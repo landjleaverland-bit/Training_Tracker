@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "npm: install",
+            "type": "shell",
+            "command": "npm install",
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Install project dependencies"
+        },
+        {
+            "label": "npm: dev",
+            "type": "shell",
+            "command": "npm run dev",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "detail": "Start SvelteKit dev server"
+        },
+        {
+            "label": "npm: build",
+            "type": "shell",
+            "command": "npm run build",
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Build the static site for GitHub Pages"
+        },
+        {
+            "label": "npm: deploy",
+            "type": "shell",
+            "command": "npm run deploy",
+            "problemMatcher": [],
+            "group": "none",
+            "detail": "Deploy the build directory to gh-pages branch",
+            "dependsOn": [
+                "npm: build"
+            ]
+        },
+        {
+            "label": "Build and Deploy",
+            "type": "shell",
+            "command": "echo 'Deployment finished!'",
+            "dependsOn": [
+                "npm: deploy"
+            ],
+            "problemMatcher": [],
+            "group": "build"
+        }
+    ]
+}
