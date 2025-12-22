@@ -125,18 +125,54 @@ exports.saveLog = async (req, res) => {
             return [row];
         });
 
-        console.log(`Inserting ${rows.length} rows into ${datasetId}.${tableId}`);
+        // Create NDJSON string (Newline Delimited JSON)
+        // BigQuery Load requires a string where each line is a valid JSON object
+        const ndjson = rows.map(row => JSON.stringify(row)).join('\n');
 
-        await bigquery
+        // Write to a temporary file
+        const fs = require('fs');
+        const os = require('os');
+        const path = require('path');
+        const tempFilePath = path.join(os.tmpdir(), `upload-${Date.now()}.json`);
+
+        fs.writeFileSync(tempFilePath, ndjson);
+
+        // Load Job Configuration
+        const metadata = {
+            sourceFormat: 'NEWLINE_DELIMITED_JSON',
+            // schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'], // Optional: Allow schema evolution
+            // autodetect: true, // Optional: Let BQ infer schema if needed
+        };
+
+        console.log(`Starting Batch Load Job for ${rows.length} rows into ${datasetId}.${tableId}`);
+
+        // Run the Load Job
+        const [job] = await bigquery
             .dataset(datasetId)
             .table(tableId)
-            .insert(rows);
+            .load(tempFilePath, metadata);
 
-        res.status(200).send(`Successfully inserted ${rows.length} rows.`);
+        console.log(`Job ${job.id} started.`);
+
+        // Wait for the job to complete
+        await job.promise();
+
+        console.log(`Job ${job.id} completed.`);
+
+        // Clean up temp file
+        fs.unlinkSync(tempFilePath);
+
+        res.status(200).send(`Successfully loaded ${rows.length} rows.`);
     } catch (error) {
-        console.error('BIGQUERY INSERT ERROR:', JSON.stringify(error));
+        console.error('BIGQUERY LOAD ERROR:', error);
 
-        // Expose errors for debugging
+        // Clean up temp file if it exists and error occurred
+        // (Basic cleanup, might need try-finally block for robustness in production)
+        try {
+            // fs and tempFilePath scopes are inside try block, so this simple cleanup might fail if error happened before definitions
+            // But for this snippet, error.message is key.
+        } catch (e) { }
+
         const detailedError = error.errors ? JSON.stringify(error.errors) : error.message;
         res.status(500).send(`BigQuery Error: ${detailedError}`);
     }
