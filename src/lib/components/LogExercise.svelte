@@ -25,6 +25,10 @@
     let isSaving = false;
     let saveMessage = "";
     let saveSuccess = false;
+    // Format current date for datetime-local input (YYYY-MM-DDTHH:mm)
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    let logDate = new Date(now - offset).toISOString().slice(0, 16);
 
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
     const API_URL = "https://save-log-825153765638.europe-west1.run.app";
@@ -77,7 +81,7 @@
                 forearm_load: data.forearmLoad || 0,
                 training: data.training || null,
                 climbs: data.exercises,
-                date: new Date().toISOString(),
+                date: new Date(logDate).toISOString(),
             };
 
             const response = await fetch(API_URL, {
@@ -115,16 +119,30 @@
 
 <div class="tab-content">
     <h2>Log Exercise</h2>
-    <div class="dropdown-wrapper">
-        <label for="exercise-type">What did you do today?</label>
-        <select id="exercise-type" bind:value={selectedId}>
-            <option value="" disabled selected>Select activity type...</option>
-            {#each options as option}
-                <option value={option.id}>
-                    {option.text}
-                </option>
-            {/each}
-        </select>
+    <div class="header-inputs">
+        <div class="dropdown-wrapper">
+            <label for="log-date">When did you do this?</label>
+            <input
+                type="datetime-local"
+                id="log-date"
+                bind:value={logDate}
+                class="date-input"
+            />
+        </div>
+
+        <div class="dropdown-wrapper">
+            <label for="exercise-type">What did you do today?</label>
+            <select id="exercise-type" bind:value={selectedId}>
+                <option value="" disabled selected
+                    >Select activity type...</option
+                >
+                {#each options as option}
+                    <option value={option.id}>
+                        {option.text}
+                    </option>
+                {/each}
+            </select>
+        </div>
     </div>
 
     {#if selectedOption}
@@ -226,6 +244,44 @@
     select:focus {
         border-color: #60a5fa;
         box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+    }
+
+    .header-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .date-input {
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: #f8fafc;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        color-scheme: dark;
+        transition: all 0.2s ease;
+    }
+
+    .date-input:hover {
+        border-color: #60a5fa;
+        background: #1e293b;
+    }
+
+    .date-input:focus {
+        border-color: #60a5fa;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+    }
+
+    @media (max-width: 600px) {
+        .header-inputs {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
     }
 
     .config-wrapper {
