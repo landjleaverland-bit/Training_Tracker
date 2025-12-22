@@ -82,7 +82,10 @@
             });
 
             if (!response.ok) {
-                throw new Error(`Server error: ${response.statusText}`);
+                const errorText = await response.text();
+                throw new Error(
+                    `Server error (${response.status}): ${errorText}`,
+                );
             }
 
             saveMessage = "Log saved successfully!";
