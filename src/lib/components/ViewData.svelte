@@ -665,6 +665,12 @@
                                                                     >{item.grade}</span
                                                                 >
                                                             {/if}
+                                                            {#if item.attempts}
+                                                                <span
+                                                                    class="ex-meta attempts"
+                                                                    >{item.attempts}</span
+                                                                >
+                                                            {/if}
                                                             {#if item.weight}
                                                                 <span
                                                                     class="ex-meta weight"
@@ -1129,6 +1135,10 @@
     .ex-meta.type {
         color: #f59e0b;
         border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .ex-meta.attempts {
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.2);
     }
 
     .ex-notes {

@@ -27,6 +27,7 @@
             id: crypto.randomUUID(),
             name: "",
             grade: "",
+            attempts: "Redpoint",
             notes: "",
         },
     ];
@@ -38,6 +39,7 @@
                 id: crypto.randomUUID(),
                 name: "",
                 grade: "",
+                attempts: "Redpoint",
                 notes: "",
             },
         ];
@@ -52,6 +54,7 @@
                     id: crypto.randomUUID(),
                     name: "",
                     grade: "",
+                    attempts: "Redpoint",
                     notes: "",
                 },
             ];
@@ -225,6 +228,7 @@
                     <tr>
                         <th>Route</th>
                         <th>Grade</th>
+                        <th>Attempts</th>
                         <th>Notes</th>
                         <th class="actions-col"></th>
                     </tr>
@@ -248,6 +252,15 @@
                                     placeholder="e.g. 7a+"
                                     bind:value={ex.grade}
                                 />
+                            </td>
+                            <td>
+                                <select bind:value={ex.attempts}>
+                                    <option value="Onsite">Onsite</option>
+                                    <option value="Flash">Flash</option>
+                                    <option value="Redpoint">Redpoint</option>
+                                    <option value="Dogged">Dogged</option>
+                                    <option value="DNF">DNF</option>
+                                </select>
                             </td>
                             <td>
                                 <textarea
@@ -421,18 +434,22 @@
     /* Column Widths */
     th:nth-child(1),
     td:nth-child(1) {
-        width: 30%;
+        width: 25%;
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 15%;
+        width: 12%;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: auto;
+        width: 18%;
     }
     th:nth-child(4),
     td:nth-child(4) {
+        width: auto;
+    }
+    th:nth-child(5),
+    td:nth-child(5) {
         width: 60px;
     }
 
