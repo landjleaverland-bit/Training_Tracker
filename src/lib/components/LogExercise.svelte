@@ -79,6 +79,7 @@
                 finger_load: data.fingerLoad || 0,
                 shoulder_load: data.shoulderLoad || 0,
                 forearm_load: data.forearmLoad || 0,
+                training: data.training || null,
                 climbs: data.exercises,
                 date: new Date().toISOString(),
             };

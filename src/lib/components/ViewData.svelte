@@ -74,6 +74,7 @@
                     fingerLoad: 0,
                     shoulderLoad: 0,
                     forearmLoad: 0,
+                    training: row.training || null,
                     items: [],
                 };
             }
@@ -641,6 +642,52 @@
 
                     {#if expandedSessions.has(session.key)}
                         <div class="session-details" transition:slide>
+                            {#if session.training}
+                                <div class="training-summary">
+                                    <div class="summary-item">
+                                        <span class="label">Focus</span>
+                                        <span class="value"
+                                            >{session.training.training_type ||
+                                                "-"}</span
+                                        >
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Difficulty</span>
+                                        <span class="value"
+                                            >{session.training.difficulty ||
+                                                "-"}</span
+                                        >
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Category</span>
+                                        <span class="value"
+                                            >{session.training.category ||
+                                                "-"}</span
+                                        >
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Energy System</span>
+                                        <span class="value"
+                                            >{session.training.energy_system ||
+                                                "-"}</span
+                                        >
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Focus Area</span>
+                                        <span class="value"
+                                            >{session.training
+                                                .technique_focus || "-"}</span
+                                        >
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="label">Wall Angle</span>
+                                        <span class="value"
+                                            >{session.training.wall_angle ||
+                                                "-"}</span
+                                        >
+                                    </div>
+                                </div>
+                            {/if}
                             <table class="details-table">
                                 <thead>
                                     <tr>
@@ -927,6 +974,43 @@
 
     .status-msg.error {
         color: #f87171;
+    }
+
+    .ex-meta.attempts {
+        background: rgba(167, 139, 250, 0.1);
+        color: #a78bfa;
+        border: 1px solid rgba(167, 139, 250, 0.2);
+    }
+
+    .training-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .summary-item .label {
+        font-size: 0.7rem;
+        color: #64748b;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.025em;
+    }
+
+    .summary-item .value {
+        font-size: 0.85rem;
+        color: #f8fafc;
+        font-weight: 500;
     }
 
     .retry-btn {

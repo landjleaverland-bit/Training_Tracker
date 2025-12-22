@@ -40,7 +40,7 @@ exports.saveLog = async (req, res) => {
     }
 
     try {
-        const { activity_type, location, session_type, finger_load, shoulder_load, forearm_load, climbs, date } = req.body;
+        const { activity_type, location, session_type, finger_load, shoulder_load, forearm_load, training, climbs, date } = req.body;
 
         // Basic validation
         if (!location || !session_type || !climbs || !climbs.length) {
@@ -82,6 +82,7 @@ exports.saveLog = async (req, res) => {
                     grade: climb.grade,
                     notes: climb.notes
                 };
+                row.training = training || null;
             } else if (activity_type === 'indoor' || !activity_type) {
                 row.location = location;
                 row.session_type = session_type;
@@ -92,6 +93,7 @@ exports.saveLog = async (req, res) => {
                     grade: climb.grade,
                     notes: climb.notes
                 };
+                row.training = training || null;
             } else if (activity_type === 'fingerboard') {
                 row.location = location;
                 row.session_type = session_type;

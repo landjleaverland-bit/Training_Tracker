@@ -32,7 +32,7 @@ exports.getLogs = async (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
-    const { type, startDate, endDate, location, session, grade } = req.query;
+    const { type, startDate, endDate, location, session, grade, attempts, training_type, difficulty, category, energy_system, technique_focus, wall_angle } = req.query;
     if (!type) {
         return res.status(400).send('Missing activity type');
     }
@@ -89,6 +89,37 @@ exports.getLogs = async (req, res) => {
         if (grade) {
             whereClauses.push("climbs.grade = @grade");
             queryOptions.params.grade = grade;
+        }
+
+        if (attempts) {
+            whereClauses.push("attempts = @attempts");
+            queryOptions.params.attempts = attempts;
+        }
+
+        // Training Record Filters
+        if (training_type) {
+            whereClauses.push("training.training_type = @training_type");
+            queryOptions.params.training_type = training_type;
+        }
+        if (difficulty) {
+            whereClauses.push("training.difficulty = @difficulty");
+            queryOptions.params.difficulty = difficulty;
+        }
+        if (category) {
+            whereClauses.push("training.category = @category");
+            queryOptions.params.category = category;
+        }
+        if (energy_system) {
+            whereClauses.push("training.energy_system = @energy_system");
+            queryOptions.params.energy_system = energy_system;
+        }
+        if (technique_focus) {
+            whereClauses.push("training.technique_focus = @technique_focus");
+            queryOptions.params.technique_focus = technique_focus;
+        }
+        if (wall_angle) {
+            whereClauses.push("training.wall_angle = @wall_angle");
+            queryOptions.params.wall_angle = wall_angle;
         }
 
         let whereString = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : "";
