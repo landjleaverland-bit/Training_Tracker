@@ -70,14 +70,14 @@ exports.saveLog = async (req, res) => {
                 date: bqDate
             };
 
-            // Dynamic mapping based on activity type
             if (activity_type === 'outdoor') {
                 row.location = {
                     area: location.area || '',
                     crag: location.crag || '',
                     wall: location.wall || ''
                 };
-                row.climbing_type = session_type; // Passed as 'climbingType' from Svelte
+                row.session_type = session_type;
+                row.climbing_type = climb.isRopes ? 'Ropes' : 'Bouldering';
                 row.climbs = {
                     route: climb.name,
                     grade: climb.grade,
