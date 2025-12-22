@@ -97,15 +97,17 @@
         background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
         color: #f8fafc;
         min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start; /* Start from top on mobile */
+        /* Using block layout + margin auto to avoid flex clipping issues on mobile */
+        display: block;
         padding: 1rem;
     }
 
+    /* Center vertically only on larger screens where we have room */
     @media (min-width: 640px) {
         :global(body) {
-            align-items: center; /* Center on larger screens */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 2rem;
         }
     }
@@ -121,6 +123,7 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        margin: 0 auto; /* Centers the container horizontally */
     }
 
     header {
