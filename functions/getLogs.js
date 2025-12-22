@@ -146,7 +146,7 @@ exports.getLogs = async (req, res) => {
             selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
         } else if (type === 'fingerboard') {
             // Provide defaults for location and session_type as they aren't in the flat table
-            selectClause = "'Fingerboard' as session_type, 'N/A' as location, *";
+            selectClause = "'Fingerboard' as session_type, 'N/A' as location, exercise_id, *";
         }
 
         const query = `

@@ -92,8 +92,8 @@
                 groups[key].forearmLoad,
                 row.forearm_load || 0,
             );
-            // Push climb info, merging in root level fields if they exist (for flat tables)
-            groups[key].items.push({
+            const exerciseId = row.exercise_id;
+            const itemData = {
                 ...(row.climbs || {}),
                 attempts:
                     row.climbs?.attempts ||
@@ -120,7 +120,28 @@
                 sets: row.climbs?.sets ?? row.sets,
                 reps: row.climbs?.reps ?? row.reps,
                 notes: row.climbs?.notes || row.notes,
-            });
+                exercise_id: exerciseId,
+            };
+
+            if (exerciseId && selectedType === "fingerboard") {
+                const existing = groups[key].items.find(
+                    (/** @type {any} */ it) => it.exercise_id === exerciseId,
+                );
+                if (existing) {
+                    if (!existing.details) {
+                        existing.details = [
+                            { weight: existing.weight, reps: existing.reps },
+                        ];
+                    }
+                    existing.details.push({
+                        weight: itemData.weight,
+                        reps: itemData.reps,
+                    });
+                    return;
+                }
+            }
+
+            groups[key].items.push(itemData);
         });
 
         return Object.values(groups).sort((a, b) => {
@@ -745,29 +766,61 @@
                                                                         item.attempt}</span
                                                                 >
                                                             {/if}
-                                                            {#if item.weight}
-                                                                <span
-                                                                    class="ex-meta weight"
-                                                                    >{item.weight}kg</span
+                                                            {#if item.details}
+                                                                <div
+                                                                    class="complex-details"
                                                                 >
-                                                            {/if}
-                                                            {#if item.grip || item.grip_type}
-                                                                {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                    {#each item.details as det}
+                                                                        <span
+                                                                            class="ex-meta multi-load"
+                                                                        >
+                                                                            {det.weight}kg
+                                                                            x {det.reps}
+                                                                        </span>
+                                                                    {/each}
+                                                                    {#if item.sets}
+                                                                        <span
+                                                                            class="ex-meta sets-count"
+                                                                            >({item.sets}
+                                                                            sets)</span
+                                                                        >
+                                                                    {/if}
+                                                                </div>
+                                                                {#if item.grip || item.grip_type}
+                                                                    {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                        <span
+                                                                            class="ex-meta grip"
+                                                                            >{item.grip ||
+                                                                                item.grip_type}</span
+                                                                        >
+                                                                    {/if}
+                                                                {/if}
+                                                            {:else}
+                                                                {#if item.weight}
                                                                     <span
-                                                                        class="ex-meta grip"
-                                                                        >{item.grip ||
-                                                                            item.grip_type}</span
+                                                                        class="ex-meta weight"
+                                                                        >{item.weight}kg</span
                                                                     >
                                                                 {/if}
-                                                            {/if}
-                                                            {#if item.sets || item.reps}
-                                                                <span
-                                                                    class="ex-meta sets-reps"
-                                                                >
-                                                                    {item.sets ||
-                                                                        0} x {item.reps ||
-                                                                        1}
-                                                                </span>
+                                                                {#if item.grip || item.grip_type}
+                                                                    {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                        <span
+                                                                            class="ex-meta grip"
+                                                                            >{item.grip ||
+                                                                                item.grip_type}</span
+                                                                        >
+                                                                    {/if}
+                                                                {/if}
+                                                                {#if item.sets || item.reps}
+                                                                    <span
+                                                                        class="ex-meta sets-reps"
+                                                                    >
+                                                                        {item.sets ||
+                                                                            0} x
+                                                                        {item.reps ||
+                                                                            1}
+                                                                    </span>
+                                                                {/if}
                                                             {/if}
 
                                                             {#if item.notes}
@@ -1269,6 +1322,27 @@
     .ex-meta.attempts {
         color: #34d399;
         border: 1px solid rgba(52, 211, 153, 0.2);
+    }
+
+    .complex-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .ex-meta.multi-load {
+        color: #fbbf24;
+        background: rgba(251, 191, 36, 0.05);
+        border: 1px dashed rgba(251, 191, 36, 0.3);
+    }
+
+    .ex-meta.sets-count {
+        color: #94a3b8;
+        font-weight: 600;
+        background: transparent;
+        border: none;
+        font-size: 0.75rem;
     }
 
     .ex-notes {

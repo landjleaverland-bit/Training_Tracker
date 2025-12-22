@@ -74,7 +74,8 @@ exports.saveLog = async (req, res) => {
                     weight: parseFloat(detail.weight) || 0,
                     sets: parseInt(climb.sets) || 0,
                     reps: String(detail.reps || '1'),
-                    notes: climb.notes
+                    notes: climb.notes,
+                    exercise_id: climb.id
                 }));
             }
 
