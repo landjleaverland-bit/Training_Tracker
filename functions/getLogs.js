@@ -141,16 +141,6 @@ exports.getLogs = async (req, res) => {
 
         // Normalize output based on activity type
         let selectClause = "*";
-        if (type === 'outdoor') {
-            // Flatten location for simpler frontend handling
-            selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, 'Outdoor' as session_type, exercise_id, * EXCEPT(location, exercise_id)";
-        } else if (type === 'fingerboard') {
-            // Provide defaults for location and session_type as they aren't in the flat table
-            selectClause = "'Fingerboard' as session_type, 'N/A' as location, exercise_id, * EXCEPT(exercise_id)";
-        } else {
-            // Indoor / Other - select exercise_id safely
-            selectClause = "exercise_id, * EXCEPT(exercise_id)";
-        }
 
         const query = `
             SELECT ${selectClause}
@@ -163,7 +153,31 @@ exports.getLogs = async (req, res) => {
         queryOptions.query = query;
 
         const [rows] = await bigquery.query(queryOptions);
-        res.status(200).json(rows);
+
+        // Normalize data in Javascript for consistency and to handle missing columns gracefully
+        const normalizedRows = rows.map(row => {
+            const normalized = { ...row };
+
+            // Ensure exercise_id exists
+            if (normalized.exercise_id === undefined) {
+                normalized.exercise_id = null;
+            }
+
+            if (type === 'outdoor') {
+                normalized.session_type = 'Outdoor';
+                if (row.location && typeof row.location === 'object') {
+                    normalized.location = `${row.location.area || ''} > ${row.location.crag || ''}`;
+                    if (row.location.wall) normalized.location += ` - ${row.location.wall}`;
+                }
+            } else if (type === 'fingerboard') {
+                normalized.session_type = 'Fingerboard';
+                normalized.location = 'N/A';
+            }
+
+            return normalized;
+        });
+
+        res.status(200).json(normalizedRows);
     } catch (error) {
         console.error('BigQuery Query Error:', error);
         res.status(500).send(`Error retrieving data: ${error.message}`);
