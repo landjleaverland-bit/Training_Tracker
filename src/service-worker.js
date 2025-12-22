@@ -27,6 +27,12 @@ self.addEventListener('fetch', (event) => {
 
     async function respond() {
         const url = new URL(event.request.url);
+
+        // Skip caching for non-http/https requests (e.g. browser extensions)
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+            return fetch(event.request);
+        }
+
         const cache = await caches.open(CACHE);
 
         // Always try the cache first for assets
