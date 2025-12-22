@@ -91,7 +91,18 @@
                 groups[key].forearmLoad,
                 row.forearm_load || 0,
             );
-            groups[key].items.push(row.climbs);
+            // Push climb info, merging in root level fields if they exist (for flat tables)
+            groups[key].items.push({
+                ...(row.climbs || {}),
+                attempts:
+                    row.climbs?.attempts ||
+                    row.attempts ||
+                    row.attempt_type ||
+                    row.Attempt,
+                type: row.climbs?.type || row.type || row.climb_type,
+                name: row.climbs?.name || row.name || row.route || row.Route,
+                grade: row.climbs?.grade || row.grade || row.Grade,
+            });
         });
 
         return Object.values(groups).sort((a, b) => {
@@ -665,10 +676,11 @@
                                                                     >{item.grade}</span
                                                                 >
                                                             {/if}
-                                                            {#if item.attempts}
+                                                            {#if item.attempts || item.attempt}
                                                                 <span
                                                                     class="ex-meta attempts"
-                                                                    >{item.attempts}</span
+                                                                    >{item.attempts ||
+                                                                        item.attempt}</span
                                                                 >
                                                             {/if}
                                                             {#if item.weight}
