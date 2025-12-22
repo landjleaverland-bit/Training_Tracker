@@ -59,9 +59,24 @@ exports.saveLog = async (req, res) => {
         const datasetId = 'training_plan_database_dataset';
 
         // BigQuery expects an array of rows
-        const rows = climbs.map(climb => {
+        const rows = climbs.flatMap(climb => {
             // Convert ISO date to BigQuery DATETIME format: YYYY-MM-DD HH:MM:SS
             const bqDate = date.replace('T', ' ').split('.')[0];
+
+            if (activity_type === 'fingerboard') {
+                // Handle multiple weight/rep details per exercise
+                const details = climb.details && climb.details.length ? climb.details : [{ weight: climb.weight, reps: climb.reps }];
+
+                return details.map(detail => ({
+                    date: bqDate,
+                    exercise: climb.name,
+                    grip: climb.grip_type || 'N/A',
+                    weight: parseFloat(detail.weight) || 0,
+                    sets: parseInt(climb.sets) || 0,
+                    reps: String(detail.reps || '1'),
+                    notes: climb.notes
+                }));
+            }
 
             const row = {
                 finger_load: finger_load || 0,
@@ -94,17 +109,6 @@ exports.saveLog = async (req, res) => {
                     notes: climb.notes
                 };
                 row.training = training || null;
-            } else if (activity_type === 'fingerboard') {
-                // Fingerboarding table is flat and doesn't have location/session_type/load metrics/climbs RECORD
-                return {
-                    date: bqDate,
-                    exercise: climb.name,
-                    grip: climb.grip_type || 'N/A',
-                    weight: parseFloat(climb.weight) || 0,
-                    sets: parseInt(climb.sets) || 0,
-                    reps: String(climb.reps || '1'),
-                    notes: climb.notes
-                };
             } else {
                 // Fallback / Gym / Other
                 row.location = location;
@@ -115,7 +119,7 @@ exports.saveLog = async (req, res) => {
                 };
             }
 
-            return row;
+            return [row];
         });
 
         console.log(`Inserting ${rows.length} rows into ${datasetId}.${tableId}`);

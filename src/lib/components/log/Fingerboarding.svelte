@@ -6,9 +6,8 @@
             id: crypto.randomUUID(),
             name: "Max hangs",
             grip_type: "Half-crimp",
-            weight: 0,
+            details: [{ weight: 0, reps: 5 }],
             sets: 1,
-            reps: 1,
             notes: "",
         },
     ];
@@ -28,12 +27,37 @@
                 id: crypto.randomUUID(),
                 name: "Max hangs",
                 grip_type: "Half-crimp",
-                weight: 0,
+                details: [{ weight: 0, reps: 5 }],
                 sets: 1,
-                reps: 1,
                 notes: "",
             },
         ];
+    }
+
+    function addDetail(/** @type {string} */ exerciseId) {
+        exercises = exercises.map((ex) => {
+            if (ex.id === exerciseId) {
+                return {
+                    ...ex,
+                    details: [...ex.details, { weight: 0, reps: 5 }],
+                };
+            }
+            return ex;
+        });
+    }
+
+    function removeDetail(
+        /** @type {string} */ exerciseId,
+        /** @type {number} */ detailIndex,
+    ) {
+        exercises = exercises.map((ex) => {
+            if (ex.id === exerciseId && ex.details.length > 1) {
+                const newDetails = [...ex.details];
+                newDetails.splice(detailIndex, 1);
+                return { ...ex, details: newDetails };
+            }
+            return ex;
+        });
     }
 
     function removeRow(/** @type {string} */ id) {
@@ -94,49 +118,78 @@
                     </div>
 
                     <div class="set-row metrics">
-                        <div class="input-group mini">
-                            <label for="ex-weight-{ex.id}">Weight</label>
-                            <input
-                                id="ex-weight-{ex.id}"
-                                type="number"
-                                bind:value={ex.weight}
-                                placeholder="0"
-                            />
+                        <div class="details-list">
+                            {#each ex.details as detail, j}
+                                <div class="detail-item" in:fade>
+                                    <div class="input-group mini">
+                                        <label for="ex-weight-{ex.id}-{j}"
+                                            >Weight</label
+                                        >
+                                        <input
+                                            id="ex-weight-{ex.id}-{j}"
+                                            type="number"
+                                            bind:value={detail.weight}
+                                            placeholder="0"
+                                        />
+                                    </div>
+                                    <div class="input-group mini">
+                                        <label for="ex-reps-{ex.id}-{j}"
+                                            >Reps</label
+                                        >
+                                        <input
+                                            id="ex-reps-{ex.id}-{j}"
+                                            type="number"
+                                            bind:value={detail.reps}
+                                            placeholder="1"
+                                        />
+                                    </div>
+                                    {#if ex.details.length > 1}
+                                        <button
+                                            class="remove-detail-btn"
+                                            on:click={() =>
+                                                removeDetail(ex.id, j)}
+                                            title="Remove Detail"
+                                        >
+                                            &times;
+                                        </button>
+                                    {/if}
+                                </div>
+                            {/each}
+                            <button
+                                class="add-detail-btn"
+                                on:click={() => addDetail(ex.id)}
+                            >
+                                + Add Weight
+                            </button>
                         </div>
-                        <div class="input-group mini">
-                            <label for="ex-sets-{ex.id}">Sets</label>
-                            <input
-                                id="ex-sets-{ex.id}"
-                                type="number"
-                                bind:value={ex.sets}
-                                placeholder="1"
-                            />
+
+                        <div class="meta-section">
+                            <div class="input-group mini">
+                                <label for="ex-sets-{ex.id}">Sets</label>
+                                <input
+                                    id="ex-sets-{ex.id}"
+                                    type="number"
+                                    bind:value={ex.sets}
+                                    placeholder="1"
+                                />
+                            </div>
+                            <div class="input-group grow">
+                                <label for="ex-notes-{ex.id}">Notes</label>
+                                <input
+                                    id="ex-notes-{ex.id}"
+                                    type="text"
+                                    bind:value={ex.notes}
+                                    placeholder="Notes"
+                                />
+                            </div>
+                            <button
+                                class="delete-btn desktop-only"
+                                on:click={() => removeRow(ex.id)}
+                                title="Remove Set"
+                            >
+                                &times;
+                            </button>
                         </div>
-                        <div class="input-group mini">
-                            <label for="ex-reps-{ex.id}">Reps</label>
-                            <input
-                                id="ex-reps-{ex.id}"
-                                type="number"
-                                bind:value={ex.reps}
-                                placeholder="1"
-                            />
-                        </div>
-                        <div class="input-group grow">
-                            <label for="ex-notes-{ex.id}">Notes</label>
-                            <input
-                                id="ex-notes-{ex.id}"
-                                type="text"
-                                bind:value={ex.notes}
-                                placeholder="Notes"
-                            />
-                        </div>
-                        <button
-                            class="delete-btn desktop-only"
-                            on:click={() => removeRow(ex.id)}
-                            title="Remove Set"
-                        >
-                            &times;
-                        </button>
                     </div>
                 </div>
             {/each}
@@ -176,6 +229,64 @@
     .set-row.main {
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         padding-bottom: 1rem;
+    }
+
+    .set-row.metrics {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .details-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .detail-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .add-detail-btn {
+        background: transparent;
+        color: #60a5fa;
+        border: 1px dashed rgba(96, 165, 250, 0.3);
+        padding: 0.4rem;
+        border-radius: 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        width: fit-content;
+        transition: all 0.2s ease;
+    }
+
+    .add-detail-btn:hover {
+        background: rgba(96, 165, 250, 0.05);
+        border-color: rgba(96, 165, 250, 0.5);
+    }
+
+    .remove-detail-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+        border: none;
+        border-radius: 0.3rem;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-bottom: 0.3rem;
+    }
+
+    .meta-section {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+        border-top: 1px solid rgba(255, 255, 255, 0.03);
+        padding-top: 1rem;
     }
 
     .input-group {
@@ -272,18 +383,21 @@
     }
 
     @media (max-width: 640px) {
-        .set-row {
+        .set-row.main {
             flex-wrap: wrap;
         }
-        .set-row.metrics {
+        .detail-item {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr auto;
+        }
+        .meta-section {
+            flex-wrap: wrap;
         }
         .input-group.mini {
             flex: 1;
         }
         .input-group.grow {
-            grid-column: span 2;
+            min-width: 100%;
         }
         .desktop-only {
             display: none;
