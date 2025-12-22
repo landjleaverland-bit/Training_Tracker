@@ -95,114 +95,153 @@
             </button>
         </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 20%;">Exercise</th>
-                        <th style="width: 20%;">Grip</th>
-                        <th style="width: 15%;">Weight (+/-)</th>
-                        <th style="width: 10%;">Sets</th>
-                        <th style="width: 10%;">Reps</th>
-                        <th>Notes</th>
-                        <th class="actions-col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each exercises as ex, i (ex.id)}
-                        <tr>
-                            <td>
-                                <select bind:value={ex.name}>
-                                    <option value="Max hangs">Max hangs</option>
-                                    <option value="Recruitment pulls"
-                                        >Recruitment pulls</option
-                                    >
-                                    <option value="Max pick-ups"
-                                        >Max pick-ups</option
-                                    >
-                                </select>
-                            </td>
-                            <td>
-                                <select bind:value={ex.grip_type}>
-                                    <option value="Full-crimp"
-                                        >Full-crimp</option
-                                    >
-                                    <option value="Half-crimp"
-                                        >Half-crimp</option
-                                    >
-                                    <option value="Three finger drag"
-                                        >Three finger drag</option
-                                    >
-                                    <option value="Pinch">Pinch</option>
-                                    <option value="Open hand">Open hand</option>
-                                    <option value="Sloper">Sloper</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    bind:value={ex.weight}
-                                    placeholder="0"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    bind:value={ex.sets}
-                                    placeholder="1"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    bind:value={ex.reps}
-                                    placeholder="1"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    bind:value={ex.notes}
-                                    placeholder="Notes"
-                                />
-                            </td>
-                            <td class="actions-col">
-                                <button
-                                    class="delete-btn"
-                                    on:click={() => removeRow(ex.id)}
+        <div class="sets-container">
+            {#each exercises as ex, i (ex.id)}
+                <div class="set-card" in:fade>
+                    <div class="set-row main">
+                        <div class="input-group">
+                            <label for="ex-name-{ex.id}">Exercise</label>
+                            <select id="ex-name-{ex.id}" bind:value={ex.name}>
+                                <option value="Max hangs">Max hangs</option>
+                                <option value="Recruitment pulls"
+                                    >Recruitment pulls</option
                                 >
-                                    &times;
-                                </button>
-                            </td>
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
+                                <option value="Max pick-ups"
+                                    >Max pick-ups</option
+                                >
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="ex-grip-{ex.id}">Grip</label>
+                            <select
+                                id="ex-grip-{ex.id}"
+                                bind:value={ex.grip_type}
+                            >
+                                <option value="Full-crimp">Full-crimp</option>
+                                <option value="Half-crimp">Half-crimp</option>
+                                <option value="Three finger drag"
+                                    >Three finger drag</option
+                                >
+                                <option value="Pinch">Pinch</option>
+                                <option value="Open hand">Open hand</option>
+                                <option value="Sloper">Sloper</option>
+                            </select>
+                        </div>
+                        <button
+                            class="delete-btn mobile-top"
+                            on:click={() => removeRow(ex.id)}
+                            title="Remove Set"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <div class="set-row metrics">
+                        <div class="input-group mini">
+                            <label for="ex-weight-{ex.id}">Weight</label>
+                            <input
+                                id="ex-weight-{ex.id}"
+                                type="number"
+                                bind:value={ex.weight}
+                                placeholder="0"
+                            />
+                        </div>
+                        <div class="input-group mini">
+                            <label for="ex-sets-{ex.id}">Sets</label>
+                            <input
+                                id="ex-sets-{ex.id}"
+                                type="number"
+                                bind:value={ex.sets}
+                                placeholder="1"
+                            />
+                        </div>
+                        <div class="input-group mini">
+                            <label for="ex-reps-{ex.id}">Reps</label>
+                            <input
+                                id="ex-reps-{ex.id}"
+                                type="number"
+                                bind:value={ex.reps}
+                                placeholder="1"
+                            />
+                        </div>
+                        <div class="input-group grow">
+                            <label for="ex-notes-{ex.id}">Notes</label>
+                            <input
+                                id="ex-notes-{ex.id}"
+                                type="text"
+                                bind:value={ex.notes}
+                                placeholder="Notes"
+                            />
+                        </div>
+                        <button
+                            class="delete-btn desktop-only"
+                            on:click={() => removeRow(ex.id)}
+                            title="Remove Set"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                </div>
+            {/each}
         </div>
     </div>
 </div>
 
 <style>
-    .fingerboard-config {
+    .exercise-section {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
-    .load-metrics {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 1.5rem;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 1.5rem;
-        border-radius: 0.75rem;
+    .sets-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .set-card {
+        background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .set-row {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .set-row.main {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 1rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        flex: 1;
+    }
+
+    .input-group.mini {
+        flex: 0 0 80px;
+    }
+
+    .input-group.grow {
+        flex: 2;
     }
 
     label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        font-weight: 500;
+        font-size: 0.7rem;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
     }
 
     input[type="text"],
@@ -218,30 +257,16 @@
         box-sizing: border-box;
     }
 
-    input:focus {
+    input:focus,
+    select:focus {
         border-color: #60a5fa;
         outline: none;
-    }
-
-    .load-metrics {
-        background: rgba(255, 255, 255, 0.03);
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .load-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        max-width: 100%;
     }
 
     .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
     }
 
     h3 {
@@ -254,47 +279,60 @@
         background: rgba(96, 165, 250, 0.1);
         color: #60a5fa;
         border: 1px solid rgba(96, 165, 250, 0.2);
-        padding: 0.4rem 0.8rem;
+        padding: 0.5rem 1rem;
         border-radius: 0.5rem;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         font-weight: 600;
         cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    .table-container {
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-    }
-
-    th {
-        padding: 0.5rem;
-        font-size: 0.7rem;
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    td {
-        padding: 0.25rem;
+    .add-row-btn:hover {
+        background: rgba(96, 165, 250, 0.2);
     }
 
     .delete-btn {
         background: rgba(239, 68, 68, 0.1);
         color: #f87171;
         border: 1px solid rgba(239, 68, 68, 0.2);
-        border-radius: 0.25rem;
-        width: 24px;
-        height: 24px;
+        border-radius: 0.4rem;
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
     }
 
-    .actions-col {
-        width: 30px;
-        text-align: center;
+    .delete-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+    }
+
+    .mobile-top {
+        display: none;
+    }
+
+    @media (max-width: 640px) {
+        .set-row {
+            flex-wrap: wrap;
+        }
+        .set-row.metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .input-group.mini {
+            flex: 1;
+        }
+        .input-group.grow {
+            grid-column: span 2;
+        }
+        .desktop-only {
+            display: none;
+        }
+        .mobile-top {
+            display: flex;
+        }
     }
 </style>
