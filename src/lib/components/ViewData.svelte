@@ -4,6 +4,7 @@
     import { historyStore, syncLogs } from "$lib/stores/history";
     import { get } from "svelte/store";
     import { onMount } from "svelte";
+    import { areaOptions, areaCragMap } from "$lib/data/climbingAreas.js";
 
     let selectedType = "indoor";
     let isLoading = false;
@@ -109,6 +110,8 @@
     let startDate = "";
     let endDate = "";
     let filterLocation = "";
+    let filterArea = "";
+    let filterCrag = "";
     let filterSession = "";
     let filterGrade = "";
 
@@ -139,6 +142,20 @@
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
     // Make sure this matches your saveLog base URL but ends in /getLogs
     const API_BASE_URL = "https://get-log-825153765638.europe-west1.run.app";
+
+    $: cragsForFilter = areaCragMap[filterArea] || [];
+
+    $: {
+        if (selectedType === "outdoor") {
+            if (filterCrag) {
+                filterLocation = filterCrag;
+            } else if (filterArea) {
+                filterLocation = filterArea;
+            } else {
+                filterLocation = "";
+            }
+        }
+    }
 
     async function fetchData() {
         if (!selectedType) return;
@@ -216,7 +233,7 @@
 
         // Find all unique keys within the 'climbs' struct across all data rows
         const climbKeys = new Set();
-        allDataForType.forEach((row) => {
+        allDataForType.forEach((/** @type {any} */ row) => {
             if (row.climbs) {
                 Object.keys(row.climbs).forEach((k) => climbKeys.add(k));
             }
@@ -231,7 +248,7 @@
         csvRows.push(headers.join(","));
 
         // Add data rows
-        allDataForType.forEach((row) => {
+        allDataForType.forEach((/** @type {any} */ row) => {
             const values = headers.map((header) => {
                 let val;
                 if (baseKeys.includes(header)) {
@@ -394,12 +411,28 @@
                 <div class="filter-group">
                     <label for="filterLocation">Location</label>
                     {#if selectedType === "outdoor"}
-                        <input
-                            id="filterLocation"
-                            type="text"
-                            bind:value={filterLocation}
-                            placeholder="Crag or Wall"
-                        />
+                        <div class="outdoor-filters">
+                            <select
+                                id="filterArea"
+                                bind:value={filterArea}
+                                on:change={() => (filterCrag = "")}
+                            >
+                                <option value="">Any Area</option>
+                                {#each areaOptions as area}
+                                    <option value={area}>{area}</option>
+                                {/each}
+                            </select>
+                            <select
+                                id="filterCrag"
+                                bind:value={filterCrag}
+                                disabled={!filterArea}
+                            >
+                                <option value="">Any Crag</option>
+                                {#each cragsForFilter as crag}
+                                    <option value={crag}>{crag}</option>
+                                {/each}
+                            </select>
+                        </div>
                     {:else}
                         <select id="filterLocation" bind:value={filterLocation}>
                             <option value="">Any Location</option>
@@ -487,6 +520,21 @@
             </div>
         </div>
     {:else}
+        {#if groupedSessions.length > 0}
+            <div class="legend-row" transition:fade>
+                <div class="legend-item finger">
+                    <span class="dot"></span> Finger
+                </div>
+                <div class="legend-item shoulder">
+                    <span class="dot"></span> Shoulder
+                </div>
+                <div class="legend-item forearm">
+                    <span class="dot"></span> Forearm
+                </div>
+                <span class="legend-note">(0-5 Scale)</span>
+            </div>
+        {/if}
+
         <div class="sessions-list" in:fade>
             {#if groupedSessions.length === 0 && allDataForType.length > 0}
                 <div class="no-results">No results match your filters.</div>
@@ -887,6 +935,9 @@
         display: flex;
         align-items: center;
         gap: 1.5rem;
+        flex: 1; /* Allow it to take up space but not push chevron off */
+        min-width: 0; /* Enable truncation for children */
+        flex-wrap: wrap; /* allow wrapping on smaller screens */
     }
 
     .date {
@@ -1080,5 +1131,56 @@
         .session-header {
             padding: 1rem;
         }
+    }
+    .outdoor-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
+        font-size: 0.8rem;
+        color: #94a3b8;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }
+
+    .legend-item .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .legend-item.finger {
+        color: #f87171;
+    }
+    .legend-item.finger .dot {
+        background: #f87171;
+    }
+
+    .legend-item.shoulder {
+        color: #60a5fa;
+    }
+    .legend-item.shoulder .dot {
+        background: #60a5fa;
+    }
+
+    .legend-item.forearm {
+        color: #4ade80;
+    }
+    .legend-item.forearm .dot {
+        background: #4ade80;
     }
 </style>
