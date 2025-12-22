@@ -1,43 +1,48 @@
 <script>
-    import { fade } from "svelte/transition";
-    let selected = "";
-    const options = [
-        { id: "1", text: "Option 1" },
-        { id: "2", text: "Option 2" },
-        { id: "3", text: "Option 3" },
+    import LogExercise from "$lib/components/LogExercise.svelte";
+    import ViewData from "$lib/components/ViewData.svelte";
+    import GraphData from "$lib/components/GraphData.svelte";
+
+    const tabs = [
+        { id: "log", label: "Log Exercise", component: LogExercise },
+        { id: "view", label: "View Data", component: ViewData },
+        { id: "graph", label: "Graph Data", component: GraphData },
     ];
+
+    let activeTabId = "log";
+
+    $: activeTab = tabs.find((t) => t.id === activeTabId);
 </script>
 
 <svelte:head>
-    <title>Training Tracker 3</title>
-    <meta name="description" content="A simple Svelte webapp with a dropdown" />
+    <title>Training Tracker - {activeTab.label}</title>
+    <meta
+        name="description"
+        content="A simple Svelte webapp for tracking training"
+    />
 </svelte:head>
 
 <main>
-    <div class="container">
-        <h1>Training Tracker 3</h1>
+    <div class="app-container">
+        <header>
+            <h1>Training Tracker</h1>
+        </header>
 
-        <div class="dropdown-wrapper">
-            <label for="main-dropdown">Select an option:</label>
-            <select id="main-dropdown" bind:value={selected}>
-                <option value="" disabled selected>Choose wisely...</option>
-                {#each options as option}
-                    <option value={option.id}>
-                        {option.text}
-                    </option>
-                {/each}
-            </select>
+        <nav class="tabs-nav">
+            {#each tabs as tab}
+                <button
+                    class="tab-button"
+                    class:active={activeTabId === tab.id}
+                    on:click={() => (activeTabId = tab.id)}
+                >
+                    {tab.label}
+                </button>
+            {/each}
+        </nav>
+
+        <div class="content-container">
+            <svelte:component this={activeTab.component} />
         </div>
-
-        {#if selected}
-            <div class="result-card" in:fade>
-                <p>
-                    You selected: <strong
-                        >{options.find((o) => o.id === selected)?.text}</strong
-                    >
-                </p>
-            </div>
-        {/if}
     </div>
 </main>
 
@@ -61,94 +66,103 @@
         min-height: 100vh;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start; /* Start from top on mobile */
+        padding: 1rem;
     }
 
-    .container {
+    @media (min-width: 640px) {
+        :global(body) {
+            align-items: center; /* Center on larger screens */
+            padding: 2rem;
+        }
+    }
+
+    .app-container {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 2.5rem;
         border-radius: 1.5rem;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         width: 100%;
-        max-width: 400px;
+        max-width: 500px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        padding: 2rem 2rem 1rem;
         text-align: center;
     }
 
     h1 {
-        margin-top: 0;
+        margin: 0;
         font-size: 2rem;
         font-weight: 700;
         background: linear-gradient(to right, #60a5fa, #a78bfa);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 2rem;
     }
 
-    .dropdown-wrapper {
+    .tabs-nav {
         display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        text-align: left;
-        margin-bottom: 2rem;
+        background: rgba(15, 23, 42, 0.4);
+        padding: 0.5rem;
+        margin: 0 1.5rem 1.5rem;
+        border-radius: 1rem;
+        gap: 0.25rem;
     }
 
-    label {
-        font-size: 0.875rem;
+    .tab-button {
+        flex: 1;
+        background: transparent;
+        border: none;
         color: #94a3b8;
-        font-weight: 500;
-    }
-
-    select {
-        appearance: none;
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 0.75rem;
-        padding: 0.75rem 1rem;
-        color: #f8fafc;
-        font-size: 1rem;
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
-        outline: none;
-    }
-
-    select:hover {
-        border-color: #60a5fa;
-        background: rgba(15, 23, 42, 0.8);
-    }
-
-    select:focus {
-        border-color: #60a5fa;
-        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
-    }
-
-    .result-card {
-        background: rgba(96, 165, 250, 0.1);
         border-radius: 0.75rem;
-        padding: 1rem;
-        border: 1px solid rgba(96, 165, 250, 0.2);
-        animation: slideUp 0.3s ease-out;
+        transition: all 0.2s ease;
+        white-space: nowrap;
     }
 
-    p {
-        margin: 0;
-        color: #e2e8f0;
+    .tab-button:hover {
+        color: #f8fafc;
+        background: rgba(255, 255, 255, 0.05);
     }
 
-    strong {
-        color: #60a5fa;
+    .tab-button.active {
+        color: #f8fafc;
+        background: rgba(96, 165, 250, 0.2);
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
+    .content-container {
+        padding: 0 2rem 2.5rem;
+        min-height: 300px;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+        header {
+            padding: 1.5rem 1.5rem 0.75rem;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .tabs-nav {
+            margin: 0 1rem 1rem;
+        }
+        .content-container {
+            padding: 0 1.5rem 2rem;
+        }
+        .tab-button {
+            font-size: 0.75rem;
+            padding: 0.6rem 0.25rem;
+        }
+        h1 {
+            font-size: 1.5rem;
         }
     }
 </style>
