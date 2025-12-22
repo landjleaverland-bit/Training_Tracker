@@ -268,6 +268,20 @@
         text-transform: uppercase;
     }
 
+    /* Column Widths */
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 25%;
+    }
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 18%;
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+        width: auto;
+    } /* Notes takes the rest */
+
     td {
         padding: 0.4rem;
     }
