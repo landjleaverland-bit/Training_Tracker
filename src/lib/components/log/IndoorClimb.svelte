@@ -1,39 +1,331 @@
 <script>
-    import { fade } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
+    import { flip } from "svelte/animate";
+
+    let type = "";
+    let location = "";
+    let session = "";
+
+    let exercises = [
+        { id: crypto.randomUUID(), name: "", grade: "", notes: "" },
+    ];
+
+    const typeOptions = ["Bouldering", "Ropes", "Mixed"];
+    const locationOptions = [
+        "Flashpoint Swindon",
+        "Rockstar",
+        "Flashpoint Bristol",
+    ];
+    const sessionOptions = ["Strength", "Endurance", "Power", "Recovery"];
+
+    function addRow() {
+        exercises = [
+            ...exercises,
+            { id: crypto.randomUUID(), name: "", grade: "", notes: "" },
+        ];
+    }
+
+    function removeRow(id) {
+        if (exercises.length > 1) {
+            exercises = exercises.filter((ex) => ex.id !== id);
+        } else {
+            // If it's the last row, just clear it instead of removing
+            exercises = [
+                { id: crypto.randomUUID(), name: "", grade: "", notes: "" },
+            ];
+        }
+    }
 </script>
 
-<div class="activity-config" in:fade>
-    <h3>Indoor Climb Config</h3>
-    <p>
-        Specific fields for indoor climbing will go here (e.g., Grade, Wall
-        Type, attempts).
-    </p>
-    <div class="placeholder-box">
-        <!-- Future fields will be added here -->
+<div class="indoor-config" in:fade>
+    <div class="form-grid">
+        <div class="input-group">
+            <label for="climb-type">Type</label>
+            <select id="climb-type" bind:value={type}>
+                <option value="" disabled selected>Select Type</option>
+                {#each typeOptions as opt}
+                    <option value={opt}>{opt}</option>
+                {/each}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="climb-location">Location</label>
+            <select id="climb-location" bind:value={location}>
+                <option value="" disabled selected>Select Location</option>
+                {#each locationOptions as opt}
+                    <option value={opt}>{opt}</option>
+                {/each}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="climb-session">Session Focus</label>
+            <select id="climb-session" bind:value={session}>
+                <option value="" disabled selected>Select Focus</option>
+                {#each sessionOptions as opt}
+                    <option value={opt}>{opt}</option>
+                {/each}
+            </select>
+        </div>
+    </div>
+
+    <div class="exercise-section">
+        <div class="section-header">
+            <h3>Exercises / Routes</h3>
+            <button class="add-row-btn" on:click={addRow} title="Add Exercise">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><line x1="12" y1="5" x2="12" y2="19" /><line
+                        x1="5"
+                        y1="12"
+                        x2="19"
+                        y2="12"
+                    /></svg
+                >
+                Add Row
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exercise / Route</th>
+                        <th>Grade / Intensity</th>
+                        <th>Notes / Result</th>
+                        <th class="actions-col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each exercises as ex, i (ex.id)}
+                        <tr
+                            out:slide|local={{ duration: 200 }}
+                            animate:flip={{ duration: 300 }}
+                        >
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. V4 Blue"
+                                    bind:value={ex.name}
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. 6b+"
+                                    bind:value={ex.grade}
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Sent 2nd try"
+                                    bind:value={ex.notes}
+                                />
+                            </td>
+                            <td class="actions-col">
+                                <button
+                                    class="delete-btn"
+                                    on:click={() => removeRow(ex.id)}
+                                    title="Remove row"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        ><path d="M3 6h18" /><path
+                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                        /><path
+                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                        /></svg
+                                    >
+                                </button>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <style>
-    .activity-config {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin-top: 1rem;
+    .indoor-config {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
-    h3 {
-        margin-top: 0;
-        color: #60a5fa;
-        font-size: 1.125rem;
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 1rem;
     }
-    p {
-        font-size: 0.875rem;
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    label {
+        font-size: 0.75rem;
         color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
-    .placeholder-box {
-        height: 100px;
-        border: 2px dashed rgba(255, 255, 255, 0.1);
+
+    select {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
-        margin-top: 1rem;
+        padding: 0.6rem 0.75rem;
+        color: #f8fafc;
+        font-size: 0.9rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    select:hover {
+        border-color: #60a5fa;
+    }
+
+    .exercise-section {
+        background: rgba(15, 23, 42, 0.3);
+        border-radius: 1rem;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: #f8fafc;
+    }
+
+    .add-row-btn {
+        background: rgba(96, 165, 250, 0.1);
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+    }
+
+    .add-row-btn:hover {
+        background: rgba(96, 165, 250, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .table-container {
+        overflow-x: auto;
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 450px;
+    }
+
+    th {
+        text-align: left;
+        font-size: 0.75rem;
+        color: #64748b;
+        padding: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    td {
+        padding: 0.4rem;
+    }
+
+    input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 0.4rem;
+        padding: 0.5rem;
+        color: #f8fafc;
+        font-size: 0.875rem;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    input:focus {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: #60a5fa;
+    }
+
+    .actions-col {
+        width: 40px;
+        text-align: center;
+    }
+
+    .delete-btn {
+        background: transparent;
+        border: none;
+        color: #ef4444;
+        opacity: 0.5;
+        cursor: pointer;
+        padding: 0.4rem;
+        border-radius: 0.4rem;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .delete-btn:hover {
+        opacity: 1;
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .add-row-btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
