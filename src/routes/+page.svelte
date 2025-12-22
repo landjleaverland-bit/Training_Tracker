@@ -9,13 +9,13 @@
 </script>
 
 <svelte:head>
-    <title>Training Tracker 1</title>
+    <title>Training Tracker 2</title>
     <meta name="description" content="A simple Svelte webapp with a dropdown" />
 </svelte:head>
 
 <main>
     <div class="container">
-        <h1>Training Tracker 1</h1>
+        <h1>Training Tracker 2</h1>
 
         <div class="dropdown-wrapper">
             <label for="main-dropdown">Select an option:</label>
