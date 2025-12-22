@@ -1,4 +1,6 @@
 <script>
+    import { apiKey, logout } from "$lib/stores/auth";
+    import Login from "$lib/components/Login.svelte";
     import LogExercise from "$lib/components/LogExercise.svelte";
     import ViewData from "$lib/components/ViewData.svelte";
     import GraphData from "$lib/components/GraphData.svelte";
@@ -15,7 +17,9 @@
 </script>
 
 <svelte:head>
-    <title>Training Tracker - {activeTab.label}</title>
+    <title
+        >Training Tracker {$apiKey ? "- " + activeTab.label : "(Locked)"}</title
+    >
     <meta
         name="description"
         content="A simple Svelte webapp for tracking training"
@@ -26,23 +30,52 @@
     <div class="app-container">
         <header>
             <h1>Training Tracker</h1>
+            {#if $apiKey}
+                <button class="logout-button" on:click={logout} title="Logout">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path
+                            d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+                        /><polyline points="16 17 21 12 16 7" /><line
+                            x1="21"
+                            x2="9"
+                            y1="12"
+                            y2="12"
+                        /></svg
+                    >
+                </button>
+            {/if}
         </header>
 
-        <nav class="tabs-nav">
-            {#each tabs as tab}
-                <button
-                    class="tab-button"
-                    class:active={activeTabId === tab.id}
-                    on:click={() => (activeTabId = tab.id)}
-                >
-                    {tab.label}
-                </button>
-            {/each}
-        </nav>
+        {#if $apiKey}
+            <nav class="tabs-nav">
+                {#each tabs as tab}
+                    <button
+                        class="tab-button"
+                        class:active={activeTabId === tab.id}
+                        on:click={() => (activeTabId = tab.id)}
+                    >
+                        {tab.label}
+                    </button>
+                {/each}
+            </nav>
 
-        <div class="content-container">
-            <svelte:component this={activeTab.component} />
-        </div>
+            <div class="content-container">
+                <svelte:component this={activeTab.component} />
+            </div>
+        {:else}
+            <div class="content-container">
+                <Login />
+            </div>
+        {/if}
     </div>
 </main>
 
@@ -103,6 +136,27 @@
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+    }
+
+    .logout-button {
+        position: absolute;
+        top: 2rem;
+        right: 1.5rem;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logout-button:hover {
+        background: rgba(239, 68, 68, 0.2);
+        transform: scale(1.05);
     }
 
     .tabs-nav {
