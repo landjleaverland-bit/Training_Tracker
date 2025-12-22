@@ -61,7 +61,7 @@ exports.saveLog = async (req, res) => {
                 session_type: session_type,
                 // IMPORTANT: Record field names must match BigQuery schema exactly
                 climbs: {
-                    route_name: climb.name,
+                    route: climb.name,   // Changed from 'route_name' to match SQL template/error
                     grade: climb.grade,
                     notes: climb.notes
                 },
