@@ -23,8 +23,7 @@
     let saveSuccess = false;
 
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
-    const API_URL =
-        "https://YOUR_REGION-YOUR_PROJECT_ID.cloudfunctions.net/saveLog";
+    const API_URL = "https://save-log-825153765638.europe-west1.run.app";
 
     $: selectedOption = options.find((o) => o.id === selectedId);
 
