@@ -23,25 +23,31 @@
         expandedSessions = expandedSessions; // trigger reactivity
     }
 
-    /** @param {any[]} rows */
-    function filterAndGroupData(rows) {
+    /**
+     * @param {any[]} rows
+     * @param {string} sDate
+     * @param {string} eDate
+     * @param {string} loc
+     * @param {string} sess
+     * @param {string} grd
+     */
+    function filterAndGroupData(rows, sDate, eDate, loc, sess, grd) {
         // 1. Filter locally
         const filtered = rows.filter((row) => {
             if (
-                startDate &&
-                new Date(row.date?.value || row.date) < new Date(startDate)
+                sDate &&
+                new Date(row.date?.value || row.date) < new Date(sDate)
             )
                 return false;
             // Add one day to endDate to make it inclusive
-            if (endDate) {
-                const end = new Date(endDate);
+            if (eDate) {
+                const end = new Date(eDate);
                 end.setHours(23, 59, 59, 999);
                 if (new Date(row.date?.value || row.date) > end) return false;
             }
-            if (filterLocation && row.location !== filterLocation) return false;
-            if (filterSession && row.session_type !== filterSession)
-                return false;
-            if (filterGrade && row.climbs?.grade !== filterGrade) return false;
+            if (loc && row.location !== loc) return false;
+            if (sess && row.session_type !== sess) return false;
+            if (grd && row.climbs?.grade !== grd) return false;
             return true;
         });
 
@@ -89,7 +95,14 @@
         });
     }
 
-    $: groupedSessions = filterAndGroupData(allDataForType);
+    $: groupedSessions = filterAndGroupData(
+        allDataForType,
+        appliedFilters.startDate,
+        appliedFilters.endDate,
+        appliedFilters.location,
+        appliedFilters.session,
+        appliedFilters.grade,
+    );
 
     // Filter states
     let showFilters = false;
@@ -98,6 +111,15 @@
     let filterLocation = "";
     let filterSession = "";
     let filterGrade = "";
+
+    // Filters that are actually applied to the view
+    let appliedFilters = {
+        startDate: "",
+        endDate: "",
+        location: "",
+        session: "",
+        grade: "",
+    };
 
     const activityTypes = [
         { id: "indoor", label: "Indoor Climb" },
@@ -160,7 +182,13 @@
     }
 
     function applyFilters() {
-        // The reactive dependency on groupedSessions handles the filtering
+        appliedFilters = {
+            startDate,
+            endDate,
+            location: filterLocation,
+            session: filterSession,
+            grade: filterGrade,
+        };
         showFilters = false;
     }
 
@@ -170,6 +198,7 @@
         filterLocation = "";
         filterSession = "";
         filterGrade = "";
+        applyFilters(); // Apply the cleared state
     }
 
     function exportToCSV() {
