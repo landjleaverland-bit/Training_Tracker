@@ -1,5 +1,20 @@
 <script>
     import { fade } from "svelte/transition";
+
+    let location = "";
+    let session = "";
+    let exercises = [];
+
+    export function getData() {
+        return {
+            location,
+            session,
+            exercises,
+            fingerLoad: 0,
+            shoulderLoad: 0,
+            forearmLoad: 0,
+        };
+    }
 </script>
 
 <div class="activity-config" in:fade>

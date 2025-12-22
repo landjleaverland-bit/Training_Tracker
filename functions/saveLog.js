@@ -40,36 +40,63 @@ exports.saveLog = async (req, res) => {
     }
 
     try {
-        const { climbing_type, location, session_type, finger_load, shoulder_load, forearm_load, climbs, date } = req.body;
+        const { activity_type, location, session_type, finger_load, shoulder_load, forearm_load, climbs, date } = req.body;
 
         // Basic validation
         if (!location || !session_type || !climbs || !climbs.length) {
             return res.status(400).send('Missing required fields');
         }
 
+        const tableMapping = {
+            'indoor': 'Indoor_Climbs',
+            'outdoor': 'Outdoor_Climbs',
+            'gym': 'Gym_Sessions',
+            'fingerboard': 'Fingerboarding',
+            'other': 'Other_Logs'
+        };
+
+        const tableId = tableMapping[activity_type || 'indoor'];
         const datasetId = 'training_plan_database_dataset';
-        const tableId = 'Indoor_Climbs';
 
         // BigQuery expects an array of rows
         const rows = climbs.map(climb => {
             // Convert ISO date to BigQuery DATETIME format: YYYY-MM-DD HH:MM:SS
             const bqDate = date.replace('T', ' ').split('.')[0];
 
-            return {
-                climbing_type: climb.isRopes ? 'Ropes' : 'Bouldering',
+            const row = {
                 location: location,
                 session_type: session_type,
                 finger_load: finger_load || 0,
                 shoulder_load: shoulder_load || 0,
                 forearm_load: forearm_load || 0,
-                // IMPORTANT: Record field names must match BigQuery schema exactly
-                climbs: {
-                    route: climb.name,   // Changed from 'route_name' to match SQL template/error
-                    grade: climb.grade,
-                    notes: climb.notes
-                },
                 date: bqDate
             };
+
+            // Dynamic mapping based on activity type
+            if (activity_type === 'indoor' || activity_type === 'outdoor' || !activity_type) {
+                row.climbing_type = climb.isRopes ? 'Ropes' : 'Bouldering';
+                row.climbs = {
+                    route: climb.name,
+                    grade: climb.grade,
+                    notes: climb.notes
+                };
+            } else if (activity_type === 'fingerboard') {
+                row.climbs = {
+                    name: climb.name,
+                    weight: parseFloat(climb.weight) || 0,
+                    sets: parseInt(climb.sets) || 0,
+                    reps: parseInt(climb.reps) || 0,
+                    notes: climb.notes
+                };
+            } else {
+                // Fallback / Gym / Other
+                row.climbs = {
+                    name: climb.name,
+                    notes: climb.notes
+                };
+            }
+
+            return row;
         });
 
         console.log(`Inserting ${rows.length} rows into ${datasetId}.${tableId}`);

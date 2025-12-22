@@ -4,11 +4,17 @@
     import GymSession from "./log/GymSession.svelte";
     import OutdoorClimb from "./log/OutdoorClimb.svelte";
     import OtherLog from "./log/OtherLog.svelte";
+    import Fingerboarding from "./log/Fingerboarding.svelte";
 
     let selectedId = "";
 
     const options = [
         { id: "indoor", text: "Indoor Climb", component: IndoorClimb },
+        {
+            id: "fingerboard",
+            text: "Fingerboarding",
+            component: Fingerboarding,
+        },
         { id: "gym", text: "Gym Session", component: GymSession },
         { id: "outdoor", text: "Outdoor Climb", component: OutdoorClimb },
         { id: "other", text: "Other", component: OtherLog },
@@ -65,12 +71,12 @@
         try {
             // Prepare payload for BigQuery
             const payload = {
-                climbing_type: "Indoor",
+                activity_type: selectedId,
                 location: data.location,
                 session_type: data.session,
-                finger_load: data.fingerLoad,
-                shoulder_load: data.shoulderLoad,
-                forearm_load: data.forearmLoad,
+                finger_load: data.fingerLoad || 0,
+                shoulder_load: data.shoulderLoad || 0,
+                forearm_load: data.forearmLoad || 0,
                 climbs: data.exercises,
                 date: new Date().toISOString(),
             };
