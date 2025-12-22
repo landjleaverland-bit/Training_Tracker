@@ -1,14 +1,16 @@
 <script>
     import { fade, slide } from "svelte/transition";
     import { apiKey } from "$lib/stores/auth";
+    import { historyStore, syncLogs } from "$lib/stores/history";
     import { get } from "svelte/store";
     import { onMount } from "svelte";
 
     let selectedType = "indoor";
     let isLoading = false;
-    /** @type {any[]} */
-    let data = [];
     let error = "";
+
+    // Reactively get data from store
+    $: allDataForType = $historyStore[selectedType] || [];
     let expandedSessions = new Set();
 
     /** @param {string} key */
@@ -22,11 +24,32 @@
     }
 
     /** @param {any[]} rows */
-    function groupData(rows) {
+    function filterAndGroupData(rows) {
+        // 1. Filter locally
+        const filtered = rows.filter((row) => {
+            if (
+                startDate &&
+                new Date(row.date?.value || row.date) < new Date(startDate)
+            )
+                return false;
+            // Add one day to endDate to make it inclusive
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                if (new Date(row.date?.value || row.date) > end) return false;
+            }
+            if (filterLocation && row.location !== filterLocation) return false;
+            if (filterSession && row.session_type !== filterSession)
+                return false;
+            if (filterGrade && row.climbs?.grade !== filterGrade) return false;
+            return true;
+        });
+
+        // 2. Group by session
         /** @type {Object.<string, any>} */
         const groups = {};
-        rows.forEach((row) => {
-            const d = row.date.value || row.date;
+        filtered.forEach((row) => {
+            const d = row.date?.value || row.date;
             const dateStr = new Date(d).toISOString().split("T")[0];
             const key = `${dateStr}|${row.location}|${row.session_type}`;
 
@@ -66,7 +89,7 @@
         });
     }
 
-    $: groupedSessions = groupData(data);
+    $: groupedSessions = filterAndGroupData(allDataForType);
 
     // Filter states
     let showFilters = false;
@@ -100,21 +123,14 @@
 
         isLoading = true;
         error = "";
-        data = [];
 
         try {
             const token = get(apiKey);
 
-            // Build query parameters
+            // Fetch the latest 100 entries (unfiltered on server to allow local persistence)
             const params = new URLSearchParams({
                 type: selectedType,
             });
-
-            if (startDate) params.append("startDate", startDate);
-            if (endDate) params.append("endDate", endDate);
-            if (filterLocation) params.append("location", filterLocation);
-            if (filterSession) params.append("session", filterSession);
-            if (filterGrade) params.append("grade", filterGrade);
 
             const response = await fetch(
                 `${API_BASE_URL}?${params.toString()}`,
@@ -131,7 +147,10 @@
                 throw new Error(errorText || "Failed to fetch data");
             }
 
-            data = await response.json();
+            const freshData = await response.json();
+
+            // Sync with local store (merges and avoids duplicates)
+            syncLogs(selectedType, freshData);
         } catch (/** @type {any} */ err) {
             console.error("Fetch Error:", err);
             error = err.message || "An unknown error occurred";
@@ -140,17 +159,21 @@
         }
     }
 
+    function applyFilters() {
+        // The reactive dependency on groupedSessions handles the filtering
+        showFilters = false;
+    }
+
     function clearFilters() {
         startDate = "";
         endDate = "";
         filterLocation = "";
         filterSession = "";
         filterGrade = "";
-        fetchData();
     }
 
     function exportToCSV() {
-        if (!data || data.length === 0) return;
+        if (!allDataForType || allDataForType.length === 0) return;
 
         // Base keys that are common to all rows
         const baseKeys = [
@@ -164,7 +187,7 @@
 
         // Find all unique keys within the 'climbs' struct across all data rows
         const climbKeys = new Set();
-        data.forEach((row) => {
+        allDataForType.forEach((row) => {
             if (row.climbs) {
                 Object.keys(row.climbs).forEach((k) => climbKeys.add(k));
             }
@@ -179,7 +202,7 @@
         csvRows.push(headers.join(","));
 
         // Add data rows
-        data.forEach((row) => {
+        allDataForType.forEach((row) => {
             const values = headers.map((header) => {
                 let val;
                 if (baseKeys.includes(header)) {
@@ -218,7 +241,8 @@
 
     // Initial fetch
     onMount(() => {
-        fetchData();
+        // Only fetch on explicit user action (Fetch Data button)
+        // as per user request to use cached data by default.
     });
 
     /** @param {any} dateStr */
@@ -364,7 +388,8 @@
                     <button class="clear-btn" on:click={clearFilters}
                         >Clear</button
                     >
-                    <button class="apply-btn" on:click={fetchData}>Apply</button
+                    <button class="apply-btn" on:click={applyFilters}
+                        >Apply</button
                     >
                 </div>
             </div>
@@ -381,9 +406,12 @@
             <p>Error: {error}</p>
             <button on:click={fetchData} class="retry-btn">Retry</button>
         </div>
-    {:else if data.length === 0}
+    {:else if allDataForType.length === 0}
         <div class="placeholder" in:fade>
-            <p>No data found for this activity.</p>
+            <p>
+                No data cached for this activity. Click "Fetch Data" to sync
+                from the server.
+            </p>
             <div class="empty-state">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -407,6 +435,9 @@
         </div>
     {:else}
         <div class="sessions-list" in:fade>
+            {#if groupedSessions.length === 0 && allDataForType.length > 0}
+                <div class="no-results">No results match your filters.</div>
+            {/if}
             {#each groupedSessions as session (session.key)}
                 <div
                     class="session-card"
@@ -516,7 +547,7 @@
             {/each}
         </div>
 
-        {#if data.length > 0}
+        {#if groupedSessions.length > 0}
             <div class="footer-actions" in:fade>
                 <button class="export-btn" on:click={exportToCSV}>
                     <svg
@@ -756,6 +787,15 @@
         flex-direction: column;
         gap: 1rem;
         padding-bottom: 2rem;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 4rem;
+        color: #94a3b8;
+        background: rgba(15, 23, 42, 0.4);
+        border-radius: 1rem;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
     }
 
     .session-card {

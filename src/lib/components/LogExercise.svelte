@@ -21,8 +21,10 @@
     ];
 
     import { apiKey } from "$lib/stores/auth";
+    import { addLog } from "$lib/stores/history";
     import { get } from "svelte/store";
 
+    /** @type {any} */
     let activeComponent;
     let isSaving = false;
     let saveMessage = "";
@@ -99,6 +101,9 @@
 
             saveMessage = "Log saved successfully!";
             saveSuccess = true;
+
+            // Add to local cache immediately
+            addLog(selectedId, payload);
 
             // Optional: Data reset logic could go here
         } catch (error) {
