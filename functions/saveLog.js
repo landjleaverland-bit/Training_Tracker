@@ -144,18 +144,38 @@ exports.saveLog = async (req, res) => {
             // autodetect: true, // Optional: Let BQ infer schema if needed
         };
 
-        console.log(`Starting Batch Load Job for ${rows.length} rows into ${datasetId}.${tableId}`);
-
         // Run the Load Job
-        const [job] = await bigquery
+        // Use createLoadJob for more explicit control
+        const jobResponse = await bigquery
             .dataset(datasetId)
             .table(tableId)
-            .load(tempFilePath, metadata);
+            .createLoadJob(tempFilePath, metadata);
 
-        console.log(`Job ${job.id} started.`);
+        // Robustly extract the Job object (handle both [Job] and Job return types)
+        const job = Array.isArray(jobResponse) ? jobResponse[0] : jobResponse;
 
-        // Wait for the job to complete
-        await job.promise();
+        console.log(`Job created with ID: ${job.id}`);
+
+        if (typeof job.getMetadata !== 'function') {
+            console.error('Job object from BigQuery is invalid:', job);
+            throw new Error(`BigQuery client returned unexpected Job object structure. ID: ${job.id || 'unknown'}`);
+        }
+
+        // Wait for the job to complete by polling
+        let jobDone = false;
+        while (!jobDone) {
+            const [meta] = await job.getMetadata();
+            if (meta.status.state === 'DONE') {
+                jobDone = true;
+                if (meta.status.errorResult) {
+                    // Check for common errors
+                    throw new Error(`Load Job Failed: ${meta.status.errorResult.message}`);
+                }
+            } else {
+                // Wait 1000ms before checking again
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
 
         console.log(`Job ${job.id} completed.`);
 
