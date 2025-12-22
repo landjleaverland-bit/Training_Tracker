@@ -46,7 +46,12 @@
                 end.setHours(23, 59, 59, 999);
                 if (new Date(row.date?.value || row.date) > end) return false;
             }
-            if (loc && !row.location?.includes(loc)) return false;
+            if (loc) {
+                const rowLoc =
+                    typeof row.location === "string" ? row.location : "";
+                if (!rowLoc.toLowerCase().includes(loc.toLowerCase()))
+                    return false;
+            }
             if (sess && row.session_type !== sess) return false;
             if (grd && row.climbs?.grade !== grd) return false;
             return true;
