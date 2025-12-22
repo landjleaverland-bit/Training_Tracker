@@ -1,23 +1,77 @@
 <script>
     import { fade } from "svelte/transition";
 
-    let session = "Training";
+    let location = "";
+    let session = "";
     let fingerLoad = 0;
-    let shoulderLoad = 0;
-    let forearmLoad = 0;
+
+    let exercises = [
+        {
+            id: crypto.randomUUID(),
+            name: "Hang",
+            weight: 0,
+            sets: 1,
+            reps: 1,
+            notes: "",
+        },
+    ];
 
     export function getData() {
         return {
-            location: "N/A",
+            location,
             session,
             fingerLoad,
-            shoulderLoad,
-            forearmLoad,
+            exercises,
         };
     }
+
+    function addRow() {
+        exercises = [
+            ...exercises,
+            {
+                id: crypto.randomUUID(),
+                name: "Hang",
+                weight: 0,
+                sets: 1,
+                reps: 1,
+                notes: "",
+            },
+        ];
+    }
+
+    function removeRow(/** @type {string} */ id) {
+        if (exercises.length > 1) {
+            exercises = exercises.filter((ex) => ex.id !== id);
+        }
+    }
+
+    const locationOptions = ["Home", "Gym", "Crag"];
+    const sessionOptions = ["Strength", "Endurance", "Recovery"];
 </script>
 
 <div class="fingerboard-config" in:fade>
+    <div class="form-grid">
+        <div class="input-group">
+            <label for="fb-location">Location</label>
+            <select id="fb-location" bind:value={location}>
+                <option value="" disabled selected>Select Location</option>
+                {#each locationOptions as loc}
+                    <option value={loc}>{loc}</option>
+                {/each}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="fb-session">Session Type</label>
+            <select id="fb-session" bind:value={session}>
+                <option value="" disabled selected>Select Session</option>
+                {#each sessionOptions as opt}
+                    <option value={opt}>{opt}</option>
+                {/each}
+            </select>
+        </div>
+    </div>
+
     <div class="load-metrics">
         <div class="load-group">
             <label for="fb-finger-load">Finger Load (0-5)</label>
@@ -26,33 +80,81 @@
                 type="number"
                 min="0"
                 max="5"
-                step="0.5"
                 bind:value={fingerLoad}
             />
         </div>
+    </div>
 
-        <div class="load-group">
-            <label for="fb-shoulder-load">Shoulder Load (0-5)</label>
-            <input
-                id="fb-shoulder-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={shoulderLoad}
-            />
+    <div class="exercise-section">
+        <div class="section-header">
+            <h3>Sets / Exercises</h3>
+            <button class="add-row-btn" on:click={addRow} title="Add Row">
+                Add Row
+            </button>
         </div>
 
-        <div class="load-group">
-            <label for="fb-forearm-load">Forearm Load (0-5)</label>
-            <input
-                id="fb-forearm-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={forearmLoad}
-            />
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exercise</th>
+                        <th>Weight (+/-)</th>
+                        <th>Sets</th>
+                        <th>Reps</th>
+                        <th>Notes</th>
+                        <th class="actions-col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each exercises as ex, i (ex.id)}
+                        <tr>
+                            <td>
+                                <input
+                                    type="text"
+                                    bind:value={ex.name}
+                                    placeholder="Hang"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    bind:value={ex.weight}
+                                    placeholder="0"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    bind:value={ex.sets}
+                                    placeholder="1"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    bind:value={ex.reps}
+                                    placeholder="1"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    bind:value={ex.notes}
+                                    placeholder="Notes"
+                                />
+                            </td>
+                            <td class="actions-col">
+                                <button
+                                    class="delete-btn"
+                                    on:click={() => removeRow(ex.id)}
+                                >
+                                    &times;
+                                </button>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -64,45 +166,120 @@
         gap: 1.5rem;
     }
 
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: left;
+    }
+
     label {
         font-size: 0.75rem;
         color: #94a3b8;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        font-weight: 500;
     }
 
+    select,
+    input[type="text"],
     input[type="number"] {
         background: #0f172a;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 0.75rem;
-        padding: 0.8rem 1rem;
+        border-radius: 0.5rem;
+        padding: 0.6rem;
         color: #f8fafc;
-        font-size: 1.1rem;
+        font-size: 0.9rem;
         width: 100%;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
     }
 
+    select option {
+        background: #0f172a;
+        color: #f8fafc;
+    }
+
+    select:focus,
     input:focus {
         border-color: #60a5fa;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
     }
 
     .load-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
         background: rgba(255, 255, 255, 0.03);
-        padding: 1.5rem;
-        border-radius: 1rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
         border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .load-group {
         display: flex;
         flex-direction: column;
-        gap: 0.6rem;
+        gap: 0.5rem;
+        max-width: 150px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: #f8fafc;
+    }
+
+    .add-row-btn {
+        background: rgba(96, 165, 250, 0.1);
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    th {
+        padding: 0.5rem;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    td {
+        padding: 0.25rem;
+    }
+
+    .delete-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 0.25rem;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+
+    .actions-col {
+        width: 30px;
+        text-align: center;
     }
 </style>

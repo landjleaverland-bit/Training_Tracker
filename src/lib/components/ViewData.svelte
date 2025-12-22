@@ -329,7 +329,9 @@
             case "fingerboard":
                 return [
                     { key: "date", label: "Date" },
+                    { key: "location", label: "Location" },
                     { key: "session_type", label: "Type" },
+                    { key: "climbs", label: "Hang", isObject: true },
                 ];
             case "outdoor":
                 return [
