@@ -72,8 +72,7 @@ exports.saveLog = async (req, res) => {
 
             if (activity_type === 'outdoor') {
                 row.location = {
-                    area: location.area || '',
-                    crag: location.crag || '',
+                    crag: location.area ? `${location.area} > ${location.crag}` : (location.crag || ''),
                     wall: location.wall || ''
                 };
                 row.session_type = session_type;

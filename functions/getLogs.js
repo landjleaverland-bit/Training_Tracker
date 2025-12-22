@@ -60,8 +60,8 @@ exports.getLogs = async (req, res) => {
 
         if (type === 'outdoor') {
             if (location) {
-                whereClauses.push("(location.crag = @location OR location.wall = @location)");
-                queryOptions.params.location = location;
+                whereClauses.push("(location.crag LIKE @location OR location.wall LIKE @location)");
+                queryOptions.params.location = `%${location}%`;
             }
             if (session) {
                 whereClauses.push("climbing_type = @session");
@@ -97,7 +97,7 @@ exports.getLogs = async (req, res) => {
         let selectClause = "*";
         if (type === 'outdoor') {
             // Flatten location for simpler frontend handling
-            selectClause = "CONCAT(IFNULL(location.area, 'N/A'), ' > ', location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
+            selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
         }
 
         const query = `

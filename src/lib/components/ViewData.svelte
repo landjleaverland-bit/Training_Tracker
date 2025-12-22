@@ -417,8 +417,7 @@
                         <select id="filterSession" bind:value={filterSession}>
                             <option value="">Any Type</option>
                             <option value="Bouldering">Bouldering</option>
-                            <option value="Sport">Sport</option>
-                            <option value="Trad">Trad</option>
+                            <option value="Ropes">Ropes</option>
                         </select>
                     {:else}
                         <select id="filterSession" bind:value={filterSession}>
