@@ -32,7 +32,7 @@ exports.getLogs = async (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
-    const { type } = req.query;
+    const { type, startDate, endDate, location, session, grade } = req.query;
     if (!type) {
         return res.status(400).send('Missing activity type');
     }
@@ -53,14 +53,46 @@ exports.getLogs = async (req, res) => {
     const datasetId = 'training_plan_database_dataset';
 
     try {
+        let whereClauses = [];
+        const queryOptions = {
+            params: {}
+        };
+
+        if (startDate) {
+            whereClauses.push("date >= @startDate");
+            queryOptions.params.startDate = startDate;
+        }
+        if (endDate) {
+            whereClauses.push("date <= @endDate");
+            queryOptions.params.endDate = endDate;
+        }
+        if (location) {
+            whereClauses.push("location = @location");
+            queryOptions.params.location = location;
+        }
+        if (session) {
+            whereClauses.push("session_type = @session");
+            queryOptions.params.session = session;
+        }
+        if (grade) {
+            // Grade is stored inside the 'climbs' struct
+            whereClauses.push("climbs.grade = @grade");
+            queryOptions.params.grade = grade;
+        }
+
+        let whereString = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : "";
+
         const query = `
             SELECT *
             FROM \`${process.env.GCP_PROJECT_ID || 'training-plan-database'}.${datasetId}.${tableId}\`
+            ${whereString}
             ORDER BY date DESC
-            LIMIT 50
+            LIMIT 100
         `;
 
-        const [rows] = await bigquery.query({ query });
+        queryOptions.query = query;
+
+        const [rows] = await bigquery.query(queryOptions);
         res.status(200).json(rows);
     } catch (error) {
         console.error('BigQuery Query Error:', error);

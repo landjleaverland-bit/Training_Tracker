@@ -9,6 +9,14 @@
     let data = [];
     let error = "";
 
+    // Filter states
+    let showFilters = false;
+    let startDate = "";
+    let endDate = "";
+    let filterLocation = "";
+    let filterSession = "";
+    let filterGrade = "";
+
     const activityTypes = [
         { id: "indoor", label: "Indoor Climb" },
         { id: "fingerboard", label: "Fingerboarding" },
@@ -30,8 +38,20 @@
 
         try {
             const token = get(apiKey);
+
+            // Build query parameters
+            const params = new URLSearchParams({
+                type: selectedType,
+            });
+
+            if (startDate) params.append("startDate", startDate);
+            if (endDate) params.append("endDate", endDate);
+            if (filterLocation) params.append("location", filterLocation);
+            if (filterSession) params.append("session", filterSession);
+            if (filterGrade) params.append("grade", filterGrade);
+
             const response = await fetch(
-                `${API_BASE_URL}?type=${selectedType}`,
+                `${API_BASE_URL}?${params.toString()}`,
                 {
                     method: "GET",
                     headers: {
@@ -52,6 +72,15 @@
         } finally {
             isLoading = false;
         }
+    }
+
+    function clearFilters() {
+        startDate = "";
+        endDate = "";
+        filterLocation = "";
+        filterSession = "";
+        filterGrade = "";
+        fetchData();
     }
 
     // Fetch data when type changes
@@ -101,12 +130,83 @@
 <div class="view-container">
     <div class="header-row">
         <h2>View Data</h2>
-        <select bind:value={selectedType} class="type-select">
-            {#each activityTypes as type}
-                <option value={type.id}>{type.label}</option>
-            {/each}
-        </select>
+        <div class="header-actions">
+            <button
+                class="filter-toggle"
+                on:click={() => (showFilters = !showFilters)}
+                class:active={showFilters}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><polygon
+                        points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+                    ></polygon></svg
+                >
+                Filters
+            </button>
+            <select bind:value={selectedType} class="type-select">
+                {#each activityTypes as type}
+                    <option value={type.id}>{type.label}</option>
+                {/each}
+            </select>
+        </div>
     </div>
+
+    {#if showFilters}
+        <div class="filters-panel" transition:fade>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Start Date</label>
+                    <input type="date" bind:value={startDate} />
+                </div>
+                <div class="filter-group">
+                    <label>End Date</label>
+                    <input type="date" bind:value={endDate} />
+                </div>
+                <div class="filter-group">
+                    <label>Location</label>
+                    <input
+                        type="text"
+                        bind:value={filterLocation}
+                        placeholder="e.g. Home"
+                    />
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Session</label>
+                    <input
+                        type="text"
+                        bind:value={filterSession}
+                        placeholder="e.g. Strength"
+                    />
+                </div>
+                <div class="filter-group">
+                    <label>Grade (Exact)</label>
+                    <input
+                        type="text"
+                        bind:value={filterGrade}
+                        placeholder="e.g. 7a+"
+                    />
+                </div>
+                <div class="filter-actions">
+                    <button class="clear-btn" on:click={clearFilters}
+                        >Clear</button
+                    >
+                    <button class="apply-btn" on:click={fetchData}>Apply</button
+                    >
+                </div>
+            </div>
+        </div>
+    {/if}
 
     {#if isLoading}
         <div class="status-msg" in:fade>
@@ -194,7 +294,106 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .filter-toggle {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .filter-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #f8fafc;
+    }
+
+    .filter-toggle.active {
+        background: rgba(96, 165, 250, 0.2);
+        border-color: rgba(96, 165, 250, 0.4);
+        color: #60a5fa;
+    }
+
+    .filters-panel {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        padding: 1.5rem;
         margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        align-items: flex-end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-group label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+
+    .filter-group input {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        color: #f8fafc;
+        font-size: 0.9rem;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    .clear-btn {
+        background: transparent;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .apply-btn {
+        background: #60a5fa;
+        color: #0f172a;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
     }
 
     h2 {
