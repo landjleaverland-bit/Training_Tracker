@@ -1,19 +1,28 @@
 <script>
     import { fade } from "svelte/transition";
-    let selected = "";
+    import IndoorClimb from "./log/IndoorClimb.svelte";
+    import GymSession from "./log/GymSession.svelte";
+    import OutdoorClimb from "./log/OutdoorClimb.svelte";
+    import OtherLog from "./log/OtherLog.svelte";
+
+    let selectedId = "";
+
     const options = [
-        { id: "1", text: "Option 1" },
-        { id: "2", text: "Option 2" },
-        { id: "3", text: "Option 3" },
+        { id: "indoor", text: "Indoor Climb", component: IndoorClimb },
+        { id: "gym", text: "Gym Session", component: GymSession },
+        { id: "outdoor", text: "Outdoor Climb", component: OutdoorClimb },
+        { id: "other", text: "Other", component: OtherLog },
     ];
+
+    $: selectedOption = options.find((o) => o.id === selectedId);
 </script>
 
 <div class="tab-content">
     <h2>Log Exercise</h2>
     <div class="dropdown-wrapper">
-        <label for="main-dropdown">Select an option:</label>
-        <select id="main-dropdown" bind:value={selected}>
-            <option value="" disabled selected>Choose wisely...</option>
+        <label for="exercise-type">What did you do today?</label>
+        <select id="exercise-type" bind:value={selectedId}>
+            <option value="" disabled selected>Select activity type...</option>
             {#each options as option}
                 <option value={option.id}>
                     {option.text}
@@ -22,13 +31,16 @@
         </select>
     </div>
 
-    {#if selected}
-        <div class="result-card" in:fade>
-            <p>
-                You selected: <strong
-                    >{options.find((o) => o.id === selected)?.text}</strong
-                >
-            </p>
+    {#if selectedOption}
+        <div class="config-wrapper" in:fade>
+            <svelte:component this={selectedOption.component} />
+
+            <button
+                class="save-button"
+                on:click={() => alert("Log saved! (Coming soon)")}
+            >
+                Save Log
+            </button>
         </div>
     {/if}
 </div>
@@ -82,21 +94,27 @@
         box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
     }
 
-    .result-card {
-        background: rgba(96, 165, 250, 0.1);
+    .config-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .save-button {
+        background: linear-gradient(to right, #60a5fa, #a78bfa);
+        color: white;
+        border: none;
+        padding: 0.875rem;
         border-radius: 0.75rem;
-        padding: 1rem;
-        border: 1px solid rgba(96, 165, 250, 0.2);
-        animation: slideUp 0.3s ease-out;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 1rem;
     }
 
-    p {
-        margin: 0;
-        color: #e2e8f0;
-    }
-
-    strong {
-        color: #60a5fa;
+    .save-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
     }
 
     @keyframes fadeIn {
@@ -105,17 +123,6 @@
         }
         to {
             opacity: 1;
-        }
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
         }
     }
 </style>
