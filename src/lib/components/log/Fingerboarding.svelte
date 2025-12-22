@@ -15,7 +15,7 @@
     export function getData() {
         return {
             location: "N/A",
-            session: "Training",
+            session: "Fingerboard",
             exercises,
         };
     }

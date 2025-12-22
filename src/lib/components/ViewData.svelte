@@ -125,18 +125,30 @@
 
             if (exerciseId && selectedType === "fingerboard") {
                 const existing = groups[key].items.find(
-                    (/** @type {any} */ it) => it.exercise_id === exerciseId,
+                    (/** @type {any} */ it) =>
+                        String(it.exercise_id) === String(exerciseId),
                 );
                 if (existing) {
                     if (!existing.details) {
+                        // Initialize details with the first row's data
                         existing.details = [
                             { weight: existing.weight, reps: existing.reps },
                         ];
                     }
+                    // Add the current row's data
                     existing.details.push({
                         weight: itemData.weight,
                         reps: itemData.reps,
                     });
+                    // Consolidate notes if they are different
+                    if (
+                        itemData.notes &&
+                        !existing.notes.includes(itemData.notes)
+                    ) {
+                        existing.notes = existing.notes
+                            ? `${existing.notes}; ${itemData.notes}`
+                            : itemData.notes;
+                    }
                     return;
                 }
             }
@@ -1333,8 +1345,9 @@
 
     .ex-meta.multi-load {
         color: #fbbf24;
-        background: rgba(251, 191, 36, 0.05);
-        border: 1px dashed rgba(251, 191, 36, 0.3);
+        background: rgba(251, 191, 36, 0.1);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        font-weight: 600;
     }
 
     .ex-meta.sets-count {
