@@ -33,11 +33,8 @@
             "type": "shell",
             "command": "npm run deploy",
             "problemMatcher": [],
-            "group": "none",
-            "detail": "Deploy the build directory to gh-pages branch",
-            "dependsOn": [
-                "npm: build"
-            ]
+            "group": "build",
+            "detail": "Deploy the build directory to gh-pages branch"
         },
         {
             "label": "Build and Deploy",
