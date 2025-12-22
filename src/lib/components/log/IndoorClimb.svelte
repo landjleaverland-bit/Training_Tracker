@@ -11,12 +11,12 @@
     let climbType = "Bouldering";
 
     // Training Metrics
-    let trainingType = "Projecting";
+    let trainingType = "None";
     let difficulty = "Medium";
-    let category = "Technique";
+    let category = "None";
     let energySystem = "None";
     let techniqueFocus = "None";
-    let wallAngle = "Overhang";
+    let wallAngle = "None";
 
     let exercises = [
         {
@@ -158,6 +158,7 @@
         <div class="training-group">
             <label for="training-type">Training Type</label>
             <select id="training-type" bind:value={trainingType}>
+                <option value="None">None</option>
                 <option value="Projecting">Projecting</option>
                 <option value="Onsighting">Onsighting</option>
                 <option value="Campusing">Campusing</option>
@@ -176,6 +177,7 @@
         <div class="training-group">
             <label for="category">Category</label>
             <select id="category" bind:value={category}>
+                <option value="None">None</option>
                 <option value="Technique">Technique</option>
                 <option value="Strength">Strength</option>
                 <option value="Strength Endurance">Strength Endurance</option>
@@ -208,6 +210,7 @@
         <div class="training-group">
             <label for="wall-angle">Wall Angle</label>
             <select id="wall-angle" bind:value={wallAngle}>
+                <option value="None">None</option>
                 <option value="Overhang">Overhang</option>
                 <option value="Slab">Slab</option>
                 <option value="Roof">Roof</option>
