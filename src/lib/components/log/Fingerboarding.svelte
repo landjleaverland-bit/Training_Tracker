@@ -8,7 +8,8 @@
     let exercises = [
         {
             id: crypto.randomUUID(),
-            name: "Hang",
+            name: "Max hangs",
+            grip_type: "Half-crimp",
             weight: 0,
             sets: 1,
             reps: 1,
@@ -32,7 +33,8 @@
             ...exercises,
             {
                 id: crypto.randomUUID(),
-                name: "Hang",
+                name: "Max hangs",
+                grip_type: "Half-crimp",
                 weight: 0,
                 sets: 1,
                 reps: 1,
@@ -97,10 +99,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Exercise</th>
-                        <th>Weight (+/-)</th>
-                        <th>Sets</th>
-                        <th>Reps</th>
+                        <th style="width: 20%;">Exercise</th>
+                        <th style="width: 20%;">Grip</th>
+                        <th style="width: 15%;">Weight (+/-)</th>
+                        <th style="width: 10%;">Sets</th>
+                        <th style="width: 10%;">Reps</th>
                         <th>Notes</th>
                         <th class="actions-col"></th>
                     </tr>
@@ -109,11 +112,31 @@
                     {#each exercises as ex, i (ex.id)}
                         <tr>
                             <td>
-                                <input
-                                    type="text"
-                                    bind:value={ex.name}
-                                    placeholder="Hang"
-                                />
+                                <select bind:value={ex.name}>
+                                    <option value="Max hangs">Max hangs</option>
+                                    <option value="Recruitment pulls"
+                                        >Recruitment pulls</option
+                                    >
+                                    <option value="Max pick-ups"
+                                        >Max pick-ups</option
+                                    >
+                                </select>
+                            </td>
+                            <td>
+                                <select bind:value={ex.grip_type}>
+                                    <option value="Full-crimp"
+                                        >Full-crimp</option
+                                    >
+                                    <option value="Half-crimp"
+                                        >Half-crimp</option
+                                    >
+                                    <option value="Three finger drag"
+                                        >Three finger drag</option
+                                    >
+                                    <option value="Pinch">Pinch</option>
+                                    <option value="Open hand">Open hand</option>
+                                    <option value="Sloper">Sloper</option>
+                                </select>
                             </td>
                             <td>
                                 <input
@@ -183,7 +206,8 @@
     }
 
     input[type="text"],
-    input[type="number"] {
+    input[type="number"],
+    select {
         background: #0f172a;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
@@ -191,6 +215,7 @@
         color: #f8fafc;
         font-size: 0.9rem;
         width: 100%;
+        box-sizing: border-box;
     }
 
     input:focus {

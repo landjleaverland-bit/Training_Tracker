@@ -32,7 +32,7 @@ exports.getLogs = async (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
-    const { type, startDate, endDate, location, session, grade, attempts, training_type, difficulty, category, energy_system, technique_focus, wall_angle } = req.query;
+    const { type, startDate, endDate, location, session, grade, attempts, training_type, difficulty, category, energy_system, technique_focus, wall_angle, exercise, grip } = req.query;
     if (!type) {
         return res.status(400).send('Missing activity type');
     }
@@ -89,6 +89,16 @@ exports.getLogs = async (req, res) => {
         if (grade) {
             whereClauses.push("climbs.grade = @grade");
             queryOptions.params.grade = grade;
+        }
+
+        if (exercise) {
+            whereClauses.push("climbs.exercise = @exercise");
+            queryOptions.params.exercise = exercise;
+        }
+
+        if (grip) {
+            whereClauses.push("climbs.grip = @grip");
+            queryOptions.params.grip = grip;
         }
 
         if (attempts) {

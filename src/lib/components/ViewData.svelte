@@ -105,8 +105,14 @@
                     row.type ||
                     row.climbing_type ||
                     row.climb_type,
-                name: row.climbs?.name || row.name || row.route || row.Route,
+                name:
+                    row.climbs?.exercise ||
+                    row.climbs?.name ||
+                    row.name ||
+                    row.route ||
+                    row.Route,
                 grade: row.climbs?.grade || row.grade || row.Grade,
+                grip: row.climbs?.grip || row.grip || row.grip_type,
             });
         });
 
@@ -738,6 +744,13 @@
                                                                     >{item.weight}kg</span
                                                                 >
                                                             {/if}
+                                                            {#if (item.grip || item.grip_type) && item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                <span
+                                                                    class="ex-meta grip"
+                                                                    >{item.grip ||
+                                                                        item.grip_type}</span
+                                                                >
+                                                            {/if}
                                                             {#if item.sets || item.reps}
                                                                 <span
                                                                     class="ex-meta sets"
@@ -978,6 +991,12 @@
         background: rgba(167, 139, 250, 0.1);
         color: #a78bfa;
         border: 1px solid rgba(167, 139, 250, 0.2);
+    }
+
+    .ex-meta.grip {
+        background: rgba(234, 179, 8, 0.1);
+        color: #eab308;
+        border: 1px solid rgba(234, 179, 8, 0.2);
     }
 
     .training-summary {

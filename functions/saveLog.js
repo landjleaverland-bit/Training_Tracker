@@ -98,10 +98,11 @@ exports.saveLog = async (req, res) => {
                 row.location = location;
                 row.session_type = session_type;
                 row.climbs = {
-                    name: climb.name,
+                    exercise: climb.name,
+                    grip: climb.grip_type || 'N/A',
                     weight: parseFloat(climb.weight) || 0,
                     sets: parseInt(climb.sets) || 0,
-                    reps: parseInt(climb.reps) || 0,
+                    reps: String(climb.reps || '1'),
                     notes: climb.notes
                 };
             } else {
