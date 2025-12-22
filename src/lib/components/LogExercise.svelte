@@ -68,6 +68,9 @@
                 climbing_type: "Indoor",
                 location: data.location,
                 session_type: data.session,
+                finger_load: data.fingerLoad,
+                shoulder_load: data.shoulderLoad,
+                forearm_load: data.forearmLoad,
                 climbs: data.exercises,
                 date: new Date().toISOString(),
             };

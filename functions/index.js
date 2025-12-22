@@ -40,7 +40,7 @@ exports.saveLog = async (req, res) => {
     }
 
     try {
-        const { climbing_type, location, session_type, climbs, date } = req.body;
+        const { climbing_type, location, session_type, finger_load, shoulder_load, forearm_load, climbs, date } = req.body;
 
         // Basic validation
         if (!location || !session_type || !climbs || !climbs.length) {
@@ -59,6 +59,9 @@ exports.saveLog = async (req, res) => {
                 climbing_type: climb.isRopes ? 'Ropes' : 'Bouldering',
                 location: location,
                 session_type: session_type,
+                finger_load: finger_load || 0,
+                shoulder_load: shoulder_load || 0,
+                forearm_load: forearm_load || 0,
                 // IMPORTANT: Record field names must match BigQuery schema exactly
                 climbs: {
                     route: climb.name,   // Changed from 'route_name' to match SQL template/error

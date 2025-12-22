@@ -4,6 +4,9 @@
 
     let location = "";
     let session = "";
+    let fingerLoad = 0;
+    let shoulderLoad = 0;
+    let forearmLoad = 0;
 
     let exercises = [
         {
@@ -35,7 +38,7 @@
         ];
     }
 
-    function removeRow(id) {
+    function removeRow(/** @type {string} */ id) {
         if (exercises.length > 1) {
             exercises = exercises.filter((ex) => ex.id !== id);
         } else {
@@ -55,6 +58,9 @@
         return {
             location,
             session,
+            fingerLoad,
+            shoulderLoad,
+            forearmLoad,
             exercises,
         };
     }
@@ -80,6 +86,39 @@
                     <option value={opt}>{opt}</option>
                 {/each}
             </select>
+        </div>
+    </div>
+
+    <div class="load-metrics">
+        <div class="load-group">
+            <label for="finger-load">Finger Load (0-5)</label>
+            <input
+                id="finger-load"
+                type="number"
+                min="0"
+                max="5"
+                bind:value={fingerLoad}
+            />
+        </div>
+        <div class="load-group">
+            <label for="shoulder-load">Shoulder Load (0-5)</label>
+            <input
+                id="shoulder-load"
+                type="number"
+                min="0"
+                max="5"
+                bind:value={shoulderLoad}
+            />
+        </div>
+        <div class="load-group">
+            <label for="forearm-load">Forearm Load (0-5)</label>
+            <input
+                id="forearm-load"
+                type="number"
+                min="0"
+                max="5"
+                bind:value={forearmLoad}
+            />
         </div>
     </div>
 
@@ -197,18 +236,20 @@
         gap: 1rem;
     }
 
-    .input-group {
+    .load-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .load-group {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-    }
-
-    label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
     }
 
     select {
