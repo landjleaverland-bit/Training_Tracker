@@ -1,7 +1,12 @@
 <script>
     import { fade, slide } from "svelte/transition";
     import { apiKey } from "$lib/stores/auth";
-    import { historyStore, syncLogs } from "$lib/stores/history";
+    import {
+        historyStore,
+        syncLogs,
+        removeLog,
+        removeSession,
+    } from "$lib/stores/history";
     import { get } from "svelte/store";
     import { onMount } from "svelte";
     import { areaOptions, areaCragMap } from "$lib/data/climbingAreas.js";
@@ -225,6 +230,89 @@
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
     // Make sure this matches your saveLog base URL but ends in /getLogs
     const API_BASE_URL = "https://get-log-825153765638.europe-west1.run.app";
+    const DELETE_URL = "https://delete-log-825153765638.europe-west1.run.app";
+
+    // Delete Modal State
+    let showDeleteModal = false;
+    let deleteConfirmText = "";
+    /** @type {{ type: 'entry'|'session', data: any } | null} */
+    let itemToDelete = null;
+    let isDeleting = false;
+
+    /**
+     * @param {'entry'|'session'} type
+     * @param {any} data
+     */
+    function openDeleteModal(type, data) {
+        itemToDelete = { type, data };
+        deleteConfirmText = "";
+        showDeleteModal = true;
+    }
+
+    async function confirmDelete() {
+        const item = itemToDelete;
+        if (!item || deleteConfirmText.toLowerCase() !== "delete") return;
+
+        isDeleting = true;
+        const currentToken = get(apiKey);
+
+        try {
+            /** @type {any} */
+            const payload = {
+                activity_type: selectedType,
+                delete_type: item.type,
+            };
+
+            if (item.type === "entry") {
+                payload.exercise_id = item.data.exercise_id;
+                payload.entry_criteria = {
+                    date: item.data.date || item.data.rowDate,
+                    name: item.data.name,
+                    weight: item.data.weight,
+                };
+            } else {
+                payload.session_criteria = {
+                    date: item.data.date,
+                    location: item.data.location,
+                    session_type: item.data.session,
+                };
+            }
+
+            const response = await fetch(DELETE_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${currentToken}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(
+                    errorText || "Failed to delete log from server",
+                );
+            }
+
+            // Remove from local store
+            if (item.type === "entry") {
+                removeLog(
+                    selectedType,
+                    item.data.exercise_id,
+                    payload.entry_criteria,
+                );
+            } else {
+                removeSession(selectedType, item.data);
+            }
+
+            showDeleteModal = false;
+        } catch (/** @type {any} */ err) {
+            console.error("Delete error:", err);
+            alert("Error deleting log: " + (err.message || String(err)));
+        } finally {
+            isDeleting = false;
+        }
+    }
 
     $: cragsForFilter = areaCragMap[filterArea] || [];
 
@@ -684,6 +772,39 @@
                                 <span class="label">FO</span>
                                 <span class="val">{session.forearmLoad}</span>
                             </div>
+                            <button
+                                class="delete-session-btn"
+                                on:click|stopPropagation={() =>
+                                    openDeleteModal("session", session)}
+                                title="Delete entire session"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    ><path d="M3 6h18" /><path
+                                        d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                    /><path
+                                        d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                    /><line
+                                        x1="10"
+                                        y1="11"
+                                        x2="10"
+                                        y2="17"
+                                    /><line
+                                        x1="14"
+                                        y1="11"
+                                        x2="14"
+                                        y2="17"
+                                    /></svg
+                                >
+                            </button>
                             <svg
                                 class="chevron"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -857,6 +978,39 @@
                                                                     >{item.notes}</span
                                                                 >
                                                             {/if}
+
+                                                            <button
+                                                                class="delete-entry-btn"
+                                                                on:click={() =>
+                                                                    openDeleteModal(
+                                                                        "entry",
+                                                                        {
+                                                                            ...item,
+                                                                            rowDate:
+                                                                                session.date,
+                                                                        },
+                                                                    )}
+                                                                title="Delete this entry"
+                                                            >
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="14"
+                                                                    height="14"
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    ><path
+                                                                        d="M3 6h18"
+                                                                    /><path
+                                                                        d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                                                    /><path
+                                                                        d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                                                    /></svg
+                                                                >
+                                                            </button>
                                                         </div>
                                                     {:else}
                                                         {item[col.key] || "-"}
@@ -901,6 +1055,60 @@
         {/if}
     {/if}
 </div>
+
+{#if showDeleteModal}
+    <div class="modal-overlay" transition:fade>
+        <div class="modal-content" transition:slide>
+            <h3>Confirm Deletion</h3>
+            <p>
+                Are you sure you want to delete this {itemToDelete?.type}? This
+                action cannot be undone.
+            </p>
+            {#if itemToDelete?.type === "session"}
+                <div class="delete-preview">
+                    <strong>{formatDate(itemToDelete.data.date)}</strong> - {itemToDelete
+                        .data.location} ({itemToDelete.data.session})
+                </div>
+            {:else if itemToDelete?.data}
+                <div class="delete-preview">
+                    <strong>{itemToDelete.data.name}</strong>
+                    ({itemToDelete.data.grade || "-"}) on {formatDate(
+                        itemToDelete.data.date || itemToDelete.data.rowDate,
+                    )}
+                </div>
+            {/if}
+
+            <p class="delete-prompt">
+                Type <strong>delete</strong> to confirm:
+            </p>
+            <input
+                type="text"
+                bind:value={deleteConfirmText}
+                placeholder="delete"
+                class="delete-input"
+            />
+
+            <div class="modal-actions">
+                <button
+                    class="cancel-btn"
+                    on:click={() => (showDeleteModal = false)}>Cancel</button
+                >
+                <button
+                    class="confirm-delete-btn"
+                    disabled={deleteConfirmText.toLowerCase() !== "delete" ||
+                        isDeleting}
+                    on:click={confirmDelete}
+                >
+                    {#if isDeleting}
+                        Deleting...
+                    {:else}
+                        Delete
+                    {/if}
+                </button>
+            </div>
+        </div>
+    </div>
+{/if}
 
 <style>
     .view-container {
@@ -1494,5 +1702,134 @@
     }
     .legend-item.forearm .dot {
         background: #4ade80;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: #1e293b;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content h3 {
+        margin-top: 0;
+        color: #f87171;
+    }
+
+    .delete-preview {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+        color: #cbd5e1;
+        border-left: 4px solid #f87171;
+    }
+
+    .delete-prompt {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-top: 1.5rem;
+    }
+
+    .delete-input {
+        width: 100%;
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: #f8fafc;
+        margin-bottom: 2rem;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .modal-actions button {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .cancel-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+    }
+
+    .confirm-delete-btn {
+        background: #ef4444;
+        border: none;
+        color: white;
+    }
+
+    .confirm-delete-btn:hover:not(:disabled) {
+        background: #dc2626;
+    }
+
+    .confirm-delete-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .delete-session-btn {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 0.5rem;
+    }
+
+    .delete-session-btn:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+    .delete-entry-btn {
+        background: transparent;
+        border: none;
+        color: #475569;
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 0.4rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .delete-entry-btn:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
     }
 </style>

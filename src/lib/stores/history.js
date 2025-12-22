@@ -63,3 +63,75 @@ export function syncLogs(type, newLogs) {
 export function addLog(type, log) {
     syncLogs(type, [log]);
 }
+
+/**
+ * Remove a specific entry from the store
+ * @param {string} type 
+ * @param {string} exercise_id 
+ * @param {any} criteria 
+ */
+export function removeLog(type, exercise_id, criteria) {
+    historyStore.update(current => {
+        const existing = current[type] || [];
+        const filtered = existing.filter((/** @type {any} */ log) => {
+            if (exercise_id && log.exercise_id === exercise_id) return false;
+
+            if (criteria) {
+                const logDate = (log.date?.value || log.date || '').split('T')[0];
+                const critDate = (criteria.date || '').split('T')[0];
+
+                if (logDate === critDate &&
+                    (log.exercise === criteria.name || log.climbs?.route === criteria.name || log.climbs?.name === criteria.name) &&
+                    (log.weight === criteria.weight || log.climbs?.weight === criteria.weight)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        return { ...current, [type]: filtered };
+    });
+}
+
+/**
+ * Remove an entire session from the store
+ * @param {string} type 
+ * @param {any} session 
+ */
+export function removeSession(type, session) {
+    historyStore.update((current) => {
+        const existing = current[type] || [];
+        const filtered = existing.filter((/** @type {any} */ log) => {
+            const logDate = (log.date?.value || log.date || "").split("T")[0];
+            const sessDate = (session.date?.value || session.date || "").split(
+                "T",
+            )[0];
+
+            if (logDate !== sessDate) return true;
+
+            // Normalize session_type labels for comparison
+            let logSess = log.session_type || log.climbing_type || "-";
+            if (type === "fingerboard") logSess = "Fingerboard";
+            if (type === "outdoor") logSess = "Outdoor";
+
+            if (logSess !== session.session) return true;
+
+            // Normalize location for comparison
+            let logLoc = log.location || "N/A";
+            if (typeof logLoc === "object" && logLoc !== null) {
+                if (logLoc.area || logLoc.crag) {
+                    logLoc = logLoc.area
+                        ? `${logLoc.area} > ${logLoc.crag}`
+                        : logLoc.crag || "";
+                    if (log.location.wall)
+                        logLoc = `${logLoc} - ${log.location.wall}`;
+                } else {
+                    logLoc = JSON.stringify(logLoc);
+                }
+            }
+
+            // If all match, return false to filter out
+            return logLoc !== session.location;
+        });
+        return { ...current, [type]: filtered };
+    });
+}
