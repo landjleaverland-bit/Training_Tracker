@@ -9,8 +9,8 @@
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
-		"deploy": "gh-pages -d build",
-		"gh-pages": "npm run build && npx gh-pages -d build"
+		"deploy": "gh-pages -d build -t --nojekyll",
+		"gh-pages": "npm run build && npx gh-pages -d build -t --nojekyll"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^3.0.0",
