@@ -137,7 +137,6 @@
 
 <div class="view-container">
     <div class="header-row">
-        <h2>View Data</h2>
         <div class="header-actions">
             <button
                 class="fetch-btn"
