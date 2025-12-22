@@ -249,7 +249,7 @@
 
     .table-container {
         overflow-x: auto;
-        margin: 0 -0.5rem;
+        /* margin: 0; Removed negative margin to prevent overflow on mobile */
         padding: 0 0.5rem;
     }
 
