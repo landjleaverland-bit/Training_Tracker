@@ -40,6 +40,14 @@
             "problemMatcher": [],
             "group": "build",
             "detail": "Preview the build directory"
+        },
+        {
+            "label": "Update Password",
+            "type": "shell",
+            "command": "node scripts/set-password.js",
+            "problemMatcher": [],
+            "group": "none",
+            "detail": "Update the app's hashed password"
         }
     ]
 }

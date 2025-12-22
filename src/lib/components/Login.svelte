@@ -4,13 +4,27 @@
 
     let keyInput = "";
     let error = "";
+    let loading = false;
 
-    function handleSubmit() {
-        if (keyInput.trim().length < 4) {
-            error = "Key must be at least 4 characters";
+    async function handleSubmit() {
+        if (!keyInput.trim()) {
+            error = "Please enter a password";
             return;
         }
-        login(keyInput.trim());
+
+        loading = true;
+        error = "";
+
+        try {
+            const success = await login(keyInput.trim());
+            if (!success) {
+                error = "Incorrect password";
+            }
+        } catch (e) {
+            error = "An error occurred";
+        } finally {
+            loading = false;
+        }
     }
 </script>
 
@@ -33,15 +47,16 @@
     </div>
 
     <h2>Access Restricted</h2>
-    <p>Please enter your API key to unlock the application.</p>
+    <p>Please enter your password to unlock the application.</p>
 
     <form on:submit|preventDefault={handleSubmit}>
         <div class="input-group">
             <input
                 type="password"
-                placeholder="Enter API Key"
+                placeholder="Enter Password"
                 bind:value={keyInput}
                 class:error
+                disabled={loading}
             />
             {#if error}
                 <span class="error-text">{error}</span>
