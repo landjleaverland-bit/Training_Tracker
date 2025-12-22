@@ -31,7 +31,7 @@
         try {
             const token = get(apiKey);
             const response = await fetch(
-                `${API_BASE_URL}/getLogs?type=${selectedType}`,
+                `${API_BASE_URL}?type=${selectedType}`,
                 {
                     method: "GET",
                     headers: {

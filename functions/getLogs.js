@@ -7,11 +7,12 @@ const bigquery = new BigQuery({ projectId: 'training-plan-database' });
  * Retrieves logs from BigQuery based on activity type.
  */
 exports.getLogs = async (req, res) => {
-    // Set CORS headers
+    // Set CORS headers for all responses
     res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+    // Handle preflight OPTIONS request
     if (req.method === 'OPTIONS') {
         res.status(204).send('');
         return;
@@ -23,10 +24,11 @@ exports.getLogs = async (req, res) => {
 
     if (!expectedKey) {
         console.error('APP_AUTH_KEY environment variable is not set');
-        return res.status(500).send('Server configuration error');
+        return res.status(500).send('Server configuration error: APP_AUTH_KEY missing');
     }
 
     if (!authHeader || authHeader !== `Bearer ${expectedKey}`) {
+        console.warn('Unauthorized attempt');
         return res.status(401).send('Unauthorized');
     }
 
