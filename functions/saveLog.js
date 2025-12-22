@@ -95,9 +95,9 @@ exports.saveLog = async (req, res) => {
                 };
                 row.training = training || null;
             } else if (activity_type === 'fingerboard') {
-                row.location = location;
-                row.session_type = session_type;
-                row.climbs = {
+                // Fingerboarding table is flat and doesn't have location/session_type/load metrics/climbs RECORD
+                return {
+                    date: bqDate,
                     exercise: climb.name,
                     grip: climb.grip_type || 'N/A',
                     weight: parseFloat(climb.weight) || 0,

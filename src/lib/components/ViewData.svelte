@@ -106,13 +106,20 @@
                     row.climbing_type ||
                     row.climb_type,
                 name:
+                    row.climbs?.route ||
                     row.climbs?.exercise ||
                     row.climbs?.name ||
+                    row.exercise ||
                     row.name ||
                     row.route ||
-                    row.Route,
+                    row.Route ||
+                    "-",
                 grade: row.climbs?.grade || row.grade || row.Grade,
                 grip: row.climbs?.grip || row.grip || row.grip_type,
+                weight: row.climbs?.weight ?? row.weight,
+                sets: row.climbs?.sets ?? row.sets,
+                reps: row.climbs?.reps ?? row.reps,
+                notes: row.climbs?.notes || row.notes,
             });
         });
 
@@ -744,19 +751,25 @@
                                                                     >{item.weight}kg</span
                                                                 >
                                                             {/if}
-                                                            {#if (item.grip || item.grip_type) && item.grip !== "N/A" && item.grip_type !== "N/A"}
-                                                                <span
-                                                                    class="ex-meta grip"
-                                                                    >{item.grip ||
-                                                                        item.grip_type}</span
-                                                                >
+                                                            {#if item.grip || item.grip_type}
+                                                                {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                    <span
+                                                                        class="ex-meta grip"
+                                                                        >{item.grip ||
+                                                                            item.grip_type}</span
+                                                                    >
+                                                                {/if}
                                                             {/if}
                                                             {#if item.sets || item.reps}
                                                                 <span
-                                                                    class="ex-meta sets"
-                                                                    >{item.sets}x{item.reps}</span
+                                                                    class="ex-meta sets-reps"
                                                                 >
+                                                                    {item.sets ||
+                                                                        0} x {item.reps ||
+                                                                        1}
+                                                                </span>
                                                             {/if}
+
                                                             {#if item.notes}
                                                                 <span
                                                                     class="ex-notes"
@@ -1245,7 +1258,7 @@
         color: #fbbf24;
         border: 1px solid rgba(251, 191, 36, 0.2);
     }
-    .ex-meta.sets {
+    .ex-meta.sets-reps {
         color: #a78bfa;
         border: 1px solid rgba(167, 139, 250, 0.2);
     }

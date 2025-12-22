@@ -67,7 +67,7 @@ exports.getLogs = async (req, res) => {
                 whereClauses.push("climbing_type = @session");
                 queryOptions.params.session = session;
             }
-        } else {
+        } else if (type === 'indoor') {
             if (location) {
                 whereClauses.push("location = @location");
                 queryOptions.params.location = location;
@@ -86,50 +86,55 @@ exports.getLogs = async (req, res) => {
             whereClauses.push("date <= @endDate");
             queryOptions.params.endDate = endDate;
         }
-        if (grade) {
-            whereClauses.push("climbs.grade = @grade");
-            queryOptions.params.grade = grade;
+
+        // Indoor/Outdoor specific filters
+        if (type === 'indoor' || type === 'outdoor') {
+            if (grade) {
+                whereClauses.push("climbs.grade = @grade");
+                queryOptions.params.grade = grade;
+            }
+            if (attempts) {
+                whereClauses.push("attempts = @attempts");
+                queryOptions.params.attempts = attempts;
+            }
+
+            // Training Record Filters
+            if (training_type) {
+                whereClauses.push("training.training_type = @training_type");
+                queryOptions.params.training_type = training_type;
+            }
+            if (difficulty) {
+                whereClauses.push("training.difficulty = @difficulty");
+                queryOptions.params.difficulty = difficulty;
+            }
+            if (category) {
+                whereClauses.push("training.category = @category");
+                queryOptions.params.category = category;
+            }
+            if (energy_system) {
+                whereClauses.push("training.energy_system = @energy_system");
+                queryOptions.params.energy_system = energy_system;
+            }
+            if (technique_focus) {
+                whereClauses.push("training.technique_focus = @technique_focus");
+                queryOptions.params.technique_focus = technique_focus;
+            }
+            if (wall_angle) {
+                whereClauses.push("training.wall_angle = @wall_angle");
+                queryOptions.params.wall_angle = wall_angle;
+            }
         }
 
-        if (exercise) {
-            whereClauses.push("climbs.exercise = @exercise");
-            queryOptions.params.exercise = exercise;
-        }
-
-        if (grip) {
-            whereClauses.push("climbs.grip = @grip");
-            queryOptions.params.grip = grip;
-        }
-
-        if (attempts) {
-            whereClauses.push("attempts = @attempts");
-            queryOptions.params.attempts = attempts;
-        }
-
-        // Training Record Filters
-        if (training_type) {
-            whereClauses.push("training.training_type = @training_type");
-            queryOptions.params.training_type = training_type;
-        }
-        if (difficulty) {
-            whereClauses.push("training.difficulty = @difficulty");
-            queryOptions.params.difficulty = difficulty;
-        }
-        if (category) {
-            whereClauses.push("training.category = @category");
-            queryOptions.params.category = category;
-        }
-        if (energy_system) {
-            whereClauses.push("training.energy_system = @energy_system");
-            queryOptions.params.energy_system = energy_system;
-        }
-        if (technique_focus) {
-            whereClauses.push("training.technique_focus = @technique_focus");
-            queryOptions.params.technique_focus = technique_focus;
-        }
-        if (wall_angle) {
-            whereClauses.push("training.wall_angle = @wall_angle");
-            queryOptions.params.wall_angle = wall_angle;
+        // Fingerboarding specific filters
+        if (type === 'fingerboard') {
+            if (exercise) {
+                whereClauses.push("exercise = @exercise");
+                queryOptions.params.exercise = exercise;
+            }
+            if (grip) {
+                whereClauses.push("grip = @grip");
+                queryOptions.params.grip = grip;
+            }
         }
 
         let whereString = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : "";
@@ -139,6 +144,9 @@ exports.getLogs = async (req, res) => {
         if (type === 'outdoor') {
             // Flatten location for simpler frontend handling
             selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
+        } else if (type === 'fingerboard') {
+            // Provide defaults for location and session_type as they aren't in the flat table
+            selectClause = "'Fingerboard' as session_type, 'N/A' as location, *";
         }
 
         const query = `

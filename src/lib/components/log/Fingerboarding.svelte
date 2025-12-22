@@ -1,10 +1,6 @@
 <script>
     import { fade } from "svelte/transition";
 
-    let fingerLoad = 0;
-    let shoulderLoad = 0;
-    let forearmLoad = 0;
-
     let exercises = [
         {
             id: crypto.randomUUID(),
@@ -21,9 +17,6 @@
         return {
             location: "N/A",
             session: "Training",
-            fingerLoad,
-            shoulderLoad,
-            forearmLoad,
             exercises,
         };
     }
@@ -51,42 +44,6 @@
 </script>
 
 <div class="fingerboard-config" in:fade>
-    <div class="load-metrics">
-        <div class="load-group">
-            <label for="fb-finger-load">Finger Load (0-5)</label>
-            <input
-                id="fb-finger-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={fingerLoad}
-            />
-        </div>
-        <div class="load-group">
-            <label for="fb-shoulder-load">Shoulder Load (0-5)</label>
-            <input
-                id="fb-shoulder-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={shoulderLoad}
-            />
-        </div>
-        <div class="load-group">
-            <label for="fb-forearm-load">Forearm Load (0-5)</label>
-            <input
-                id="fb-forearm-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={forearmLoad}
-            />
-        </div>
-    </div>
-
     <div class="exercise-section">
         <div class="section-header">
             <h3>Sets / Exercises</h3>
