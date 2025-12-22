@@ -19,7 +19,7 @@
 
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
     // Make sure this matches your saveLog base URL but ends in /getLogs
-    const API_BASE_URL = "https://save-log-825153765638.europe-west1.run.app";
+    const API_BASE_URL = "https://get-log-825153765638.europe-west1.run.app";
 
     async function fetchData() {
         if (!selectedType) return;
