@@ -126,11 +126,11 @@
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="text"
+                                <textarea
                                     placeholder="e.g. Sent 2nd try"
                                     bind:value={ex.notes}
-                                />
+                                    rows="1"
+                                ></textarea>
                             </td>
                             <td class="actions-col">
                                 <button
@@ -272,7 +272,8 @@
         padding: 0.4rem;
     }
 
-    input {
+    input,
+    textarea {
         width: 100%;
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.05);
@@ -282,11 +283,18 @@
         font-size: 0.875rem;
         outline: none;
         transition: all 0.2s ease;
+        font-family: inherit;
+        resize: none; /* Prevent manual resize, rely on focus expansion */
     }
 
-    input:focus {
+    input:focus,
+    textarea:focus {
         background: rgba(255, 255, 255, 0.07);
         border-color: #60a5fa;
+    }
+
+    textarea:focus {
+        min-height: 80px;
     }
 
     .actions-col {
