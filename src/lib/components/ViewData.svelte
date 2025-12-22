@@ -99,7 +99,11 @@
                     row.attempts ||
                     row.attempt_type ||
                     row.Attempt,
-                type: row.climbs?.type || row.type || row.climb_type,
+                type:
+                    row.climbs?.type ||
+                    row.type ||
+                    row.climbing_type ||
+                    row.climb_type,
                 name: row.climbs?.name || row.name || row.route || row.Route,
                 grade: row.climbs?.grade || row.grade || row.Grade,
             });

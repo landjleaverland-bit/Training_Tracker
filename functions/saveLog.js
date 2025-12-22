@@ -75,7 +75,8 @@ exports.saveLog = async (req, res) => {
                     crag: location.area ? `${location.area} > ${location.crag}` : (location.crag || ''),
                     wall: location.wall || ''
                 };
-                row.climbing_type = climb.isRopes ? 'Ropes' : 'Bouldering';
+                row.climbing_type = climb.type || 'Bouldering';
+                row.attempts = climb.attempts || 'Redpoint';
                 row.climbs = {
                     route: climb.name,
                     grade: climb.grade,
@@ -84,7 +85,8 @@ exports.saveLog = async (req, res) => {
             } else if (activity_type === 'indoor' || !activity_type) {
                 row.location = location;
                 row.session_type = session_type;
-                row.climbing_type = climb.isRopes ? 'Ropes' : 'Bouldering';
+                row.climbing_type = climb.type || 'Bouldering';
+                row.attempts = climb.attempts || 'Redpoint';
                 row.climbs = {
                     route: climb.name,
                     grade: climb.grade,
