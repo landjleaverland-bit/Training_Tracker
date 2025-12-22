@@ -1,8 +1,8 @@
 <script>
     import { fade } from "svelte/transition";
 
-    let location = "";
-    let session = "";
+    let location = "Home";
+    let session = "Training";
     let fingerLoad = 0;
 
     let exercises = [
@@ -44,34 +44,9 @@
             exercises = exercises.filter((ex) => ex.id !== id);
         }
     }
-
-    const locationOptions = ["Home", "Gym", "Crag"];
-    const sessionOptions = ["Strength", "Endurance", "Recovery"];
 </script>
 
 <div class="fingerboard-config" in:fade>
-    <div class="form-grid">
-        <div class="input-group">
-            <label for="fb-location">Location</label>
-            <select id="fb-location" bind:value={location}>
-                <option value="" disabled selected>Select Location</option>
-                {#each locationOptions as loc}
-                    <option value={loc}>{loc}</option>
-                {/each}
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label for="fb-session">Session Type</label>
-            <select id="fb-session" bind:value={session}>
-                <option value="" disabled selected>Select Session</option>
-                {#each sessionOptions as opt}
-                    <option value={opt}>{opt}</option>
-                {/each}
-            </select>
-        </div>
-    </div>
-
     <div class="load-metrics">
         <div class="load-group">
             <label for="fb-finger-load">Finger Load (0-5)</label>
@@ -166,12 +141,6 @@
         gap: 1.5rem;
     }
 
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-
     .input-group {
         display: flex;
         flex-direction: column;
@@ -185,7 +154,6 @@
         font-weight: 500;
     }
 
-    select,
     input[type="text"],
     input[type="number"] {
         background: #0f172a;
@@ -197,12 +165,6 @@
         width: 100%;
     }
 
-    select option {
-        background: #0f172a;
-        color: #f8fafc;
-    }
-
-    select:focus,
     input:focus {
         border-color: #60a5fa;
         outline: none;
@@ -219,7 +181,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        max-width: 150px;
+        max-width: 100%;
     }
 
     .section-header {
