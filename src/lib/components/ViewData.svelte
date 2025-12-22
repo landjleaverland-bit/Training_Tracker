@@ -111,7 +111,9 @@
     let endDate = "";
     let filterLocation = "";
     let filterArea = "";
+    let customFilterArea = "";
     let filterCrag = "";
+    let customFilterCrag = "";
     let filterSession = "";
     let filterGrade = "";
 
@@ -147,10 +149,16 @@
 
     $: {
         if (selectedType === "outdoor") {
-            if (filterCrag) {
-                filterLocation = filterCrag;
-            } else if (filterArea) {
-                filterLocation = filterArea;
+            let locParts = [];
+            const areaToUse =
+                filterArea === "Other" ? customFilterArea : filterArea;
+            const cragToUse =
+                filterCrag === "Other" ? customFilterCrag : filterCrag;
+
+            if (cragToUse) {
+                filterLocation = cragToUse;
+            } else if (areaToUse) {
+                filterLocation = areaToUse;
             } else {
                 filterLocation = "";
             }
@@ -415,23 +423,51 @@
                             <select
                                 id="filterArea"
                                 bind:value={filterArea}
-                                on:change={() => (filterCrag = "")}
+                                on:change={() => {
+                                    filterCrag = "";
+                                    customFilterArea = "";
+                                }}
                             >
                                 <option value="">Any Area</option>
                                 {#each areaOptions as area}
                                     <option value={area}>{area}</option>
                                 {/each}
                             </select>
+
+                            {#if filterArea === "Other"}
+                                <div transition:slide|local>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Area..."
+                                        bind:value={customFilterArea}
+                                        class="custom-filter-input"
+                                    />
+                                </div>
+                            {/if}
+
                             <select
                                 id="filterCrag"
                                 bind:value={filterCrag}
                                 disabled={!filterArea}
+                                on:change={() => (customFilterCrag = "")}
                             >
                                 <option value="">Any Crag</option>
                                 {#each cragsForFilter as crag}
                                     <option value={crag}>{crag}</option>
                                 {/each}
+                                <option value="Other">Other (Custom)</option>
                             </select>
+
+                            {#if filterCrag === "Other"}
+                                <div transition:slide|local>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Crag..."
+                                        bind:value={customFilterCrag}
+                                        class="custom-filter-input"
+                                    />
+                                </div>
+                            {/if}
                         </div>
                     {:else}
                         <select id="filterLocation" bind:value={filterLocation}>
@@ -929,6 +965,8 @@
         color: inherit;
         cursor: pointer;
         text-align: left;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
     .session-info {
@@ -1136,6 +1174,13 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .custom-filter-input {
+        margin-top: 0.25rem;
+        font-size: 0.85rem !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-style: dashed !important;
     }
 
     .legend-row {
