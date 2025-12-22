@@ -150,9 +150,7 @@
     const activityTypes = [
         { id: "indoor", label: "Indoor Climb" },
         { id: "fingerboard", label: "Fingerboarding" },
-        { id: "gym", label: "Gym Session" },
         { id: "outdoor", label: "Outdoor Climb" },
-        { id: "other", label: "Other" },
     ];
 
     const locationOptions = [

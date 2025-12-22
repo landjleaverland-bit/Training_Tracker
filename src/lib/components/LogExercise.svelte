@@ -1,9 +1,7 @@
 <script>
     import { fade } from "svelte/transition";
     import IndoorClimb from "./log/IndoorClimb.svelte";
-    import GymSession from "./log/GymSession.svelte";
     import OutdoorClimb from "./log/OutdoorClimb.svelte";
-    import OtherLog from "./log/OtherLog.svelte";
     import Fingerboarding from "./log/Fingerboarding.svelte";
 
     let selectedId = "";
@@ -15,9 +13,7 @@
             text: "Fingerboarding",
             component: Fingerboarding,
         },
-        { id: "gym", text: "Gym Session", component: GymSession },
         { id: "outdoor", text: "Outdoor Climb", component: OutdoorClimb },
-        { id: "other", text: "Other", component: OtherLog },
     ];
 
     import { apiKey } from "$lib/stores/auth";
