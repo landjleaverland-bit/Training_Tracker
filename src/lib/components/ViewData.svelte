@@ -71,89 +71,71 @@
                     date: row.date,
                     location: row.location,
                     session: row.session_type,
-                    fingerLoad: 0,
-                    shoulderLoad: 0,
-                    forearmLoad: 0,
+                    fingerLoad: row.finger_load || 0,
+                    shoulderLoad: row.shoulder_load || 0,
+                    forearmLoad: row.forearm_load || 0,
                     training: row.training || null,
                     items: [],
                 };
             }
 
-            // Take max load for the session
-            groups[key].fingerLoad = Math.max(
-                groups[key].fingerLoad,
-                row.finger_load || 0,
-            );
-            groups[key].shoulderLoad = Math.max(
-                groups[key].shoulderLoad,
-                row.shoulder_load || 0,
-            );
-            groups[key].forearmLoad = Math.max(
-                groups[key].forearmLoad,
-                row.forearm_load || 0,
-            );
-            const exerciseId = row.exercise_id;
-            const itemData = {
-                ...(row.climbs || {}),
-                attempts:
-                    row.climbs?.attempts ||
-                    row.attempts ||
-                    row.attempt_type ||
-                    row.Attempt,
-                type:
-                    row.climbs?.type ||
-                    row.type ||
-                    row.climbing_type ||
-                    row.climb_type,
-                name:
-                    row.climbs?.route ||
-                    row.climbs?.exercise ||
-                    row.climbs?.name ||
-                    row.exercise ||
-                    row.name ||
-                    row.route ||
-                    row.Route ||
-                    "-",
-                grade: row.climbs?.grade || row.grade || row.Grade,
-                grip: row.climbs?.grip || row.grip || row.grip_type,
-                weight: row.climbs?.weight ?? row.weight,
-                sets: row.climbs?.sets ?? row.sets,
-                reps: row.climbs?.reps ?? row.reps,
-                notes: row.climbs?.notes || row.notes,
-                exercise_id: exerciseId,
-            };
+            // Normalize: local data has row.climbs as an array, remote is flat rows
+            const climbsToProcess = Array.isArray(row.climbs)
+                ? row.climbs
+                : [row];
 
-            if (exerciseId && selectedType === "fingerboard") {
-                const existing = groups[key].items.find(
-                    (/** @type {any} */ it) =>
-                        String(it.exercise_id) === String(exerciseId),
-                );
-                if (existing) {
-                    if (!existing.details) {
-                        // Initialize details with the first row's data
-                        existing.details = [
-                            { weight: existing.weight, reps: existing.reps },
-                        ];
+            climbsToProcess.forEach((climb) => {
+                const exerciseId =
+                    climb.exercise_id || climb.id || row.exercise_id;
+
+                const itemData = {
+                    ...(climb.climbs || climb), // Handle nested or flat
+                    attempts: climb.attempts || row.attempts,
+                    type:
+                        climb.type || climb.climbing_type || row.climbing_type,
+                    name:
+                        climb.route ||
+                        climb.exercise ||
+                        climb.name ||
+                        row.exercise ||
+                        "-",
+                    grade: climb.grade || row.grade,
+                    grip: climb.grip || climb.grip_type || row.grip,
+                    weight: climb.weight,
+                    sets: climb.sets || row.sets,
+                    reps: climb.reps || row.reps,
+                    notes: climb.notes || row.notes,
+                    exercise_id: exerciseId,
+                    details: climb.details || null,
+                };
+
+                if (exerciseId && selectedType === "fingerboard") {
+                    const existing = groups[key].items.find(
+                        (/** @type {any} */ it) =>
+                            String(it.exercise_id) === String(exerciseId),
+                    );
+                    if (existing) {
+                        if (!existing.details) {
+                            existing.details = [
+                                {
+                                    weight: existing.weight,
+                                    reps: existing.reps,
+                                },
+                            ];
+                        }
+                        // Only add if it's a new weight/rep combo or from a flat row
+                        if (!Array.isArray(climb.details)) {
+                            existing.details.push({
+                                weight: itemData.weight,
+                                reps: itemData.reps,
+                            });
+                        }
+                        return;
                     }
-                    // Add the current row's data
-                    existing.details.push({
-                        weight: itemData.weight,
-                        reps: itemData.reps,
-                    });
-                    // Consolidate notes if they are different
-                    if (
-                        itemData.notes &&
-                        !existing.notes.includes(itemData.notes)
-                    ) {
-                        existing.notes = existing.notes
-                            ? `${existing.notes}; ${itemData.notes}`
-                            : itemData.notes;
-                    }
-                    return;
                 }
-            }
 
-            groups[key].items.push(itemData);
+                groups[key].items.push(itemData);
+            });
         });
 
         return Object.values(groups).sort((a, b) => {
