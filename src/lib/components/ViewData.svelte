@@ -60,17 +60,39 @@
         // 2. Group by session
         /** @type {Object.<string, any>} */
         const groups = {};
+        const seenRows = new Set(); // For deduplication
+
         filtered.forEach((row) => {
             const d = row.date?.value || row.date;
             const dateStr = new Date(d).toISOString().split("T")[0];
-            const key = `${dateStr}|${row.location}|${row.session_type}`;
+
+            // Normalize session_type labels for consistent grouping across local/remote data
+            let sType = row.session_type || row.climbing_type || "-";
+            if (selectedType === "fingerboard") sType = "Fingerboard";
+            if (selectedType === "outdoor") sType = "Outdoor";
+
+            // Normalize location: remote outdoor is a string, local is an object
+            let loc = row.location || "N/A";
+            if (typeof loc === "object" && loc !== null) {
+                if (loc.area || loc.crag) {
+                    loc = loc.area
+                        ? `${loc.area} > ${loc.crag}`
+                        : loc.crag || "";
+                    if (row.location.wall)
+                        loc = `${loc} - ${row.location.wall}`;
+                } else {
+                    loc = JSON.stringify(loc);
+                }
+            }
+
+            const key = `${dateStr}|${loc}|${sType}`;
 
             if (!groups[key]) {
                 groups[key] = {
                     key,
                     date: row.date,
-                    location: row.location,
-                    session: row.session_type,
+                    location: loc,
+                    session: sType,
                     fingerLoad: row.finger_load || 0,
                     shoulderLoad: row.shoulder_load || 0,
                     forearmLoad: row.forearm_load || 0,
@@ -84,9 +106,14 @@
                 ? row.climbs
                 : [row];
 
-            climbsToProcess.forEach((climb) => {
+            climbsToProcess.forEach((/** @type {any} */ climb) => {
                 const exerciseId =
                     climb.exercise_id || climb.id || row.exercise_id;
+
+                // Deduplication check: Date + ExerciseID + Weight
+                const dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}`;
+                if (seenRows.has(dedupKey)) return;
+                seenRows.add(dedupKey);
 
                 const itemData = {
                     ...(climb.climbs || climb), // Handle nested or flat
@@ -101,7 +128,7 @@
                         "-",
                     grade: climb.grade || row.grade,
                     grip: climb.grip || climb.grip_type || row.grip,
-                    weight: climb.weight,
+                    weight: climb.weight ?? row.weight,
                     sets: climb.sets || row.sets,
                     reps: climb.reps || row.reps,
                     notes: climb.notes || row.notes,
@@ -123,12 +150,19 @@
                                 },
                             ];
                         }
-                        // Only add if it's a new weight/rep combo or from a flat row
+                        // Only add if it's a new weight/rep combo from a flat server row
                         if (!Array.isArray(climb.details)) {
-                            existing.details.push({
-                                weight: itemData.weight,
-                                reps: itemData.reps,
-                            });
+                            const isNewDetail = !existing.details.find(
+                                (/** @type {any} */ d) =>
+                                    d.weight === itemData.weight &&
+                                    d.reps === itemData.reps,
+                            );
+                            if (isNewDetail) {
+                                existing.details.push({
+                                    weight: itemData.weight,
+                                    reps: itemData.reps,
+                                });
+                            }
                         }
                         return;
                     }

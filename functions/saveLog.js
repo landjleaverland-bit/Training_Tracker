@@ -99,6 +99,7 @@ exports.saveLog = async (req, res) => {
                     notes: climb.notes
                 };
                 row.training = training || null;
+                row.exercise_id = climb.id;
             } else if (activity_type === 'indoor' || !activity_type) {
                 row.location = location;
                 row.session_type = session_type;
@@ -110,6 +111,7 @@ exports.saveLog = async (req, res) => {
                     notes: climb.notes
                 };
                 row.training = training || null;
+                row.exercise_id = climb.id;
             } else {
                 // Fallback / Gym / Other
                 row.location = location;

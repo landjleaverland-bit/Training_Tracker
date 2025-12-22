@@ -143,10 +143,13 @@ exports.getLogs = async (req, res) => {
         let selectClause = "*";
         if (type === 'outdoor') {
             // Flatten location for simpler frontend handling
-            selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
+            selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, 'Outdoor' as session_type, exercise_id, * EXCEPT(location, exercise_id)";
         } else if (type === 'fingerboard') {
             // Provide defaults for location and session_type as they aren't in the flat table
             selectClause = "'Fingerboard' as session_type, 'N/A' as location, exercise_id, * EXCEPT(exercise_id)";
+        } else {
+            // Indoor / Other - select exercise_id safely
+            selectClause = "exercise_id, * EXCEPT(exercise_id)";
         }
 
         const query = `
