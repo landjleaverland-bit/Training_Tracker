@@ -75,7 +75,6 @@ exports.saveLog = async (req, res) => {
                     crag: location.area ? `${location.area} > ${location.crag}` : (location.crag || ''),
                     wall: location.wall || ''
                 };
-                row.session_type = session_type;
                 row.climbing_type = climb.isRopes ? 'Ropes' : 'Bouldering';
                 row.climbs = {
                     route: climb.name,
