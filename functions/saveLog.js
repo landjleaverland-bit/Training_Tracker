@@ -64,8 +64,6 @@ exports.saveLog = async (req, res) => {
             const bqDate = date.replace('T', ' ').split('.')[0];
 
             const row = {
-                location: location,
-                session_type: session_type,
                 finger_load: finger_load || 0,
                 shoulder_load: shoulder_load || 0,
                 forearm_load: forearm_load || 0,
@@ -73,7 +71,20 @@ exports.saveLog = async (req, res) => {
             };
 
             // Dynamic mapping based on activity type
-            if (activity_type === 'indoor' || activity_type === 'outdoor' || !activity_type) {
+            if (activity_type === 'outdoor') {
+                row.location = {
+                    crag: location.crag || '',
+                    wall: location.wall || ''
+                };
+                row.climbing_type = session_type; // Passed as 'climbingType' from Svelte
+                row.climbs = {
+                    route: climb.name,
+                    grade: climb.grade,
+                    notes: climb.notes
+                };
+            } else if (activity_type === 'indoor' || !activity_type) {
+                row.location = location;
+                row.session_type = session_type;
                 row.climbing_type = climb.isRopes ? 'Ropes' : 'Bouldering';
                 row.climbs = {
                     route: climb.name,
@@ -81,6 +92,8 @@ exports.saveLog = async (req, res) => {
                     notes: climb.notes
                 };
             } else if (activity_type === 'fingerboard') {
+                row.location = location;
+                row.session_type = session_type;
                 row.climbs = {
                     name: climb.name,
                     weight: parseFloat(climb.weight) || 0,
@@ -90,6 +103,8 @@ exports.saveLog = async (req, res) => {
                 };
             } else {
                 // Fallback / Gym / Other
+                row.location = location;
+                row.session_type = session_type;
                 row.climbs = {
                     name: climb.name,
                     notes: climb.notes

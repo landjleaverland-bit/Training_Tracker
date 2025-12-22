@@ -303,6 +303,13 @@
                     { key: "session_type", label: "Type" },
                     { key: "climbs", label: "Hang", isObject: true },
                 ];
+            case "outdoor":
+                return [
+                    { key: "date", label: "Date" },
+                    { key: "location", label: "Location" },
+                    { key: "session_type", label: "Type" },
+                    { key: "climbs", label: "Routes", isObject: true },
+                ];
             default:
                 return [
                     { key: "date", label: "Date" },
@@ -386,23 +393,41 @@
                 </div>
                 <div class="filter-group">
                     <label for="filterLocation">Location</label>
-                    <select id="filterLocation" bind:value={filterLocation}>
-                        <option value="">Any Location</option>
-                        {#each locationOptions as loc}
-                            <option value={loc}>{loc}</option>
-                        {/each}
-                    </select>
+                    {#if selectedType === "outdoor"}
+                        <input
+                            id="filterLocation"
+                            type="text"
+                            bind:value={filterLocation}
+                            placeholder="Crag or Wall"
+                        />
+                    {:else}
+                        <select id="filterLocation" bind:value={filterLocation}>
+                            <option value="">Any Location</option>
+                            {#each locationOptions as loc}
+                                <option value={loc}>{loc}</option>
+                            {/each}
+                        </select>
+                    {/if}
                 </div>
             </div>
             <div class="filter-row">
                 <div class="filter-group">
-                    <label for="filterSession">Session</label>
-                    <select id="filterSession" bind:value={filterSession}>
-                        <option value="">Any Session</option>
-                        {#each sessionOptions as sess}
-                            <option value={sess}>{sess}</option>
-                        {/each}
-                    </select>
+                    <label for="filterSession">Session / Type</label>
+                    {#if selectedType === "outdoor"}
+                        <select id="filterSession" bind:value={filterSession}>
+                            <option value="">Any Type</option>
+                            <option value="Bouldering">Bouldering</option>
+                            <option value="Sport">Sport</option>
+                            <option value="Trad">Trad</option>
+                        </select>
+                    {:else}
+                        <select id="filterSession" bind:value={filterSession}>
+                            <option value="">Any Session</option>
+                            {#each sessionOptions as sess}
+                                <option value={sess}>{sess}</option>
+                            {/each}
+                        </select>
+                    {/if}
                 </div>
                 <div class="filter-group">
                     <label for="filterGrade">Grade (Exact)</label>

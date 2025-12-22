@@ -58,6 +58,26 @@ exports.getLogs = async (req, res) => {
             params: {}
         };
 
+        if (type === 'outdoor') {
+            if (location) {
+                whereClauses.push("(location.crag = @location OR location.wall = @location)");
+                queryOptions.params.location = location;
+            }
+            if (session) {
+                whereClauses.push("climbing_type = @session");
+                queryOptions.params.session = session;
+            }
+        } else {
+            if (location) {
+                whereClauses.push("location = @location");
+                queryOptions.params.location = location;
+            }
+            if (session) {
+                whereClauses.push("session_type = @session");
+                queryOptions.params.session = session;
+            }
+        }
+
         if (startDate) {
             whereClauses.push("date >= @startDate");
             queryOptions.params.startDate = startDate;
@@ -66,24 +86,22 @@ exports.getLogs = async (req, res) => {
             whereClauses.push("date <= @endDate");
             queryOptions.params.endDate = endDate;
         }
-        if (location) {
-            whereClauses.push("location = @location");
-            queryOptions.params.location = location;
-        }
-        if (session) {
-            whereClauses.push("session_type = @session");
-            queryOptions.params.session = session;
-        }
         if (grade) {
-            // Grade is stored inside the 'climbs' struct
             whereClauses.push("climbs.grade = @grade");
             queryOptions.params.grade = grade;
         }
 
         let whereString = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : "";
 
+        // Normalize output based on activity type
+        let selectClause = "*";
+        if (type === 'outdoor') {
+            // Flatten location for simpler frontend handling
+            selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
+        }
+
         const query = `
-            SELECT *
+            SELECT ${selectClause}
             FROM \`${process.env.GCP_PROJECT_ID || 'training-plan-database'}.${datasetId}.${tableId}\`
             ${whereString}
             ORDER BY date DESC
