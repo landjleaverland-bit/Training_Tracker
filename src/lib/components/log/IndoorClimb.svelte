@@ -2,15 +2,19 @@
     import { fade, slide } from "svelte/transition";
     import { flip } from "svelte/animate";
 
-    let type = "";
     let location = "";
     let session = "";
 
     let exercises = [
-        { id: crypto.randomUUID(), name: "", grade: "", notes: "" },
+        {
+            id: crypto.randomUUID(),
+            isRopes: false,
+            name: "",
+            grade: "",
+            notes: "",
+        },
     ];
 
-    const typeOptions = ["Bouldering", "Ropes", "Mixed"];
     const locationOptions = [
         "Flashpoint Swindon",
         "Rockstar",
@@ -21,7 +25,13 @@
     function addRow() {
         exercises = [
             ...exercises,
-            { id: crypto.randomUUID(), name: "", grade: "", notes: "" },
+            {
+                id: crypto.randomUUID(),
+                isRopes: false,
+                name: "",
+                grade: "",
+                notes: "",
+            },
         ];
     }
 
@@ -31,7 +41,13 @@
         } else {
             // If it's the last row, just clear it instead of removing
             exercises = [
-                { id: crypto.randomUUID(), name: "", grade: "", notes: "" },
+                {
+                    id: crypto.randomUUID(),
+                    isRopes: false,
+                    name: "",
+                    grade: "",
+                    notes: "",
+                },
             ];
         }
     }
@@ -39,16 +55,6 @@
 
 <div class="indoor-config" in:fade>
     <div class="form-grid">
-        <div class="input-group">
-            <label for="climb-type">Type</label>
-            <select id="climb-type" bind:value={type}>
-                <option value="" disabled selected>Select Type</option>
-                {#each typeOptions as opt}
-                    <option value={opt}>{opt}</option>
-                {/each}
-            </select>
-        </div>
-
         <div class="input-group">
             <label for="climb-location">Location</label>
             <select id="climb-location" bind:value={location}>
@@ -99,9 +105,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Exercise / Route</th>
-                        <th>Grade / Intensity</th>
-                        <th>Notes / Result</th>
+                        <th class="checkbox-col">Ropes?</th>
+                        <th>Route</th>
+                        <th>Grade</th>
+                        <th>Notes</th>
                         <th class="actions-col"></th>
                     </tr>
                 </thead>
@@ -111,10 +118,16 @@
                             out:slide|local={{ duration: 200 }}
                             animate:flip={{ duration: 300 }}
                         >
+                            <td class="checkbox-col">
+                                <input
+                                    type="checkbox"
+                                    bind:checked={ex.isRopes}
+                                />
+                            </td>
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="e.g. V4 Blue"
+                                    placeholder="e.g. Blue"
                                     bind:value={ex.name}
                                 />
                             </td>
@@ -127,7 +140,7 @@
                             </td>
                             <td>
                                 <textarea
-                                    placeholder="e.g. Sent 2nd try"
+                                    placeholder="e.g. Smooth"
                                     bind:value={ex.notes}
                                     rows="1"
                                 ></textarea>
@@ -269,18 +282,32 @@
     }
 
     /* Column Widths */
-    th:nth-child(1),
-    td:nth-child(1) {
-        width: 25%;
+    .checkbox-col {
+        width: 45px;
+        text-align: center;
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 18%;
+        width: 22%;
     }
     th:nth-child(3),
     td:nth-child(3) {
+        width: 15%;
+    }
+    th:nth-child(4),
+    td:nth-child(4) {
         width: auto;
     } /* Notes takes the rest */
+
+    /* Checkbox Styling */
+    input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.25rem;
+    }
 
     td {
         padding: 0.4rem;
