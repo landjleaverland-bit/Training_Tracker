@@ -42,7 +42,7 @@ export async function hashPassword(message) {
 export async function login(password) {
     const hash = await hashPassword(password);
     if (hash === CORRECT_HASH) {
-        apiKey.set(hash); // We store the hash as the "token"
+        apiKey.set(password); // Store the actual password to pass to BigQuery
         return true;
     }
     return false;

@@ -14,7 +14,90 @@
         { id: "other", text: "Other", component: OtherLog },
     ];
 
+    import { apiKey } from "$lib/stores/auth";
+    import { get } from "svelte/store";
+
+    let activeComponent;
+    let isSaving = false;
+    let saveMessage = "";
+    let saveSuccess = false;
+
+    // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
+    const API_URL =
+        "https://YOUR_REGION-YOUR_PROJECT_ID.cloudfunctions.net/saveLog";
+
     $: selectedOption = options.find((o) => o.id === selectedId);
+
+    // Clear message when switching tabs
+    $: if (selectedId) {
+        saveMessage = "";
+    }
+
+    async function submitToBigQuery() {
+        if (!activeComponent || !activeComponent.getData) {
+            console.error("Component does not support data export");
+            return;
+        }
+
+        const data = activeComponent.getData();
+        const currentToken = get(apiKey);
+
+        // Basic Validation
+        if (
+            !data.location ||
+            !data.session ||
+            (data.exercises && data.exercises.length === 0)
+        ) {
+            saveMessage =
+                "Please select a Location, Session, and add at least one exercise.";
+            saveSuccess = false;
+            return;
+        }
+
+        if (!currentToken) {
+            saveMessage = "Authentication error. Please log in again.";
+            saveSuccess = false;
+            return;
+        }
+
+        isSaving = true;
+        saveMessage = "";
+
+        try {
+            // Prepare payload for BigQuery
+            const payload = {
+                climbing_type: "Indoor",
+                location: data.location,
+                session_type: data.session,
+                climbs: data.exercises,
+                date: new Date().toISOString(),
+            };
+
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${currentToken}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.statusText}`);
+            }
+
+            saveMessage = "Log saved successfully!";
+            saveSuccess = true;
+
+            // Optional: Data reset logic could go here
+        } catch (error) {
+            console.error("Save Error:", error);
+            saveMessage = "Failed to save log. Check console for details.";
+            saveSuccess = false;
+        } finally {
+            isSaving = false;
+        }
+    }
 </script>
 
 <div class="tab-content">
@@ -33,19 +116,52 @@
 
     {#if selectedOption}
         <div class="config-wrapper" in:fade>
-            <svelte:component this={selectedOption.component} />
+            <svelte:component
+                this={selectedOption.component}
+                bind:this={activeComponent}
+            />
+
+            {#if saveMessage}
+                <div
+                    class="message"
+                    class:success={saveSuccess}
+                    class:error={!saveSuccess}
+                    transition:fade
+                >
+                    {saveMessage}
+                </div>
+            {/if}
 
             <button
                 class="save-button"
-                on:click={() => alert("Log saved! (Coming soon)")}
+                on:click={submitToBigQuery}
+                disabled={isSaving}
             >
-                Save Log
+                {isSaving ? "Saving..." : "Save Log"}
             </button>
         </div>
     {/if}
 </div>
 
 <style>
+    .message {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+    .message.success {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .message.error {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
     .tab-content {
         animation: fadeIn 0.3s ease-out;
     }

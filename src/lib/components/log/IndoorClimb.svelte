@@ -51,6 +51,13 @@
             ];
         }
     }
+    export function getData() {
+        return {
+            location,
+            session,
+            exercises,
+        };
+    }
 </script>
 
 <div class="indoor-config" in:fade>
