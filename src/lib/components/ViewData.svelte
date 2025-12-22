@@ -2,6 +2,7 @@
     import { fade } from "svelte/transition";
     import { apiKey } from "$lib/stores/auth";
     import { get } from "svelte/store";
+    import { onMount } from "svelte";
 
     let selectedType = "indoor";
     let isLoading = false;
@@ -24,6 +25,13 @@
         { id: "outdoor", label: "Outdoor Climb" },
         { id: "other", label: "Other" },
     ];
+
+    const locationOptions = [
+        "Flashpoint Swindon",
+        "Rockstar",
+        "Flashpoint Bristol",
+    ];
+    const sessionOptions = ["Strength", "Endurance", "Power", "Recovery"];
 
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
     // Make sure this matches your saveLog base URL but ends in /getLogs
@@ -83,10 +91,10 @@
         fetchData();
     }
 
-    // Fetch data when type changes
-    $: if (selectedType) {
+    // Initial fetch
+    onMount(() => {
         fetchData();
-    }
+    });
 
     function formatDate(/** @type {any} */ dateStr) {
         if (!dateStr) return "-";
@@ -132,6 +140,32 @@
         <h2>View Data</h2>
         <div class="header-actions">
             <button
+                class="fetch-btn"
+                on:click={fetchData}
+                disabled={isLoading}
+                title="Fetch latest data"
+            >
+                {#if isLoading}
+                    <div class="spinner-small"></div>
+                {:else}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path
+                            d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"
+                        /><path d="M21 3v5h-5" /></svg
+                    >
+                {/if}
+                Fetch Data
+            </button>
+            <button
                 class="filter-toggle"
                 on:click={() => (showFilters = !showFilters)}
                 class:active={showFilters}
@@ -164,34 +198,37 @@
         <div class="filters-panel" transition:fade>
             <div class="filter-row">
                 <div class="filter-group">
-                    <label>Start Date</label>
-                    <input type="date" bind:value={startDate} />
+                    <label for="startDate">Start Date</label>
+                    <input id="startDate" type="date" bind:value={startDate} />
                 </div>
                 <div class="filter-group">
-                    <label>End Date</label>
-                    <input type="date" bind:value={endDate} />
+                    <label for="endDate">End Date</label>
+                    <input id="endDate" type="date" bind:value={endDate} />
                 </div>
                 <div class="filter-group">
-                    <label>Location</label>
-                    <input
-                        type="text"
-                        bind:value={filterLocation}
-                        placeholder="e.g. Home"
-                    />
+                    <label for="filterLocation">Location</label>
+                    <select id="filterLocation" bind:value={filterLocation}>
+                        <option value="">Any Location</option>
+                        {#each locationOptions as loc}
+                            <option value={loc}>{loc}</option>
+                        {/each}
+                    </select>
                 </div>
             </div>
             <div class="filter-row">
                 <div class="filter-group">
-                    <label>Session</label>
-                    <input
-                        type="text"
-                        bind:value={filterSession}
-                        placeholder="e.g. Strength"
-                    />
+                    <label for="filterSession">Session</label>
+                    <select id="filterSession" bind:value={filterSession}>
+                        <option value="">Any Session</option>
+                        {#each sessionOptions as sess}
+                            <option value={sess}>{sess}</option>
+                        {/each}
+                    </select>
                 </div>
                 <div class="filter-group">
-                    <label>Grade (Exact)</label>
+                    <label for="filterGrade">Grade (Exact)</label>
                     <input
+                        id="filterGrade"
                         type="text"
                         bind:value={filterGrade}
                         placeholder="e.g. 7a+"
@@ -303,6 +340,40 @@
         align-items: center;
     }
 
+    .fetch-btn {
+        background: #60a5fa;
+        color: #0f172a;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .fetch-btn:hover:not(:disabled) {
+        background: #93c5fd;
+        transform: translateY(-1px);
+    }
+
+    .fetch-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .spinner-small {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(15, 23, 42, 0.2);
+        border-top-color: #0f172a;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
     .filter-toggle {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -360,13 +431,19 @@
         font-weight: 600;
     }
 
-    .filter-group input {
+    .filter-group input,
+    .filter-group select {
         background: rgba(15, 23, 42, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
         padding: 0.5rem 0.75rem;
         color: #f8fafc;
         font-size: 0.9rem;
+    }
+
+    .filter-group select option {
+        background: #1e293b;
+        color: #f8fafc;
     }
 
     .filter-actions {
