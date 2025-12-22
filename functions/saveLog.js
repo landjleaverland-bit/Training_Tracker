@@ -73,6 +73,7 @@ exports.saveLog = async (req, res) => {
             // Dynamic mapping based on activity type
             if (activity_type === 'outdoor') {
                 row.location = {
+                    area: location.area || '',
                     crag: location.crag || '',
                     wall: location.wall || ''
                 };

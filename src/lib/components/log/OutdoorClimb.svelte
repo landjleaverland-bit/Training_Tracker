@@ -2,12 +2,100 @@
     import { fade, slide } from "svelte/transition";
     import { flip } from "svelte/animate";
 
+    let selectedArea = "";
+    let customArea = "";
     let crag = "";
+    let customCrag = "";
     let wall = "";
     let climbingType = "Bouldering";
     let fingerLoad = 0;
     let shoulderLoad = 0;
     let forearmLoad = 0;
+
+    const areaOptions = [
+        "Portland",
+        "Swanage",
+        "Bristol",
+        "Costa Del Severn",
+        "Cotswolds",
+        "Mendips",
+        "Wye Valley",
+        "Gower",
+        "South Wales",
+        "North Wales",
+        "Peak District",
+        "Devon",
+        "Fontainebleau",
+        "Switzerland",
+        "Other",
+    ];
+
+    /** @type {Object.<string, string[]>} */
+    const areaCragMap = {
+        Portland: [
+            "Blacknor Far North",
+            "Blacknor North",
+            "Blacknor Central",
+            "Blacknor South",
+            "Blacknor Far South",
+            "Battleship Edge",
+            "Battleship Back Cliff",
+            "Wallsend North",
+            "Wallsend South",
+            "Coastguard North",
+            "Coastguard South",
+            "Godnor",
+            "Neddyfields",
+            "Cheyne Cliff",
+            "The Cuttings",
+            "The New Cuttings",
+            "The Cuttings Boulderfield",
+        ],
+        Swanage: ["Dancing Ledge", "Hedbury", "Winspit"],
+        "Wye Valley": [
+            "Ban-y-Gor",
+            "Biblins Cave",
+            "Woodcroft Quarry",
+            "Wyndcliff Quarry",
+        ],
+        "Costa Del Severn": ["Brean", "Clevedon", "Portishead Quarry"],
+        Bristol: ["Avon Gorge", "Leigh Woods", "Bickley Wood", "Hambrook"],
+        Cotswolds: ["Sally-in-the-Wood", "Browns Folly"],
+        Mendips: ["Cheddar Gorge"],
+        Gower: ["Rhossili", "Trial Wall Area", "Foxhole"],
+        "South Wales": ["Dinas Rock", "Ogmore"],
+        "North Wales": ["Cromlech", "Australia"],
+        "Peak District": [
+            "Burbage South Valley",
+            "Gardoms Edge",
+            "Raven Tor",
+            "Stanage",
+            "Curbar Edge",
+        ],
+        Devon: ["Dartmoor", "Hartland", "Tintagel"],
+        Fontainebleau: [
+            "Bas Cuvier",
+            "Apremont",
+            "Franchard Isatis",
+            "Roche aux Sabots",
+            "Cul de Chien",
+            "Elephant",
+        ],
+        Switzerland: [
+            "Magic Wood",
+            "Chironico",
+            "Cresciano",
+            "Brione",
+            "San Carlo",
+        ],
+    };
+
+    $: cragsForArea = areaCragMap[selectedArea] || [];
+
+    function handleAreaChange() {
+        crag = "";
+        customCrag = "";
+    }
 
     let exercises = [
         {
@@ -48,18 +136,22 @@
     }
 
     export function getData() {
+        const areaToSave = selectedArea === "Other" ? customArea : selectedArea;
+        const cragToSave = crag === "Other" ? customCrag : crag;
+
         return {
             location: {
-                crag,
+                area: areaToSave,
+                crag: cragToSave,
                 wall,
             },
-            session: climbingType, // Using session field to pass climbingType for now, or we can adjust LogExercise
+            session: climbingType,
             fingerLoad,
             shoulderLoad,
             forearmLoad,
             exercises: exercises.map((ex) => ({
                 ...ex,
-                isRopes: climbingType !== "Bouldering", // Helper for saveLog if needed
+                isRopes: climbingType !== "Bouldering",
             })),
         };
     }
@@ -68,13 +160,60 @@
 <div class="outdoor-config" in:fade>
     <div class="form-grid">
         <div class="input-group">
+            <label for="climb-area">Area</label>
+            <select
+                id="climb-area"
+                bind:value={selectedArea}
+                on:change={handleAreaChange}
+            >
+                <option value="" disabled selected>Select Area</option>
+                {#each areaOptions as opt}
+                    <option value={opt}>{opt}</option>
+                {/each}
+            </select>
+            {#if selectedArea === "Other"}
+                <div transition:slide|local>
+                    <input
+                        type="text"
+                        placeholder="Enter Custom Area..."
+                        bind:value={customArea}
+                        class="custom-input"
+                    />
+                </div>
+            {/if}
+        </div>
+
+        <div class="input-group">
             <label for="climb-crag">Crag</label>
-            <input
-                id="climb-crag"
-                type="text"
-                placeholder="e.g. Stanage"
-                bind:value={crag}
-            />
+            {#if selectedArea && selectedArea !== "Other"}
+                <select id="climb-crag" bind:value={crag}>
+                    <option value="" disabled selected>Select Crag</option>
+                    {#each cragsForArea as c}
+                        <option value={c}>{c}</option>
+                    {/each}
+                    <option value="Other">Other (Custom)</option>
+                </select>
+                {#if crag === "Other"}
+                    <div transition:slide|local>
+                        <input
+                            type="text"
+                            placeholder="Enter Custom Crag..."
+                            bind:value={customCrag}
+                            class="custom-input"
+                        />
+                    </div>
+                {/if}
+            {:else}
+                <input
+                    id="climb-crag"
+                    type="text"
+                    placeholder={selectedArea === "Other"
+                        ? "Enter Crag Name"
+                        : "Select area first..."}
+                    bind:value={crag}
+                    disabled={!selectedArea}
+                />
+            {/if}
         </div>
 
         <div class="input-group">
@@ -272,6 +411,12 @@
     input:hover,
     select:hover {
         border-color: #60a5fa;
+    }
+
+    .custom-input {
+        margin-top: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-style: dashed;
     }
 
     .exercise-section {

@@ -97,7 +97,7 @@ exports.getLogs = async (req, res) => {
         let selectClause = "*";
         if (type === 'outdoor') {
             // Flatten location for simpler frontend handling
-            selectClause = "CONCAT(location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
+            selectClause = "CONCAT(IFNULL(location.area, 'N/A'), ' > ', location.crag, ' - ', location.wall) as location, climbing_type as session_type, * EXCEPT(location, climbing_type)";
         }
 
         const query = `
