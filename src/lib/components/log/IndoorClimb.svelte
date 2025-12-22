@@ -232,8 +232,14 @@
 
     .form-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .load-metrics {
@@ -253,6 +259,8 @@
     }
 
     select {
+        width: 100%;
+        box-sizing: border-box;
         background: rgba(15, 23, 42, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
@@ -318,6 +326,7 @@
         width: 100%;
         border-collapse: collapse;
         min-width: 450px;
+        table-layout: fixed;
     }
 
     th {
@@ -336,11 +345,11 @@
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 18%;
+        width: 20%;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: 12%;
+        width: 14%;
     }
     th:nth-child(4),
     td:nth-child(4) {
@@ -374,6 +383,7 @@
         transition: all 0.2s ease;
         font-family: inherit;
         resize: none; /* Prevent manual resize, rely on focus expansion */
+        box-sizing: border-box;
     }
 
     input:focus,
