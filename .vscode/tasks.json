@@ -10,17 +10,6 @@
             "detail": "Install project dependencies"
         },
         {
-            "label": "npm: dev",
-            "type": "shell",
-            "command": "npm run dev",
-            "problemMatcher": [],
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "detail": "Start SvelteKit dev server"
-        },
-        {
             "label": "npm: build",
             "type": "shell",
             "command": "npm run build",
@@ -37,14 +26,12 @@
             "detail": "Deploy the build directory to gh-pages branch"
         },
         {
-            "label": "Build and Deploy",
+            "label": "npm: preview",
             "type": "shell",
-            "command": "echo 'Deployment finished!'",
-            "dependsOn": [
-                "npm: deploy"
-            ],
+            "command": "npm run preview",
             "problemMatcher": [],
-            "group": "build"
+            "group": "build",
+            "detail": "Preview the build directory"
         }
     ]
 }

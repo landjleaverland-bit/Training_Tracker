@@ -11,8 +11,7 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/Training_Tracker' : '',
-			relative: false
+			base: process.env.NODE_ENV === 'production' ? '/Training_Tracker' : ''
 		}
 	}
 };
