@@ -264,15 +264,21 @@
             };
 
             if (item.type === "entry") {
+                const dateVal =
+                    item.data.date?.value ||
+                    item.data.date ||
+                    item.data.rowDate?.value ||
+                    item.data.rowDate;
                 payload.exercise_id = item.data.exercise_id;
                 payload.entry_criteria = {
-                    date: item.data.date || item.data.rowDate,
+                    date: dateVal,
                     name: item.data.name,
                     weight: item.data.weight,
                 };
             } else {
+                const dateVal = item.data.date?.value || item.data.date;
                 payload.session_criteria = {
-                    date: item.data.date,
+                    date: dateVal,
                     location: item.data.location,
                     session_type: item.data.session,
                 };

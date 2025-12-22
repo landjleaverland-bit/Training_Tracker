@@ -126,9 +126,12 @@ exports.deleteLog = async (req, res) => {
         }
         if (session_criteria) {
             if (session_criteria.date) {
-                const dateOnly = session_criteria.date.split('T')[0];
-                params.date_start = `${dateOnly} 00:00:00`;
-                params.date_end = `${dateOnly} 23:59:59`;
+                const rawDate = session_criteria.date.value || session_criteria.date;
+                if (typeof rawDate === 'string') {
+                    const dateOnly = rawDate.split('T')[0];
+                    params.date_start = `${dateOnly} 00:00:00`;
+                    params.date_end = `${dateOnly} 23:59:59`;
+                }
             }
             if (session_criteria.location) params.location = session_criteria.location;
             if (session_criteria.session_type) params.session_type = session_criteria.session_type;
