@@ -479,6 +479,18 @@
         width: 45px;
         text-align: center;
     }
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 18%;
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+        width: 12%;
+    }
+    th:nth-child(4),
+    td:nth-child(4) {
+        width: auto;
+    }
 
     /* Checkbox Styling */
     input[type="checkbox"] {

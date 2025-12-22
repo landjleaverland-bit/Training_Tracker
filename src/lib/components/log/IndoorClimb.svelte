@@ -336,11 +336,11 @@
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 22%;
+        width: 18%;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: 15%;
+        width: 12%;
     }
     th:nth-child(4),
     td:nth-child(4) {
