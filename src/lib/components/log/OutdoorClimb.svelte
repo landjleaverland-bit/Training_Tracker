@@ -20,10 +20,11 @@
         customCrag = "";
     }
 
+    let climbType = "Bouldering";
+
     let exercises = [
         {
             id: crypto.randomUUID(),
-            isRopes: false,
             name: "",
             grade: "",
             notes: "",
@@ -35,7 +36,6 @@
             ...exercises,
             {
                 id: crypto.randomUUID(),
-                isRopes: false,
                 name: "",
                 grade: "",
                 notes: "",
@@ -50,7 +50,6 @@
             exercises = [
                 {
                     id: crypto.randomUUID(),
-                    isRopes: false,
                     name: "",
                     grade: "",
                     notes: "",
@@ -73,7 +72,10 @@
             fingerLoad,
             shoulderLoad,
             forearmLoad,
-            exercises,
+            exercises: exercises.map((ex) => ({
+                ...ex,
+                type: climbType,
+            })),
         };
     }
 </script>
@@ -146,6 +148,14 @@
                 bind:value={wall}
             />
         </div>
+
+        <div class="input-group">
+            <label for="climb-type">Climb Type</label>
+            <select id="climb-type" bind:value={climbType}>
+                <option value="Bouldering">Bouldering</option>
+                <option value="Sport">Sport</option>
+            </select>
+        </div>
     </div>
 
     <div class="load-metrics">
@@ -156,6 +166,7 @@
                 type="number"
                 min="0"
                 max="5"
+                step="0.5"
                 bind:value={fingerLoad}
             />
         </div>
@@ -166,6 +177,7 @@
                 type="number"
                 min="0"
                 max="5"
+                step="0.5"
                 bind:value={shoulderLoad}
             />
         </div>
@@ -176,6 +188,7 @@
                 type="number"
                 min="0"
                 max="5"
+                step="0.5"
                 bind:value={forearmLoad}
             />
         </div>
@@ -210,7 +223,6 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="checkbox-col">Ropes?</th>
                         <th>Route</th>
                         <th>Grade</th>
                         <th>Notes</th>
@@ -223,12 +235,6 @@
                             out:slide|local={{ duration: 200 }}
                             animate:flip={{ duration: 300 }}
                         >
-                            <td class="checkbox-col">
-                                <input
-                                    type="checkbox"
-                                    bind:checked={ex.isRopes}
-                                />
-                            </td>
                             <td>
                                 <input
                                     type="text"
@@ -413,31 +419,21 @@
     }
 
     /* Column Widths */
-    .checkbox-col {
-        width: 45px;
-        text-align: center;
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 30%;
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 20%;
+        width: 15%;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: 14%;
+        width: auto;
     }
     th:nth-child(4),
     td:nth-child(4) {
-        width: auto;
-    }
-
-    /* Checkbox Styling */
-    input[type="checkbox"] {
-        width: 1.25rem;
-        height: 1.25rem;
-        cursor: pointer;
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 0.25rem;
+        width: 60px;
     }
 
     td {
@@ -476,7 +472,6 @@
     }
 
     .actions-col {
-        width: 40px;
         text-align: center;
     }
 

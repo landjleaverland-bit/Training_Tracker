@@ -1,9 +1,9 @@
 <script>
     import { fade } from "svelte/transition";
 
-    let location = "Home";
-    let session = "Training";
     let fingerLoad = 0;
+    let shoulderLoad = 0;
+    let forearmLoad = 0;
 
     let exercises = [
         {
@@ -18,9 +18,11 @@
 
     export function getData() {
         return {
-            location,
-            session,
+            location: "N/A",
+            session: "Training",
             fingerLoad,
+            shoulderLoad,
+            forearmLoad,
             exercises,
         };
     }
@@ -55,7 +57,30 @@
                 type="number"
                 min="0"
                 max="5"
+                step="0.5"
                 bind:value={fingerLoad}
+            />
+        </div>
+        <div class="load-group">
+            <label for="fb-shoulder-load">Shoulder Load (0-5)</label>
+            <input
+                id="fb-shoulder-load"
+                type="number"
+                min="0"
+                max="5"
+                step="0.5"
+                bind:value={shoulderLoad}
+            />
+        </div>
+        <div class="load-group">
+            <label for="fb-forearm-load">Forearm Load (0-5)</label>
+            <input
+                id="fb-forearm-load"
+                type="number"
+                min="0"
+                max="5"
+                step="0.5"
+                bind:value={forearmLoad}
             />
         </div>
     </div>
@@ -141,11 +166,14 @@
         gap: 1.5rem;
     }
 
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: left;
+    .load-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1.5rem;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     label {

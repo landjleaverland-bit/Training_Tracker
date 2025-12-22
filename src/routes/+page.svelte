@@ -18,7 +18,9 @@
 
 <svelte:head>
     <title
-        >Training Tracker {$apiKey ? "- " + activeTab.label : "(Locked)"}</title
+        >Training Tracker {$apiKey
+            ? "- " + (activeTab?.label || "")
+            : "(Locked)"}</title
     >
     <meta
         name="description"
@@ -69,7 +71,9 @@
             </nav>
 
             <div class="content-container">
-                <svelte:component this={activeTab.component} />
+                {#if activeTab}
+                    <svelte:component this={activeTab.component} />
+                {/if}
             </div>
         {:else}
             <div class="content-container">

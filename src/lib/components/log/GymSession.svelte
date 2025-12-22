@@ -3,6 +3,7 @@
 
     let location = "";
     let session = "";
+    /** @type {any[]} */
     let exercises = [];
 
     export function getData() {

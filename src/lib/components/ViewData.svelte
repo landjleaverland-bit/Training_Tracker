@@ -649,6 +649,16 @@
                                                                     item.name ||
                                                                     "-"}</span
                                                             >
+                                                            {#if item.type || item.isRopes !== undefined}
+                                                                <span
+                                                                    class="ex-meta type"
+                                                                >
+                                                                    {item.type ||
+                                                                        (item.isRopes
+                                                                            ? "Sport"
+                                                                            : "Bouldering")}
+                                                                </span>
+                                                            {/if}
                                                             {#if item.grade}
                                                                 <span
                                                                     class="ex-meta grade"
@@ -1115,6 +1125,10 @@
     .ex-meta.sets {
         color: #a78bfa;
         border: 1px solid rgba(167, 139, 250, 0.2);
+    }
+    .ex-meta.type {
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.2);
     }
 
     .ex-notes {
