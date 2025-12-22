@@ -188,13 +188,18 @@
     select,
     input[type="text"],
     input[type="number"] {
-        background: rgba(15, 23, 42, 0.6);
+        background: #0f172a;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
         padding: 0.6rem;
         color: #f8fafc;
         font-size: 0.9rem;
         width: 100%;
+    }
+
+    select option {
+        background: #0f172a;
+        color: #f8fafc;
     }
 
     select:focus,

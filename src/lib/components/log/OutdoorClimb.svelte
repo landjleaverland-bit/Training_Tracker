@@ -321,7 +321,7 @@
     select {
         width: 100%;
         box-sizing: border-box;
-        background: rgba(15, 23, 42, 0.6);
+        background: #0f172a;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
         padding: 0.6rem 0.75rem;
@@ -329,6 +329,11 @@
         font-size: 0.9rem;
         outline: none;
         transition: all 0.2s ease;
+    }
+
+    select option {
+        background: #0f172a;
+        color: #f8fafc;
     }
 
     select {

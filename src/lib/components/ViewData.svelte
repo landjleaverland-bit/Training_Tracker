@@ -824,7 +824,7 @@
 
     .filter-group input,
     .filter-group select {
-        background: rgba(15, 23, 42, 0.6);
+        background: #0f172a;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.5rem;
         padding: 0.5rem 0.75rem;
@@ -833,7 +833,7 @@
     }
 
     .filter-group select option {
-        background: #1e293b;
+        background: #0f172a;
         color: #f8fafc;
     }
 
@@ -865,13 +865,18 @@
     }
 
     .type-select {
-        background: rgba(15, 23, 42, 0.6);
+        background: #0f172a;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.75rem;
         padding: 0.5rem 1rem;
         color: #f8fafc;
         font-size: 0.9rem;
         cursor: pointer;
+    }
+
+    .type-select option {
+        background: #0f172a;
+        color: #f8fafc;
     }
 
     .status-msg {
