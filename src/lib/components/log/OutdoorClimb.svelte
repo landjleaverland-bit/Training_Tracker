@@ -426,10 +426,10 @@
 
     .training-metrics {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
         background: rgba(255, 255, 255, 0.03);
-        padding: 1rem;
+        padding: 1.5rem;
         border-radius: 0.75rem;
         border: 1px solid rgba(255, 255, 255, 0.05);
         margin-top: 1rem;
