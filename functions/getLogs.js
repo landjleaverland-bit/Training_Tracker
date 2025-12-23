@@ -188,6 +188,12 @@ exports.getLogs = async (req, res) => {
                 if (row.position !== undefined) {
                     normalized.position = row.position;
                 }
+
+                // Flatten route name and attempts for easier frontend display
+                if (row.climbs) {
+                    normalized.name = row.climbs.route || 'Unknown Problem';
+                    normalized.attempts = row.climbs.attempts;
+                }
             } else if (type === 'fingerboard') {
                 normalized.session_type = 'Fingerboard';
                 normalized.location = 'N/A';
