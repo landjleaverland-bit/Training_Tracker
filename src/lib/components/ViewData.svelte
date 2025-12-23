@@ -43,25 +43,29 @@
 
     /**
      * @param {any[]} rows
-     * @param {string} sDate
-     * @param {string} eDate
+     * @param {any[]} data
+     * @param {string} start
+     * @param {string} end
      * @param {string} loc
-     * @param {string} sess
+     * @param {string} sType
      * @param {string} grd
      */
-    function filterAndGroupData(rows, sDate, eDate, loc, sess, grd) {
+    function filterAndGroupData(data, start, end, loc, sType, grd) {
+        if (!data) return [];
+        console.log(`Filtering data. Total rows: ${data.length}`);
+
         // 1. Filter locally
-        const filtered = rows.filter((row) => {
+        const filtered = data.filter((row) => {
             if (
-                sDate &&
-                new Date(row.date?.value || row.date) < new Date(sDate)
+                start &&
+                new Date(row.date?.value || row.date) < new Date(start)
             )
                 return false;
             // Add one day to endDate to make it inclusive
-            if (eDate) {
-                const end = new Date(eDate);
-                end.setHours(23, 59, 59, 999);
-                if (new Date(row.date?.value || row.date) > end) return false;
+            if (end) {
+                const limit = new Date(end);
+                limit.setHours(23, 59, 59, 999);
+                if (new Date(row.date?.value || row.date) > limit) return false;
             }
             if (loc) {
                 const rowLoc =
@@ -69,13 +73,14 @@
                 if (!rowLoc.toLowerCase().includes(loc.toLowerCase()))
                     return false;
             }
-            if (sess && row.session_type !== sess) return false;
+            if (sType && row.session_type !== sType) return false;
             if (grd) {
                 const itemGrade = (row.climbs?.grade || "").toLowerCase();
                 if (itemGrade !== grd.toLowerCase()) return false;
             }
             return true;
         });
+        console.log(`Filtered rows: ${filtered.length}`);
 
         // 2. Group by session
         /** @type {Object.<string, any>} */
@@ -152,32 +157,20 @@
                         (climb.climbs && climb.climbs.round),
                 };
 
-                // Deduplication check: Use entire data object + date to ensure any difference is shown
-                const dedupKey = `${dateStr}|${JSON.stringify({
-                    // Create a deterministic key object
-                    n: itemData.name,
-                    g: itemData.grade,
-                    a: itemData.attempts,
-                    gr: itemData.grip,
-                    w: itemData.weight,
-                    no: itemData.notes,
-                    l: itemData.rawLocation,
-                    r: itemData.round,
-                    s: itemData.sets,
-                    rp: itemData.reps,
-                })}`;
-
-                if (seenRows.has(dedupKey)) return;
-                seenRows.add(dedupKey);
-
-                if (exerciseId && selectedType === "fingerboard") {
+                if (selectedType === "fingerboard" && exerciseId) {
+                    console.log(
+                        `Processing FB Item: ${itemData.name}, Grip: ${itemData.grip}, ID: ${exerciseId}`,
+                    );
+                    // Fingerboard Logic: Group by Exercise + Grip
                     const existing = groups[key].items.find(
                         (/** @type {any} */ it) =>
                             String(it.exercise_id) === String(exerciseId) &&
                             (it.grip || it.grip_type) ===
                                 (itemData.grip || itemData.grip_type),
                     );
+
                     if (existing) {
+                        console.log(" -> Found existing match");
                         if (!existing.details) {
                             existing.details = [
                                 {
@@ -200,21 +193,44 @@
                                 });
                             }
                         }
-                        return;
+                    } else {
+                        console.log(" -> No match, adding new item");
+                        // New grip variation, add as separate item
+                        groups[key].items.push(itemData);
                     }
-                }
+                } else {
+                    // General & Competition Logic: Strict Deduplication
 
-                if (selectedType === "competition") {
-                    if (!groups[key].rounds) groups[key].rounds = {};
+                    // Deduplication check: Use entire data object + date to ensure any difference is shown
+                    const dedupKey = `${dateStr}|${JSON.stringify({
+                        // Create a deterministic key object
+                        n: itemData.name,
+                        g: itemData.grade,
+                        a: itemData.attempts,
+                        gr: itemData.grip,
+                        w: itemData.weight,
+                        no: itemData.notes,
+                        l: itemData.rawLocation,
+                        r: itemData.round,
+                        s: itemData.sets,
+                        rp: itemData.reps,
+                    })}`;
 
-                    const roundName = itemData.round || "Unknown";
-                    if (!groups[key].rounds[roundName]) {
-                        groups[key].rounds[roundName] = [];
+                    if (seenRows.has(dedupKey)) return;
+                    seenRows.add(dedupKey);
+
+                    if (selectedType === "competition") {
+                        if (!groups[key].rounds) groups[key].rounds = {};
+
+                        const roundName = itemData.round || "Unknown";
+                        if (!groups[key].rounds[roundName]) {
+                            groups[key].rounds[roundName] = [];
+                        }
+                        groups[key].rounds[roundName].push(itemData);
                     }
-                    groups[key].rounds[roundName].push(itemData);
-                }
 
-                groups[key].items.push(itemData);
+                    groups[key].items.push(itemData);
+                }
             });
         });
 

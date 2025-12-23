@@ -38,7 +38,8 @@ export function syncLogs(type, newLogs) {
             // Generate a unique ID for the entry
             // Since BigQuery might return duplicate looking rows if we aren't careful, 
             // we use as much info as possible.
-            const uniqueId = `${dateStr}|${log.location}|${log.session_type}|${JSON.stringify(log.climbs)}`;
+            // For fingerboard (flat rows), we need to include specific fields that differentiate them
+            const uniqueId = `${dateStr}|${log.location}|${log.session_type}|${JSON.stringify(log.climbs)}|${log.exercise}|${log.grip}|${log.weight}|${log.reps}`;
 
             if (!uniqueMap.has(uniqueId)) {
                 uniqueMap.set(uniqueId, log);
