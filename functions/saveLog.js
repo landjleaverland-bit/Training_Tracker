@@ -42,6 +42,8 @@ exports.saveLog = async (req, res) => {
     try {
         const { activity_type, location, session_type, finger_load, shoulder_load, forearm_load, training, climbs, date } = req.body;
 
+        console.log('DEBUG: Received payload', { activity_type, location, session_type });
+
         // Basic validation
         // Basic validation
         // session_type is not required for indoor climbs
@@ -181,6 +183,7 @@ exports.saveLog = async (req, res) => {
             ),
             { name: 'climbing_type', type: 'STRING' },
             { name: 'session_type', type: 'STRING' },
+            { name: 'attempts', type: 'STRING' },
             { name: 'position', type: 'INTEGER' },
             { name: 'finger_load', type: 'NUMERIC' },
             { name: 'shoulder_load', type: 'NUMERIC' },
