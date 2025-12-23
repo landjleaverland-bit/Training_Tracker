@@ -251,6 +251,7 @@
                                     <option value="Onsight">Onsight</option>
                                     <option value="Flash">Flash</option>
                                     <option value="Redpoint">Redpoint</option>
+                                    <option value="Repeat">Repeat</option>
                                     <option value="Dogged">Dogged</option>
                                     <option value="DNF">DNF</option>
                                 </select>
