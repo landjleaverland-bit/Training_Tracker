@@ -162,6 +162,7 @@
                 <option value="Projecting">Projecting</option>
                 <option value="Onsighting">Onsighting</option>
                 <option value="Campusing">Campusing</option>
+                <option value="Repeaters">Repeaters</option>
             </select>
         </div>
         <div class="training-group">
