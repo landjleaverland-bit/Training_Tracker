@@ -132,6 +132,8 @@
                 let dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}`;
                 if (selectedType === "competition") {
                     dedupKey += `|${roundVal}`;
+                } else if (selectedType === "fingerboard") {
+                    dedupKey += `|${climb.grip || climb.grip_type || row.grip || ""}`;
                 }
 
                 if (seenRows.has(dedupKey)) return;
@@ -170,7 +172,9 @@
                 if (exerciseId && selectedType === "fingerboard") {
                     const existing = groups[key].items.find(
                         (/** @type {any} */ it) =>
-                            String(it.exercise_id) === String(exerciseId),
+                            String(it.exercise_id) === String(exerciseId) &&
+                            (it.grip || it.grip_type) ===
+                                (itemData.grip || itemData.grip_type),
                     );
                     if (existing) {
                         if (!existing.details) {
