@@ -58,7 +58,10 @@
                     return false;
             }
             if (sess && row.session_type !== sess) return false;
-            if (grd && row.climbs?.grade !== grd) return false;
+            if (grd) {
+                const itemGrade = (row.climbs?.grade || "").toLowerCase();
+                if (itemGrade !== grd.toLowerCase()) return false;
+            }
             return true;
         });
 
@@ -679,10 +682,29 @@
                     <label for="filterGrade">Grade (Exact)</label>
                     <input
                         id="filterGrade"
-                        type="text"
+                        list="grade-suggestions"
                         bind:value={filterGrade}
-                        placeholder="e.g. 7a+"
+                        placeholder="V4, 6a+..."
                     />
+                    <datalist id="grade-suggestions">
+                        <!-- V-Grades -->
+                        {#each Array(17) as _, i}
+                            <option value="V{i}">V{i}</option>
+                        {/each}
+                        <!-- Font Grades -->
+                        {#each [4, 5, 6, 7, 8] as num}
+                            <option value={num}>{num}</option>
+                            <option value="{num}+">{num}+</option>
+                            {#if num >= 6}
+                                <option value="{num}a">{num}a</option>
+                                <option value="{num}a+">{num}a+</option>
+                                <option value="{num}b">{num}b</option>
+                                <option value="{num}b+">{num}b+</option>
+                                <option value="{num}c">{num}c</option>
+                                <option value="{num}c+">{num}c+</option>
+                            {/if}
+                        {/each}
+                    </datalist>
                 </div>
                 <div class="filter-actions">
                     <button class="clear-btn" on:click={clearFilters}
@@ -914,6 +936,11 @@
                                                             {#if item.grade}
                                                                 <span
                                                                     class="ex-meta grade"
+                                                                    class:v-grade={item.grade
+                                                                        ?.toUpperCase()
+                                                                        .startsWith(
+                                                                            "V",
+                                                                        )}
                                                                     >{item.grade}</span
                                                                 >
                                                             {/if}
@@ -1551,6 +1578,10 @@
     .ex-meta.grade {
         color: #f472b6;
         border: 1px solid rgba(244, 114, 182, 0.2);
+    }
+    .ex-meta.grade.v-grade {
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.2);
     }
     .ex-meta.weight {
         color: #fbbf24;

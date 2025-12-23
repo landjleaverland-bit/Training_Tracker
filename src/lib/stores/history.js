@@ -79,7 +79,7 @@ export function removeLog(type, exercise_id, criteria) {
 
             // 2. Fallback match by criteria
             if (criteria) {
-                const normalizeDate = (d) => (d?.value || d || '').toString().replace('T', ' ').split(' ')[0];
+                const normalizeDate = (/** @type {any} */ d) => (d?.value || d || '').toString().replace('T', ' ').split(' ')[0];
                 const logDateOnly = normalizeDate(log.date);
                 const critDateOnly = normalizeDate(criteria.date);
 
