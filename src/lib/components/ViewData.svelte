@@ -128,12 +128,28 @@
                     (climb.climbs && climb.climbs.round) ||
                     "";
 
-                // Deduplication check: Date + ExerciseID + Weight (+ Round for comp)
-                let dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}`;
+                // Pre-calculate fields for deduplication
+                const dName =
+                    climb.route ||
+                    climb.exercise ||
+                    climb.name ||
+                    row.exercise ||
+                    "-";
+                const dGrade =
+                    climb.grade ||
+                    row.grade ||
+                    (climb.climbs && climb.climbs.grade) ||
+                    "";
+                const dAttempts = climb.attempts || row.attempts || "";
+                const dGrip = climb.grip || climb.grip_type || row.grip || "";
+
+                // Deduplication check: Include all visual fields to prevent hiding valid data
+                let dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}|${dName}|${dGrade}|${dAttempts}`;
+
                 if (selectedType === "competition") {
                     dedupKey += `|${roundVal}`;
                 } else if (selectedType === "fingerboard") {
-                    dedupKey += `|${climb.grip || climb.grip_type || row.grip || ""}`;
+                    dedupKey += `|${dGrip}`;
                 }
 
                 if (seenRows.has(dedupKey)) return;
@@ -144,17 +160,9 @@
                     attempts: climb.attempts || row.attempts,
                     type:
                         climb.type || climb.climbing_type || row.climbing_type,
-                    name:
-                        climb.route ||
-                        climb.exercise ||
-                        climb.name ||
-                        row.exercise ||
-                        "-",
-                    grade:
-                        climb.grade ||
-                        row.grade ||
-                        (climb.climbs && climb.climbs.grade),
-                    grip: climb.grip || climb.grip_type || row.grip,
+                    name: dName,
+                    grade: dGrade,
+                    grip: dGrip,
                     weight: climb.weight ?? row.weight,
                     sets: climb.sets || row.sets,
                     reps: climb.reps || row.reps,
