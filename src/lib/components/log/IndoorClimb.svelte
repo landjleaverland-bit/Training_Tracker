@@ -3,9 +3,9 @@
     import { flip } from "svelte/animate";
 
     let location = "";
-    let fingerLoad = 0;
-    let shoulderLoad = 0;
-    let forearmLoad = 0;
+    let fingerLoad = 3;
+    let shoulderLoad = 3;
+    let forearmLoad = 3;
 
     let climbType = "Bouldering";
 

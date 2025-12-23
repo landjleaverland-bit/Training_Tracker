@@ -7,9 +7,9 @@
     let crag = "";
     let customCrag = "";
     let wall = "";
-    let fingerLoad = 0;
-    let shoulderLoad = 0;
-    let forearmLoad = 0;
+    let fingerLoad = 3;
+    let shoulderLoad = 3;
+    let forearmLoad = 3;
 
     import { areaOptions, areaCragMap } from "$lib/data/climbingAreas.js";
 
