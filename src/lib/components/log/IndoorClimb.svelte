@@ -3,6 +3,7 @@
     import { flip } from "svelte/animate";
 
     let location = "";
+    let customLocation = "";
     let fingerLoad = 3;
     let shoulderLoad = 3;
     let forearmLoad = 3;
@@ -65,7 +66,7 @@
     }
     export function getData() {
         return {
-            location,
+            location: location === "Other" ? customLocation : location,
             fingerLoad,
             shoulderLoad,
             forearmLoad,
@@ -94,7 +95,18 @@
                 {#each locationOptions as opt}
                     <option value={opt}>{opt}</option>
                 {/each}
+                <option value="Other">Other</option>
             </select>
+            {#if location === "Other"}
+                <div transition:slide|local>
+                    <input
+                        type="text"
+                        placeholder="Enter Custom Location..."
+                        bind:value={customLocation}
+                        class="custom-input"
+                    />
+                </div>
+            {/if}
         </div>
 
         <div class="input-group">
@@ -383,6 +395,12 @@
 
     select:hover {
         border-color: #60a5fa;
+    }
+
+    .custom-input {
+        margin-top: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-style: dashed;
     }
 
     .exercise-section {
