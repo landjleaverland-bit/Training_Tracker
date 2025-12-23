@@ -23,6 +23,8 @@
     /** @type {number | null} */
     let compPosition = null;
 
+    let isInputFocused = false;
+
     let exercises = [
         {
             id: crypto.randomUUID(),
@@ -207,7 +209,7 @@
             </div>
 
             <div class="table-container">
-                <table>
+                <table class:resizing={isInputFocused}>
                     <thead>
                         <tr>
                             <th>Problem #</th>
@@ -251,6 +253,10 @@
                                                     bind:value={
                                                         ex.attempt_count
                                                     }
+                                                    on:focus={() =>
+                                                        (isInputFocused = true)}
+                                                    on:blur={() =>
+                                                        (isInputFocused = false)}
                                                     class="attempt-count"
                                                 />
                                             </div>
@@ -472,19 +478,33 @@
     th:nth-child(1),
     td:nth-child(1) {
         width: 16.6%;
+        transition: width 0.3s ease;
     }
     th:nth-child(2),
     td:nth-child(2) {
         width: 33.3%;
         min-width: 160px;
+        transition: width 0.3s ease;
     }
     th:nth-child(3),
     td:nth-child(3) {
         width: 50%;
+        transition: width 0.3s ease;
     }
     th:nth-child(4),
     td:nth-child(4) {
         width: 60px;
+        transition: width 0.3s ease;
+    }
+
+    /* Dynamic Resizing */
+    table.resizing th:nth-child(2),
+    table.resizing td:nth-child(2) {
+        width: 45%; /* Widen Result column */
+    }
+    table.resizing th:nth-child(3),
+    table.resizing td:nth-child(3) {
+        width: 38.3%; /* Shrink Notes column */
     }
 
     td {
