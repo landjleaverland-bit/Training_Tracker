@@ -52,7 +52,6 @@
      */
     function filterAndGroupData(data, start, end, loc, sType, grd) {
         if (!data) return [];
-        console.log(`Filtering data. Total rows: ${data.length}`);
 
         // 1. Filter locally
         const filtered = data.filter((row) => {
@@ -80,7 +79,6 @@
             }
             return true;
         });
-        console.log(`Filtered rows: ${filtered.length}`);
 
         // 2. Group by session
         /** @type {Object.<string, any>} */
@@ -158,9 +156,6 @@
                 };
 
                 if (selectedType === "fingerboard" && exerciseId) {
-                    console.log(
-                        `Processing FB Item: ${itemData.name}, Grip: ${itemData.grip}, ID: ${exerciseId}`,
-                    );
                     // Fingerboard Logic: Group by Exercise + Grip
                     const existing = groups[key].items.find(
                         (/** @type {any} */ it) =>
@@ -170,7 +165,6 @@
                     );
 
                     if (existing) {
-                        console.log(" -> Found existing match");
                         if (!existing.details) {
                             existing.details = [
                                 {
@@ -194,7 +188,6 @@
                             }
                         }
                     } else {
-                        console.log(" -> No match, adding new item");
                         // New grip variation, add as separate item
                         groups[key].items.push(itemData);
                     }
