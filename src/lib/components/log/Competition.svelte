@@ -25,7 +25,6 @@
         {
             id: crypto.randomUUID(),
             name: "",
-            grade: "",
             attempts: "Redpoint",
             notes: "",
         },
@@ -48,7 +47,6 @@
             {
                 id: crypto.randomUUID(),
                 name: "",
-                grade: "",
                 attempts: "Redpoint",
                 notes: "",
             },
@@ -64,7 +62,6 @@
                 {
                     id: crypto.randomUUID(),
                     name: "",
-                    grade: "",
                     attempts: "Redpoint",
                     notes: "",
                 },
@@ -179,7 +176,6 @@
                 <thead>
                     <tr>
                         <th>Problem #</th>
-                        <th>Grade/Points</th>
                         <th>Result</th>
                         <th>Notes</th>
                         <th class="actions-col"></th>
@@ -196,13 +192,6 @@
                                     type="text"
                                     placeholder="e.g. #1"
                                     bind:value={ex.name}
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. 25pts"
-                                    bind:value={ex.grade}
                                 />
                             </td>
                             <td>
@@ -369,18 +358,14 @@
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 20%;
+        width: 25%;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: 20%;
+        width: auto;
     }
     th:nth-child(4),
     td:nth-child(4) {
-        width: auto;
-    }
-    th:nth-child(5),
-    td:nth-child(5) {
         width: 60px;
     }
 
