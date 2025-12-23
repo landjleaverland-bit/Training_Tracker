@@ -152,6 +152,8 @@ exports.saveLog = async (req, res) => {
         // BigQuery Load requires a string where each line is a valid JSON object
         const ndjson = rows.map(row => JSON.stringify(row)).join('\n');
 
+        console.log('Uploading payload:', ndjson);
+
         // Write to a temporary file
         const fs = require('fs');
         const os = require('os');
@@ -163,11 +165,40 @@ exports.saveLog = async (req, res) => {
         // Load Job Configuration
         const metadata = {
             sourceFormat: 'NEWLINE_DELIMITED_JSON',
-            schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'], // Optional: Allow schema evolution
-            autodetect: true, // Optional: Let BQ infer schema if needed
+            schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'],
+            autodetect: false, // Turn off autodetect to rely on explicit schema
             schema: {
                 fields: [
-                    { name: 'date', type: 'DATETIME' }
+                    { name: 'date', type: 'DATETIME' },
+                    { name: 'location', type: 'STRING' },
+                    { name: 'climbing_type', type: 'STRING' },
+                    { name: 'session_type', type: 'STRING' },
+                    { name: 'position', type: 'INTEGER' },
+                    { name: 'finger_load', type: 'NUMERIC' },
+                    { name: 'shoulder_load', type: 'NUMERIC' },
+                    { name: 'forearm_load', type: 'NUMERIC' },
+                    { name: 'exercise_id', type: 'STRING' },
+                    {
+                        name: 'training', type: 'RECORD', fields: [
+                            { name: 'training_type', type: 'STRING' },
+                            { name: 'difficulty', type: 'STRING' },
+                            { name: 'category', type: 'STRING' },
+                            { name: 'energy_system', type: 'STRING' },
+                            { name: 'technique_focus', type: 'STRING' },
+                            { name: 'wall_angle', type: 'STRING' }
+                        ]
+                    },
+                    {
+                        name: 'climbs', type: 'RECORD', mode: 'NULLABLE', fields: [
+                            { name: 'route', type: 'STRING' },
+                            { name: 'attempts', type: 'STRING' },
+                            { name: 'round', type: 'STRING' },
+                            { name: 'notes', type: 'STRING' },
+                            { name: 'attempt_count', type: 'INTEGER' },
+                            { name: 'grade', type: 'STRING' },
+                            { name: 'name', type: 'STRING' }
+                        ]
+                    }
                 ]
             }
         };
