@@ -296,18 +296,18 @@
         </div>
     {/if}
 
-    <div class="position-input-group">
-        <label for="comp-position"
-            >Final Position {round === "Result" ? "" : "(Optional)"}</label
-        >
-        <input
-            type="number"
-            id="comp-position"
-            placeholder="e.g. 1"
-            bind:value={compPosition}
-            class="position-input"
-        />
-    </div>
+    {#if round === "Result"}
+        <div class="position-input-group">
+            <label for="comp-position">Final Position</label>
+            <input
+                type="number"
+                id="comp-position"
+                placeholder="e.g. 1"
+                bind:value={compPosition}
+                class="position-input"
+            />
+        </div>
+    {/if}
 </div>
 
 <style>
