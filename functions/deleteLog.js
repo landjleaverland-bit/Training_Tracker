@@ -112,7 +112,11 @@ exports.deleteLog = async (req, res) => {
                 }
                 if (session_criteria.session_type) {
                     if (activity_type === 'outdoor') {
-                        parts.push(`climbing_type = @session_type`);
+                        // Only filter by climbing_type if it is NOT the generic 'Outdoor' label
+                        // getLogs returns 'Outdoor' for all outdoor sessions, while DB has 'Bouldering'/'Sport' etc.
+                        if (session_criteria.session_type !== 'Outdoor') {
+                            parts.push(`climbing_type = @session_type`);
+                        }
                     } else if (activity_type === 'fingerboard' || activity_type === 'indoor') {
                         // Session type is hardcoded in getLogs
                     } else {
