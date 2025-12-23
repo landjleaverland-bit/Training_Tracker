@@ -112,7 +112,7 @@ exports.deleteLog = async (req, res) => {
                 if (session_criteria.session_type) {
                     if (activity_type === 'outdoor') {
                         parts.push(`climbing_type = @session_type`);
-                    } else if (activity_type === 'fingerboard') {
+                    } else if (activity_type === 'fingerboard' || activity_type === 'indoor') {
                         // Session type is hardcoded in getLogs
                     } else {
                         parts.push(`session_type = @session_type`);

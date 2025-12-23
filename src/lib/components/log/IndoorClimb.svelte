@@ -3,7 +3,6 @@
     import { flip } from "svelte/animate";
 
     let location = "";
-    let session = "";
     let fingerLoad = 0;
     let shoulderLoad = 0;
     let forearmLoad = 0;
@@ -33,7 +32,6 @@
         "Rockstar",
         "Flashpoint Bristol",
     ];
-    const sessionOptions = ["Strength", "Endurance", "Power", "Recovery"];
 
     function addRow() {
         exercises = [
@@ -67,7 +65,6 @@
     export function getData() {
         return {
             location,
-            session,
             fingerLoad,
             shoulderLoad,
             forearmLoad,
@@ -94,16 +91,6 @@
             <select id="climb-location" bind:value={location}>
                 <option value="" disabled selected>Select Location</option>
                 {#each locationOptions as opt}
-                    <option value={opt}>{opt}</option>
-                {/each}
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label for="climb-session">Session Focus</label>
-            <select id="climb-session" bind:value={session}>
-                <option value="" disabled selected>Select Focus</option>
-                {#each sessionOptions as opt}
                     <option value={opt}>{opt}</option>
                 {/each}
             </select>

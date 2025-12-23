@@ -102,7 +102,6 @@ exports.saveLog = async (req, res) => {
                 row.exercise_id = climb.id;
             } else if (activity_type === 'indoor' || !activity_type) {
                 row.location = location;
-                row.session_type = session_type;
                 row.climbing_type = climb.type || 'Bouldering';
                 row.attempts = climb.attempts || 'Redpoint';
                 row.climbs = {

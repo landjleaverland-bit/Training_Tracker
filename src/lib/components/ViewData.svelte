@@ -499,7 +499,6 @@
                 return [
                     { key: "date", label: "Date" },
                     { key: "location", label: "Location" },
-                    { key: "session_type", label: "Session" },
                     { key: "climbs", label: "Data", isObject: true },
                 ];
             case "fingerboard":
@@ -669,7 +668,7 @@
                             <option value="Bouldering">Bouldering</option>
                             <option value="Ropes">Ropes</option>
                         </select>
-                    {:else}
+                    {:else if selectedType !== "indoor"}
                         <select id="filterSession" bind:value={filterSession}>
                             <option value="">Any Session</option>
                             {#each sessionOptions as sess}

@@ -72,10 +72,6 @@ exports.getLogs = async (req, res) => {
                 whereClauses.push("location = @location");
                 queryOptions.params.location = location;
             }
-            if (session) {
-                whereClauses.push("session_type = @session");
-                queryOptions.params.session = session;
-            }
         }
 
         if (startDate) {
