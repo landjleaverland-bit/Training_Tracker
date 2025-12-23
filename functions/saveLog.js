@@ -163,8 +163,13 @@ exports.saveLog = async (req, res) => {
         // Load Job Configuration
         const metadata = {
             sourceFormat: 'NEWLINE_DELIMITED_JSON',
-            // schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'], // Optional: Allow schema evolution
-            // autodetect: true, // Optional: Let BQ infer schema if needed
+            schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'], // Optional: Allow schema evolution
+            autodetect: true, // Optional: Let BQ infer schema if needed
+            schema: {
+                fields: [
+                    { name: 'date', type: 'DATETIME' }
+                ]
+            }
         };
 
         // Run the Load Job
