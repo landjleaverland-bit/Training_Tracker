@@ -482,13 +482,13 @@
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 33.3%;
+        width: 40%; /* Increased from 33.3% */
         min-width: 160px;
         transition: width 0.3s ease;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: 50%;
+        width: 43.4%; /* Decreased from 50% */
         transition: width 0.3s ease;
     }
     th:nth-child(4),
@@ -500,11 +500,11 @@
     /* Dynamic Resizing */
     table.resizing th:nth-child(2),
     table.resizing td:nth-child(2) {
-        width: 45%; /* Widen Result column */
+        width: 55%; /* Widen Result column further */
     }
     table.resizing th:nth-child(3),
     table.resizing td:nth-child(3) {
-        width: 38.3%; /* Shrink Notes column */
+        width: 28.4%; /* Shrink Notes column further */
     }
 
     td {
