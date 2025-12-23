@@ -122,47 +122,22 @@
                 const exerciseId =
                     climb.exercise_id || climb.id || row.exercise_id;
 
-                const roundVal =
-                    climb.round ||
-                    row.round ||
-                    (climb.climbs && climb.climbs.round) ||
-                    "";
-
-                // Pre-calculate fields for deduplication
-                const dName =
-                    climb.route ||
-                    climb.exercise ||
-                    climb.name ||
-                    row.exercise ||
-                    "-";
-                const dGrade =
-                    climb.grade ||
-                    row.grade ||
-                    (climb.climbs && climb.climbs.grade) ||
-                    "";
-                const dAttempts = climb.attempts || row.attempts || "";
-                const dGrip = climb.grip || climb.grip_type || row.grip || "";
-
-                // Deduplication check: Include all visual fields to prevent hiding valid data
-                let dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}|${dName}|${dGrade}|${dAttempts}`;
-
-                if (selectedType === "competition") {
-                    dedupKey += `|${roundVal}`;
-                } else if (selectedType === "fingerboard") {
-                    dedupKey += `|${dGrip}`;
-                }
-
-                if (seenRows.has(dedupKey)) return;
-                seenRows.add(dedupKey);
-
                 const itemData = {
                     ...(climb.climbs || climb), // Handle nested or flat
                     attempts: climb.attempts || row.attempts,
                     type:
                         climb.type || climb.climbing_type || row.climbing_type,
-                    name: dName,
-                    grade: dGrade,
-                    grip: dGrip,
+                    name:
+                        climb.route ||
+                        climb.exercise ||
+                        climb.name ||
+                        row.exercise ||
+                        "-",
+                    grade:
+                        climb.grade ||
+                        row.grade ||
+                        (climb.climbs && climb.climbs.grade),
+                    grip: climb.grip || climb.grip_type || row.grip,
                     weight: climb.weight ?? row.weight,
                     sets: climb.sets || row.sets,
                     reps: climb.reps || row.reps,
@@ -176,6 +151,24 @@
                         row.round ||
                         (climb.climbs && climb.climbs.round),
                 };
+
+                // Deduplication check: Use entire data object + date to ensure any difference is shown
+                const dedupKey = `${dateStr}|${JSON.stringify({
+                    // Create a deterministic key object
+                    n: itemData.name,
+                    g: itemData.grade,
+                    a: itemData.attempts,
+                    gr: itemData.grip,
+                    w: itemData.weight,
+                    no: itemData.notes,
+                    l: itemData.rawLocation,
+                    r: itemData.round,
+                    s: itemData.sets,
+                    rp: itemData.reps,
+                })}`;
+
+                if (seenRows.has(dedupKey)) return;
+                seenRows.add(dedupKey);
 
                 if (exerciseId && selectedType === "fingerboard") {
                     const existing = groups[key].items.find(
