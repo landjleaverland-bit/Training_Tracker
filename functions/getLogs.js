@@ -166,6 +166,7 @@ exports.getLogs = async (req, res) => {
             if (type === 'outdoor') {
                 normalized.session_type = 'Outdoor';
                 if (row.location && typeof row.location === 'object') {
+                    normalized.raw_location = row.location;
                     const parts = [];
                     if (row.location.area) parts.push(row.location.area);
                     if (row.location.crag) parts.push(row.location.crag);

@@ -139,7 +139,7 @@
                     notes: climb.notes || row.notes,
                     exercise_id: exerciseId,
                     details: climb.details || null,
-                    rawLocation: row.location,
+                    rawLocation: row.raw_location || row.location,
                     rowDate: row.date,
                 };
 
