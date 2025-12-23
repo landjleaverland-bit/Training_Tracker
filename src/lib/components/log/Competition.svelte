@@ -323,7 +323,8 @@
     }
 
     .attempts-wrapper {
-        width: 60px;
+        width: 80px;
+        flex-shrink: 0;
     }
 
     .attempt-count {
