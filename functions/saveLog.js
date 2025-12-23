@@ -45,8 +45,13 @@ exports.saveLog = async (req, res) => {
         // Basic validation
         // Basic validation
         // session_type is not required for indoor climbs
-        if (!location || (!session_type && activity_type !== 'indoor') || !climbs || !climbs.length) {
+        if (!location || (!session_type && activity_type !== 'indoor')) {
             return res.status(400).send('Missing required fields');
+        }
+
+        // Climbs are required unless it is a competition result only
+        if ((!climbs || !climbs.length) && req.body.isResultOnly !== true) {
+            return res.status(400).send('Missing climbs data');
         }
 
         const tableMapping = {
@@ -62,7 +67,10 @@ exports.saveLog = async (req, res) => {
         const datasetId = 'training_plan_database_dataset';
 
         // BigQuery expects an array of rows
-        const rows = climbs.flatMap(climb => {
+        // If result only, create a dummy climb to generate the row
+        const climbsList = (climbs && climbs.length) ? climbs : (req.body.isResultOnly ? [{ name: 'Result', attempts: 'N/A', attempt_count: 0, notes: '' }] : []);
+
+        const rows = climbsList.flatMap(climb => {
             // Convert ISO date to BigQuery DATETIME format: YYYY-MM-DD HH:MM:SS
             const bqDate = date.replace('T', ' ').split('.')[0];
 
@@ -117,7 +125,7 @@ exports.saveLog = async (req, res) => {
             } else if (activity_type === 'competition') {
                 row.location = location;
                 row.climbing_type = climb.type || 'Bouldering';
-                row.position = climb.position || null;
+                row.position = req.body.position || climb.position || null;
                 row.climbs = {
                     route: climb.name,
                     attempts: climb.attempts || 'Attempt',

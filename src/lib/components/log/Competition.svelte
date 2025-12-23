@@ -42,7 +42,13 @@
         "TCA",
     ];
 
-    const roundOptions = ["Qualifiers", "Semi-Finals", "Finals", "Other"];
+    const roundOptions = [
+        "Qualifiers",
+        "Semi-Finals",
+        "Finals",
+        "Result",
+        "Other",
+    ];
 
     function addRow() {
         exercises = [
@@ -87,20 +93,27 @@
                 technique_focus: techniqueFocus,
                 wall_angle: wallAngle,
             },
-            exercises: exercises.map((ex, index) => {
-                const isLast = index === exercises.length - 1;
-                return {
-                    ...ex,
-                    type: climbType,
-                    attempts: ex.attempts,
-                    attempt_count:
-                        ex.attempts === "Flash" ? 1 : ex.attempt_count || 1,
-                    position:
-                        isLast && compPosition
-                            ? parseInt(String(compPosition))
-                            : null,
-                };
-            }),
+            isResultOnly: round === "Result",
+            position: compPosition ? parseInt(String(compPosition)) : null,
+            exercises:
+                round === "Result"
+                    ? []
+                    : exercises.map((ex, index) => {
+                          const isLast = index === exercises.length - 1;
+                          return {
+                              ...ex,
+                              type: climbType,
+                              attempts: ex.attempts,
+                              attempt_count:
+                                  ex.attempts === "Flash"
+                                      ? 1
+                                      : ex.attempt_count || 1,
+                              position:
+                                  isLast && compPosition
+                                      ? parseInt(String(compPosition))
+                                      : null,
+                          };
+                      }),
             session: "Competition", // Explicit session type
             round: round === "Other" ? customRound : round,
         };
@@ -140,7 +153,9 @@
         </div>
     </div>
 
-    <LoadMetrics bind:fingerLoad bind:shoulderLoad bind:forearmLoad />
+    {#if round !== "Result"}
+        <LoadMetrics bind:fingerLoad bind:shoulderLoad bind:forearmLoad />
+    {/if}
 
     <div class="input-group">
         <label for="comp-round">Round</label>
@@ -161,125 +176,137 @@
         {/if}
     </div>
 
-    <div class="exercise-section">
-        <div class="section-header">
-            <h3>Boulders / Routes</h3>
-            <button class="add-row-btn" on:click={addRow} title="Add Problem">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    ><line x1="12" y1="5" x2="12" y2="19" /><line
-                        x1="5"
-                        y1="12"
-                        x2="19"
-                        y2="12"
-                    /></svg
+    {#if round !== "Result"}
+        <div class="exercise-section">
+            <div class="section-header">
+                <h3>Boulders / Routes</h3>
+                <button
+                    class="add-row-btn"
+                    on:click={addRow}
+                    title="Add Problem"
                 >
-                Add Row
-            </button>
-        </div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><line x1="12" y1="5" x2="12" y2="19" /><line
+                            x1="5"
+                            y1="12"
+                            x2="19"
+                            y2="12"
+                        /></svg
+                    >
+                    Add Row
+                </button>
+            </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Problem #</th>
-                        <th>Result</th>
-                        <th>Notes</th>
-                        <th class="actions-col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each exercises as ex, i (ex.id)}
-                        <tr
-                            out:slide|local={{ duration: 200 }}
-                            animate:flip={{ duration: 300 }}
-                        >
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. #1"
-                                    bind:value={ex.name}
-                                />
-                            </td>
-                            <td>
-                                <div class="result-cell">
-                                    <select bind:value={ex.attempts}>
-                                        <option value="Flash">Flash</option>
-                                        <option value="Top">Top</option>
-                                        <option value="Zone">Zone</option>
-                                        <option value="Attempt">Attempt</option>
-                                    </select>
-                                    {#if ex.attempts === "Top" || ex.attempts === "Zone" || ex.attempts === "Attempt"}
-                                        <div
-                                            class="attempts-wrapper"
-                                            transition:slide|local
-                                        >
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                placeholder="#"
-                                                bind:value={ex.attempt_count}
-                                                class="attempt-count"
-                                            />
-                                        </div>
-                                    {/if}
-                                </div>
-                            </td>
-                            <td>
-                                <textarea
-                                    placeholder="Details..."
-                                    bind:value={ex.notes}
-                                    rows="1"
-                                ></textarea>
-                            </td>
-                            <td class="actions-col">
-                                <button
-                                    class="delete-btn"
-                                    on:click={() => removeRow(ex.id)}
-                                    title="Remove row"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        ><path d="M3 6h18" /><path
-                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                                        /><path
-                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                                        /></svg
-                                    >
-                                </button>
-                            </td>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Problem #</th>
+                            <th>Result</th>
+                            <th>Notes</th>
+                            <th class="actions-col"></th>
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {#each exercises as ex, i (ex.id)}
+                            <tr
+                                out:slide|local={{ duration: 200 }}
+                                animate:flip={{ duration: 300 }}
+                            >
+                                <td>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. #1"
+                                        bind:value={ex.name}
+                                    />
+                                </td>
+                                <td>
+                                    <div class="result-cell">
+                                        <select bind:value={ex.attempts}>
+                                            <option value="Flash">Flash</option>
+                                            <option value="Top">Top</option>
+                                            <option value="Zone">Zone</option>
+                                            <option value="Attempt"
+                                                >Attempt</option
+                                            >
+                                        </select>
+                                        {#if ex.attempts === "Top" || ex.attempts === "Zone" || ex.attempts === "Attempt"}
+                                            <div
+                                                class="attempts-wrapper"
+                                                transition:slide|local
+                                            >
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    placeholder="#"
+                                                    bind:value={
+                                                        ex.attempt_count
+                                                    }
+                                                    class="attempt-count"
+                                                />
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </td>
+                                <td>
+                                    <textarea
+                                        placeholder="Details..."
+                                        bind:value={ex.notes}
+                                        rows="1"
+                                    ></textarea>
+                                </td>
+                                <td class="actions-col">
+                                    <button
+                                        class="delete-btn"
+                                        on:click={() => removeRow(ex.id)}
+                                        title="Remove row"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            ><path d="M3 6h18" /><path
+                                                d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                            /><path
+                                                d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                            /></svg
+                                        >
+                                    </button>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
         </div>
+    {/if}
 
-        <div class="position-input-group">
-            <label for="comp-position">Final Position (Optional)</label>
-            <input
-                type="number"
-                id="comp-position"
-                placeholder="e.g. 1"
-                bind:value={compPosition}
-                class="position-input"
-            />
-        </div>
+    <div class="position-input-group">
+        <label for="comp-position"
+            >Final Position {round === "Result" ? "" : "(Optional)"}</label
+        >
+        <input
+            type="number"
+            id="comp-position"
+            placeholder="e.g. 1"
+            bind:value={compPosition}
+            class="position-input"
+        />
     </div>
 </div>
 
@@ -306,17 +333,24 @@
 
     .position-input-group {
         margin-top: 1rem;
-        padding: 1.5rem;
-        background: rgba(167, 139, 250, 0.05);
-        border: 1px solid rgba(167, 139, 250, 0.1);
-        border-radius: 1rem;
+        padding: 0.75rem 1rem;
+        background: rgba(167, 139, 250, 0.03);
+        border: 1px solid rgba(167, 139, 250, 0.08);
+        border-radius: 0.75rem;
         display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .position-input-group label {
+        margin: 0;
+        white-space: nowrap;
+        font-size: 0.8rem;
     }
 
     .position-input {
-        max-width: 120px;
+        max-width: 80px;
+        padding: 0.4rem 0.6rem !important;
     }
 
     .competition-config {
