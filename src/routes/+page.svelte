@@ -71,9 +71,15 @@
             </nav>
 
             <div class="content-container">
-                {#if activeTab}
-                    <svelte:component this={activeTab.component} />
-                {/if}
+                {#each tabs as tab}
+                    <div
+                        style:display={activeTabId === tab.id
+                            ? "block"
+                            : "none"}
+                    >
+                        <svelte:component this={tab.component} />
+                    </div>
+                {/each}
             </div>
         {:else}
             <div class="content-container">
