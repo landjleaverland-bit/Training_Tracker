@@ -933,13 +933,6 @@
                                         .sort(),
                                 ]}
                                 <div class="rounds-container">
-                                    <div
-                                        style="font-size: 0.8rem; color: #666; padding: 0.5rem;"
-                                    >
-                                        Found Rounds: {Object.keys(
-                                            session.rounds || {},
-                                        ).join(", ")}
-                                    </div>
                                     {#each allRounds as roundName}
                                         {#if session.rounds && session.rounds[roundName]}
                                             {@const roundItems =
