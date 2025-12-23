@@ -250,11 +250,18 @@
             <select id="energy-system" bind:value={energySystem}>
                 <option value="None">None</option>
                 <option value="Aerobic Capacity">Aerobic Capacity</option>
+                <option value="Aerobic lactic power"
+                    >Aerobic lactic power</option
+                >
                 <option value="Anaerobic Alactic Capacity"
                     >Anaerobic Alactic Capacity</option
                 >
                 <option value="Anaerobic Alactic Power"
                     >Anaerobic Alactic Power</option
+                >
+                <option value="Anaerobic power">Anaerobic power</option>
+                <option value="Anaerobic lactic capacity"
+                    >Anaerobic lactic capacity</option
                 >
             </select>
         </div>
