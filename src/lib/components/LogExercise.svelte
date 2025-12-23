@@ -55,7 +55,9 @@
         if (
             !data.location ||
             (selectedId !== "indoor" && !data.session) ||
-            (data.exercises && data.exercises.length === 0)
+            (!data.isResultOnly &&
+                data.exercises &&
+                data.exercises.length === 0)
         ) {
             saveMessage =
                 "Please select a Location, Session, and add at least one exercise.";
@@ -85,6 +87,8 @@
                 climbs: data.exercises,
                 date: new Date(logDate).toISOString(),
                 round: data.round || null,
+                position: data.position || null,
+                isResultOnly: data.isResultOnly || false,
             };
 
             const response = await fetch(API_URL, {
