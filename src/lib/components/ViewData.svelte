@@ -30,6 +30,17 @@
         expandedSessions = expandedSessions; // trigger reactivity
     }
 
+    /** @param {string} key */
+    let expandedRounds = new Set();
+    function toggleRound(key) {
+        if (expandedRounds.has(key)) {
+            expandedRounds.delete(key);
+        } else {
+            expandedRounds.add(key);
+        }
+        expandedRounds = expandedRounds;
+    }
+
     /**
      * @param {any[]} rows
      * @param {string} sDate
@@ -176,6 +187,16 @@
                         }
                         return;
                     }
+                }
+
+                if (selectedType === "competition") {
+                    if (!groups[key].rounds) groups[key].rounds = {};
+
+                    const roundName = itemData.round || "Unknown";
+                    if (!groups[key].rounds[roundName]) {
+                        groups[key].rounds[roundName] = [];
+                    }
+                    groups[key].rounds[roundName].push(itemData);
                 }
 
                 groups[key].items.push(itemData);
@@ -781,17 +802,45 @@
                     <button
                         class="session-header"
                         on:click={() => toggleSession(session.key)}
+                        class:competition-header={selectedType ===
+                            "competition"}
                     >
-                        <div class="session-info">
-                            <span class="date">{formatDate(session.date)}</span>
-                            <span class="location">{session.location}</span>
-                            <span class="tag">{session.session}</span>
-                            {#if session.position}
-                                <span class="tag position-tag"
-                                    >Pos: {session.position}</span
+                        {#if selectedType === "competition"}
+                            <div class="comp-header-grid">
+                                <div class="comp-main-info">
+                                    <span class="comp-date"
+                                        >{formatDate(session.date)}</span
+                                    >
+                                    <span class="comp-venue"
+                                        >{session.location}</span
+                                    >
+                                </div>
+                                <div class="comp-meta-info">
+                                    <span class="comp-discipline"
+                                        >{session.items[0]?.type ||
+                                            "Bouldering"}</span
+                                    >
+                                    {#if session.position}
+                                        <span class="comp-position"
+                                            >#{session.position}</span
+                                        >
+                                    {/if}
+                                </div>
+                            </div>
+                        {:else}
+                            <div class="session-info">
+                                <span class="date"
+                                    >{formatDate(session.date)}</span
                                 >
-                            {/if}
-                        </div>
+                                <span class="location">{session.location}</span>
+                                <span class="tag">{session.session}</span>
+                                {#if session.position}
+                                    <span class="tag position-tag"
+                                        >Pos: {session.position}</span
+                                    >
+                                {/if}
+                            </div>
+                        {/if}
 
                         <div class="load-summary">
                             <div class="load-pill finger">
@@ -857,212 +906,337 @@
 
                     {#if expandedSessions.has(session.key)}
                         <div class="session-details" transition:slide>
-                            {#if session.training}
-                                <div class="training-summary">
-                                    <div class="summary-item">
-                                        <span class="label">Focus</span>
-                                        <span class="value"
-                                            >{session.training.training_type ||
-                                                "-"}</span
-                                        >
-                                    </div>
-                                    <div class="summary-item">
-                                        <span class="label">Difficulty</span>
-                                        <span class="value"
-                                            >{session.training.difficulty ||
-                                                "-"}</span
-                                        >
-                                    </div>
-                                    <div class="summary-item">
-                                        <span class="label">Category</span>
-                                        <span class="value"
-                                            >{session.training.category ||
-                                                "-"}</span
-                                        >
-                                    </div>
-                                    <div class="summary-item">
-                                        <span class="label">Energy System</span>
-                                        <span class="value"
-                                            >{session.training.energy_system ||
-                                                "-"}</span
-                                        >
-                                    </div>
-                                    <div class="summary-item">
-                                        <span class="label">Focus Area</span>
-                                        <span class="value"
-                                            >{session.training
-                                                .technique_focus || "-"}</span
-                                        >
-                                    </div>
-                                    <div class="summary-item">
-                                        <span class="label">Wall Angle</span>
-                                        <span class="value"
-                                            >{session.training.wall_angle ||
-                                                "-"}</span
-                                        >
-                                    </div>
+                            {#if selectedType === "competition"}
+                                <div class="rounds-container">
+                                    {#each ["Result", "Finals", "Semi-Finals", "Qualifiers"] as roundName}
+                                        {#if session.rounds && session.rounds[roundName] && roundName !== "Result"}
+                                            {@const roundItems =
+                                                session.rounds[roundName]}
+                                            <div class="round-section">
+                                                <button
+                                                    class="round-header"
+                                                    on:click={() =>
+                                                        toggleRound(
+                                                            `${session.key}-${roundName}`,
+                                                        )}
+                                                >
+                                                    <div
+                                                        class="round-header-left"
+                                                    >
+                                                        <svg
+                                                            class="chevron"
+                                                            class:expanded={expandedRounds.has(
+                                                                `${session.key}-${roundName}`,
+                                                            )}
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="16"
+                                                            height="16"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            stroke-width="2"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            ><path
+                                                                d="m9 18 6-6-6-6"
+                                                            /></svg
+                                                        >
+                                                        <span
+                                                            class="round-title"
+                                                            >{roundName}</span
+                                                        >
+                                                    </div>
+                                                    <span class="round-count"
+                                                        >{roundItems.length} problems</span
+                                                    >
+                                                </button>
+                                                {#if expandedRounds.has(`${session.key}-${roundName}`)}
+                                                    <div
+                                                        class="round-content"
+                                                        transition:slide|local
+                                                    >
+                                                        <table
+                                                            class="details-table"
+                                                        >
+                                                            <thead>
+                                                                <tr>
+                                                                    {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "round") as col}
+                                                                        <th
+                                                                            >{col.label}</th
+                                                                        >
+                                                                    {/each}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {#each roundItems as item}
+                                                                    <tr>
+                                                                        {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "round") as col}
+                                                                            <td>
+                                                                                {#if col.key === "climbs"}
+                                                                                    <div
+                                                                                        class="climb-cell"
+                                                                                    >
+                                                                                        <span
+                                                                                            class="climb-name"
+                                                                                            >{item.name}</span
+                                                                                        >
+                                                                                        {#if item.attempts}
+                                                                                            <span
+                                                                                                class="climb-result {item.attempts.toLowerCase()}"
+                                                                                            >
+                                                                                                {item.attempts}
+                                                                                                {#if (item.attempts === "Top" || item.attempts === "Zone") && item.attempt_count > 1}
+                                                                                                    <span
+                                                                                                        class="attempt-number"
+                                                                                                        >({item.attempt_count})</span
+                                                                                                    >
+                                                                                                {/if}
+                                                                                            </span>
+                                                                                        {/if}
+                                                                                    </div>
+                                                                                    {#if item.notes}
+                                                                                        <div
+                                                                                            class="climb-notes"
+                                                                                        >
+                                                                                            {item.notes}
+                                                                                        </div>
+                                                                                    {/if}
+                                                                                {:else}
+                                                                                    {item[
+                                                                                        col
+                                                                                            .key
+                                                                                    ] ||
+                                                                                        "-"}
+                                                                                {/if}
+                                                                            </td>
+                                                                        {/each}
+                                                                    </tr>
+                                                                {/each}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                {/if}
+                                            </div>
+                                        {/if}
+                                    {/each}
                                 </div>
-                            {/if}
-                            <table class="details-table">
-                                <thead>
-                                    <tr>
-                                        {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
-                                            <th>{col.label}</th>
-                                        {/each}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {#each session.items as item}
+                            {:else}
+                                {#if session.training}
+                                    <div class="training-summary">
+                                        <div class="summary-item">
+                                            <span class="label">Focus</span>
+                                            <span class="value"
+                                                >{session.training
+                                                    .training_type || "-"}</span
+                                            >
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">Difficulty</span
+                                            >
+                                            <span class="value"
+                                                >{session.training.difficulty ||
+                                                    "-"}</span
+                                            >
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">Category</span>
+                                            <span class="value"
+                                                >{session.training.category ||
+                                                    "-"}</span
+                                            >
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label"
+                                                >Energy System</span
+                                            >
+                                            <span class="value"
+                                                >{session.training
+                                                    .energy_system || "-"}</span
+                                            >
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">Focus Area</span
+                                            >
+                                            <span class="value"
+                                                >{session.training
+                                                    .technique_focus ||
+                                                    "-"}</span
+                                            >
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="label">Wall Angle</span
+                                            >
+                                            <span class="value"
+                                                >{session.training.wall_angle ||
+                                                    "-"}</span
+                                            >
+                                        </div>
+                                    </div>
+                                {/if}
+                                <table class="details-table">
+                                    <thead>
                                         <tr>
                                             {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
-                                                <td>
-                                                    {#if col.isObject}
-                                                        <div
-                                                            class="exercise-row"
-                                                        >
-                                                            <span
-                                                                class="ex-name"
-                                                                >{item.route ||
-                                                                    item.name ||
-                                                                    "-"}</span
-                                                            >
-                                                            {#if item.type || item.isRopes !== undefined}
-                                                                <span
-                                                                    class="ex-meta type"
-                                                                >
-                                                                    {item.type ||
-                                                                        (item.isRopes
-                                                                            ? "Sport"
-                                                                            : "Bouldering")}
-                                                                </span>
-                                                            {/if}
-                                                            {#if item.grade}
-                                                                <span
-                                                                    class="ex-meta grade"
-                                                                    class:v-grade={item.grade
-                                                                        ?.toUpperCase()
-                                                                        .startsWith(
-                                                                            "V",
-                                                                        )}
-                                                                    >{item.grade}</span
-                                                                >
-                                                            {/if}
-                                                            {#if item.attempts || item.attempt}
-                                                                <span
-                                                                    class="ex-meta attempts"
-                                                                    >{item.attempts ||
-                                                                        item.attempt}
-                                                                    {#if item.attempt_count && item.attempt_count > 1}
-                                                                        ({item.attempt_count})
-                                                                    {/if}
-                                                                </span>
-                                                            {/if}
-                                                            {#if item.details}
-                                                                <div
-                                                                    class="complex-details"
-                                                                >
-                                                                    {#each item.details as det}
-                                                                        <span
-                                                                            class="ex-meta multi-load"
-                                                                        >
-                                                                            {det.weight}kg
-                                                                            x {det.reps}
-                                                                        </span>
-                                                                    {/each}
-                                                                    {#if item.sets}
-                                                                        <span
-                                                                            class="ex-meta sets-count"
-                                                                            >({item.sets}
-                                                                            sets)</span
-                                                                        >
-                                                                    {/if}
-                                                                </div>
-                                                                {#if item.grip || item.grip_type}
-                                                                    {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
-                                                                        <span
-                                                                            class="ex-meta grip"
-                                                                            >{item.grip ||
-                                                                                item.grip_type}</span
-                                                                        >
-                                                                    {/if}
-                                                                {/if}
-                                                            {:else}
-                                                                {#if item.weight}
-                                                                    <span
-                                                                        class="ex-meta weight"
-                                                                        >{item.weight}kg</span
-                                                                    >
-                                                                {/if}
-                                                                {#if item.grip || item.grip_type}
-                                                                    {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
-                                                                        <span
-                                                                            class="ex-meta grip"
-                                                                            >{item.grip ||
-                                                                                item.grip_type}</span
-                                                                        >
-                                                                    {/if}
-                                                                {/if}
-                                                                {#if item.sets || item.reps}
-                                                                    <span
-                                                                        class="ex-meta sets-reps"
-                                                                    >
-                                                                        {item.sets ||
-                                                                            0} x
-                                                                        {item.reps ||
-                                                                            1}
-                                                                    </span>
-                                                                {/if}
-                                                            {/if}
-
-                                                            {#if item.notes}
-                                                                <span
-                                                                    class="ex-notes"
-                                                                    >{item.notes}</span
-                                                                >
-                                                            {/if}
-
-                                                            <button
-                                                                class="delete-entry-btn"
-                                                                on:click={() =>
-                                                                    openDeleteModal(
-                                                                        "entry",
-                                                                        {
-                                                                            ...item,
-                                                                            rowDate:
-                                                                                session.date,
-                                                                        },
-                                                                    )}
-                                                                title="Delete this entry"
-                                                            >
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="14"
-                                                                    height="14"
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="none"
-                                                                    stroke="currentColor"
-                                                                    stroke-width="2"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
-                                                                    ><path
-                                                                        d="M3 6h18"
-                                                                    /><path
-                                                                        d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                                                                    /><path
-                                                                        d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                                                                    /></svg
-                                                                >
-                                                            </button>
-                                                        </div>
-                                                    {:else}
-                                                        {item[col.key] || "-"}
-                                                    {/if}
-                                                </td>
+                                                <th>{col.label}</th>
                                             {/each}
                                         </tr>
-                                    {/each}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {#each session.items as item}
+                                            <tr>
+                                                {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
+                                                    <td>
+                                                        {#if col.isObject}
+                                                            <div
+                                                                class="exercise-row"
+                                                            >
+                                                                <span
+                                                                    class="ex-name"
+                                                                    >{item.route ||
+                                                                        item.name ||
+                                                                        "-"}</span
+                                                                >
+                                                                {#if item.type || item.isRopes !== undefined}
+                                                                    <span
+                                                                        class="ex-meta type"
+                                                                    >
+                                                                        {item.type ||
+                                                                            (item.isRopes
+                                                                                ? "Sport"
+                                                                                : "Bouldering")}
+                                                                    </span>
+                                                                {/if}
+                                                                {#if item.grade}
+                                                                    <span
+                                                                        class="ex-meta grade"
+                                                                        class:v-grade={item.grade
+                                                                            ?.toUpperCase()
+                                                                            .startsWith(
+                                                                                "V",
+                                                                            )}
+                                                                        >{item.grade}</span
+                                                                    >
+                                                                {/if}
+                                                                {#if item.attempts || item.attempt}
+                                                                    <span
+                                                                        class="ex-meta attempts"
+                                                                        >{item.attempts ||
+                                                                            item.attempt}
+                                                                        {#if item.attempt_count && item.attempt_count > 1}
+                                                                            ({item.attempt_count})
+                                                                        {/if}
+                                                                    </span>
+                                                                {/if}
+                                                                {#if item.details}
+                                                                    <div
+                                                                        class="complex-details"
+                                                                    >
+                                                                        {#each item.details as det}
+                                                                            <span
+                                                                                class="ex-meta multi-load"
+                                                                            >
+                                                                                {det.weight}kg
+                                                                                x
+                                                                                {det.reps}
+                                                                            </span>
+                                                                        {/each}
+                                                                        {#if item.sets}
+                                                                            <span
+                                                                                class="ex-meta sets-count"
+                                                                                >({item.sets}
+                                                                                sets)</span
+                                                                            >
+                                                                        {/if}
+                                                                    </div>
+                                                                    {#if item.grip || item.grip_type}
+                                                                        {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                            <span
+                                                                                class="ex-meta grip"
+                                                                                >{item.grip ||
+                                                                                    item.grip_type}</span
+                                                                            >
+                                                                        {/if}
+                                                                    {/if}
+                                                                {:else}
+                                                                    {#if item.weight}
+                                                                        <span
+                                                                            class="ex-meta weight"
+                                                                            >{item.weight}kg</span
+                                                                        >
+                                                                    {/if}
+                                                                    {#if item.grip || item.grip_type}
+                                                                        {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
+                                                                            <span
+                                                                                class="ex-meta grip"
+                                                                                >{item.grip ||
+                                                                                    item.grip_type}</span
+                                                                            >
+                                                                        {/if}
+                                                                    {/if}
+                                                                    {#if item.sets || item.reps}
+                                                                        <span
+                                                                            class="ex-meta sets-reps"
+                                                                        >
+                                                                            {item.sets ||
+                                                                                0}
+                                                                            x
+                                                                            {item.reps ||
+                                                                                1}
+                                                                        </span>
+                                                                    {/if}
+                                                                {/if}
+
+                                                                {#if item.notes}
+                                                                    <span
+                                                                        class="ex-notes"
+                                                                        >{item.notes}</span
+                                                                    >
+                                                                {/if}
+
+                                                                <button
+                                                                    class="delete-entry-btn"
+                                                                    on:click={() =>
+                                                                        openDeleteModal(
+                                                                            "entry",
+                                                                            {
+                                                                                ...item,
+                                                                                rowDate:
+                                                                                    session.date,
+                                                                            },
+                                                                        )}
+                                                                    title="Delete this entry"
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="14"
+                                                                        height="14"
+                                                                        viewBox="0 0 24 24"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        stroke-width="2"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        ><path
+                                                                            d="M3 6h18"
+                                                                        /><path
+                                                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                                                        /><path
+                                                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                                                        /></svg
+                                                                    >
+                                                                </button>
+                                                            </div>
+                                                        {:else}
+                                                            {item[col.key] ||
+                                                                "-"}
+                                                        {/if}
+                                                    </td>
+                                                {/each}
+                                            </tr>
+                                        {/each}
+                                    </tbody>
+                                </table>
+                            {/if}
                         </div>
                     {/if}
                 </div>
@@ -1883,5 +2057,139 @@
     .delete-entry-btn:hover {
         color: #ef4444;
         background: rgba(239, 68, 68, 0.1);
+    }
+    /* Competition Styles */
+    .competition-header {
+        padding: 1rem;
+        border: 1px solid rgba(167, 139, 250, 0.1);
+        background: rgba(167, 139, 250, 0.03);
+    }
+
+    .comp-header-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .comp-main-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .comp-date {
+        font-size: 0.8rem;
+        color: #94a3b8;
+    }
+
+    .comp-venue {
+        font-weight: 600;
+        color: #f8fafc;
+        font-size: 1.1rem;
+    }
+
+    .comp-meta-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .comp-discipline {
+        background: rgba(99, 102, 241, 0.1);
+        color: #818cf8;
+        padding: 0.2rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .comp-position {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+        padding: 0.2rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .rounds-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+    }
+
+    .round-section {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .round-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #f8fafc;
+        transition: background 0.2s;
+    }
+
+    .round-header:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .round-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .round-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .round-count {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    .round-content {
+        padding: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .climb-result {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .climb-result.top {
+        color: #4ade80;
+    }
+    .climb-result.zone {
+        color: #60a5fa;
+    }
+    .climb-result.flash {
+        color: #facc15;
+    }
+    .climb-result.attempt {
+        color: #94a3b8;
+    }
+
+    .attempt-number {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: normal;
+        margin-left: 0.25rem;
     }
 </style>
