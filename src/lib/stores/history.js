@@ -74,15 +74,43 @@ export function removeLog(type, exercise_id, criteria) {
     historyStore.update(current => {
         const existing = current[type] || [];
         const filtered = existing.filter((/** @type {any} */ log) => {
-            if (exercise_id && log.exercise_id === exercise_id) return false;
+            // 1. Match by String exercise_id
+            if (exercise_id && String(log.exercise_id) === String(exercise_id)) return false;
 
+            // 2. Fallback match by criteria
             if (criteria) {
-                const logDate = (log.date?.value || log.date || '').split('T')[0];
-                const critDate = (criteria.date || '').split('T')[0];
+                const normalizeDate = (d) => (d?.value || d || '').toString().replace('T', ' ').split(' ')[0];
+                const logDateOnly = normalizeDate(log.date);
+                const critDateOnly = normalizeDate(criteria.date);
 
-                if (logDate === critDate &&
-                    (log.exercise === criteria.name || log.climbs?.route === criteria.name || log.climbs?.name === criteria.name) &&
-                    (log.weight === criteria.weight || log.climbs?.weight === criteria.weight)) {
+                const nameMatch = (log.exercise === criteria.name ||
+                    log.climbs?.route === criteria.name ||
+                    log.climbs?.name === criteria.name);
+
+                const weightMatch = (Number(log.weight || log.climbs?.weight) === Number(criteria.weight));
+
+                let locationMatch = true;
+                if (criteria.location) {
+                    // Normalize log location
+                    let logLoc = log.location || "N/A";
+                    if (typeof logLoc === "object" && logLoc !== null) {
+                        if (logLoc.area || logLoc.crag) {
+                            logLoc = logLoc.area ? `${logLoc.area} > ${logLoc.crag}` : logLoc.crag || "";
+                            if (log.location.wall) logLoc = `${logLoc} - ${log.location.wall}`;
+                        }
+                    }
+
+                    // Normalize criteria location
+                    let critLoc = criteria.location;
+                    if (typeof critLoc === "object" && critLoc !== null) {
+                        critLoc = critLoc.area ? `${critLoc.area} > ${critLoc.crag}` : critLoc.crag || "";
+                        if (criteria.location.wall) critLoc = `${critLoc} - ${criteria.location.wall}`;
+                    }
+
+                    locationMatch = (logLoc === critLoc);
+                }
+
+                if (logDateOnly === critDateOnly && nameMatch && weightMatch && locationMatch) {
                     return false;
                 }
             }
