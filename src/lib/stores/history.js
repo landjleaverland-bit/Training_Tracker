@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
+import { normalizeLocation } from '$lib/utils/formatters';
 
 const STORAGE_KEY = 'training_history_cache';
 
@@ -92,20 +93,10 @@ export function removeLog(type, exercise_id, criteria) {
                 let locationMatch = true;
                 if (criteria.location) {
                     // Normalize log location
-                    let logLoc = log.location || "N/A";
-                    if (typeof logLoc === "object" && logLoc !== null) {
-                        if (logLoc.area || logLoc.crag) {
-                            logLoc = logLoc.area ? `${logLoc.area} > ${logLoc.crag}` : logLoc.crag || "";
-                            if (log.location.wall) logLoc = `${logLoc} - ${log.location.wall}`;
-                        }
-                    }
+                    const logLoc = normalizeLocation(log.location);
 
                     // Normalize criteria location
-                    let critLoc = criteria.location;
-                    if (typeof critLoc === "object" && critLoc !== null) {
-                        critLoc = critLoc.area ? `${critLoc.area} > ${critLoc.crag}` : critLoc.crag || "";
-                        if (criteria.location.wall) critLoc = `${critLoc} - ${criteria.location.wall}`;
-                    }
+                    const critLoc = normalizeLocation(criteria.location);
 
                     locationMatch = (logLoc === critLoc);
                 }
@@ -144,18 +135,7 @@ export function removeSession(type, session) {
             if (logSess !== session.session) return true;
 
             // Normalize location for comparison
-            let logLoc = log.location || "N/A";
-            if (typeof logLoc === "object" && logLoc !== null) {
-                if (logLoc.area || logLoc.crag) {
-                    logLoc = logLoc.area
-                        ? `${logLoc.area} > ${logLoc.crag}`
-                        : logLoc.crag || "";
-                    if (log.location.wall)
-                        logLoc = `${logLoc} - ${log.location.wall}`;
-                } else {
-                    logLoc = JSON.stringify(logLoc);
-                }
-            }
+            const logLoc = normalizeLocation(log.location);
 
             // If all match, return false to filter out
             return logLoc !== session.location;

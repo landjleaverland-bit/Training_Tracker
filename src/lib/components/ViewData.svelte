@@ -10,6 +10,7 @@
     import { get } from "svelte/store";
     import { onMount } from "svelte";
     import { areaOptions, areaCragMap } from "$lib/data/climbingAreas.js";
+    import { normalizeLocation, formatDate } from "$lib/utils/formatters";
 
     let selectedType = "indoor";
     let isLoading = false;
@@ -80,18 +81,7 @@
             if (selectedType === "outdoor") sType = "Outdoor";
 
             // Normalize location: remote outdoor is a string, local is an object
-            let loc = row.location || "N/A";
-            if (typeof loc === "object" && loc !== null) {
-                if (loc.area || loc.crag) {
-                    loc = loc.area
-                        ? `${loc.area} > ${loc.crag}`
-                        : loc.crag || "";
-                    if (row.location.wall)
-                        loc = `${loc} - ${row.location.wall}`;
-                } else {
-                    loc = JSON.stringify(loc);
-                }
-            }
+            const loc = normalizeLocation(row.location);
 
             const key = `${dateStr}|${loc}|${sType}`;
 
@@ -483,17 +473,6 @@
         // Only fetch on explicit user action (Fetch Data button)
         // as per user request to use cached data by default.
     });
-
-    /** @param {any} dateStr */
-    function formatDate(dateStr) {
-        if (!dateStr) return "-";
-        const date = new Date(dateStr.value || dateStr);
-        return date.toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-            year: "2-digit",
-        });
-    }
 
     /** @param {string} type */
     function getColumns(type) {

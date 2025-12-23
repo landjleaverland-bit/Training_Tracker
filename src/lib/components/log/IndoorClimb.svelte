@@ -1,6 +1,8 @@
 <script>
     import { fade, slide } from "svelte/transition";
     import { flip } from "svelte/animate";
+    import LoadMetrics from "$lib/components/common/LoadMetrics.svelte";
+    import TrainingMetrics from "$lib/components/common/TrainingMetrics.svelte";
 
     let location = "";
     let customLocation = "";
@@ -118,113 +120,16 @@
         </div>
     </div>
 
-    <div class="load-metrics">
-        <div class="load-group">
-            <label for="finger-load">Finger Load (0-5)</label>
-            <input
-                id="finger-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={fingerLoad}
-            />
-        </div>
-        <div class="load-group">
-            <label for="shoulder-load">Shoulder Load (0-5)</label>
-            <input
-                id="shoulder-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={shoulderLoad}
-            />
-        </div>
-        <div class="load-group">
-            <label for="forearm-load">Forearm Load (0-5)</label>
-            <input
-                id="forearm-load"
-                type="number"
-                min="0"
-                max="5"
-                step="0.5"
-                bind:value={forearmLoad}
-            />
-        </div>
-    </div>
+    <LoadMetrics bind:fingerLoad bind:shoulderLoad bind:forearmLoad />
 
-    <div class="training-metrics">
-        <div class="training-group">
-            <label for="training-type">Training Type</label>
-            <select id="training-type" bind:value={trainingType}>
-                <option value="None">None</option>
-                <option value="Projecting">Projecting</option>
-                <option value="Onsighting">Onsighting</option>
-                <option value="Campusing">Campusing</option>
-                <option value="Repeaters">Repeaters</option>
-            </select>
-        </div>
-        <div class="training-group">
-            <label for="difficulty">Difficulty</label>
-            <select id="difficulty" bind:value={difficulty}>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-                <option value="Max">Max</option>
-                <option value="Limit+">Limit+</option>
-            </select>
-        </div>
-        <div class="training-group">
-            <label for="category">Category</label>
-            <select id="category" bind:value={category}>
-                <option value="None">None</option>
-                <option value="Technique">Technique</option>
-                <option value="Strength">Strength</option>
-                <option value="Strength Endurance">Strength Endurance</option>
-                <option value="Warm-up">Warm-up</option>
-                <option value="Power">Power</option>
-            </select>
-        </div>
-        <div class="training-group">
-            <label for="energy-system">Energy System</label>
-            <select id="energy-system" bind:value={energySystem}>
-                <option value="None">None</option>
-                <option value="Aerobic Capacity">Aerobic Capacity</option>
-                <option value="Aerobic lactic power"
-                    >Aerobic lactic power</option
-                >
-                <option value="Anaerobic Alactic Capacity"
-                    >Anaerobic Alactic Capacity</option
-                >
-                <option value="Anaerobic Alactic Power"
-                    >Anaerobic Alactic Power</option
-                >
-                <option value="Anaerobic power">Anaerobic power</option>
-                <option value="Anaerobic lactic capacity"
-                    >Anaerobic lactic capacity</option
-                >
-            </select>
-        </div>
-        <div class="training-group">
-            <label for="technique-focus">Technique Focus</label>
-            <select id="technique-focus" bind:value={techniqueFocus}>
-                <option value="None">None</option>
-                <option value="Double Clutch">Double Clutch</option>
-                <option value="Standing on Volumes">Standing on Volumes</option>
-                <option value="Trusting feet">Trusting feet</option>
-            </select>
-        </div>
-        <div class="training-group">
-            <label for="wall-angle">Wall Angle</label>
-            <select id="wall-angle" bind:value={wallAngle}>
-                <option value="None">None</option>
-                <option value="Overhang">Overhang</option>
-                <option value="Slab">Slab</option>
-                <option value="Roof">Roof</option>
-            </select>
-        </div>
-    </div>
+    <TrainingMetrics
+        bind:trainingType
+        bind:difficulty
+        bind:category
+        bind:energySystem
+        bind:techniqueFocus
+        bind:wallAngle
+    />
 
     <div class="exercise-section">
         <div class="section-header">
@@ -344,39 +249,6 @@
     }
 
     .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .load-metrics {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .load-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .training-metrics {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        margin-top: 1rem;
-    }
-
-    .training-group {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
