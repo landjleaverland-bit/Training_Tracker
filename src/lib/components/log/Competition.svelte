@@ -395,16 +395,16 @@
     /* Column Widths */
     th:nth-child(1),
     td:nth-child(1) {
-        width: 15%;
+        width: 16.6%;
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 40%;
+        width: 33.3%;
         min-width: 160px;
     }
     th:nth-child(3),
     td:nth-child(3) {
-        width: auto;
+        width: 50%;
     }
     th:nth-child(4),
     td:nth-child(4) {
