@@ -323,8 +323,13 @@
     }
 
     .attempts-wrapper {
-        width: 80px;
+        width: 45px;
         flex-shrink: 0;
+        transition: width 0.2s ease;
+    }
+
+    .attempts-wrapper:focus-within {
+        width: 100px;
     }
 
     .attempt-count {
