@@ -95,8 +95,11 @@
                     shoulderLoad: row.shoulder_load || 0,
                     forearmLoad: row.forearm_load || 0,
                     training: row.training || null,
+                    position: row.position || null,
                     items: [],
                 };
+            } else if (row.position && !groups[key].position) {
+                groups[key].position = row.position;
             }
 
             // Normalize: local data has row.climbs as an array, remote is flat rows
@@ -783,6 +786,11 @@
                             <span class="date">{formatDate(session.date)}</span>
                             <span class="location">{session.location}</span>
                             <span class="tag">{session.session}</span>
+                            {#if session.position}
+                                <span class="tag position-tag"
+                                    >Pos: {session.position}</span
+                                >
+                            {/if}
                         </div>
 
                         <div class="load-summary">
@@ -1478,6 +1486,12 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.025em;
+    }
+
+    .tag.position-tag {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
     }
 
     .load-summary {

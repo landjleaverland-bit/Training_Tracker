@@ -20,6 +20,8 @@
     let wallAngle = "None";
     let round = "Qualifiers";
     let customRound = "";
+    /** @type {number | null} */
+    let compPosition = null;
 
     let exercises = [
         {
@@ -85,13 +87,20 @@
                 technique_focus: techniqueFocus,
                 wall_angle: wallAngle,
             },
-            exercises: exercises.map((ex) => ({
-                ...ex,
-                type: climbType,
-                attempts: ex.attempts,
-                attempt_count:
-                    ex.attempts === "Flash" ? 1 : ex.attempt_count || 1,
-            })),
+            exercises: exercises.map((ex, index) => {
+                const isLast = index === exercises.length - 1;
+                return {
+                    ...ex,
+                    type: climbType,
+                    attempts: ex.attempts,
+                    attempt_count:
+                        ex.attempts === "Flash" ? 1 : ex.attempt_count || 1,
+                    position:
+                        isLast && compPosition
+                            ? parseInt(String(compPosition))
+                            : null,
+                };
+            }),
             session: "Competition", // Explicit session type
             round: round === "Other" ? customRound : round,
         };
@@ -260,6 +269,17 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="position-input-group">
+            <label for="comp-position">Final Position (Optional)</label>
+            <input
+                type="number"
+                id="comp-position"
+                placeholder="e.g. 1"
+                bind:value={compPosition}
+                class="position-input"
+            />
+        </div>
     </div>
 </div>
 
@@ -283,6 +303,22 @@
         padding: 0.4rem;
         text-align: center;
     }
+
+    .position-input-group {
+        margin-top: 1rem;
+        padding: 1.5rem;
+        background: rgba(167, 139, 250, 0.05);
+        border: 1px solid rgba(167, 139, 250, 0.1);
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .position-input {
+        max-width: 120px;
+    }
+
     .competition-config {
         display: flex;
         flex-direction: column;

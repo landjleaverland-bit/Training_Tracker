@@ -184,6 +184,10 @@ exports.getLogs = async (req, res) => {
                 if (row.climbs && row.climbs.attempt_count) {
                     normalized.attempt_count = row.climbs.attempt_count;
                 }
+                // Extract position if available
+                if (row.position !== undefined) {
+                    normalized.position = row.position;
+                }
             } else if (type === 'fingerboard') {
                 normalized.session_type = 'Fingerboard';
                 normalized.location = 'N/A';
