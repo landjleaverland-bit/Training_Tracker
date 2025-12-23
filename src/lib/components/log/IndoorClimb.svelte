@@ -189,7 +189,7 @@
                             </td>
                             <td>
                                 <select bind:value={ex.attempts}>
-                                    <option value="Onsite">Onsite</option>
+                                    <option value="Onsight">Onsight</option>
                                     <option value="Flash">Flash</option>
                                     <option value="Redpoint">Redpoint</option>
                                     <option value="Dogged">Dogged</option>
