@@ -313,6 +313,8 @@
                 };
             }
 
+            console.log("Sending delete payload:", payload);
+
             const response = await fetch(DELETE_URL, {
                 method: "POST",
                 headers: {
@@ -321,6 +323,9 @@
                 },
                 body: JSON.stringify(payload),
             });
+
+            const responseData = await response.json();
+            console.log("Delete response:", responseData);
 
             if (!response.ok) {
                 const errorText = await response.text();

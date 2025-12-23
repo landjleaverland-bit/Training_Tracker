@@ -66,9 +66,10 @@ exports.saveLog = async (req, res) => {
         const tableId = tableMapping[activity_type || 'indoor'];
         const datasetId = 'training_plan_database_dataset';
 
+        const crypto = require('crypto');
         // BigQuery expects an array of rows
         // If result only, create a dummy climb to generate the row
-        const climbsList = (climbs && climbs.length) ? climbs : (req.body.isResultOnly ? [{ name: 'Result', attempts: 'N/A', attempt_count: 0, notes: '' }] : []);
+        const climbsList = (climbs && climbs.length) ? climbs : (req.body.isResultOnly ? [{ id: crypto.randomUUID(), name: 'Result', attempts: 'N/A', attempt_count: 0, notes: '' }] : []);
 
         const rows = climbsList.flatMap(climb => {
             // Convert ISO date to BigQuery DATETIME format: YYYY-MM-DD HH:MM:SS

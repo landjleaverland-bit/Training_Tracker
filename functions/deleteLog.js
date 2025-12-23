@@ -161,12 +161,29 @@ exports.deleteLog = async (req, res) => {
 
         console.log(`Executing delete query: ${query} with params:`, params);
 
-        await bigquery.query({
+        const [rows, metadata] = await bigquery.query({
             query: query,
-            params: params
+            params: params,
+            // Wrap in a transaction or ensure DML stats are returned? 
+            // Standard query returns job info.
         });
 
-        res.status(200).send(`Successfully deleted items.`);
+        // For DML, metadata.numDmlAffectedRows might be available depending on client version/job.
+        // Or job.getQueryResults()
+
+        // Actually, let's just inspect the job result if possible.
+        // The simple client returns [rows] but we destructured it.
+
+        // Let's try to return more info. 
+        // Note: For DELETE, rows is empty.
+
+        res.status(200).json({
+            message: 'Successfully processed delete request.',
+            // We can't easily get row count without job inspection, but let's assume success if no error.
+            // Wait, for debugging, let's add the params we used to the response so the frontend can see what was sent.
+            debug_params: params,
+            debug_query: query
+        });
     } catch (error) {
         console.error('DELETE ERROR:', error);
         res.status(500).send(`Delete Error: ${error.message}`);
