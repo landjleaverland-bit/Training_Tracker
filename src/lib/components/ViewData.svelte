@@ -943,8 +943,11 @@
                                                                 <span
                                                                     class="ex-meta attempts"
                                                                     >{item.attempts ||
-                                                                        item.attempt}</span
-                                                                >
+                                                                        item.attempt}
+                                                                    {#if item.attempt_count && item.attempt_count > 1}
+                                                                        ({item.attempt_count})
+                                                                    {/if}
+                                                                </span>
                                                             {/if}
                                                             {#if item.details}
                                                                 <div

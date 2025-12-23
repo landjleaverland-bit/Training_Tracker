@@ -120,6 +120,7 @@ exports.saveLog = async (req, res) => {
                 row.climbs = {
                     route: climb.name,
                     attempts: climb.attempts || 'Attempt',
+                    attempt_count: parseInt(climb.attempt_count) || 1,
                     round: req.body.round || 'N/A',
                     notes: climb.notes
                 };

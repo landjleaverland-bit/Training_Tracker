@@ -180,6 +180,10 @@ exports.getLogs = async (req, res) => {
                 normalized.session_type = 'Competition';
                 // Round is nested in the climbs RECORD
                 normalized.round = (row.climbs && row.climbs.round) || row.round || 'Qualifiers';
+                // Extract attempt count if available
+                if (row.climbs && row.climbs.attempt_count) {
+                    normalized.attempt_count = row.climbs.attempt_count;
+                }
             } else if (type === 'fingerboard') {
                 normalized.session_type = 'Fingerboard';
                 normalized.location = 'N/A';

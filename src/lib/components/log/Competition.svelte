@@ -25,7 +25,8 @@
         {
             id: crypto.randomUUID(),
             name: "",
-            attempts: "Redpoint",
+            attempts: "Flash",
+            attempt_count: 1,
             notes: "",
         },
     ];
@@ -47,7 +48,8 @@
             {
                 id: crypto.randomUUID(),
                 name: "",
-                attempts: "Redpoint",
+                attempts: "Flash",
+                attempt_count: 1,
                 notes: "",
             },
         ];
@@ -62,7 +64,8 @@
                 {
                     id: crypto.randomUUID(),
                     name: "",
-                    attempts: "Redpoint",
+                    attempts: "Flash",
+                    attempt_count: 1,
                     notes: "",
                 },
             ];
@@ -85,6 +88,9 @@
             exercises: exercises.map((ex) => ({
                 ...ex,
                 type: climbType,
+                attempts: ex.attempts,
+                attempt_count:
+                    ex.attempts === "Flash" ? 1 : ex.attempt_count || 1,
             })),
             session: "Competition", // Explicit session type
             round: round === "Other" ? customRound : round,
@@ -194,13 +200,29 @@
                                     bind:value={ex.name}
                                 />
                             </td>
-                            <td>
-                                <select bind:value={ex.attempts}>
-                                    <option value="Top">Top</option>
-                                    <option value="Zone">Zone</option>
-                                    <option value="Flash">Flash</option>
-                                    <option value="Attempt">Attempt</option>
-                                </select>
+                            <td> </td><td>
+                                <div class="result-cell">
+                                    <select bind:value={ex.attempts}>
+                                        <option value="Flash">Flash</option>
+                                        <option value="Top">Top</option>
+                                        <option value="Zone">Zone</option>
+                                        <option value="Attempt">Attempt</option>
+                                    </select>
+                                    {#if ex.attempts === "Top" || ex.attempts === "Zone"}
+                                        <div
+                                            class="attempts-wrapper"
+                                            transition:slide|local
+                                        >
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                placeholder="#"
+                                                bind:value={ex.attempt_count}
+                                                class="attempt-count"
+                                            />
+                                        </div>
+                                    {/if}
+                                </div>
                             </td>
                             <td>
                                 <textarea
@@ -242,6 +264,20 @@
 </div>
 
 <style>
+    .result-cell {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .attempts-wrapper {
+        width: 60px;
+    }
+
+    .attempt-count {
+        padding: 0.4rem;
+        text-align: center;
+    }
     .competition-config {
         display: flex;
         flex-direction: column;
