@@ -122,8 +122,18 @@
                 const exerciseId =
                     climb.exercise_id || climb.id || row.exercise_id;
 
-                // Deduplication check: Date + ExerciseID + Weight
-                const dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}`;
+                const roundVal =
+                    climb.round ||
+                    row.round ||
+                    (climb.climbs && climb.climbs.round) ||
+                    "";
+
+                // Deduplication check: Date + ExerciseID + Weight (+ Round for comp)
+                let dedupKey = `${dateStr}|${exerciseId}|${climb.weight ?? row.weight}`;
+                if (selectedType === "competition") {
+                    dedupKey += `|${roundVal}`;
+                }
+
                 if (seenRows.has(dedupKey)) return;
                 seenRows.add(dedupKey);
 
@@ -387,6 +397,7 @@
                 `${API_BASE_URL}?${params.toString()}`,
                 {
                     method: "GET",
+                    cache: "no-store",
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -907,9 +918,30 @@
                     {#if expandedSessions.has(session.key)}
                         <div class="session-details" transition:slide>
                             {#if selectedType === "competition"}
+                                {@const standardRounds = [
+                                    "Result",
+                                    "Finals",
+                                    "Semi-Finals",
+                                    "Qualifiers",
+                                ]}
+                                {@const allRounds = [
+                                    ...standardRounds,
+                                    ...Object.keys(session.rounds || {})
+                                        .filter(
+                                            (r) => !standardRounds.includes(r),
+                                        )
+                                        .sort(),
+                                ]}
                                 <div class="rounds-container">
-                                    {#each ["Result", "Finals", "Semi-Finals", "Qualifiers"] as roundName}
-                                        {#if session.rounds && session.rounds[roundName] && roundName !== "Result"}
+                                    <div
+                                        style="font-size: 0.8rem; color: #666; padding: 0.5rem;"
+                                    >
+                                        Found Rounds: {Object.keys(
+                                            session.rounds || {},
+                                        ).join(", ")}
+                                    </div>
+                                    {#each allRounds as roundName}
+                                        {#if session.rounds && session.rounds[roundName]}
                                             {@const roundItems =
                                                 session.rounds[roundName]}
                                             <div class="round-section">
