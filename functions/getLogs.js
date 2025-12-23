@@ -42,6 +42,7 @@ exports.getLogs = async (req, res) => {
         'outdoor': 'Outdoor_Climbs',
         'gym': 'Gym_Sessions',
         'fingerboard': 'Fingerboarding',
+        'competition': 'Competition_Logs',
         'other': 'Other_Logs'
     };
 
@@ -121,7 +122,7 @@ exports.getLogs = async (req, res) => {
             }
         }
 
-        // Fingerboarding specific filters
+        // Fingerboarding/Competition specific filters
         if (type === 'fingerboard') {
             if (exercise) {
                 whereClauses.push("exercise = @exercise");
@@ -130,6 +131,12 @@ exports.getLogs = async (req, res) => {
             if (grip) {
                 whereClauses.push("grip = @grip");
                 queryOptions.params.grip = grip;
+            }
+        }
+        if (type === 'competition') {
+            if (attempts) {
+                whereClauses.push("attempts = @attempts");
+                queryOptions.params.attempts = attempts;
             }
         }
 
@@ -169,6 +176,10 @@ exports.getLogs = async (req, res) => {
                     normalized.location = parts.join(' > ');
                     if (row.location.wall) normalized.location += ` - ${row.location.wall}`;
                 }
+            } else if (type === 'competition') {
+                normalized.session_type = 'Competition';
+                // Round is nested in the climbs RECORD
+                normalized.round = (row.climbs && row.climbs.round) || row.round || 'Qualifiers';
             } else if (type === 'fingerboard') {
                 normalized.session_type = 'Fingerboard';
                 normalized.location = 'N/A';

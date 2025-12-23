@@ -137,6 +137,10 @@
                     details: climb.details || null,
                     rawLocation: row.raw_location || row.location,
                     rowDate: row.date,
+                    round:
+                        climb.round ||
+                        row.round ||
+                        (climb.climbs && climb.climbs.round),
                 };
 
                 if (exerciseId && selectedType === "fingerboard") {
@@ -216,6 +220,7 @@
         { id: "indoor", label: "Indoor Climb" },
         { id: "fingerboard", label: "Fingerboarding" },
         { id: "outdoor", label: "Outdoor Climb" },
+        { id: "competition", label: "Competition" },
     ];
 
     const locationOptions = [
@@ -498,6 +503,13 @@
                     { key: "location", label: "Location" },
                     { key: "session_type", label: "Type" },
                     { key: "climbs", label: "Routes", isObject: true },
+                ];
+            case "competition":
+                return [
+                    { key: "date", label: "Date" },
+                    { key: "location", label: "Venue" },
+                    { key: "round", label: "Round" },
+                    { key: "climbs", label: "Problems", isObject: true },
                 ];
             default:
                 return [

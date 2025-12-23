@@ -51,6 +51,7 @@ exports.deleteLog = async (req, res) => {
             'outdoor': 'Outdoor_Climbs',
             'fingerboard': 'Fingerboarding',
             'gym': 'Gym_Sessions',
+            'competition': 'Competition_Logs',
             'other': 'Other_Logs'
         };
 
@@ -76,7 +77,7 @@ exports.deleteLog = async (req, res) => {
                         parts.push(`exercise = @name`);
                     } else if (activity_type === 'gym' || activity_type === 'other') {
                         parts.push(`climbs.name = @name`);
-                    } else {
+                    } else if (activity_type === 'indoor' || activity_type === 'outdoor' || activity_type === 'competition') {
                         parts.push(`climbs.route = @name`);
                     }
                 }

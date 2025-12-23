@@ -54,6 +54,7 @@ exports.saveLog = async (req, res) => {
             'outdoor': 'Outdoor_Climbs',
             'gym': 'Gym_Sessions',
             'fingerboard': 'Fingerboarding',
+            'competition': 'Competition_Logs',
             'other': 'Other_Logs'
         };
 
@@ -112,6 +113,16 @@ exports.saveLog = async (req, res) => {
                     notes: climb.notes
                 };
                 row.training = training || null;
+                row.exercise_id = climb.id;
+            } else if (activity_type === 'competition') {
+                row.location = location;
+                row.climbing_type = climb.type || 'Bouldering';
+                row.climbs = {
+                    route: climb.name,
+                    attempts: climb.attempts || 'Attempt',
+                    round: req.body.round || 'N/A',
+                    notes: climb.notes
+                };
                 row.exercise_id = climb.id;
             } else {
                 // Fallback / Gym / Other

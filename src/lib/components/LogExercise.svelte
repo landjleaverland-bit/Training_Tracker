@@ -84,6 +84,7 @@
                 training: data.training || null,
                 climbs: data.exercises,
                 date: new Date(logDate).toISOString(),
+                round: data.round || null,
             };
 
             const response = await fetch(API_URL, {
