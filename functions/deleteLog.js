@@ -64,31 +64,44 @@ exports.deleteLog = async (req, res) => {
 
         let whereClause = '';
         if (delete_type === 'entry') {
+            const parts = [];
             if (exercise_id) {
-                whereClause = `exercise_id = @exercise_id`;
+                // Primary match by ID
+                parts.push(`exercise_id = @exercise_id`);
             } else if (entry_criteria) {
-                // Fallback for logs without exercise_id
-                const parts = [];
-                if (entry_criteria.date) parts.push(`date = @date`);
+                // Detailed match fallback
+                if (entry_criteria.date) parts.push(`date = DATETIME(@date)`);
                 if (entry_criteria.name) {
-                    if (activity_type === 'fingerboard') parts.push(`exercise = @name`);
-                    else parts.push(`JSON_EXTRACT_SCALAR(climbs, '$.route') = @name OR JSON_EXTRACT_SCALAR(climbs, '$.name') = @name`);
+                    if (activity_type === 'fingerboard') {
+                        parts.push(`exercise = @name`);
+                    } else if (activity_type === 'gym' || activity_type === 'other') {
+                        parts.push(`climbs.name = @name`);
+                    } else {
+                        parts.push(`climbs.route = @name`);
+                    }
                 }
                 if (entry_criteria.weight !== undefined) parts.push(`weight = @weight`);
 
-                if (parts.length === 0) return res.status(400).send('Insufficient entry_criteria');
-                whereClause = parts.join(' AND ');
-            } else {
-                return res.status(400).send('Missing exercise_id or entry_criteria for entry deletion');
+                if (entry_criteria.location) {
+                    if (activity_type === 'outdoor') {
+                        parts.push(`(location.crag = @loc_crag OR CONCAT(location.crag, ' - ', location.wall) = @loc_crag)`);
+                    } else {
+                        parts.push(`location = @location_str`);
+                    }
+                }
             }
-        } else if (delete_type === 'session') {
+
+            if (parts.length === 0) return res.status(400).send('Insufficient criteria for entry deletion');
+            whereClause = parts.join(' AND ');
+        }
+        else if (delete_type === 'session') {
             if (session_criteria) {
                 const parts = [];
                 if (session_criteria.date) parts.push(`date BETWEEN @date_start AND @date_end`);
                 if (session_criteria.location) {
                     if (activity_type === 'outdoor') {
                         // Location is a record in outdoor
-                        parts.push(`(CONCAT(location.crag, ' - ', location.wall) = @location OR location.area = @location OR location.crag = @location)`);
+                        parts.push(`(CONCAT(location.crag, ' - ', location.wall) = @location OR location.crag = @location)`);
                     } else if (activity_type === 'fingerboard') {
                         // Fingerboard doesn't really have location in DB yet, but we use 'N/A'
                         // So skipping location check for fingerboard session delete if it's N/A
@@ -123,6 +136,14 @@ exports.deleteLog = async (req, res) => {
             if (entry_criteria.date) params.date = entry_criteria.date.replace('T', ' ').split('.')[0];
             if (entry_criteria.name) params.name = entry_criteria.name;
             if (entry_criteria.weight !== undefined) params.weight = entry_criteria.weight;
+            if (entry_criteria.location) {
+                if (typeof entry_criteria.location === 'object') {
+                    params.loc_crag = entry_criteria.location.crag || '';
+                    params.loc_wall = entry_criteria.location.wall || '';
+                } else {
+                    params.location_str = entry_criteria.location;
+                }
+            }
         }
         if (session_criteria) {
             if (session_criteria.date) {

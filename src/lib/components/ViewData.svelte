@@ -139,6 +139,8 @@
                     notes: climb.notes || row.notes,
                     exercise_id: exerciseId,
                     details: climb.details || null,
+                    rawLocation: row.location,
+                    rowDate: row.date,
                 };
 
                 if (exerciseId && selectedType === "fingerboard") {
@@ -274,6 +276,7 @@
                     date: dateVal,
                     name: item.data.name,
                     weight: item.data.weight,
+                    location: item.data.rawLocation || null,
                 };
             } else {
                 const dateVal = item.data.date?.value || item.data.date;

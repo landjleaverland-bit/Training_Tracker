@@ -166,7 +166,10 @@ exports.getLogs = async (req, res) => {
             if (type === 'outdoor') {
                 normalized.session_type = 'Outdoor';
                 if (row.location && typeof row.location === 'object') {
-                    normalized.location = `${row.location.area || ''} > ${row.location.crag || ''}`;
+                    const parts = [];
+                    if (row.location.area) parts.push(row.location.area);
+                    if (row.location.crag) parts.push(row.location.crag);
+                    normalized.location = parts.join(' > ');
                     if (row.location.wall) normalized.location += ` - ${row.location.wall}`;
                 }
             } else if (type === 'fingerboard') {
