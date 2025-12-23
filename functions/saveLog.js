@@ -43,7 +43,9 @@ exports.saveLog = async (req, res) => {
         const { activity_type, location, session_type, finger_load, shoulder_load, forearm_load, training, climbs, date } = req.body;
 
         // Basic validation
-        if (!location || !session_type || !climbs || !climbs.length) {
+        // Basic validation
+        // session_type is not required for indoor climbs
+        if (!location || (!session_type && activity_type !== 'indoor') || !climbs || !climbs.length) {
             return res.status(400).send('Missing required fields');
         }
 
