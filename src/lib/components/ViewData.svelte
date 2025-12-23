@@ -30,8 +30,8 @@
         expandedSessions = expandedSessions; // trigger reactivity
     }
 
-    /** @param {string} key */
     let expandedRounds = new Set();
+    /** @param {string} key */
     function toggleRound(key) {
         if (expandedRounds.has(key)) {
             expandedRounds.delete(key);

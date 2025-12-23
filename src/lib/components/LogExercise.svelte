@@ -30,7 +30,7 @@
     // Format current date for datetime-local input (YYYY-MM-DDTHH:mm)
     const now = new Date();
     const offset = now.getTimezoneOffset() * 60000;
-    let logDate = new Date(now - offset).toISOString().slice(0, 16);
+    let logDate = new Date(now.getTime() - offset).toISOString().slice(0, 16);
 
     // REPLACE WITH YOUR ACTUAL DEPLOYED CLOUD FUNCTION URL
     const API_URL = "https://save-log-825153765638.europe-west1.run.app";
