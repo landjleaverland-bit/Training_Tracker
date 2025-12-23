@@ -229,9 +229,10 @@
     ];
 
     const locationOptions = [
-        "Flashpoint Swindon",
-        "Rockstar",
         "Flashpoint Bristol",
+        "Rockstar Techno",
+        "Rockstar Unit 3",
+        "Rockstar Unit 5",
     ];
     const sessionOptions = ["Strength", "Endurance", "Power", "Recovery"];
 
