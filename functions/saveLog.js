@@ -164,43 +164,57 @@ exports.saveLog = async (req, res) => {
         fs.writeFileSync(tempFilePath, ndjson);
 
         // Load Job Configuration
+
+        let schemaFields = [
+            { name: 'date', type: 'DATETIME' },
+            // Location type depends on activity
+            (activity_type === 'outdoor'
+                ? {
+                    name: 'location',
+                    type: 'RECORD',
+                    fields: [
+                        { name: 'crag', type: 'STRING' },
+                        { name: 'wall', type: 'STRING' }
+                    ]
+                }
+                : { name: 'location', type: 'STRING' }
+            ),
+            { name: 'climbing_type', type: 'STRING' },
+            { name: 'session_type', type: 'STRING' },
+            { name: 'position', type: 'INTEGER' },
+            { name: 'finger_load', type: 'NUMERIC' },
+            { name: 'shoulder_load', type: 'NUMERIC' },
+            { name: 'forearm_load', type: 'NUMERIC' },
+            { name: 'exercise_id', type: 'STRING' },
+            {
+                name: 'training', type: 'RECORD', fields: [
+                    { name: 'training_type', type: 'STRING' },
+                    { name: 'difficulty', type: 'STRING' },
+                    { name: 'category', type: 'STRING' },
+                    { name: 'energy_system', type: 'STRING' },
+                    { name: 'technique_focus', type: 'STRING' },
+                    { name: 'wall_angle', type: 'STRING' }
+                ]
+            },
+            {
+                name: 'climbs', type: 'RECORD', mode: 'NULLABLE', fields: [
+                    { name: 'route', type: 'STRING' },
+                    { name: 'attempts', type: 'STRING' },
+                    { name: 'round', type: 'STRING' },
+                    { name: 'notes', type: 'STRING' },
+                    { name: 'attempt_count', type: 'INTEGER' },
+                    { name: 'grade', type: 'STRING' },
+                    { name: 'name', type: 'STRING' }
+                ]
+            }
+        ];
+
         const metadata = {
             sourceFormat: 'NEWLINE_DELIMITED_JSON',
             schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'],
             autodetect: false, // Turn off autodetect to rely on explicit schema
             schema: {
-                fields: [
-                    { name: 'date', type: 'DATETIME' },
-                    { name: 'location', type: 'STRING' },
-                    { name: 'climbing_type', type: 'STRING' },
-                    { name: 'session_type', type: 'STRING' },
-                    { name: 'position', type: 'INTEGER' },
-                    { name: 'finger_load', type: 'NUMERIC' },
-                    { name: 'shoulder_load', type: 'NUMERIC' },
-                    { name: 'forearm_load', type: 'NUMERIC' },
-                    { name: 'exercise_id', type: 'STRING' },
-                    {
-                        name: 'training', type: 'RECORD', fields: [
-                            { name: 'training_type', type: 'STRING' },
-                            { name: 'difficulty', type: 'STRING' },
-                            { name: 'category', type: 'STRING' },
-                            { name: 'energy_system', type: 'STRING' },
-                            { name: 'technique_focus', type: 'STRING' },
-                            { name: 'wall_angle', type: 'STRING' }
-                        ]
-                    },
-                    {
-                        name: 'climbs', type: 'RECORD', mode: 'NULLABLE', fields: [
-                            { name: 'route', type: 'STRING' },
-                            { name: 'attempts', type: 'STRING' },
-                            { name: 'round', type: 'STRING' },
-                            { name: 'notes', type: 'STRING' },
-                            { name: 'attempt_count', type: 'INTEGER' },
-                            { name: 'grade', type: 'STRING' },
-                            { name: 'name', type: 'STRING' }
-                        ]
-                    }
-                ]
+                fields: schemaFields
             }
         };
 
