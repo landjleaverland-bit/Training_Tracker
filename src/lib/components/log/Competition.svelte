@@ -200,7 +200,7 @@
                                     bind:value={ex.name}
                                 />
                             </td>
-                            <td> </td><td>
+                            <td>
                                 <div class="result-cell">
                                     <select bind:value={ex.attempts}>
                                         <option value="Flash">Flash</option>
@@ -208,7 +208,7 @@
                                         <option value="Zone">Zone</option>
                                         <option value="Attempt">Attempt</option>
                                     </select>
-                                    {#if ex.attempts === "Top" || ex.attempts === "Zone"}
+                                    {#if ex.attempts === "Top" || ex.attempts === "Zone" || ex.attempts === "Attempt"}
                                         <div
                                             class="attempts-wrapper"
                                             transition:slide|local
@@ -268,6 +268,11 @@
         display: flex;
         gap: 0.5rem;
         align-items: center;
+    }
+
+    .result-cell select {
+        flex: 1;
+        width: auto;
     }
 
     .attempts-wrapper {
@@ -390,11 +395,12 @@
     /* Column Widths */
     th:nth-child(1),
     td:nth-child(1) {
-        width: 20%;
+        width: 15%;
     }
     th:nth-child(2),
     td:nth-child(2) {
-        width: 25%;
+        width: 40%;
+        min-width: 160px;
     }
     th:nth-child(3),
     td:nth-child(3) {
