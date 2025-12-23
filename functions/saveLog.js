@@ -126,6 +126,7 @@ exports.saveLog = async (req, res) => {
                 row.location = location;
                 row.climbing_type = climb.type || 'Bouldering';
                 row.position = req.body.position || climb.position || null;
+                row.session_type = 'Competition';
                 row.climbs = {
                     route: climb.name,
                     attempts: climb.attempts || 'Attempt',
