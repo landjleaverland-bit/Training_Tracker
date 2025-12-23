@@ -1,6 +1,38 @@
-# sv
+# Training Tracker
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A Svelte-based training tracker application, powered by [`sv`](https://github.com/sveltejs/cli).
+
+## Quick Setup
+
+For first-time setup, use the automated setup script:
+
+```sh
+./setup.sh
+```
+
+This script will:
+- ✅ Check your operating system compatibility
+- ✅ Install Node.js v22 (if not already installed)
+- ✅ Install all project dependencies
+- ✅ Install functions dependencies
+- ✅ Run a security audit
+- ✅ Display next steps
+
+### Manual Setup
+
+If you prefer to set up manually or the script doesn't work for your system:
+
+```sh
+# Install Node.js v22 (Ubuntu/Debian)
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install nodejs -y
+
+# Install project dependencies
+npm install
+
+# Install functions dependencies
+cd functions && npm install && cd ..
+```
 
 ## Creating a project
 
