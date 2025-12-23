@@ -3,6 +3,7 @@
     import IndoorClimb from "./log/IndoorClimb.svelte";
     import OutdoorClimb from "./log/OutdoorClimb.svelte";
     import Fingerboarding from "./log/Fingerboarding.svelte";
+    import Competition from "./log/Competition.svelte";
 
     let selectedId = "";
 
@@ -14,6 +15,7 @@
             component: Fingerboarding,
         },
         { id: "outdoor", text: "Outdoor Climb", component: OutdoorClimb },
+        { id: "competition", text: "Competition", component: Competition },
     ];
 
     import { apiKey } from "$lib/stores/auth";
