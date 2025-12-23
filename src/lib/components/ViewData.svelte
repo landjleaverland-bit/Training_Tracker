@@ -134,7 +134,10 @@
                         climb.name ||
                         row.exercise ||
                         "-",
-                    grade: climb.grade || row.grade,
+                    grade:
+                        climb.grade ||
+                        row.grade ||
+                        (climb.climbs && climb.climbs.grade),
                     grip: climb.grip || climb.grip_type || row.grip,
                     weight: climb.weight ?? row.weight,
                     sets: climb.sets || row.sets,

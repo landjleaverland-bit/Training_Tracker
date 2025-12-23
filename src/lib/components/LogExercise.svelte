@@ -52,7 +52,7 @@
         // Basic Validation
         if (
             !data.location ||
-            !data.session ||
+            (selectedId !== "indoor" && !data.session) ||
             (data.exercises && data.exercises.length === 0)
         ) {
             saveMessage =
