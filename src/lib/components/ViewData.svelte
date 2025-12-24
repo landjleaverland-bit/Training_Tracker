@@ -42,7 +42,6 @@
     }
 
     /**
-     * @param {any[]} rows
      * @param {any[]} data
      * @param {string} start
      * @param {string} end
@@ -144,6 +143,7 @@
                     weight: climb.weight ?? row.weight,
                     sets: climb.sets || row.sets,
                     reps: climb.reps || row.reps,
+                    attempts_no: climb.attempts_no || row.attempts_no || null,
                     notes: climb.notes || row.notes,
                     exercise_id: exerciseId,
                     details: climb.details || null,
@@ -167,6 +167,7 @@
                     r: itemData.round,
                     s: itemData.sets,
                     rp: itemData.reps,
+                    an: itemData.attempts_no,
                 })}`;
 
                 if (selectedType === "fingerboard" && exerciseId) {
@@ -538,6 +539,8 @@
                     { key: "date", label: "Date" },
                     { key: "location", label: "Location" },
                     { key: "session_type", label: "Type" },
+                    { key: "name", label: "Climb" },
+                    { key: "attempts_no", label: "Attempts No." },
                     { key: "climbs", label: "Data", isObject: true },
                 ];
             case "fingerboard":
@@ -552,6 +555,8 @@
                     { key: "date", label: "Date" },
                     { key: "location", label: "Location" },
                     { key: "session_type", label: "Type" },
+                    { key: "name", label: "Climb" },
+                    { key: "attempts_no", label: "Attempts No." },
                     { key: "climbs", label: "Routes", isObject: true },
                 ];
             case "competition":
@@ -1130,12 +1135,6 @@
                                                             <div
                                                                 class="exercise-row"
                                                             >
-                                                                <span
-                                                                    class="ex-name"
-                                                                    >{item.route ||
-                                                                        item.name ||
-                                                                        "-"}</span
-                                                                >
                                                                 {#if item.type || item.isRopes !== undefined}
                                                                     <span
                                                                         class="ex-meta type"
@@ -1267,8 +1266,12 @@
                                                                 </button>
                                                             </div>
                                                         {:else}
-                                                            {item[col.key] ||
-                                                                "-"}
+                                                            {item[col.key] !==
+                                                                undefined &&
+                                                            item[col.key] !==
+                                                                null
+                                                                ? item[col.key]
+                                                                : "-"}
                                                         {/if}
                                                     </td>
                                                 {/each}

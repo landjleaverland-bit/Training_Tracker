@@ -26,6 +26,7 @@
             name: "",
             grade: "",
             attempts: "Redpoint",
+            attemptsCount: 1,
             notes: "",
         },
     ];
@@ -45,6 +46,7 @@
                 name: "",
                 grade: "",
                 attempts: "Redpoint",
+                attemptsCount: 1,
                 notes: "",
             },
         ];
@@ -61,6 +63,7 @@
                     name: "",
                     grade: "",
                     attempts: "Redpoint",
+                    attemptsCount: 1,
                     notes: "",
                 },
             ];
@@ -83,6 +86,11 @@
             exercises: exercises.map((ex) => ({
                 ...ex,
                 type: climbType,
+                attempts_no: ["Redpoint", "Repeat", "Dogged"].includes(
+                    ex.attempts,
+                )
+                    ? ex.attemptsCount
+                    : null,
             })),
         };
     }
@@ -188,6 +196,23 @@
                                 <option value="DNF">DNF</option>
                             </select>
                         </div>
+                        {#if ["Redpoint", "Repeat", "Dogged"].includes(ex.attempts)}
+                            <div
+                                class="input-wrapper attempts-count"
+                                transition:slide|local={{
+                                    axis: "x",
+                                    duration: 200,
+                                }}
+                            >
+                                <input
+                                    type="number"
+                                    min="1"
+                                    placeholder="#"
+                                    bind:value={ex.attemptsCount}
+                                    title="Number of attempts"
+                                />
+                            </div>
+                        {/if}
                         <button
                             class="delete-btn"
                             on:click={() => removeRow(ex.id)}
@@ -360,6 +385,12 @@
         min-width: 100px;
     }
 
+    .input-wrapper.attempts-count {
+        flex: 0.5;
+        min-width: 50px;
+        max-width: 70px;
+    }
+
     .bottom-row textarea {
         width: 100%;
         min-height: 42px; /* Slight height increase */
@@ -437,6 +468,9 @@
         }
         .input-wrapper.attempts {
             flex: 2 1 100px;
+        }
+        .input-wrapper.attempts-count {
+            flex: 1 1 50px;
         }
     }
 </style>

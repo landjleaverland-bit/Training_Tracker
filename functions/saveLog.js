@@ -107,6 +107,7 @@ exports.saveLog = async (req, res) => {
                 row.climbs = {
                     route: climb.name,
                     grade: climb.grade,
+                    attempts_no: parseInt(climb.attempts_no) || null,
                     notes: climb.notes
                 };
                 row.training = training || null;
@@ -118,6 +119,7 @@ exports.saveLog = async (req, res) => {
                 row.climbs = {
                     route: climb.name,
                     grade: climb.grade,
+                    attempts_no: parseInt(climb.attempts_no) || null,
                     notes: climb.notes
                 };
                 row.training = training || null;
@@ -217,6 +219,7 @@ exports.saveLog = async (req, res) => {
                         { name: 'round', type: 'STRING' },
                         { name: 'notes', type: 'STRING' },
                         { name: 'attempt_count', type: 'INTEGER' },
+                        { name: 'attempts_no', type: 'INTEGER' },
                         { name: 'grade', type: 'STRING' },
                         { name: 'name', type: 'STRING' }
                     ]
