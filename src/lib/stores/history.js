@@ -36,13 +36,17 @@ export function syncLogs(type, newLogs) {
             const dateStr = d ? new Date(d).toISOString() : '';
 
             // Generate a unique ID for the entry
-            // Since BigQuery might return duplicate looking rows if we aren't careful, 
-            // we use as much info as possible.
-            // For fingerboard (flat rows), we need to include specific fields that differentiate them
+            // We consciously exclude 'synced' from the ID so we can update the status
             const uniqueId = `${dateStr}|${log.location}|${log.session_type}|${JSON.stringify(log.climbs)}|${log.exercise}|${log.grip}|${log.weight}|${log.reps}`;
 
             if (!uniqueMap.has(uniqueId)) {
                 uniqueMap.set(uniqueId, log);
+            } else {
+                // If we already have this log, we might want to update it if the new one has better info
+                // e.g. if the new one says synced:true and the old one says synced:false
+                // Since newLogs are prepended, they are processed first, so this 'else' block
+                // is hitting the 'existing' logs (or duplicates within newLogs).
+                // The first one wins, which is what we want for updates.
             }
         });
 
@@ -64,6 +68,19 @@ export function syncLogs(type, newLogs) {
  */
 export function addLog(type, log) {
     syncLogs(type, [log]);
+}
+
+/**
+ * Updates a specific log entry's synced status
+ * @param {string} type 
+ * @param {any} log 
+ * @param {boolean} isSynced 
+ */
+export function markLogAsSynced(type, log, isSynced = true) {
+    // We update by "adding" it again with the new status.
+    // Since syncLogs logic prefers the new entry (it's prepended), it will overwrite the old one.
+    const updatedLog = { ...log, synced: isSynced };
+    syncLogs(type, [updatedLog]);
 }
 
 /**

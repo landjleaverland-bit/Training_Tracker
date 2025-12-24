@@ -19,12 +19,13 @@
     ];
 
     import { apiKey } from "$lib/stores/auth";
-    import { addLog } from "$lib/stores/history";
+    import { addLog, historyStore, markLogAsSynced } from "$lib/stores/history";
     import { get } from "svelte/store";
 
     /** @type {any} */
     let activeComponent;
     let isSaving = false;
+    let isSyncing = false;
     let saveMessage = "";
     let saveSuccess = false;
     // Format current date for datetime-local input (YYYY-MM-DDTHH:mm)
@@ -37,9 +38,85 @@
 
     $: selectedOption = options.find((o) => o.id === selectedId);
 
+    // Count pending logs across all types
+    $: pendingLogsCount = Object.values($historyStore)
+        .flat()
+        .filter((l) => l.synced === false).length;
+
     // Clear message when switching tabs
     $: if (selectedId) {
         saveMessage = "";
+    }
+
+    async function syncOfflineLogs() {
+        if (pendingLogsCount === 0) return;
+
+        isSyncing = true;
+        saveMessage = "Syncing offline logs...";
+        saveSuccess = true; // Neutral/Info color
+
+        const currentToken = get(apiKey);
+        if (!currentToken) {
+            saveMessage = "Authentication error. Please log in first.";
+            saveSuccess = false;
+            isSyncing = false;
+            return;
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+
+        try {
+            const store = get(historyStore);
+            // Iterate over all types and their logs
+            for (const [type, logs] of Object.entries(store)) {
+                // Find pending logs for this type
+                const pendingForType = logs.filter(
+                    (/** @type {any} */ l) => l.synced === false,
+                );
+
+                for (const log of pendingForType) {
+                    try {
+                        // Create payload WITHOUT 'synced' property
+                        const { synced, ...payload } = log;
+
+                        const response = await fetch(API_URL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${currentToken}`,
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to sync log`);
+                        }
+
+                        // Mark as synced locally
+                        markLogAsSynced(type, log, true);
+                        successCount++;
+                    } catch (e) {
+                        console.error("Sync error for log:", log, e);
+                        failCount++;
+                    }
+                }
+            }
+
+            if (failCount === 0) {
+                saveMessage = `Successfully synced ${successCount} logs!`;
+                saveSuccess = true;
+            } else {
+                saveMessage = `Synced ${successCount} logs. Failed to sync ${failCount} logs.`;
+                saveSuccess = false;
+            }
+        } catch (error) {
+            console.error("Global sync error:", error);
+            saveMessage = "Error during sync.";
+            saveSuccess = false;
+        } finally {
+            isSyncing = false;
+        }
     }
 
     async function submitToBigQuery() {
@@ -65,9 +142,27 @@
             return;
         }
 
+        // Prepare payload for BigQuery
+        const payload = {
+            activity_type: selectedId,
+            location: data.location,
+            session_type: data.session,
+            finger_load: data.fingerLoad || 0,
+            shoulder_load: data.shoulderLoad || 0,
+            forearm_load: data.forearmLoad || 0,
+            training: data.training || null,
+            climbs: data.exercises,
+            date: new Date(logDate).toISOString(),
+            round: data.round || null,
+            position: data.position || null,
+            isResultOnly: data.isResultOnly || false,
+        };
+
+        // If no token, we are definitely offline/unauth, so save locally immediately
         if (!currentToken) {
-            saveMessage = "Authentication error. Please log in again.";
-            saveSuccess = false;
+            addLog(selectedId, { ...payload, synced: false });
+            saveMessage = "Saved offline (Not logged in). Sync later.";
+            saveSuccess = true; // Still a "success" in that data isn't lost
             return;
         }
 
@@ -75,22 +170,6 @@
         saveMessage = "";
 
         try {
-            // Prepare payload for BigQuery
-            const payload = {
-                activity_type: selectedId,
-                location: data.location,
-                session_type: data.session,
-                finger_load: data.fingerLoad || 0,
-                shoulder_load: data.shoulderLoad || 0,
-                forearm_load: data.forearmLoad || 0,
-                training: data.training || null,
-                climbs: data.exercises,
-                date: new Date(logDate).toISOString(),
-                round: data.round || null,
-                position: data.position || null,
-                isResultOnly: data.isResultOnly || false,
-            };
-
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
@@ -111,13 +190,16 @@
             saveSuccess = true;
 
             // Add to local cache immediately
-            addLog(selectedId, payload);
+            addLog(selectedId, { ...payload, synced: true });
 
             // Optional: Data reset logic could go here
         } catch (error) {
             console.error("Save Error:", error);
-            saveMessage = "Failed to save log. Check console for details.";
-            saveSuccess = false;
+            // Fallback: Save offline
+            addLog(selectedId, { ...payload, synced: false });
+
+            saveMessage = "Network error. Saved offline. Please Sync later.";
+            saveSuccess = true;
         } finally {
             isSaving = false;
         }
@@ -125,7 +207,22 @@
 </script>
 
 <div class="tab-content">
-    <h2>Log Exercise</h2>
+    <div class="header-row">
+        <h2>Log Exercise</h2>
+        {#if pendingLogsCount > 0}
+            <button
+                class="sync-button"
+                on:click={syncOfflineLogs}
+                disabled={isSyncing}
+            >
+                {#if isSyncing}
+                    Syncing...
+                {:else}
+                    Sync ({pendingLogsCount})
+                {/if}
+            </button>
+        {/if}
+    </div>
     <div class="header-inputs">
         <div class="dropdown-wrapper">
             <label for="log-date">When did you do this?</label>
@@ -206,8 +303,36 @@
 
     h2 {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0; /* Remove bottom margin as it's now in header-row */
         color: #f8fafc;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .sync-button {
+        background: rgba(234, 179, 8, 0.2);
+        color: #facc15;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .sync-button:hover {
+        background: rgba(234, 179, 8, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .sync-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
 
     .dropdown-wrapper {
