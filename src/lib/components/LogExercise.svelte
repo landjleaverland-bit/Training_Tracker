@@ -21,6 +21,7 @@
     import { apiKey } from "$lib/stores/auth";
     import { addLog, historyStore, markLogAsSynced } from "$lib/stores/history";
     import { get } from "svelte/store";
+    import { onMount, onDestroy } from "svelte";
 
     /** @type {any} */
     let activeComponent;
@@ -47,6 +48,25 @@
     $: if (selectedId) {
         saveMessage = "";
     }
+
+    onMount(() => {
+        // Auto-sync on load
+        if (pendingLogsCount > 0) {
+            syncOfflineLogs();
+        }
+
+        // Auto-sync when coming back online
+        const handleOnline = () => {
+            console.log("Network restored, attempting sync...");
+            syncOfflineLogs();
+        };
+
+        window.addEventListener("online", handleOnline);
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+        };
+    });
 
     async function syncOfflineLogs() {
         if (pendingLogsCount === 0) return;
