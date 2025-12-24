@@ -39,7 +39,9 @@
             grade: "",
             attempts: "Redpoint",
             attemptsCount: 1,
+
             notes: "",
+            expanded: true,
         },
     ];
 
@@ -52,7 +54,9 @@
                 grade: "",
                 attempts: "Redpoint",
                 attemptsCount: 1,
+
                 notes: "",
+                expanded: true,
             },
         ];
     }
@@ -69,6 +73,7 @@
                     attempts: "Redpoint",
                     attemptsCount: 1,
                     notes: "",
+                    expanded: true,
                 },
             ];
         }
@@ -294,14 +299,35 @@
                                 /></svg
                             >
                         </button>
+                        <button
+                            class="toggle-btn"
+                            class:expanded={ex.expanded}
+                            on:click={() => (ex.expanded = !ex.expanded)}
+                            title={ex.expanded ? "Collapse" : "Expand"}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path d="m6 9 6 6 6-6" /></svg
+                            >
+                        </button>
                     </div>
-                    <div class="card-row bottom-row">
-                        <textarea
-                            placeholder="Notes..."
-                            bind:value={ex.notes}
-                            rows="1"
-                        ></textarea>
-                    </div>
+                    {#if ex.expanded}
+                        <div class="card-row bottom-row" transition:slide|local>
+                            <textarea
+                                placeholder="Notes..."
+                                bind:value={ex.notes}
+                                rows="1"
+                            ></textarea>
+                        </div>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -499,6 +525,30 @@
     .delete-btn:hover {
         opacity: 1;
         background: rgba(239, 68, 68, 0.15);
+    }
+
+    .toggle-btn {
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+    }
+
+    .toggle-btn:hover {
+        color: #60a5fa;
+    }
+
+    .toggle-btn svg {
+        transition: transform 0.2s ease;
+    }
+
+    .toggle-btn.expanded svg {
+        transform: rotate(180deg);
     }
 
     @media (max-width: 480px) {
