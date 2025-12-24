@@ -1,3 +1,4 @@
+// @context-ref: docs/GEMINI_CONTEXT.md - Read-Path Normalization. Consult context before changing data transformation.
 const { BigQuery } = require('@google-cloud/bigquery');
 
 // Initialize BigQuery client

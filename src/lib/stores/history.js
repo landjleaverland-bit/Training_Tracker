@@ -1,3 +1,4 @@
+// @context-ref: docs/GEMINI_CONTEXT.md - Please consult this file for deep architectural context before modifying logic.
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import { normalizeLocation } from '$lib/utils/formatters';

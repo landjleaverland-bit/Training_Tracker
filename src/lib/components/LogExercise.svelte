@@ -1,3 +1,4 @@
+<!-- @context-ref: docs/GEMINI_CONTEXT.md - Sync Orchestration Logic. Consult context for offline/sync contracts. -->
 <script>
     import { fade } from "svelte/transition";
     import IndoorClimb from "./log/IndoorClimb.svelte";

@@ -1,3 +1,4 @@
+<!-- @context-ref: docs/GEMINI_CONTEXT.md - Data View & Grouping Logic. Consult context for deduplication logic. -->
 <script>
     import { fade, slide } from "svelte/transition";
     import { apiKey } from "$lib/stores/auth";

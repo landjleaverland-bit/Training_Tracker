@@ -1,3 +1,4 @@
+// @context-ref: docs/GEMINI_CONTEXT.md - Critical Backend Logic. Consult context for Schema/Normalization contracts.
 const { BigQuery } = require('@google-cloud/bigquery');
 
 // Initialize BigQuery client
