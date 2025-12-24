@@ -1141,7 +1141,7 @@
                                         </div>
                                     </div>
                                 {/if}
-                                {#if selectedType === "indoor" || selectedType === "outdoor"}
+                                {#if selectedType === "indoor" || selectedType === "outdoor" || selectedType === "fingerboard"}
                                     <div class="cards-list">
                                         {#each session.items as item}
                                             <div class="climb-card-container">
@@ -1170,15 +1170,33 @@
                                                                 {item.grade}
                                                             </span>
                                                         {/if}
+                                                        {#if selectedType === "fingerboard" && item.grip}
+                                                            <span
+                                                                class="ex-meta type"
+                                                            >
+                                                                {item.grip}
+                                                            </span>
+                                                        {/if}
                                                     </div>
                                                     <div class="header-right">
-                                                        {#if item.attempts}
+                                                        {#if item.attempts && selectedType !== "fingerboard"}
                                                             <span
                                                                 class="mini-status {item.attempts.toLowerCase()}"
                                                             >
                                                                 {item.attempts}
                                                             </span>
                                                         {/if}
+                                                        <!-- For Fingerboard, show summary of sets if collapsed, or just chevron -->
+                                                        {#if selectedType === "fingerboard"}
+                                                            <span
+                                                                class="mini-status type"
+                                                            >
+                                                                {item.details
+                                                                    ?.length ||
+                                                                    1} Sets
+                                                            </span>
+                                                        {/if}
+
                                                         <div
                                                             class="chevron"
                                                             class:expanded={expandedItems.has(
@@ -1209,94 +1227,151 @@
                                                         class="climb-card-body"
                                                         transition:slide|local
                                                     >
-                                                        <div
-                                                            class="climb-meta-grid"
-                                                        >
-                                                            {#if item.attempts}
-                                                                <div
-                                                                    class="meta-item"
-                                                                >
-                                                                    <span
-                                                                        class="meta-label"
-                                                                        >Attempts</span
-                                                                    >
-                                                                    <span
-                                                                        class="meta-value"
-                                                                    >
-                                                                        {item.attempts}
-                                                                        {#if item.attempt_count && item.attempt_count > 1}
-                                                                            ({item.attempt_count})
-                                                                        {/if}
-                                                                    </span>
-                                                                </div>
-                                                            {/if}
-                                                            {#if item.type || item.isRopes !== undefined}
-                                                                <div
-                                                                    class="meta-item"
-                                                                >
-                                                                    <span
-                                                                        class="meta-label"
-                                                                        >Type</span
-                                                                    >
-                                                                    <span
-                                                                        class="meta-value"
-                                                                    >
-                                                                        {item.type ||
-                                                                            (item.isRopes
-                                                                                ? "Sport"
-                                                                                : "Bouldering")}
-                                                                    </span>
-                                                                </div>
-                                                            {/if}
-
+                                                        {#if selectedType === "fingerboard"}
+                                                            <!-- Fingerboard Specific Body: Weight/Reps Table -->
                                                             <div
-                                                                class="meta-item action"
+                                                                class="fb-sets-container"
                                                             >
-                                                                <button
-                                                                    class="delete-session-btn"
-                                                                    on:click|stopPropagation={() =>
-                                                                        openDeleteModal(
-                                                                            "entry",
-                                                                            {
-                                                                                ...item,
-                                                                                rowDate:
-                                                                                    session.date,
-                                                                            },
-                                                                        )}
-                                                                    title="Delete this entry"
-                                                                    style="width: 28px; height: 28px; margin-left: auto;"
+                                                                <div
+                                                                    class="fb-sets-header"
                                                                 >
-                                                                    <svg
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        width="14"
-                                                                        height="14"
-                                                                        viewBox="0 0 24 24"
-                                                                        fill="none"
-                                                                        stroke="currentColor"
-                                                                        stroke-width="2"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                        ><path
-                                                                            d="M3 6h18"
-                                                                        /><path
-                                                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                                                                        /><path
-                                                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                                                                        /><line
-                                                                            x1="10"
-                                                                            y1="11"
-                                                                            x2="10"
-                                                                            y2="17"
-                                                                        /><line
-                                                                            x1="14"
-                                                                            y1="11"
-                                                                            x2="14"
-                                                                            y2="17"
-                                                                        /></svg
+                                                                    <span
+                                                                        >Weight</span
                                                                     >
-                                                                </button>
+                                                                    <span
+                                                                        >Reps</span
+                                                                    >
+                                                                </div>
+                                                                <div
+                                                                    class="fb-sets-list"
+                                                                >
+                                                                    {#if item.details && item.details.length > 0}
+                                                                        {#each item.details as set}
+                                                                            <div
+                                                                                class="fb-set-row"
+                                                                            >
+                                                                                <span
+                                                                                    class="set-weight"
+                                                                                    >{set.weight}
+                                                                                    kg</span
+                                                                                >
+                                                                                <span
+                                                                                    class="set-reps"
+                                                                                    >{set.reps}</span
+                                                                                >
+                                                                            </div>
+                                                                        {/each}
+                                                                    {:else}
+                                                                        <!-- Fallback for single/legacy items -->
+                                                                        <div
+                                                                            class="fb-set-row"
+                                                                        >
+                                                                            <span
+                                                                                class="set-weight"
+                                                                                >{item.weight ||
+                                                                                    0}
+                                                                                kg</span
+                                                                            >
+                                                                            <span
+                                                                                class="set-reps"
+                                                                                >{item.reps ||
+                                                                                    0}</span
+                                                                            >
+                                                                        </div>
+                                                                    {/if}
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        {:else}
+                                                            <!-- Standard Climb Body -->
+                                                            <div
+                                                                class="climb-meta-grid"
+                                                            >
+                                                                {#if item.attempts}
+                                                                    <div
+                                                                        class="meta-item"
+                                                                    >
+                                                                        <span
+                                                                            class="meta-label"
+                                                                            >Attempts</span
+                                                                        >
+                                                                        <span
+                                                                            class="meta-value"
+                                                                        >
+                                                                            {item.attempts}
+                                                                            {#if item.attempt_count && item.attempt_count > 1}
+                                                                                ({item.attempt_count})
+                                                                            {/if}
+                                                                        </span>
+                                                                    </div>
+                                                                {/if}
+                                                                {#if item.type || item.isRopes !== undefined}
+                                                                    <div
+                                                                        class="meta-item"
+                                                                    >
+                                                                        <span
+                                                                            class="meta-label"
+                                                                            >Type</span
+                                                                        >
+                                                                        <span
+                                                                            class="meta-value"
+                                                                        >
+                                                                            {item.type ||
+                                                                                (item.isRopes
+                                                                                    ? "Sport"
+                                                                                    : "Bouldering")}
+                                                                        </span>
+                                                                    </div>
+                                                                {/if}
+
+                                                                <div
+                                                                    class="meta-item action"
+                                                                >
+                                                                    <button
+                                                                        class="delete-session-btn"
+                                                                        on:click|stopPropagation={() =>
+                                                                            openDeleteModal(
+                                                                                "entry",
+                                                                                {
+                                                                                    ...item,
+                                                                                    rowDate:
+                                                                                        session.date,
+                                                                                },
+                                                                            )}
+                                                                        title="Delete this entry"
+                                                                        style="width: 28px; height: 28px; margin-left: auto;"
+                                                                    >
+                                                                        <svg
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="14"
+                                                                            height="14"
+                                                                            viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            stroke="currentColor"
+                                                                            stroke-width="2"
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            ><path
+                                                                                d="M3 6h18"
+                                                                            /><path
+                                                                                d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                                                            /><path
+                                                                                d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                                                            /><line
+                                                                                x1="10"
+                                                                                y1="11"
+                                                                                x2="10"
+                                                                                y2="17"
+                                                                            /><line
+                                                                                x1="14"
+                                                                                y1="11"
+                                                                                x2="14"
+                                                                                y2="17"
+                                                                            /></svg
+                                                                        >
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        {/if}
 
                                                         {#if item.notes}
                                                             <div
