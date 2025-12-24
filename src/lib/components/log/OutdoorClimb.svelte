@@ -400,6 +400,7 @@
 
     .top-row {
         width: 100%;
+        flex-wrap: wrap;
     }
 
     .input-wrapper {
@@ -409,18 +410,18 @@
 
     .input-wrapper.route {
         flex: 2;
-        min-width: 100px;
+        min-width: 80px;
     }
 
     .input-wrapper.grade {
         flex: 1;
-        min-width: 60px;
+        min-width: 50px;
         max-width: 100px;
     }
 
     .input-wrapper.attempts {
         flex: 1.5;
-        min-width: 110px;
+        min-width: 100px;
     }
 
     .bottom-row textarea {
@@ -488,14 +489,14 @@
         }
 
         .input-wrapper.route {
-            flex: 1.5;
+            flex: 1 1 120px;
         }
         .input-wrapper.grade {
-            flex: 1;
-            max-width: 60px;
+            flex: 1 1 50px;
+            max-width: none;
         }
         .input-wrapper.attempts {
-            flex: 1.5;
+            flex: 2 1 100px;
         }
     }
 </style>
