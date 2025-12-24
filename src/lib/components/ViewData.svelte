@@ -1320,24 +1320,60 @@
                                                 <tr>
                                                     {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
                                                         <td>
-                                                            {#if col.isObject}
-                                                                <!-- Generic fallback for object columns in table view if needed, or simplifed -->
-                                                                {item[
-                                                                    col.key
-                                                                ] || "-"}
+                                                            {#if col.key === "climbs"}
+                                                                <div
+                                                                    class="climb-cell"
+                                                                >
+                                                                    <span
+                                                                        class="climb-name"
+                                                                        >{item.name}</span
+                                                                    >
+                                                                    {#if item.grip}
+                                                                        <span
+                                                                            class="meta-fb"
+                                                                            >{item.grip}</span
+                                                                        >
+                                                                    {/if}
+                                                                    {#if item.weight}
+                                                                        <span
+                                                                            class="meta-fb"
+                                                                            >{item.weight}</span
+                                                                        >
+                                                                    {/if}
+                                                                    {#if item.sets || item.reps}
+                                                                        <span
+                                                                            class="meta-fb"
+                                                                        >
+                                                                            {item.sets ||
+                                                                                0}
+                                                                            x {item.reps ||
+                                                                                0}
+                                                                        </span>
+                                                                    {/if}
+                                                                    {#if item.attempts}
+                                                                        <span
+                                                                            class="climb-result {item.attempts.toLowerCase()}"
+                                                                        >
+                                                                            {item.attempts}
+                                                                            {#if (item.attempts === "Top" || item.attempts === "Zone") && item.attempt_count > 1}
+                                                                                <span
+                                                                                    class="attempt-number"
+                                                                                    >({item.attempt_count})</span
+                                                                                >
+                                                                            {/if}
+                                                                        </span>
+                                                                    {/if}
+                                                                </div>
+                                                                {#if item.notes}
+                                                                    <div
+                                                                        class="climb-notes"
+                                                                    >
+                                                                        {item.notes}
+                                                                    </div>
+                                                                {/if}
                                                             {:else}
-                                                                {item[
-                                                                    col.key
-                                                                ] !==
-                                                                    undefined &&
-                                                                item[
-                                                                    col.key
-                                                                ] !== null
-                                                                    ? item[
-                                                                          col
-                                                                              .key
-                                                                      ]
-                                                                    : "-"}
+                                                                ? item[ col .key
+                                                                ] : "-"}
                                                             {/if}
                                                         </td>
                                                     {/each}
