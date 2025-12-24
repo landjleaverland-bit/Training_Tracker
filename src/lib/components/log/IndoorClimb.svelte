@@ -156,82 +156,70 @@
             </button>
         </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Route</th>
-                        <th>Grade</th>
-                        <th>Attempts</th>
-                        <th>Notes</th>
-                        <th class="actions-col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each exercises as ex, i (ex.id)}
-                        <tr
-                            out:slide|local={{ duration: 200 }}
-                            animate:flip={{ duration: 300 }}
+        <div class="exercise-list">
+            {#each exercises as ex, i (ex.id)}
+                <div
+                    class="exercise-card"
+                    out:slide|local={{ duration: 200 }}
+                    animate:flip={{ duration: 300 }}
+                >
+                    <div class="card-row top-row">
+                        <div class="input-wrapper route">
+                            <input
+                                type="text"
+                                placeholder="Route Color/Name"
+                                bind:value={ex.name}
+                            />
+                        </div>
+                        <div class="input-wrapper grade">
+                            <input
+                                type="text"
+                                placeholder="Grade"
+                                bind:value={ex.grade}
+                            />
+                        </div>
+                        <div class="input-wrapper attempts">
+                            <select bind:value={ex.attempts} title="Attempts">
+                                <option value="Onsight">Onsight</option>
+                                <option value="Flash">Flash</option>
+                                <option value="Redpoint">Redpoint</option>
+                                <option value="Repeat">Repeat</option>
+                                <option value="Dogged">Dogged</option>
+                                <option value="DNF">DNF</option>
+                            </select>
+                        </div>
+                        <button
+                            class="delete-btn"
+                            on:click={() => removeRow(ex.id)}
+                            title="Remove row"
                         >
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. Blue"
-                                    bind:value={ex.name}
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. 6b+"
-                                    bind:value={ex.grade}
-                                />
-                            </td>
-                            <td>
-                                <select bind:value={ex.attempts}>
-                                    <option value="Onsight">Onsight</option>
-                                    <option value="Flash">Flash</option>
-                                    <option value="Redpoint">Redpoint</option>
-                                    <option value="Repeat">Repeat</option>
-                                    <option value="Dogged">Dogged</option>
-                                    <option value="DNF">DNF</option>
-                                </select>
-                            </td>
-                            <td>
-                                <textarea
-                                    placeholder="e.g. Smooth"
-                                    bind:value={ex.notes}
-                                    rows="1"
-                                ></textarea>
-                            </td>
-                            <td class="actions-col">
-                                <button
-                                    class="delete-btn"
-                                    on:click={() => removeRow(ex.id)}
-                                    title="Remove row"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        ><path d="M3 6h18" /><path
-                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                                        /><path
-                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                                        /></svg
-                                    >
-                                </button>
-                            </td>
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                ><path d="M3 6h18" /><path
+                                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                /><path
+                                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                /></svg
+                            >
+                        </button>
+                    </div>
+                    <div class="card-row bottom-row">
+                        <textarea
+                            placeholder="Notes..."
+                            bind:value={ex.notes}
+                            rows="1"
+                        ></textarea>
+                    </div>
+                </div>
+            {/each}
         </div>
     </div>
 </div>
@@ -324,101 +312,97 @@
         transform: translateY(-1px);
     }
 
-    .table-container {
-        overflow-x: auto;
-        /* margin: 0; Removed negative margin to prevent overflow on mobile */
-        padding: 0 0.5rem;
+    .exercise-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    table {
+    .exercise-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .card-row {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .top-row {
         width: 100%;
-        border-collapse: collapse;
-        min-width: 450px;
-        table-layout: fixed;
     }
 
-    th {
-        text-align: left;
-        font-size: 0.75rem;
-        color: #64748b;
-        padding: 0.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
+    .input-wrapper {
+        display: flex;
+        flex-direction: column;
     }
 
-    /* Column Widths */
-    th:nth-child(1),
-    td:nth-child(1) {
-        width: 25%;
-    }
-    th:nth-child(2),
-    td:nth-child(2) {
-        width: 12%;
-    }
-    th:nth-child(3),
-    td:nth-child(3) {
-        width: 18%;
-    }
-    th:nth-child(4),
-    td:nth-child(4) {
-        width: auto;
-    }
-    th:nth-child(5),
-    td:nth-child(5) {
-        width: 60px;
+    .input-wrapper.route {
+        flex: 2;
+        min-width: 100px;
     }
 
-    td {
-        padding: 0.4rem;
+    .input-wrapper.grade {
+        flex: 1;
+        min-width: 60px;
+        max-width: 100px;
+    }
+
+    .input-wrapper.attempts {
+        flex: 1.5;
+        min-width: 110px;
+    }
+
+    .bottom-row textarea {
+        width: 100%;
+        min-height: 42px; /* Slight height increase */
     }
 
     input,
-    textarea {
+    textarea,
+    select {
         width: 100%;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 0.4rem;
         padding: 0.5rem;
         color: #f8fafc;
         font-size: 0.875rem;
         outline: none;
         transition: all 0.2s ease;
-        font-family: inherit;
-        resize: none; /* Prevent manual resize, rely on focus expansion */
         box-sizing: border-box;
     }
 
     input:focus,
-    textarea:focus {
-        background: rgba(255, 255, 255, 0.07);
+    textarea:focus,
+    select:focus {
+        background: rgba(15, 23, 42, 0.8);
         border-color: #60a5fa;
-    }
-
-    textarea:focus {
-        min-height: 80px;
-    }
-
-    .actions-col {
-        text-align: center;
     }
 
     .delete-btn {
         background: transparent;
         border: none;
-        color: #ef4444;
-        opacity: 0.5;
+        color: #f87171; /* Brighter red */
+        opacity: 0.7;
         cursor: pointer;
-        padding: 0.4rem;
+        padding: 0.5rem;
         border-radius: 0.4rem;
-        transition: all 0.2s ease;
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-left: auto; /* Push to right if space allows, though flex gap handles it */
     }
 
     .delete-btn:hover {
         opacity: 1;
-        background: rgba(239, 68, 68, 0.1);
+        background: rgba(239, 68, 68, 0.15);
     }
 
     /* Mobile adjustments */
@@ -434,6 +418,24 @@
         .add-row-btn {
             width: 100%;
             justify-content: center;
+        }
+
+        /* Stack inputs more on tiny screens if needed, 
+           but flex layout should resize nicely. 
+           Maybe adjust gap or font size. */
+        .card-row {
+            gap: 0.5rem;
+        }
+
+        .input-wrapper.route {
+            flex: 1.5;
+        }
+        .input-wrapper.grade {
+            flex: 1;
+            max-width: 60px;
+        }
+        .input-wrapper.attempts {
+            flex: 1.5;
         }
     }
 </style>
