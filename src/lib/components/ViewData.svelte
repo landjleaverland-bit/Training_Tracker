@@ -1241,7 +1241,7 @@
                                                                 class="meta-item action"
                                                             >
                                                                 <button
-                                                                    class="delete-text-btn"
+                                                                    class="delete-session-btn"
                                                                     on:click|stopPropagation={() =>
                                                                         openDeleteModal(
                                                                             "entry",
@@ -1252,8 +1252,36 @@
                                                                             },
                                                                         )}
                                                                     title="Delete this entry"
+                                                                    style="width: 28px; height: 28px; margin-left: auto;"
                                                                 >
-                                                                    Delete Entry
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="14"
+                                                                        height="14"
+                                                                        viewBox="0 0 24 24"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        stroke-width="2"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        ><path
+                                                                            d="M3 6h18"
+                                                                        /><path
+                                                                            d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                                                                        /><path
+                                                                            d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                                                                        /><line
+                                                                            x1="10"
+                                                                            y1="11"
+                                                                            x2="10"
+                                                                            y2="17"
+                                                                        /><line
+                                                                            x1="14"
+                                                                            y1="11"
+                                                                            x2="14"
+                                                                            y2="17"
+                                                                        /></svg
+                                                                    >
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -2201,6 +2229,159 @@
         font-size: 0.85rem;
         font-weight: 700;
         border: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    /* Sticky Header for Tables (existing) */
+    .details-table th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #1e1b4b; /* Match page background or table header bg */
+    }
+
+    /* Collapsible Climb Cards */
+    .cards-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%; /* Fix: ensure it takes full width of parent */
+    }
+
+    .climb-card-container {
+        /* Fix: darker background to match app theme (Deep Blue/Dark) */
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        width: 100%; /* Fix: ensure card is full width */
+    }
+
+    .climb-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        background: transparent;
+        border: none;
+        padding: 0.85rem 1rem;
+        color: inherit;
+        cursor: pointer;
+        text-align: left;
+        transition: background 0.2s ease;
+    }
+
+    .climb-card-header:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .climb-name-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #f8fafc;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .mini-status {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 0.25rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
+    }
+
+    .mini-status.flash {
+        color: #facc15;
+        background: rgba(250, 204, 21, 0.15);
+    }
+
+    .mini-status.redpoint {
+        color: #f87171;
+        background: rgba(248, 113, 113, 0.15);
+    }
+
+    .chevron {
+        transition: transform 0.2s ease;
+        line-height: 0;
+        opacity: 0.7;
+    }
+
+    .chevron.expanded {
+        transform: rotate(180deg);
+    }
+
+    .climb-card-body {
+        padding: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.15);
+    }
+
+    .climb-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .meta-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #94a3b8;
+    }
+
+    .meta-value {
+        font-size: 0.9rem;
+        color: #e2e8f0;
+    }
+
+    .climb-notes-section {
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .notes-text {
+        font-size: 0.9rem;
+        color: #cbd5e1;
+        margin: 0;
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    .delete-text-btn {
+        background: none;
+        border: none;
+        color: #ef4444;
+        font-size: 0.8rem;
+        cursor: pointer;
+        padding: 0;
+        text-align: left;
+        margin-top: auto;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .delete-text-btn:hover {
+        text-decoration: underline;
+        opacity: 1;
     }
 
     .rounds-container {
