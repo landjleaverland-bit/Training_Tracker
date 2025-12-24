@@ -1376,12 +1376,15 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
     .header-actions {
         display: flex;
         gap: 0.75rem;
         align-items: center;
+        flex-wrap: wrap;
     }
 
     .fetch-btn {
@@ -1525,6 +1528,8 @@
         color: #f8fafc;
         font-size: 0.9rem;
         cursor: pointer;
+        min-width: 140px;
+        max-width: 100%;
     }
 
     .type-select option {
