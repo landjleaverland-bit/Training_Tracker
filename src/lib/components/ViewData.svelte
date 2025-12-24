@@ -41,6 +41,17 @@
         expandedRounds = expandedRounds;
     }
 
+    let expandedItems = new Set();
+    /** @param {any} item */
+    function toggleItem(item) {
+        if (expandedItems.has(item)) {
+            expandedItems.delete(item);
+        } else {
+            expandedItems.add(item);
+        }
+        expandedItems = expandedItems;
+    }
+
     /**
      * @param {any[]} data
      * @param {string} start
