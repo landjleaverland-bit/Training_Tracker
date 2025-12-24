@@ -1129,175 +1129,195 @@
                                         </div>
                                     </div>
                                 {/if}
-                                <table class="details-table">
-                                    <thead>
-                                        <tr>
-                                            {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
-                                                <th>{col.label}</th>
-                                            {/each}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                {#if selectedType === "indoor" || selectedType === "outdoor"}
+                                    <div class="cards-list">
                                         {#each session.items as item}
+                                            <div class="climb-card-container">
+                                                <button
+                                                    class="climb-card-header"
+                                                    on:click={() =>
+                                                        toggleItem(item)}
+                                                    type="button"
+                                                >
+                                                    <div class="header-left">
+                                                        <span
+                                                            class="climb-name-title"
+                                                        >
+                                                            {item.name ||
+                                                                "Unnamed Climb"}
+                                                        </span>
+                                                        {#if item.grade}
+                                                            <span
+                                                                class="ex-meta grade"
+                                                                class:v-grade={item.grade
+                                                                    ?.toUpperCase()
+                                                                    .startsWith(
+                                                                        "V",
+                                                                    )}
+                                                            >
+                                                                {item.grade}
+                                                            </span>
+                                                        {/if}
+                                                    </div>
+                                                    <div class="header-right">
+                                                        {#if item.attempts}
+                                                            <span
+                                                                class="mini-status {item.attempts.toLowerCase()}"
+                                                            >
+                                                                {item.attempts}
+                                                            </span>
+                                                        {/if}
+                                                        <div
+                                                            class="chevron"
+                                                            class:expanded={expandedItems.has(
+                                                                item,
+                                                            )}
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="20"
+                                                                height="20"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                stroke-width="2"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                ><polyline
+                                                                    points="6 9 12 15 18 9"
+
+                                                                ></polyline></svg
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </button>
+
+                                                {#if expandedItems.has(item)}
+                                                    <div
+                                                        class="climb-card-body"
+                                                        transition:slide|local
+                                                    >
+                                                        <div
+                                                            class="climb-meta-grid"
+                                                        >
+                                                            {#if item.attempts}
+                                                                <div
+                                                                    class="meta-item"
+                                                                >
+                                                                    <span
+                                                                        class="meta-label"
+                                                                        >Attempts</span
+                                                                    >
+                                                                    <span
+                                                                        class="meta-value"
+                                                                    >
+                                                                        {item.attempts}
+                                                                        {#if item.attempt_count && item.attempt_count > 1}
+                                                                            ({item.attempt_count})
+                                                                        {/if}
+                                                                    </span>
+                                                                </div>
+                                                            {/if}
+                                                            {#if item.type || item.isRopes !== undefined}
+                                                                <div
+                                                                    class="meta-item"
+                                                                >
+                                                                    <span
+                                                                        class="meta-label"
+                                                                        >Type</span
+                                                                    >
+                                                                    <span
+                                                                        class="meta-value"
+                                                                    >
+                                                                        {item.type ||
+                                                                            (item.isRopes
+                                                                                ? "Sport"
+                                                                                : "Bouldering")}
+                                                                    </span>
+                                                                </div>
+                                                            {/if}
+
+                                                            <div
+                                                                class="meta-item action"
+                                                            >
+                                                                <button
+                                                                    class="delete-text-btn"
+                                                                    on:click|stopPropagation={() =>
+                                                                        openDeleteModal(
+                                                                            "entry",
+                                                                            {
+                                                                                ...item,
+                                                                                rowDate:
+                                                                                    session.date,
+                                                                            },
+                                                                        )}
+                                                                    title="Delete this entry"
+                                                                >
+                                                                    Delete Entry
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        {#if item.notes}
+                                                            <div
+                                                                class="climb-notes-section"
+                                                            >
+                                                                <span
+                                                                    class="meta-label"
+                                                                    >Notes</span
+                                                                >
+                                                                <p
+                                                                    class="notes-text"
+                                                                >
+                                                                    {item.notes}
+                                                                </p>
+                                                            </div>
+                                                        {/if}
+                                                    </div>
+                                                {/if}
+                                            </div>
+                                        {/each}
+                                    </div>
+                                {:else}
+                                    <table class="details-table">
+                                        <thead>
                                             <tr>
                                                 {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
-                                                    <td>
-                                                        {#if col.isObject}
-                                                            <div
-                                                                class="inner-card"
-                                                            >
-                                                                <div
-                                                                    class="inner-card-header"
-                                                                >
-                                                                    {#if item.grade}
-                                                                        <span
-                                                                            class="ex-meta grade"
-                                                                            class:v-grade={item.grade
-                                                                                ?.toUpperCase()
-                                                                                .startsWith(
-                                                                                    "V",
-                                                                                )}
-                                                                            >{item.grade}</span
-                                                                        >
-                                                                    {/if}
-                                                                    {#if item.attempts || item.attempt}
-                                                                        <span
-                                                                            class="ex-meta attempts"
-                                                                        >
-                                                                            {item.attempts ||
-                                                                                item.attempt}
-                                                                            {#if item.attempt_count && item.attempt_count > 1}
-                                                                                ({item.attempt_count})
-                                                                            {/if}
-                                                                        </span>
-                                                                    {/if}
-                                                                    {#if item.type || item.isRopes !== undefined}
-                                                                        <span
-                                                                            class="ex-meta type"
-                                                                        >
-                                                                            {item.type ||
-                                                                                (item.isRopes
-                                                                                    ? "Sport"
-                                                                                    : "Bouldering")}
-                                                                        </span>
-                                                                    {/if}
-                                                                    {#if item.details}
-                                                                        <div
-                                                                            class="complex-details"
-                                                                        >
-                                                                            {#each item.details as det}
-                                                                                <span
-                                                                                    class="ex-meta multi-load"
-                                                                                >
-                                                                                    {det.weight}kg
-                                                                                    x
-                                                                                    {det.reps}
-                                                                                </span>
-                                                                            {/each}
-                                                                            {#if item.sets}
-                                                                                <span
-                                                                                    class="ex-meta sets-count"
-                                                                                    >({item.sets}
-                                                                                    sets)</span
-                                                                                >
-                                                                            {/if}
-                                                                        </div>
-                                                                        {#if item.grip || item.grip_type}
-                                                                            {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
-                                                                                <span
-                                                                                    class="ex-meta grip"
-                                                                                    >{item.grip ||
-                                                                                        item.grip_type}</span
-                                                                                >
-                                                                            {/if}
-                                                                        {/if}
-                                                                    {:else}
-                                                                        {#if item.weight}
-                                                                            <span
-                                                                                class="ex-meta weight"
-                                                                                >{item.weight}kg</span
-                                                                            >
-                                                                        {/if}
-                                                                        {#if item.grip || item.grip_type}
-                                                                            {#if item.grip !== "N/A" && item.grip_type !== "N/A"}
-                                                                                <span
-                                                                                    class="ex-meta grip"
-                                                                                    >{item.grip ||
-                                                                                        item.grip_type}</span
-                                                                                >
-                                                                            {/if}
-                                                                        {/if}
-                                                                        {#if item.sets || item.reps}
-                                                                            <span
-                                                                                class="ex-meta sets-reps"
-                                                                            >
-                                                                                {item.sets ||
-                                                                                    0}
-                                                                                x
-                                                                                {item.reps ||
-                                                                                    1}
-                                                                            </span>
-                                                                        {/if}
-                                                                    {/if}
-
-                                                                    <button
-                                                                        class="delete-entry-btn"
-                                                                        on:click={() =>
-                                                                            openDeleteModal(
-                                                                                "entry",
-                                                                                {
-                                                                                    ...item,
-                                                                                    rowDate:
-                                                                                        session.date,
-                                                                                },
-                                                                            )}
-                                                                        title="Delete this entry"
-                                                                    >
-                                                                        <svg
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                            width="14"
-                                                                            height="14"
-                                                                            viewBox="0 0 24 24"
-                                                                            fill="none"
-                                                                            stroke="currentColor"
-                                                                            stroke-width="2"
-                                                                            stroke-linecap="round"
-                                                                            stroke-linejoin="round"
-                                                                            ><path
-                                                                                d="M3 6h18"
-                                                                            /><path
-                                                                                d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
-                                                                            /><path
-                                                                                d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
-                                                                            /></svg
-                                                                        >
-                                                                    </button>
-                                                                </div>
-                                                                {#if item.notes}
-                                                                    <div
-                                                                        class="inner-card-body"
-                                                                    >
-                                                                        <span
-                                                                            class="notes"
-                                                                            >{item.notes}</span
-                                                                        >
-                                                                    </div>
-                                                                {/if}
-                                                            </div>
-                                                        {:else}
-                                                            {item[col.key] !==
-                                                                undefined &&
-                                                            item[col.key] !==
-                                                                null
-                                                                ? item[col.key]
-                                                                : "-"}
-                                                        {/if}
-                                                    </td>
+                                                    <th>{col.label}</th>
                                                 {/each}
                                             </tr>
-                                        {/each}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {#each session.items as item}
+                                                <tr>
+                                                    {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "session_type") as col}
+                                                        <td>
+                                                            {#if col.isObject}
+                                                                <!-- Generic fallback for object columns in table view if needed, or simplifed -->
+                                                                {item[
+                                                                    col.key
+                                                                ] || "-"}
+                                                            {:else}
+                                                                {item[
+                                                                    col.key
+                                                                ] !==
+                                                                    undefined &&
+                                                                item[
+                                                                    col.key
+                                                                ] !== null
+                                                                    ? item[
+                                                                          col
+                                                                              .key
+                                                                      ]
+                                                                    : "-"}
+                                                            {/if}
+                                                        </td>
+                                                    {/each}
+                                                </tr>
+                                            {/each}
+                                        </tbody>
+                                    </table>
+                                {/if}
                             {/if}
                         </div>
                     {/if}
