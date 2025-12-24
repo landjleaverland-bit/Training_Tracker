@@ -968,111 +968,123 @@
                                         {#if session.rounds && session.rounds[roundName]}
                                             {@const roundItems =
                                                 session.rounds[roundName]}
-                                            <div class="round-section">
-                                                <button
-                                                    class="round-header"
-                                                    on:click={() =>
-                                                        toggleRound(
-                                                            `${session.key}-${roundName}`,
-                                                        )}
-                                                >
-                                                    <div
-                                                        class="round-header-left"
-                                                    >
-                                                        <svg
-                                                            class="chevron"
-                                                            class:expanded={expandedRounds.has(
+                                            <!-- Defensive filter: Ensure items strictly belong to this round -->
+                                            {@const filteredItems =
+                                                roundItems.filter(
+                                                    (/** @type {any} */ i) =>
+                                                        i.round === roundName,
+                                                )}
+
+                                            {#if filteredItems.length > 0}
+                                                <div class="round-section">
+                                                    <button
+                                                        class="round-header"
+                                                        on:click={() =>
+                                                            toggleRound(
                                                                 `${session.key}-${roundName}`,
                                                             )}
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            width="16"
-                                                            height="16"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            stroke-width="2"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            ><path
-                                                                d="m9 18 6-6-6-6"
-                                                            /></svg
+                                                    >
+                                                        <div
+                                                            class="round-header-left"
                                                         >
+                                                            <svg
+                                                                class="chevron"
+                                                                class:expanded={expandedRounds.has(
+                                                                    `${session.key}-${roundName}`,
+                                                                )}
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="16"
+                                                                height="16"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                stroke-width="2"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                ><path
+                                                                    d="m9 18 6-6-6-6"
+                                                                /></svg
+                                                            >
+                                                            <span
+                                                                class="round-title"
+                                                                >{roundName}</span
+                                                            >
+                                                        </div>
                                                         <span
-                                                            class="round-title"
-                                                            >{roundName}</span
+                                                            class="round-count"
+                                                            >{filteredItems.length}
+                                                            problems</span
                                                         >
-                                                    </div>
-                                                    <span class="round-count"
-                                                        >{roundItems.length} problems</span
-                                                    >
-                                                </button>
-                                                {#if expandedRounds.has(`${session.key}-${roundName}`)}
-                                                    <div
-                                                        class="round-content"
-                                                        transition:slide|local
-                                                    >
-                                                        <table
-                                                            class="details-table"
+                                                    </button>
+                                                    {#if expandedRounds.has(`${session.key}-${roundName}`)}
+                                                        <div
+                                                            class="round-content"
+                                                            transition:slide|local
                                                         >
-                                                            <thead>
-                                                                <tr>
-                                                                    {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "round") as col}
-                                                                        <th
-                                                                            >{col.label}</th
-                                                                        >
-                                                                    {/each}
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {#each roundItems as item}
+                                                            <table
+                                                                class="details-table"
+                                                            >
+                                                                <thead>
                                                                     <tr>
                                                                         {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "round") as col}
-                                                                            <td>
-                                                                                {#if col.key === "climbs"}
-                                                                                    <div
-                                                                                        class="climb-cell"
-                                                                                    >
-                                                                                        <span
-                                                                                            class="climb-name"
-                                                                                            >{item.name}</span
-                                                                                        >
-                                                                                        {#if item.attempts}
-                                                                                            <span
-                                                                                                class="climb-result {item.attempts.toLowerCase()}"
-                                                                                            >
-                                                                                                {item.attempts}
-                                                                                                {#if (item.attempts === "Top" || item.attempts === "Zone") && item.attempt_count > 1}
-                                                                                                    <span
-                                                                                                        class="attempt-number"
-                                                                                                        >({item.attempt_count})</span
-                                                                                                    >
-                                                                                                {/if}
-                                                                                            </span>
-                                                                                        {/if}
-                                                                                    </div>
-                                                                                    {#if item.notes}
-                                                                                        <div
-                                                                                            class="climb-notes"
-                                                                                        >
-                                                                                            {item.notes}
-                                                                                        </div>
-                                                                                    {/if}
-                                                                                {:else}
-                                                                                    {item[
-                                                                                        col
-                                                                                            .key
-                                                                                    ] ||
-                                                                                        "-"}
-                                                                                {/if}
-                                                                            </td>
+                                                                            <th
+                                                                                >{col.label}</th
+                                                                            >
                                                                         {/each}
                                                                     </tr>
-                                                                {/each}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                {/if}
-                                            </div>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {#each filteredItems as item}
+                                                                        <tr>
+                                                                            {#each columns.filter((c) => c.key !== "date" && c.key !== "location" && c.key !== "round") as col}
+                                                                                <td
+                                                                                >
+                                                                                    {#if col.key === "climbs"}
+                                                                                        <div
+                                                                                            class="climb-cell"
+                                                                                        >
+                                                                                            <span
+                                                                                                class="climb-name"
+                                                                                                >{item.name}</span
+                                                                                            >
+                                                                                            {#if item.attempts}
+                                                                                                <span
+                                                                                                    class="climb-result {item.attempts.toLowerCase()}"
+                                                                                                >
+                                                                                                    {item.attempts}
+                                                                                                    {#if (item.attempts === "Top" || item.attempts === "Zone") && item.attempt_count > 1}
+                                                                                                        <span
+                                                                                                            class="attempt-number"
+                                                                                                            >({item.attempt_count})</span
+                                                                                                        >
+                                                                                                    {/if}
+                                                                                                </span>
+                                                                                            {/if}
+                                                                                        </div>
+                                                                                        {#if item.notes}
+                                                                                            <div
+                                                                                                class="climb-notes"
+                                                                                            >
+                                                                                                {item.notes}
+                                                                                            </div>
+                                                                                        {/if}
+                                                                                    {:else}
+                                                                                        {item[
+                                                                                            col
+                                                                                                .key
+                                                                                        ] ||
+                                                                                            "-"}
+                                                                                    {/if}
+                                                                                </td>
+                                                                            {/each}
+                                                                        </tr>
+                                                                    {/each}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    {/if}
+                                                </div>
+                                            {/if}
                                         {/if}
                                     {/each}
                                 </div>
