@@ -155,7 +155,24 @@
                         (climb.climbs && climb.climbs.round),
                 };
 
+                // Deduplication key: Use entire data object + date to ensure any difference is shown
+                const dedupKey = `${dateStr}|${JSON.stringify({
+                    n: itemData.name,
+                    g: itemData.grade,
+                    a: itemData.attempts,
+                    gr: itemData.grip,
+                    w: itemData.weight,
+                    no: itemData.notes,
+                    l: itemData.rawLocation,
+                    r: itemData.round,
+                    s: itemData.sets,
+                    rp: itemData.reps,
+                })}`;
+
                 if (selectedType === "fingerboard" && exerciseId) {
+                    // Register this item in seenRows so that any fallback/duplicate generic items are skipped
+                    seenRows.add(dedupKey);
+
                     // Fingerboard Logic: Group by Exercise + Grip
                     const existing = groups[key].items.find(
                         (/** @type {any} */ it) =>
@@ -193,22 +210,6 @@
                     }
                 } else {
                     // General & Competition Logic: Strict Deduplication
-
-                    // Deduplication check: Use entire data object + date to ensure any difference is shown
-                    const dedupKey = `${dateStr}|${JSON.stringify({
-                        // Create a deterministic key object
-                        n: itemData.name,
-                        g: itemData.grade,
-                        a: itemData.attempts,
-                        gr: itemData.grip,
-                        w: itemData.weight,
-                        no: itemData.notes,
-                        l: itemData.rawLocation,
-                        r: itemData.round,
-                        s: itemData.sets,
-                        rp: itemData.reps,
-                    })}`;
-
                     if (seenRows.has(dedupKey)) return;
                     seenRows.add(dedupKey);
 
