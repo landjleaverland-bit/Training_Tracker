@@ -43,8 +43,10 @@ exports.deleteLog = async (req, res) => {
         const { activity_type, delete_type, exercise_id, session_criteria, entry_criteria } = req.body;
 
         if (!activity_type || !delete_type) {
+            console.error('Missing fields:', req.body);
             return res.status(400).send('Missing required fields: activity_type and delete_type');
         }
+        console.log('DELETE Request:', JSON.stringify(req.body));
 
         const tableMapping = {
             'indoor': 'Indoor_Climbs',
@@ -72,22 +74,30 @@ exports.deleteLog = async (req, res) => {
             } else if (entry_criteria) {
                 // Detailed match fallback
                 if (entry_criteria.date) parts.push(`date = DATETIME(@date)`);
+
                 if (entry_criteria.name) {
+                    const isUnknown = entry_criteria.name === 'N/A' || entry_criteria.name === 'Unknown Problem';
                     if (activity_type === 'fingerboard') {
-                        parts.push(`exercise = @name`);
+                        if (isUnknown) parts.push(`(exercise IS NULL OR exercise = 'N/A' OR exercise = '' OR exercise = 'Unknown Problem')`);
+                        else parts.push(`exercise = @name`);
                     } else if (activity_type === 'gym' || activity_type === 'other') {
-                        parts.push(`climbs.name = @name`);
+                        if (isUnknown) parts.push(`(climbs.name IS NULL OR climbs.name = 'N/A' OR climbs.name = '' OR climbs.name = 'Unknown Problem')`);
+                        else parts.push(`climbs.name = @name`);
                     } else if (activity_type === 'indoor' || activity_type === 'outdoor' || activity_type === 'competition') {
-                        parts.push(`climbs.route = @name`);
+                        if (isUnknown) parts.push(`(climbs.route IS NULL OR climbs.route = 'N/A' OR climbs.route = '' OR climbs.route = 'Unknown Problem')`);
+                        else parts.push(`climbs.route = @name`);
                     }
                 }
                 if (entry_criteria.weight !== undefined) parts.push(`weight = @weight`);
 
                 if (entry_criteria.location) {
+                    const isLocUnknown = entry_criteria.location === 'N/A';
                     if (activity_type === 'outdoor') {
-                        parts.push(`(location.crag = @loc_crag OR CONCAT(location.crag, ' - ', location.wall) = @loc_crag)`);
+                        if (isLocUnknown) parts.push(`(location IS NULL OR location.crag IS NULL OR location.crag = 'N/A' OR location.crag = '')`);
+                        else parts.push(`(location.crag = @loc_crag OR CONCAT(location.crag, ' - ', location.wall) = @loc_crag)`);
                     } else {
-                        parts.push(`location = @location_str`);
+                        if (isLocUnknown) parts.push(`(location IS NULL OR location = 'N/A' OR location = '')`);
+                        else parts.push(`location = @location_str`);
                     }
                 }
             }
@@ -102,23 +112,30 @@ exports.deleteLog = async (req, res) => {
                 if (session_criteria.location) {
                     if (activity_type === 'outdoor') {
                         // Location is a record in outdoor
-                        parts.push(`(CONCAT(location.crag, ' - ', location.wall) = @location OR location.crag = @location)`);
+                        if (session_criteria.location === 'N/A') {
+                            parts.push(`(location IS NULL OR location.crag IS NULL OR location.crag = 'N/A' OR location.crag = '')`);
+                        } else {
+                            parts.push(`(CONCAT(location.crag, ' - ', location.wall) = @location OR location.crag = @location)`);
+                        }
                     } else if (activity_type === 'fingerboard') {
-                        // Fingerboard doesn't really have location in DB yet, but we use 'N/A'
-                        // So skipping location check for fingerboard session delete if it's N/A
+                        // Fingerboard handling
                     } else {
-                        parts.push(`location = @location`);
+                        if (session_criteria.location === 'N/A') {
+                            parts.push(`(location IS NULL OR location = 'N/A' OR location = '')`);
+                        } else {
+                            parts.push(`location = @location`);
+                        }
                     }
                 }
                 if (session_criteria.session_type) {
-                    if (activity_type === 'outdoor') {
-                        // Only filter by climbing_type if it is NOT the generic 'Outdoor' label
-                        // getLogs returns 'Outdoor' for all outdoor sessions, while DB has 'Bouldering'/'Sport' etc.
+                    if (session_criteria.session_type === 'N/A') {
+                        parts.push(`(session_type IS NULL OR session_type = 'N/A' OR session_type = '')`);
+                    } else if (activity_type === 'outdoor') {
                         if (session_criteria.session_type !== 'Outdoor') {
                             parts.push(`climbing_type = @session_type`);
                         }
                     } else if (activity_type === 'fingerboard' || activity_type === 'indoor' || activity_type === 'competition') {
-                        // Session type is hardcoded in getLogs or redundant for this table
+                        // Redundant
                     } else {
                         parts.push(`session_type = @session_type`);
                     }
@@ -146,7 +163,14 @@ exports.deleteLog = async (req, res) => {
                     params.loc_crag = entry_criteria.location.crag || '';
                     params.loc_wall = entry_criteria.location.wall || '';
                 } else {
-                    params.location_str = entry_criteria.location;
+                    if (activity_type === 'outdoor') {
+                        // Handle case where frontend defines location as string (legacy/fallback)
+                        params.loc_crag = entry_criteria.location;
+                        params.loc_wall = ''; // Ensure param exists if query uses it?
+                        // Actually, query uses @loc_crag. Matches location.crag or concat.
+                    } else {
+                        params.location_str = entry_criteria.location;
+                    }
                 }
             }
         }
@@ -165,23 +189,21 @@ exports.deleteLog = async (req, res) => {
 
 
 
-        const [rows, metadata] = await bigquery.query({
+        const [job] = await bigquery.createQueryJob({
             query: query,
             params: params,
-            // Wrap in a transaction or ensure DML stats are returned? 
-            // Standard query returns job info.
         });
 
-        // For DML, metadata.numDmlAffectedRows might be available depending on client version/job.
-        // Or job.getQueryResults()
+        // Wait for the query to complete
+        await job.getQueryResults();
 
-        // Actually, let's just inspect the job result if possible.
-        // The simple client returns [rows] but we destructured it.
+        // Fetch job metadata to get affected rows stats
+        const [metadata] = await job.getMetadata();
+        const deletedCount = metadata.statistics?.query?.numDmlAffectedRows || 0;
 
-        // Let's try to return more info. 
-        // Note: For DELETE, rows is empty.
+        console.log(`Deleted ${deletedCount} rows.`);
 
-        res.status(200).send('Successfully processed delete request.');
+        res.status(200).json({ message: 'Successfully processed delete request.', deleted: deletedCount });
     } catch (error) {
         console.error('DELETE ERROR:', error);
         res.status(500).send(`Delete Error: ${error.message}`);
