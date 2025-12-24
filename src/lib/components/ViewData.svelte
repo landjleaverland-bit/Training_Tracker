@@ -1932,6 +1932,14 @@
         color: #38bdf8;
         border: 1px solid rgba(56, 189, 248, 0.2);
     }
+    .ex-meta.type {
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .ex-meta.attempts {
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.2);
+    }
     .ex-meta.weight {
         color: #fbbf24;
         border: 1px solid rgba(251, 191, 36, 0.2);
@@ -1940,13 +1948,65 @@
         color: #a78bfa;
         border: 1px solid rgba(167, 139, 250, 0.2);
     }
-    .ex-meta.type {
-        color: #f59e0b;
-        border: 1px solid rgba(245, 158, 11, 0.2);
+    .meta-fb {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+        width: fit-content;
     }
-    .ex-meta.attempts {
-        color: #34d399;
-        border: 1px solid rgba(52, 211, 153, 0.2);
+
+    /* Fingerboard Sets Sub-layout inside Card */
+    .fb-sets-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .fb-sets-header {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .fb-sets-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .fb-set-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0.25rem;
+        font-size: 0.9rem;
+        color: #e2e8f0;
+        border-radius: 0.25rem;
+    }
+
+    .fb-set-row:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .set-weight {
+        font-weight: 600;
+        color: #f8fafc;
+    }
+
+    .set-reps {
+        color: #94a3b8;
     }
 
     .complex-details {
