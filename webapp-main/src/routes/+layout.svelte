@@ -38,9 +38,10 @@
 		width: 100%;
 	}
 
+	/* On mobile, header doesn't need sticky top - TabBar handles bottom positioning */
 	@media (max-width: 640px) {
 		header {
-			display: none;
+			position: static;
 		}
 	}
 </style>
