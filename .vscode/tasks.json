@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Preview Webapp (Dev)",
+            "type": "shell",
+            "command": "npm run dev",
+            "options": {
+                "cwd": "${workspaceFolder}/webapp-main"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "typescript",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": {
+                        "regexp": "vite v.*"
+                    },
+                    "endsPattern": {
+                        "regexp": "ready in.*|Local:.*"
+                    }
+                },
+                "pattern": [
+                    {
+                        "regexp": "^(.*?):(\\d+):(\\d+) - (error|warning|info) (\\w+\\d+): (.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "code": 5,
+                        "message": 6
+                    }
+                ]
+            }
+        },
+        {
+            "label": "Preview Webapp (Production Build)",
+            "type": "shell",
+            "command": "npm run build && npm run preview",
+            "options": {
+                "cwd": "${workspaceFolder}/webapp-main"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Deploy to GitHub Pages",
+            "type": "shell",
+            "command": "npm run build && npm run deploy",
+            "options": {
+                "cwd": "${workspaceFolder}/webapp-main"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        }
+    ]
+}
