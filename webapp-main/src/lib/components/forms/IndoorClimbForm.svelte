@@ -317,6 +317,7 @@
 
 	.form-group input,
 	.form-group select {
+		width: 100%;
 		padding: 0.6rem 0.8rem;
 		border-radius: 8px;
 		border: 2px solid rgba(74, 155, 155, 0.25);
@@ -324,6 +325,7 @@
 		font-size: 0.95rem;
 		color: var(--text-primary);
 		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		box-sizing: border-box;
 	}
 
 	.form-group input:focus,
@@ -346,13 +348,7 @@
 		display: flex;
 		gap: 1.5rem;
 		justify-content: center;
-	}
-
-	@media (max-width: 480px) {
-		.load-metrics {
-			flex-direction: column;
-			gap: 1rem;
-		}
+		flex-wrap: wrap;
 	}
 
 	.load-item {
