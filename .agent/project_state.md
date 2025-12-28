@@ -16,6 +16,8 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - 3-tab navigation: Log Data, View Data, Plot Data
   - Color scheme: Gold (#F4C430) + Teal (#4A9B9B)
   - Mobile-responsive (bottom-fixed tabs on mobile)
+  - Log Data: Activity type dropdown with conditional form components
+    - Forms in `$lib/components/forms/`: IndoorClimbForm, OutdoorClimbForm, GymSessionForm, FingerboardingForm, CompetitionForm
 * **Backend:** Module initialized. No handlers yet.
 * **Infrastructure:** Project and DB created manually.
 

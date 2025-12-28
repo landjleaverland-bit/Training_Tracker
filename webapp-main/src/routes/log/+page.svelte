@@ -1,5 +1,20 @@
 <script lang="ts">
 	// Log Data page - for entering training data
+	import IndoorClimbForm from '$lib/components/forms/IndoorClimbForm.svelte';
+	import OutdoorClimbForm from '$lib/components/forms/OutdoorClimbForm.svelte';
+	import GymSessionForm from '$lib/components/forms/GymSessionForm.svelte';
+	import FingerboardingForm from '$lib/components/forms/FingerboardingForm.svelte';
+	import CompetitionForm from '$lib/components/forms/CompetitionForm.svelte';
+	
+	const activityTypes = [
+		{ value: 'indoor_climb', label: 'Indoor Climb', icon: '🧗' },
+		{ value: 'outdoor_climb', label: 'Outdoor Climb', icon: '⛰️' },
+		{ value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
+		{ value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
+		{ value: 'competition', label: 'Competition', icon: '🏆' }
+	];
+
+	let selectedActivity = $state('');
 </script>
 
 <div class="page">
@@ -9,7 +24,31 @@
 	</div>
 	
 	<div class="content-card">
-		<p class="placeholder-text">Training log form will go here</p>
+		<div class="form-group">
+			<label for="activity-type">Activity Type</label>
+			<select id="activity-type" bind:value={selectedActivity}>
+				<option value="" disabled>Select an activity...</option>
+				{#each activityTypes as activity}
+					<option value={activity.value}>{activity.icon} {activity.label}</option>
+				{/each}
+			</select>
+		</div>
+
+		{#if selectedActivity}
+			<div class="form-container">
+				{#if selectedActivity === 'indoor_climb'}
+					<IndoorClimbForm />
+				{:else if selectedActivity === 'outdoor_climb'}
+					<OutdoorClimbForm />
+				{:else if selectedActivity === 'gym_session'}
+					<GymSessionForm />
+				{:else if selectedActivity === 'fingerboarding'}
+					<FingerboardingForm />
+				{:else if selectedActivity === 'competition'}
+					<CompetitionForm />
+				{/if}
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -48,10 +87,42 @@
 		border: 1px solid rgba(74, 155, 155, 0.15);
 	}
 
-	.placeholder-text {
-		color: var(--text-secondary);
-		font-style: italic;
-		text-align: center;
-		margin: 2rem 0;
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.form-group label {
+		font-weight: 600;
+		color: var(--text-primary);
+		font-size: 0.95rem;
+	}
+
+	.form-group select {
+		padding: 0.75rem 1rem;
+		border-radius: 10px;
+		border: 2px solid rgba(74, 155, 155, 0.3);
+		background: white;
+		font-size: 1rem;
+		color: var(--text-primary);
+		cursor: pointer;
+		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.form-group select:focus {
+		outline: none;
+		border-color: var(--teal-primary);
+		box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.15);
+	}
+
+	.form-group select:hover {
+		border-color: var(--teal-primary);
+	}
+
+	.form-container {
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgba(74, 155, 155, 0.15);
 	}
 </style>
