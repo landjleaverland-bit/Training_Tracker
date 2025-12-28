@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # System Architecture
 
 ## Overview
@@ -15,6 +19,7 @@ A web application hosted on GitHub Pages (Static SPA) interacting with a Google 
    * Querying: API must support filtering/range queries via URL params mapped to Firestore clauses.
  * **Database:** Google Firestore.
    * Access: Blocked to public. Only accessible via Cloud Function Identity.
+   * Caching: There should be a local cache of the database to allow for usage without wifi. There should be a mechanism to understand whether local data has been synced to the cloud already or not. Be careful to avoid entry duplication.
 
 ## Security Model
  * Frontend: No secrets allowed in source code.
