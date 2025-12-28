@@ -1,0 +1,3 @@
+[submodule "functions/func-workout-api"]
+	path = functions/func-workout-api
+	url = git@github.com:landjleaverland-bit/func-workout-api.git
