@@ -92,10 +92,17 @@ export async function createIndoorSession(
 }
 
 /**
+ * Remote Indoor Session structure (what comes back from API)
+ */
+export interface RemoteIndoorSession extends IndoorSessionPayload {
+    id: string;
+}
+
+/**
  * Get all indoor sessions from the server
  */
-export async function getIndoorSessions(): Promise<{ ok: boolean; data?: unknown[]; error?: string }> {
-    return apiRequest('/indoor_sessions', { method: 'GET' });
+export async function getIndoorSessions(): Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }> {
+    return apiRequest<RemoteIndoorSession[]>('/indoor_sessions', { method: 'GET' });
 }
 
 /**

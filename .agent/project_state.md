@@ -26,8 +26,12 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
     - **Sync banner**: Shows when sessions are pending sync; includes "Sync Now" button when online, offline indicator when offline
   - **View Data Tab** (`/view`):
     - Activity type dropdown (same 5 options as Log Data)
-    - Conditional view components in `$lib/components/views/`
-    - Placeholder views: IndoorClimbView, OutdoorClimbView, GymSessionView, FingerboardingView, CompetitionView
+    *   **View Data (`src/lib/components/views/`)**:
+        *   `IndoorClimbView.svelte`: Implemented. Features date/location/grade filtering and remote data fetching.
+        *   `indoor/IndoorClimbFilters.svelte`: Expandable filter panel.
+        *   `indoor/IndoorClimbCard.svelte`: Expandable session card with load metrics and sync status.
+        *   `indoor/IndoorClimbEntry.svelte`: Nested expandable climb details.
+        *   (Other activity views are placeholders)
 * **Backend:** Go 1.21 Cloud Function with Firestore integration.
   - `function.go`: Main entry point with CORS, auth, routing
   - `handlers.go`: CRUD handlers for indoor sessions
