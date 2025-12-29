@@ -19,9 +19,15 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - 3-tab navigation: Log Data, View Data, Plot Data
   - Color scheme: Gold (#F4C430) + Teal (#4A9B9B)
   - Mobile-responsive (bottom-fixed tabs on mobile)
-  - Log Data: Activity type dropdown with conditional form components
-    - Forms in `$lib/components/forms/`
+  - **Log Data Tab** (`/log`):
+    - Activity type dropdown with 5 options: Indoor Climb, Outdoor Climb, Gym Session, Fingerboarding, Competition
+    - Conditional form components in `$lib/components/forms/`
     - **IndoorClimbForm**: date, location (6 options + Other), climbing_type, session_type, load metrics (finger/shoulder/forearm 1-5), climbs table (sport?, name, grade, attempt type, attempts)
+    - **Sync banner**: Shows when sessions are pending sync; includes "Sync Now" button when online, offline indicator when offline
+  - **View Data Tab** (`/view`):
+    - Activity type dropdown (same 5 options as Log Data)
+    - Conditional view components in `$lib/components/views/`
+    - Placeholder views: IndoorClimbView, OutdoorClimbView, GymSessionView, FingerboardingView, CompetitionView
 * **Backend:** Go 1.21 Cloud Function with Firestore integration.
   - `function.go`: Main entry point with CORS, auth, routing
   - `handlers.go`: CRUD handlers for indoor sessions
@@ -37,7 +43,11 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **Cache service** in `$lib/services/cache.ts`:
   - Uses localStorage with key `training_tracker_sessions`
   - Tracks sync status: `pending` (not synced), `synced` (uploaded to cloud), `error` (sync failed)
-  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`
+  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`
+* **Sync service** in `$lib/services/sync.ts`:
+  - `syncAllPending()`: Batch syncs all pending sessions, returns success/failed counts
+  - `getPendingCount()`: Returns count of unsynced sessions
+  - Handles per-activity-type syncing (currently supports indoor_climb)
 * **API service** in `$lib/services/api.ts`:
   - URL: `https://func-workout-api-825153765638.europe-west1.run.app`
   - Functions: `createIndoorSession`, `getIndoorSessions`, `deleteIndoorSession`, `isOnline`
