@@ -8,9 +8,8 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **Backend:** Go 1.21 (Google Cloud Functions).
 * **Database:** Firestore (Native Mode).
 * **Auth:** Shared Secret (API Key Header validation).
-  - Frontend: `$lib/services/auth.ts` with login/logout, stores password in localStorage
-  - Backend: SHA-256 hashes incoming password, compares to `APP_SECRET_PASSWORD` env var
-  - `/verify` endpoint to validate password
+  - Frontend: `$lib/services/auth.ts` - client-side SHA-256 hash verification, stores password in localStorage
+  - Backend: Validates `x-api-key` header against `APP_SECRET_PASSWORD` env var
   - Password hash script: `scripts/generate-password-hash.sh`
 
 ## 3. Current Implementation State
@@ -23,7 +22,12 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - Log Data: Activity type dropdown with conditional form components
     - Forms in `$lib/components/forms/`
     - **IndoorClimbForm**: date, location (6 options + Other), climbing_type, session_type, load metrics (finger/shoulder/forearm 1-5), climbs table (sport?, name, grade, attempt type, attempts)
-* **Backend:** Module initialized. No handlers yet.
+* **Backend:** Go 1.21 Cloud Function with Firestore integration.
+  - `function.go`: Main entry point with CORS, auth, routing
+  - `handlers.go`: CRUD handlers for indoor sessions
+  - `firestore.go`: Client init (database: `climbing-tracker-db`, collection: `Indoor_Climbs`)
+  - `models.go`: Go structs for IndoorSession
+  - Endpoints: GET/POST/PUT/DELETE `/indoor_sessions`
 * **Infrastructure:** Project and DB created manually.
 
 ## 4. Schema & Data Models
