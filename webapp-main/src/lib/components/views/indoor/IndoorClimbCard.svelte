@@ -57,6 +57,19 @@
 						<span class="stat">Max: {maxGrade}</span>
 					{/if}
 				</div>
+				
+				<!-- Load Summary (Visible when collapsed) -->
+				<div class="load-summary">
+					<div class="load-badge finger" title="Finger Load: {session.fingerLoad}">
+						{session.fingerLoad}
+					</div>
+					<div class="load-badge shoulder" title="Shoulder Load: {session.shoulderLoad}">
+						{session.shoulderLoad}
+					</div>
+					<div class="load-badge forearm" title="Forearm Load: {session.forearmLoad}">
+						{session.forearmLoad}
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -243,6 +256,28 @@
 		margin-right: 0.5rem;
 		opacity: 0.5;
 	}
+
+	.load-summary {
+		display: flex;
+		gap: 0.4rem;
+		margin-top: 0.3rem;
+	}
+
+	.load-badge {
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.7rem;
+		font-weight: 700;
+		color: white;
+	}
+
+	.load-badge.finger { background: #E57373; }
+	.load-badge.shoulder { background: #64B5F6; }
+	.load-badge.forearm { background: #81C784; }
 
 	.header-status {
 		display: flex;

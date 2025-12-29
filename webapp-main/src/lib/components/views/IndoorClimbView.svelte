@@ -142,6 +142,14 @@
 
 	<IndoorClimbFilters onFilterParamsChange={handleFilterChange} />
 
+	<!-- Load Key -->
+	<div class="load-key">
+		<span class="key-label">Load:</span>
+		<div class="key-item"><span class="dot finger"></span> Finger</div>
+		<div class="key-item"><span class="dot shoulder"></span> Shoulder</div>
+		<div class="key-item"><span class="dot forearm"></span> Forearm</div>
+	</div>
+
 	<div class="sessions-list">
 		{#each filteredSessions as session (session.id)}
 			<IndoorClimbCard {session} />
@@ -249,4 +257,36 @@
 	.empty-state small {
 		opacity: 0.7;
 	}
+
+	.load-key {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 0.75rem;
+		padding: 0 0.5rem;
+		font-size: 0.75rem;
+		color: var(--text-secondary);
+	}
+
+	.key-label {
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.key-item {
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+	}
+
+	.dot.finger { background: #E57373; }
+	.dot.shoulder { background: #64B5F6; }
+	.dot.forearm { background: #81C784; }
 </style>
