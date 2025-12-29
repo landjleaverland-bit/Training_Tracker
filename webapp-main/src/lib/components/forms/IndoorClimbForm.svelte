@@ -191,6 +191,9 @@
 				saveStatus = 'success';
 				saveMessage = 'Saved locally. Will sync when online.';
 			}
+
+			// Dispatch custom event to notify parent of session save
+			window.dispatchEvent(new CustomEvent('session-saved'));
 			
 			// Reset form after short delay
 			setTimeout(() => {

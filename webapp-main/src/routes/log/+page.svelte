@@ -39,12 +39,19 @@
 			online = false;
 		};
 		
+		// Listen for session-saved events from forms
+		const handleSessionSaved = () => {
+			updatePendingCount();
+		};
+		
 		window.addEventListener('online', handleOnline);
 		window.addEventListener('offline', handleOffline);
+		window.addEventListener('session-saved', handleSessionSaved);
 		
 		return () => {
 			window.removeEventListener('online', handleOnline);
 			window.removeEventListener('offline', handleOffline);
+			window.removeEventListener('session-saved', handleSessionSaved);
 		};
 	});
 

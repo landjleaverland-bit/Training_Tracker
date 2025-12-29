@@ -58,3 +58,4 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **SPA Mode:** Chosen for free hosting on GitHub Pages, relying on backend for all dynamic data.
 * **UI Modularization:** Distinct UI elements are split into separate files/folders. Shared components require strict documentation in Project State to prevent regression.
 * **Deployment:** Using 'gh-pages' branch to separate source code (main) from production build artifacts.
+* **Form-to-Page Communication:** Forms dispatch `window.dispatchEvent(new CustomEvent('session-saved'))` after saving sessions. Parent pages listen for this event to update sync banner pending counts.
