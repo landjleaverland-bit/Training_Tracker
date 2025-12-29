@@ -1,35 +1,26 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="theme-color" content="#1a1a2e" />
-		<meta name="description" content="Track your training sessions and progress" />
-		<link rel="manifest" href="/Training_Tracker/manifest.json" />
-		<link rel="apple-touch-icon" href="/Training_Tracker/icon-192.png" />
-		
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/entry/start.VrZdqwpQ.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/DGlG58ks.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/BIujM3vT.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/DbZ67xQI.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/entry/app.SAjIViEH.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/B8kAwu97.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/BANvjMEk.js">
-		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/B3BYz1Zt.js">
-		<script>
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('/Training_Tracker/service-worker.js')
-						.catch(err => console.log('Service worker registration failed:', err));
-				});
-			}
-		</script>
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="/Training_Tracker/icon-192.png" />
+	<link rel="manifest" href="/Training_Tracker/manifest.json" />
+	<meta name="theme-color" content="#0f172a" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	
+		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/entry/start.CPoK5-qR.js">
+		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/BvW8P0li.js">
+		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/BaIkYGXA.js">
+		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/tG3zrUkQ.js">
+		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/entry/app.D_es77a8.js">
+		<link rel="modulepreload" href="/Training_Tracker/_app/immutable/chunks/D6OmcCVF.js">
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<div style="display: contents">
 			<script>
 				{
-					__sveltekit_9rxqnq = {
+					__sveltekit_e301vd = {
 						base: "/Training_Tracker",
 						assets: "/Training_Tracker"
 					};
@@ -37,13 +28,20 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/Training_Tracker/_app/immutable/entry/start.VrZdqwpQ.js"),
-						import("/Training_Tracker/_app/immutable/entry/app.SAjIViEH.js")
+						import("/Training_Tracker/_app/immutable/entry/start.CPoK5-qR.js"),
+						import("/Training_Tracker/_app/immutable/entry/app.D_es77a8.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
+
+					if ('serviceWorker' in navigator) {
+						addEventListener('load', function () {
+							navigator.serviceWorker.register('/Training_Tracker/service-worker.js');
+						});
+					}
 				}
 			</script>
 		</div>
-	</body>
+</body>
+
 </html>
