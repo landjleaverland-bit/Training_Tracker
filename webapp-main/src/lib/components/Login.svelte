@@ -3,10 +3,9 @@
 
 	interface Props {
 		onSuccess: () => void;
-		apiUrl?: string;
 	}
 
-	let { onSuccess, apiUrl = '' }: Props = $props();
+	let { onSuccess }: Props = $props();
 
 	let password = $state('');
 	let isLoading = $state(false);
@@ -24,14 +23,12 @@
 		error = '';
 
 		try {
-			// If we have an API URL, verify with backend
-			if (apiUrl) {
-				const isValid = await verifyPassword(password, apiUrl);
-				if (!isValid) {
-					error = 'Invalid password';
-					isLoading = false;
-					return;
-				}
+			// Verify password hash locally
+			const isValid = await verifyPassword(password);
+			if (!isValid) {
+				error = 'Invalid password';
+				isLoading = false;
+				return;
 			}
 
 			// Store password and notify parent

@@ -1,10 +1,34 @@
 /**
  * Authentication service
- * Stores password in localStorage, sends over HTTPS
- * Server performs SHA-256 hashing and validation
+ * Uses client-side hash comparison for login
+ * Stores plain password in localStorage for API calls
  */
 
 const AUTH_KEY = 'training_tracker_auth';
+
+// Expected password hash (SHA-256)
+// Generate with: ./scripts/generate-password-hash.sh
+const EXPECTED_PASSWORD_HASH = 'c2fb788c7deedbeaa296e424d4c2921b871a4f6cb4cf393c1c1105653ab399b4';
+
+/**
+ * Hash a password using SHA-256
+ */
+async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Verify password by comparing hashes
+ * Returns true if password is correct
+ */
+export async function verifyPassword(password: string): Promise<boolean> {
+    const inputHash = await hashPassword(password);
+    return inputHash === EXPECTED_PASSWORD_HASH;
+}
 
 /**
  * Store password after successful login
@@ -36,23 +60,4 @@ export function getApiKey(): string | null {
 export function logout(): void {
     if (typeof localStorage === 'undefined') return;
     localStorage.removeItem(AUTH_KEY);
-}
-
-/**
- * Verify password against backend
- * Returns true if valid, false if invalid
- */
-export async function verifyPassword(password: string, apiUrl: string): Promise<boolean> {
-    try {
-        const response = await fetch(`${apiUrl}/verify`, {
-            method: 'GET',
-            headers: {
-                'x-api-key': password
-            }
-        });
-        return response.ok;
-    } catch {
-        // Network error - can't verify, assume invalid
-        return false;
-    }
 }
