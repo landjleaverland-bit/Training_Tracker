@@ -8,6 +8,10 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **Backend:** Go 1.21 (Google Cloud Functions).
 * **Database:** Firestore (Native Mode).
 * **Auth:** Shared Secret (API Key Header validation).
+  - Frontend: `$lib/services/auth.ts` with login/logout, stores password in localStorage
+  - Backend: SHA-256 hashes incoming password, compares to `APP_SECRET_PASSWORD` env var
+  - `/verify` endpoint to validate password
+  - Password hash script: `scripts/generate-password-hash.sh`
 
 ## 3. Current Implementation State
 * **Status:** Frontend UI in progress.

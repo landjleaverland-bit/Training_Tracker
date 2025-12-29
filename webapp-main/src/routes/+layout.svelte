@@ -2,22 +2,58 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import TabBar from '$lib/components/TabBar.svelte';
+	import Login from '$lib/components/Login.svelte';
+	import { isAuthenticated } from '$lib/services/auth';
+	import { onMount } from 'svelte';
 
 	let { children } = $props();
+
+	// Auth state
+	let isLoggedIn = $state(false);
+	let isChecking = $state(true);
+
+	onMount(() => {
+		isLoggedIn = isAuthenticated();
+		isChecking = false;
+	});
+
+	function handleLoginSuccess() {
+		isLoggedIn = true;
+	}
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<div class="app-container">
-	<header>
-		<TabBar />
-	</header>
-	<main>
-		{@render children()}
-	</main>
-</div>
+{#if isChecking}
+	<!-- Loading state while checking auth -->
+	<div class="loading-container">
+		<p>Loading...</p>
+	</div>
+{:else if !isLoggedIn}
+	<!-- Show login if not authenticated -->
+	<Login onSuccess={handleLoginSuccess} />
+{:else}
+	<!-- Main app content -->
+	<div class="app-container">
+		<header>
+			<TabBar />
+		</header>
+		<main>
+			{@render children()}
+		</main>
+	</div>
+{/if}
 
 <style>
+	.loading-container {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--teal-primary);
+		font-size: 1.1rem;
+	}
+
 	.app-container {
 		min-height: 100vh;
 		display: flex;
