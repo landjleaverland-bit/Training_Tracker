@@ -23,7 +23,13 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **Infrastructure:** Project and DB created manually.
 
 ## 4. Schema & Data Models
-*(Placeholder: To be populated by Agent during implementation)*
+* **Session types** defined in `$lib/types/session.ts`:
+  - `BaseSession`: id, activityType, date, createdAt, updatedAt, **syncStatus** (pending/synced/error), syncedAt
+  - `IndoorClimbSession`: extends BaseSession with location, climbingType, sessionType, loads, climbs[]
+* **Cache service** in `$lib/services/cache.ts`:
+  - Uses localStorage with key `training_tracker_sessions`
+  - Tracks sync status: `pending` (not synced), `synced` (uploaded to cloud), `error` (sync failed)
+  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`
 
 ## 5. Design Decisions
 * **Go Backend:** Chosen for high concurrency handling and fast cold-start times on Cloud Functions.

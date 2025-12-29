@@ -1,5 +1,6 @@
 <script lang="ts">
 	// Indoor Climb form for logging climbing sessions
+	import { createIndoorClimbSession } from '$lib/services/cache';
 	
 	const locations = [
 		'Rockstar Swindon',
@@ -104,6 +105,83 @@
 	function isValidGrade(grade: string): boolean {
 		if (!grade.trim()) return true; // Empty is allowed (not filled yet)
 		return validGradesLower.includes(grade.trim().toLowerCase());
+	}
+
+	// Save status
+	let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
+	let saveMessage = $state('');
+
+	// Validate form before saving
+	function validateForm(): string | null {
+		if (!location) return 'Please select a location';
+		if (location === 'Other' && !customLocation.trim()) return 'Please enter a custom location';
+		if (!climbingType) return 'Please select a climbing type';
+		if (!sessionType) return 'Please select a session type';
+		
+		// Check for invalid grades
+		const invalidGrades = climbs.filter(c => c.grade.trim() && !isValidGrade(c.grade));
+		if (invalidGrades.length > 0) return 'Please fix invalid grades';
+		
+		return null;
+	}
+
+	// Save session to local cache
+	function saveSession() {
+		const error = validateForm();
+		if (error) {
+			saveStatus = 'error';
+			saveMessage = error;
+			return;
+		}
+
+		saveStatus = 'saving';
+		
+		try {
+			// Prepare climbs with correct isSport based on climbingType
+			const preparedClimbs = climbs.map(climb => ({
+				...climb,
+				isSport: getIsSport(climb)
+			}));
+
+			createIndoorClimbSession({
+				date,
+				location: location === 'Other' ? customLocation : location,
+				customLocation: location === 'Other' ? customLocation : undefined,
+				climbingType,
+				sessionType,
+				fingerLoad,
+				shoulderLoad,
+				forearmLoad,
+				climbs: preparedClimbs
+			});
+
+			saveStatus = 'success';
+			saveMessage = 'Session saved locally! Will sync when online.';
+			
+			// Reset form after short delay
+			setTimeout(() => {
+				resetForm();
+			}, 2000);
+		} catch (e) {
+			saveStatus = 'error';
+			saveMessage = 'Failed to save session';
+			console.error('Save error:', e);
+		}
+	}
+
+	// Reset form to initial state
+	function resetForm() {
+		date = new Date().toISOString().split('T')[0];
+		location = '';
+		customLocation = '';
+		climbingType = '';
+		sessionType = '';
+		fingerLoad = 3;
+		shoulderLoad = 3;
+		forearmLoad = 3;
+		climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
+		saveStatus = 'idle';
+		saveMessage = '';
 	}
 </script>
 
@@ -261,7 +339,25 @@
 
 	<!-- Submit Button -->
 	<div class="submit-section">
-		<button type="submit" class="submit-btn">Save Session</button>
+		{#if saveMessage}
+			<div class="save-message" class:success={saveStatus === 'success'} class:error={saveStatus === 'error'}>
+				{saveMessage}
+			</div>
+		{/if}
+		<button 
+			type="button" 
+			class="submit-btn" 
+			onclick={saveSession}
+			disabled={saveStatus === 'saving'}
+		>
+			{#if saveStatus === 'saving'}
+				Saving...
+			{:else if saveStatus === 'success'}
+				✓ Saved!
+			{:else}
+				Save Session
+			{/if}
+		</button>
 	</div>
 </div>
 
@@ -589,5 +685,31 @@
 
 	.submit-btn:active {
 		transform: translateY(0);
+	}
+
+	.submit-btn:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+		transform: none;
+	}
+
+	.save-message {
+		padding: 0.75rem 1rem;
+		border-radius: 8px;
+		margin-bottom: 1rem;
+		font-size: 0.9rem;
+		text-align: center;
+	}
+
+	.save-message.success {
+		background: rgba(74, 155, 155, 0.15);
+		color: var(--teal-secondary);
+		border: 1px solid rgba(74, 155, 155, 0.3);
+	}
+
+	.save-message.error {
+		background: rgba(217, 83, 79, 0.1);
+		color: #c9302c;
+		border: 1px solid rgba(217, 83, 79, 0.3);
 	}
 </style>
