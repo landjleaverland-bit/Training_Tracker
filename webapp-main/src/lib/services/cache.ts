@@ -97,10 +97,10 @@ export function deleteSession(id: string): boolean {
 }
 
 /**
- * Get sessions that need to be synced
+ * Get sessions that need to be synced (pending or error)
  */
 export function getPendingSessions(): Session[] {
-    return getAllSessions().filter(s => s.syncStatus === 'pending');
+    return getAllSessions().filter(s => s.syncStatus === 'pending' || s.syncStatus === 'error');
 }
 
 /**
