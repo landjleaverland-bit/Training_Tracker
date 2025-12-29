@@ -1,7 +1,7 @@
 <script lang="ts">
 	// Indoor Climb form for logging climbing sessions
-	import { createIndoorClimbSession } from '$lib/services/cache';
-	
+	import { createIndoorClimbSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+	import { createIndoorSession as syncToServer, isOnline } from '$lib/services/api';
 	const locations = [
 		'Rockstar Swindon',
 		'Flashpoint Swindon',
@@ -125,8 +125,8 @@
 		return null;
 	}
 
-	// Save session to local cache
-	function saveSession() {
+	// Save session to local cache and sync to server
+	async function saveSession() {
 		const error = validateForm();
 		if (error) {
 			saveStatus = 'error';
@@ -143,7 +143,7 @@
 				isSport: getIsSport(climb)
 			}));
 
-			createIndoorClimbSession({
+			const sessionData = {
 				date,
 				location: location === 'Other' ? customLocation : location,
 				customLocation: location === 'Other' ? customLocation : undefined,
@@ -153,10 +153,27 @@
 				shoulderLoad,
 				forearmLoad,
 				climbs: preparedClimbs
-			});
+			};
 
-			saveStatus = 'success';
-			saveMessage = 'Session saved locally! Will sync when online.';
+			// Save to local cache first (offline-first)
+			const localSession = createIndoorClimbSession(sessionData);
+
+			// Try to sync to server if online
+			if (isOnline()) {
+				const result = await syncToServer(sessionData);
+				if (result.ok) {
+					markAsSynced(localSession.id);
+					saveStatus = 'success';
+					saveMessage = 'Session saved and synced!';
+				} else {
+					markAsSyncError(localSession.id);
+					saveStatus = 'success';
+					saveMessage = 'Saved locally. Sync failed: ' + (result.error || 'Unknown error');
+				}
+			} else {
+				saveStatus = 'success';
+				saveMessage = 'Saved locally. Will sync when online.';
+			}
 			
 			// Reset form after short delay
 			setTimeout(() => {

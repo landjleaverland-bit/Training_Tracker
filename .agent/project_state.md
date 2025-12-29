@@ -38,6 +38,10 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - Uses localStorage with key `training_tracker_sessions`
   - Tracks sync status: `pending` (not synced), `synced` (uploaded to cloud), `error` (sync failed)
   - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`
+* **API service** in `$lib/services/api.ts`:
+  - URL: `https://func-workout-api-825153765638.europe-west1.run.app`
+  - Functions: `createIndoorSession`, `getIndoorSessions`, `deleteIndoorSession`, `isOnline`
+  - Authenticates via `x-api-key` header
 
 ## 5. Design Decisions
 * **Go Backend:** Chosen for high concurrency handling and fast cold-start times on Cloud Functions.
