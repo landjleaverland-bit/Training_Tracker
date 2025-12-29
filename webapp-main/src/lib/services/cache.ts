@@ -3,7 +3,7 @@
  * Uses localStorage with sync status tracking
  */
 
-import type { Session, IndoorClimbSession } from '$lib/types/session';
+import type { Session, IndoorClimbSession, OutdoorClimbSession } from '$lib/types/session';
 
 const CACHE_KEY = 'training_tracker_sessions';
 
@@ -77,7 +77,7 @@ export function updateSession(id: string, updates: Partial<Session>): Session | 
         ...updates,
         updatedAt: now(),
         syncStatus: 'pending'  // Mark as needing sync
-    };
+    } as Session;
 
     saveAllSessions(sessions);
     return sessions[index];
@@ -161,3 +161,29 @@ export function createIndoorClimbSession(data: {
         ...data
     }) as IndoorClimbSession;
 }
+
+/**
+ * Helper to create an Outdoor Climb session
+ */
+export function createOutdoorClimbSession(data: {
+    date: string;
+    area: string;
+    crag: string;
+    sector?: string;
+    climbingType: string;
+    trainingType: string;
+    difficulty?: string;
+    category?: string;
+    energySystem?: string;
+    techniqueFocus?: string;
+    fingerLoad: number;
+    shoulderLoad: number;
+    forearmLoad: number;
+    climbs: OutdoorClimbSession['climbs'];
+}): OutdoorClimbSession {
+    return addSession({
+        activityType: 'outdoor_climb',
+        ...data
+    }) as OutdoorClimbSession;
+}
+

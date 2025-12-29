@@ -41,5 +41,24 @@ export interface IndoorClimbSession extends BaseSession {
     climbs: ClimbEntry[];
 }
 
+// Outdoor climbing session
+export interface OutdoorClimbSession extends BaseSession {
+    activityType: 'outdoor_climb';
+    area: string;                 // e.g., Portland, Swanage
+    crag: string;                 // e.g., Blacknor North, Dancing Ledge
+    sector?: string;              // e.g., Diamond Slab (optional text)
+    climbingType: string;         // Boulder, Sport, Trad
+    trainingType: string;         // Projecting, Onsighting, etc.
+    difficulty?: string;
+    category?: string;
+    energySystem?: string;
+    techniqueFocus?: string;
+    fingerLoad: number;
+    shoulderLoad: number;
+    forearmLoad: number;
+    climbs: ClimbEntry[];
+}
+
 // Union of all session types
-export type Session = IndoorClimbSession; // Add more as implemented: | OutdoorClimbSession | etc.
+export type Session = IndoorClimbSession | OutdoorClimbSession;
+
