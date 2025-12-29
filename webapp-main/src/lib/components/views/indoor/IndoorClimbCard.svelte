@@ -49,16 +49,18 @@
 			</div>
 			
 			<div class="session-info">
-				<h3 class="location">{session.location}</h3>
-				<div class="session-meta">
-					<span class="type-tag">{session.climbingType}</span>
-					<span class="stat">{climbCount} climbs</span>
-					{#if climbCount > 0}
-						<span class="stat">Max: {maxGrade}</span>
-					{/if}
+				<div class="session-text">
+					<h3 class="location">{session.location}</h3>
+					<div class="session-meta">
+						<span class="type-tag">{session.climbingType}</span>
+						<span class="stat">{climbCount} climbs</span>
+						{#if climbCount > 0}
+							<span class="stat">Max: {maxGrade}</span>
+						{/if}
+					</div>
 				</div>
 				
-				<!-- Load Summary (Visible when collapsed) -->
+				<!-- Load Summary (Right aligned, wraps on mobile if needed) -->
 				<div class="load-summary">
 					<div class="load-badge finger" title="Finger Load: {session.fingerLoad}">
 						{session.fingerLoad}
@@ -218,8 +220,18 @@
 
 	.session-info {
 		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+		flex: 1;
+		flex-wrap: wrap; /* Wraps on very small screens */
+	}
+
+	.session-text {
+		display: flex;
 		flex-direction: column;
 		gap: 0.2rem;
+		min-width: 120px;
 	}
 
 	.location {
@@ -260,7 +272,7 @@
 	.load-summary {
 		display: flex;
 		gap: 0.4rem;
-		margin-top: 0.3rem;
+		margin-top: 0;
 	}
 
 	.load-badge {
