@@ -29,7 +29,12 @@ export interface IndoorClimbSession extends BaseSession {
     location: string;
     customLocation?: string;
     climbingType: string;         // Bouldering, Sport, Mixed
-    sessionType: string;          // Projecting, Onsighting, Campusing
+    trainingType: string;         // Projecting, Onsighting, Campusing, Repeaters
+    difficulty?: string;          // Easy, Medium, Hard, Max, Limit+
+    category?: string;            // None, Technique, Strength, Strength-endurance, Warm-up, Power
+    energySystem?: string;        // Aerobic capacity, Aerobic lactic power, etc.
+    techniqueFocus?: string;      // None, Double-clutch, Standing on volumes, Trusting feet
+    wallAngle?: string;           // None, Overhang, Slab, Roof
     fingerLoad: number;           // 1-5
     shoulderLoad: number;         // 1-5
     forearmLoad: number;          // 1-5

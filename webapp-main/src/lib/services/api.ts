@@ -55,7 +55,12 @@ export interface IndoorSessionPayload {
     location: string;
     customLocation?: string;
     climbingType: string;
-    sessionType: string;
+    trainingType: string;
+    difficulty?: string;
+    category?: string;
+    energySystem?: string;
+    techniqueFocus?: string;
+    wallAngle?: string;
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;

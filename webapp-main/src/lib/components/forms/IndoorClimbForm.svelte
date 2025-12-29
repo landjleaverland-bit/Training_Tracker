@@ -12,8 +12,15 @@
 	];
 
 	const climbingTypes = ['Bouldering', 'Sport', 'Mixed'];
-	const sessionTypes = ['Projecting', 'Onsighting', 'Campusing'];
 	const attemptTypes = ['Flash', 'Redpoint', 'Dogged'];
+
+	// Training classification options
+	const trainingTypes = ['Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
+	const difficulties = ['Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
+	const categories = ['None', 'Technique', 'Strength', 'Strength-endurance', 'Warm-up', 'Power'];
+	const energySystems = ['Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
+	const techniqueFocuses = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
+	const wallAngles = ['None', 'Overhang', 'Slab', 'Roof'];
 
 	// Valid grades (case-insensitive matching)
 	const validGrades = [
@@ -59,7 +66,12 @@
 	let location = $state('');
 	let customLocation = $state('');
 	let climbingType = $state('');
-	let sessionType = $state('');
+	let trainingType = $state('');
+	let difficulty = $state('');
+	let category = $state('');
+	let energySystem = $state('');
+	let techniqueFocus = $state('');
+	let wallAngle = $state('');
 	let fingerLoad = $state(3);
 	let shoulderLoad = $state(3);
 	let forearmLoad = $state(3);
@@ -116,7 +128,7 @@
 		if (!location) return 'Please select a location';
 		if (location === 'Other' && !customLocation.trim()) return 'Please enter a custom location';
 		if (!climbingType) return 'Please select a climbing type';
-		if (!sessionType) return 'Please select a session type';
+		if (!trainingType) return 'Please select a training type';
 		
 		// Check for invalid grades
 		const invalidGrades = climbs.filter(c => c.grade.trim() && !isValidGrade(c.grade));
@@ -148,7 +160,12 @@
 				location: location === 'Other' ? customLocation : location,
 				customLocation: location === 'Other' ? customLocation : undefined,
 				climbingType,
-				sessionType,
+				trainingType,
+				difficulty,
+				category,
+				energySystem,
+				techniqueFocus,
+				wallAngle,
 				fingerLoad,
 				shoulderLoad,
 				forearmLoad,
@@ -192,7 +209,12 @@
 		location = '';
 		customLocation = '';
 		climbingType = '';
-		sessionType = '';
+		trainingType = '';
+		difficulty = '';
+		category = '';
+		energySystem = '';
+		techniqueFocus = '';
+		wallAngle = '';
 		fingerLoad = 3;
 		shoulderLoad = 3;
 		forearmLoad = 3;
@@ -230,26 +252,14 @@
 		</div>
 	{/if}
 
-	<div class="form-row">
-		<div class="form-group">
-			<label for="climbing-type">Climbing Type</label>
-			<select id="climbing-type" bind:value={climbingType}>
-				<option value="" disabled>Select type...</option>
-				{#each climbingTypes as type}
-					<option value={type}>{type}</option>
-				{/each}
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="session-type">Session Type</label>
-			<select id="session-type" bind:value={sessionType}>
-				<option value="" disabled>Select session...</option>
-				{#each sessionTypes as type}
-					<option value={type}>{type}</option>
-				{/each}
-			</select>
-		</div>
+	<div class="form-group">
+		<label for="climbing-type">Climbing Type</label>
+		<select id="climbing-type" bind:value={climbingType}>
+			<option value="" disabled>Select type...</option>
+			{#each climbingTypes as type}
+				<option value={type}>{type}</option>
+			{/each}
+		</select>
 	</div>
 
 	<!-- Load Metrics Section -->
@@ -270,6 +280,67 @@
 				<label for="forearm-load">Forearm</label>
 				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
 				<span class="load-scale">/ 5</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- Training Details Section -->
+	<div class="training-section">
+		<h4>Training Details</h4>
+		<div class="training-grid">
+			<div class="training-item">
+				<label for="training-type">Training Type</label>
+				<select id="training-type" bind:value={trainingType}>
+					<option value="" disabled>Select...</option>
+					{#each trainingTypes as type}
+						<option value={type}>{type}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="training-item">
+				<label for="difficulty">Difficulty</label>
+				<select id="difficulty" bind:value={difficulty}>
+					<option value="" disabled>Select...</option>
+					{#each difficulties as diff}
+						<option value={diff}>{diff}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="training-item">
+				<label for="category">Category</label>
+				<select id="category" bind:value={category}>
+					<option value="" disabled>Select...</option>
+					{#each categories as cat}
+						<option value={cat}>{cat}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="training-item">
+				<label for="energy-system">Energy System</label>
+				<select id="energy-system" bind:value={energySystem}>
+					<option value="" disabled>Select...</option>
+					{#each energySystems as es}
+						<option value={es}>{es}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="training-item">
+				<label for="technique-focus">Technique Focus</label>
+				<select id="technique-focus" bind:value={techniqueFocus}>
+					<option value="" disabled>Select...</option>
+					{#each techniqueFocuses as tf}
+						<option value={tf}>{tf}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="training-item">
+				<label for="wall-angle">Wall Angle</label>
+				<select id="wall-angle" bind:value={wallAngle}>
+					<option value="" disabled>Select...</option>
+					{#each wallAngles as wa}
+						<option value={wa}>{wa}</option>
+					{/each}
+				</select>
 			</div>
 		</div>
 	</div>
@@ -497,6 +568,63 @@
 	.load-scale {
 		font-size: 0.8rem;
 		color: var(--text-secondary);
+	}
+
+	/* Training Details Section */
+	.training-section {
+		background: linear-gradient(135deg, rgba(74, 155, 155, 0.08) 0%, rgba(100, 180, 180, 0.06) 100%);
+		border-radius: 12px;
+		padding: 1.25rem;
+		margin: 1.5rem 0;
+		border: 1px solid rgba(74, 155, 155, 0.15);
+	}
+
+	.training-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+	}
+
+	@media (max-width: 768px) {
+		.training-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 480px) {
+		.training-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.training-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.training-item label {
+		font-weight: 500;
+		color: var(--text-primary);
+		font-size: 0.85rem;
+	}
+
+	.training-item select {
+		width: 100%;
+		padding: 0.5rem 0.6rem;
+		border-radius: 8px;
+		border: 1.5px solid rgba(74, 155, 155, 0.3);
+		background: white;
+		font-size: 0.9rem;
+		color: var(--text-primary);
+		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		cursor: pointer;
+	}
+
+	.training-item select:focus {
+		outline: none;
+		border-color: var(--teal-primary);
+		box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.12);
 	}
 
 	/* Climbs Table Section */
