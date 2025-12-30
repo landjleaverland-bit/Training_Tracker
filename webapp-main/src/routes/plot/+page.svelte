@@ -90,8 +90,10 @@
     let trainingSystems = $derived(getTrainingSystemStats(filteredSessions));
 
     // 3. Performance Grade
-    let boulderGrades = $derived(getGradeStats(filteredSessions, 'boulder'));
-    let leadGrades = $derived(getGradeStats(filteredSessions, 'lead'));
+    let indoorBoulderGrades = $derived(getGradeStats(filteredSessions, 'boulder', 'indoor'));
+    let outdoorBoulderGrades = $derived(getGradeStats(filteredSessions, 'boulder', 'outdoor'));
+    let indoorLeadGrades = $derived(getGradeStats(filteredSessions, 'lead', 'indoor'));
+    let outdoorLeadGrades = $derived(getGradeStats(filteredSessions, 'lead', 'outdoor'));
 
     // 4. Venue
     let indoorVenues = $derived(getIndoorLocationStats(filteredSessions));
@@ -244,32 +246,62 @@
             {:else if selectedView === 'grades'}
                 <div class="chart-grid">
                     <div class="chart-card full-width">
-                        <h3>Boulder Grade Pyramid</h3>
-                        {#if boulderGrades.length > 0}
+                        <h3>🧗 Indoor Boulder Grades</h3>
+                        {#if indoorBoulderGrades.length > 0}
                              <BarChart 
-                                data={boulderGrades} 
+                                data={indoorBoulderGrades} 
                                 xAccessor={d => d.label} 
                                 yAccessor={d => d.value} 
                                 orientation="vertical"
                                 color="#4A9B9B"
                             />
                         {:else}
-                            <p class="no-data">No climbs with grades recorded.</p>
+                            <p class="no-data">No indoor boulders recorded.</p>
                         {/if}
                     </div>
 
                     <div class="chart-card full-width">
-                        <h3>Lead/Sport Grade Pyramid</h3>
-                        {#if leadGrades.length > 0}
+                        <h3>⛰️ Outdoor Boulder Grades</h3>
+                        {#if outdoorBoulderGrades.length > 0}
                              <BarChart 
-                                data={leadGrades} 
+                                data={outdoorBoulderGrades} 
                                 xAccessor={d => d.label} 
                                 yAccessor={d => d.value} 
                                 orientation="vertical"
                                 color="#E6B72B"
                             />
                         {:else}
-                            <p class="no-data">No sport climbs recorded.</p>
+                            <p class="no-data">No outdoor boulders recorded.</p>
+                        {/if}
+                    </div>
+
+                    <div class="chart-card full-width">
+                        <h3>🧗 Indoor Lead/Sport Grades</h3>
+                        {#if indoorLeadGrades.length > 0}
+                             <BarChart 
+                                data={indoorLeadGrades} 
+                                xAccessor={d => d.label} 
+                                yAccessor={d => d.value} 
+                                orientation="vertical"
+                                color="#2E8B8B"
+                            />
+                        {:else}
+                            <p class="no-data">No indoor lead climbs recorded.</p>
+                        {/if}
+                    </div>
+
+                    <div class="chart-card full-width">
+                        <h3>⛰️ Outdoor Lead/Sport Grades</h3>
+                        {#if outdoorLeadGrades.length > 0}
+                             <BarChart 
+                                data={outdoorLeadGrades} 
+                                xAccessor={d => d.label} 
+                                yAccessor={d => d.value} 
+                                orientation="vertical"
+                                color="#F4C430"
+                            />
+                        {:else}
+                            <p class="no-data">No outdoor sport climbs recorded.</p>
                         {/if}
                     </div>
                 </div>

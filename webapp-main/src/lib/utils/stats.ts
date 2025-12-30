@@ -151,11 +151,16 @@ const HUECO_TO_FRENCH: Record<string, string> = Object.entries(FRENCH_TO_HUECO).
 }, {} as Record<string, string>);
 
 // --- 3. Performance Grade Pyramids ---
-export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead'): ChartDataPoint[] {
+export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', location: 'indoor' | 'outdoor' | 'all' = 'all'): ChartDataPoint[] {
     const grades: Record<string, number> = {};
 
     sessions.forEach(s => {
         if (!isClimbing(s)) return;
+
+        // Filter by location
+        if (location === 'indoor' && s.activityType !== 'indoor_climb') return;
+        if (location === 'outdoor' && s.activityType !== 'outdoor_climb') return;
+
         const climbSession = s as IndoorClimbSession | OutdoorClimbSession;
 
         climbSession.climbs?.forEach(c => {
