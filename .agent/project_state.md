@@ -31,8 +31,8 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
     - Activity type dropdown (same 5 options as Log Data)
     *   **View Data (`src/lib/components/views/`)**:
         *   `IndoorClimbView.svelte`: Implemented. Features date/location/grade filtering and remote data fetching.
-        *   `FingerboardingView.svelte`: Implemented. Timeline view with detailed set breakdowns.
-        *   `CompetitionView.svelte`: Implemented. Summary cards with round details and result badges.
+        *   `FingerboardingView.svelte`: Implemented. Timeline view with date filtering and collapsible session details.
+        *   `CompetitionView.svelte`: Implemented. Compact summary cards with expandable details for rounds and individual climb results.
         *   `indoor/IndoorClimbFilters.svelte`: Expandable filter panel.
         *   `indoor/IndoorClimbCard.svelte`: Expandable session card with collapsed load metrics summary and sync status.
         *   `indoor/IndoorClimbEntry.svelte`: Nested expandable climb details.

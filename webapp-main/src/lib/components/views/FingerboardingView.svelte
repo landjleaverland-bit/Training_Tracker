@@ -110,51 +110,52 @@
         </div>
     {:else}
         <div class="timeline">
-            {#each groupByDate(filteredSessions) as [date, daysSessions]}
-                <div class="date-group">
-                    <div class="date-header">{new Date(date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</div>
-                    
-                    {#each daysSessions as session}
-                        <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
-                            <button class="card-header" onclick={() => toggleExpand(session.id)}>
-                                <div class="header-main">
-                                    <span class="location">{session.location}</span>
-                                    <span class="meta">{session.exercises.length} Exercises · {getTotalSets(session)} Sets</span>
-                                </div>
-                                <div class="header-status">
-                                    <span class="sync-dot" class:synced={session.syncStatus === 'synced'} title={session.syncStatus === 'synced' ? 'Synced' : 'Local'}>●</span>
-                                    <span class="chevron">{expandedDetails.has(session.id) ? '▲' : '▼'}</span>
-                                </div>
-                            </button>
-
-                            {#if expandedDetails.has(session.id)}
-                                <div class="card-body" transition:slide={{ duration: 200 }}>
-                                    <div class="exercises-list">
-                                        {#each session.exercises as exercise}
-                                            <div class="exercise-item">
-                                                <div class="ex-header">
-                                                    <span class="ex-name">{exercise.name}</span>
-                                                    <span class="ex-grip">{exercise.gripType}</span>
-                                                </div>
-                                                <div class="ex-sets">
-                                                    {#each exercise.details as set, i}
-                                                        <span class="set-tag">
-                                                            {set.weight > 0 ? `+${set.weight}kg` : 'BW'} 
-                                                            <span class="x">x</span> 
-                                                            {set.reps}s/reps
-                                                        </span>
-                                                    {/each}
-                                                </div>
-                                                {#if exercise.notes}
-                                                    <div class="ex-notes">"{exercise.notes}"</div>
-                                                {/if}
-                                            </div>
-                                        {/each}
-                                    </div>
-                                </div>
-                            {/if}
+            {#each filteredSessions as session}
+                <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
+                    <button class="card-header" onclick={() => toggleExpand(session.id)}>
+                        <div class="header-main">
+                            <span class="session-date">
+                                {new Date(session.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                            </span>
+                            <span class="meta">
+                                {#if session.location && session.location !== 'N/A' && session.location !== 'Home'}
+                                    {session.location} · 
+                                {/if}
+                                {session.exercises.length} Exercises · {getTotalSets(session)} Sets
+                            </span>
                         </div>
-                    {/each}
+                        <div class="header-status">
+                            <span class="sync-dot" class:synced={session.syncStatus === 'synced'} title={session.syncStatus === 'synced' ? 'Synced' : 'Local'}>●</span>
+                            <span class="chevron">{expandedDetails.has(session.id) ? '▲' : '▼'}</span>
+                        </div>
+                    </button>
+
+                    {#if expandedDetails.has(session.id)}
+                        <div class="card-body" transition:slide={{ duration: 200 }}>
+                            <div class="exercises-list">
+                                {#each session.exercises as exercise}
+                                    <div class="exercise-item">
+                                        <div class="ex-header">
+                                            <span class="ex-name">{exercise.name}</span>
+                                            <span class="ex-grip">{exercise.gripType}</span>
+                                        </div>
+                                        <div class="ex-sets">
+                                            {#each exercise.details as set, i}
+                                                <span class="set-tag">
+                                                    {set.weight > 0 ? `+${set.weight}kg` : 'BW'} 
+                                                    <span class="x">x</span> 
+                                                    {set.reps}s/reps
+                                                </span>
+                                            {/each}
+                                        </div>
+                                        {#if exercise.notes}
+                                            <div class="ex-notes">"{exercise.notes}"</div>
+                                        {/if}
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -226,48 +227,7 @@
         padding-bottom: 2rem;
     }
 
-    .date-header {
-        font-weight: 600;
-        color: var(--text-secondary);
-        margin-bottom: 0.6rem;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        position: sticky;
-        top: 0;
-        background: var(--bg-primary);
-        padding: 0.5rem 0;
-        z-index: 10;
-        border-bottom: 1px solid #eee;
-    }
-
-    .session-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        border: 1px solid #eee;
-        margin-bottom: 0.8rem;
-        overflow: hidden;
-    }
-
-    .card-header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        background: white;
-        border: none;
-        cursor: pointer;
-        text-align: left;
-    }
-
-    .header-main {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .location {
+    .session-date {
         font-weight: 600;
         color: var(--teal-primary);
         font-size: 1rem;
