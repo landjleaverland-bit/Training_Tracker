@@ -22,7 +22,7 @@
 	const categoryOptions = ['None', 'Strength', 'Strength-endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang technique', 'Warm-up', 'Power'];
 	const energySystemOptions = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
 	const techniqueFocusOptions = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
-	const wallAngleOptions = ['None', 'Overhang', 'Slab', 'Roof'];
+	const wallAngleOptions = ['None', 'Overhang', 'Slab', 'Roof', 'Moon Board', 'Kilter Board', 'Beast', 'Circuit Board'];
 
 	// Valid grades (case-insensitive matching)
 	const validGrades = [
@@ -382,7 +382,7 @@
                 />
 			</div>
 			<div class="training-item">
-				<label for="wall-angle">Wall Angle</label>
+				<label for="wall-angle">Wall</label>
 				<MultiSelect 
                     options={wallAngleOptions} 
                     selected={wallAngles} 
