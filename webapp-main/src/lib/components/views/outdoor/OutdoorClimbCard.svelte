@@ -212,6 +212,16 @@
 		transition: box-shadow 0.2s ease, border-color 0.2s ease;
 	}
 
+	@media (max-width: 480px) {
+		.session-card {
+			border-radius: 8px;
+			margin-bottom: 0.5rem;
+			border-left: none;
+			border-right: none;
+			border-radius: 0;
+		}
+	}
+
 	.session-card:hover {
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 		border-color: rgba(74, 155, 155, 0.3);
@@ -232,6 +242,12 @@
 		border: none;
 		cursor: pointer;
 		text-align: left;
+	}
+
+	@media (max-width: 480px) {
+		.card-header {
+			padding: 0.75rem 0.5rem;
+		}
 	}
 
 	.header-main {
@@ -372,6 +388,14 @@
 		padding: 1.25rem 1.25rem 0 1.25rem;
 	}
 
+	@media (max-width: 480px) {
+		.details-grid {
+			padding: 1rem 0.75rem 0 0.75rem;
+			gap: 0.8rem;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
 	.detail-item {
 		display: flex;
 		flex-direction: column;
@@ -400,6 +424,14 @@
 		background: white;
 		border-radius: 8px;
 		border: 1px solid rgba(0, 0, 0, 0.05);
+	}
+
+	@media (max-width: 480px) {
+		.metrics-container {
+			padding: 0.8rem;
+			margin: 0.8rem 0.75rem;
+			gap: 1rem;
+		}
 	}
 
 	.metric {
@@ -438,6 +470,12 @@
 
 	.climbs-list {
 		padding: 0 1.25rem 1.25rem 1.25rem;
+	}
+
+	@media (max-width: 480px) {
+		.climbs-list {
+			padding: 0 0.5rem 1rem 0.5rem;
+		}
 	}
 
 	.climbs-list h4 {

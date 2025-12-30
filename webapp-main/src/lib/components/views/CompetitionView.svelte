@@ -304,23 +304,38 @@
     }
 
     .card-header {
-        width: 100%; display: flex; justify-content: space-between; align-items: center;
+        width: 100%; display: flex; justify-content: space-between; align-items: flex-start;
         padding: 0.8rem 1rem; background: white; border: none; cursor: pointer; text-align: left;
     }
 
-    .header-main { display: flex; flex: 1; justify-content: space-between; align-items: center; padding-right: 1rem; }
+    /* Reduce padding on mobile */
+    @media (max-width: 480px) {
+        .card-header { padding: 0.8rem 0.5rem; }
+    }
+
+    .header-main { display: flex; flex: 1; flex-direction: column; gap: 0.2rem; padding-right: 0.5rem; }
+    
+    @media (min-width: 640px) {
+        .header-main { flex-direction: row; align-items: center; gap: 0; padding-right: 1rem; }
+         .card-header { align-items: center; }
+    }
     
     .left-col { display: flex; flex-direction: column; }
     .venue { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
     .date { font-size: 0.8rem; color: #aaa; }
 
     .right-col { display: flex; align-items: center; }
-    .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-start; margin-top: 0.2rem; }
+    
+    @media (min-width: 640px) {
+        .badges { justify-content: flex-end; margin-top: 0; }
+    }
     
     .type-tag { font-size: 0.7rem; background: #eefdfd; color: var(--teal-secondary); padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid rgba(74,155,155,0.1); }
     .result-tag { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); }
 
-    .chevron { color: #ccc; font-size: 0.8rem; }
+    .chevron { color: #ccc; font-size: 0.8rem; margin-top: 2px; }
+    @media (min-width: 640px) { .chevron { margin-top: 0; } }
 
     .card-body { border-top: 1px solid #f5f5f5; background: #fafafa; padding: 1rem; }
 
@@ -340,8 +355,29 @@
     }
     .climb-row:last-child { border-bottom: none; }
 
-    .c-name { font-weight: 500; color: var(--text-primary); }
-    .c-attempts { font-size: 0.8rem; color: #aaa; margin-left: 0.4rem; }
+    .climb-info {
+        display: flex;
+        align-items: center;
+        min-width: 0; /* Enable truncation */
+        flex: 1;
+        margin-right: 0.5rem;
+    }
+
+    .c-name { 
+        font-weight: 500; 
+        color: var(--text-primary); 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .c-attempts { 
+        font-size: 0.8rem; 
+        color: #aaa; 
+        margin-left: 0.4rem; 
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
 
     .status-badge {
         font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 10px;

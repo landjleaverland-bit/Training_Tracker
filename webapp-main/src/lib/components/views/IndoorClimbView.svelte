@@ -4,6 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import IndoorClimbFilters, { type FilterParams } from './indoor/IndoorClimbFilters.svelte';
 	import IndoorClimbCard from './indoor/IndoorClimbCard.svelte';
+	import IconLegend from '$lib/components/common/IconLegend.svelte';
 	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
 	import { getIndoorSessions, type RemoteIndoorSession } from '$lib/services/api';
 	import { syncAllPending } from '$lib/services/sync';
@@ -134,12 +135,18 @@
 
 	<IndoorClimbFilters onFilterParamsChange={handleFilterChange} />
 
-	<!-- Load Key -->
-	<div class="load-key">
-		<span class="key-label">Load:</span>
-		<div class="key-item"><span class="dot finger"></span> Finger</div>
-		<div class="key-item"><span class="dot shoulder"></span> Shoulder</div>
-		<div class="key-item"><span class="dot forearm"></span> Forearm</div>
+	<!-- Legend & Key -->
+	<div class="info-bar">
+		<div class="legend-wrapper">
+			<IconLegend />
+		</div>
+		
+		<div class="load-key">
+			<span class="key-label">Load:</span>
+			<div class="key-item"><span class="dot finger"></span> Finger</div>
+			<div class="key-item"><span class="dot shoulder"></span> Shoulder</div>
+			<div class="key-item"><span class="dot forearm"></span> Forearm</div>
+		</div>
 	</div>
 
 	<div class="sessions-list">
@@ -250,11 +257,18 @@
 		opacity: 0.7;
 	}
 
+	.info-bar {
+		margin-bottom: 0.75rem;
+	}
+
+	.legend-wrapper {
+		margin-bottom: 0.5rem;
+	}
+
 	.load-key {
 		display: flex;
 		align-items: center;
 		gap: 1rem;
-		margin-bottom: 0.75rem;
 		padding: 0 0.5rem;
 		font-size: 0.75rem;
 		color: var(--text-secondary);

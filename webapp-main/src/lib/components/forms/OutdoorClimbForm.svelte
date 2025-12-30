@@ -550,6 +550,13 @@
 		border: 1px solid rgba(74, 155, 155, 0.15);
 	}
 
+	@media (max-width: 640px) {
+		.load-section {
+			padding: 0.8rem;
+			margin: 1rem 0;
+		}
+	}
+
 	.load-metrics {
 		display: flex;
 		gap: 1.5rem;
@@ -599,6 +606,13 @@
 		padding: 1.25rem;
 		margin: 1.5rem 0;
 		border: 1px solid rgba(74, 155, 155, 0.15);
+	}
+
+	@media (max-width: 640px) {
+		.training-section {
+			padding: 0.8rem;
+			margin: 1rem 0;
+		}
 	}
 
 	.training-grid {
@@ -756,6 +770,24 @@
 
 	.notes-cell.expanded {
 		min-width: 200px;
+	}
+
+	@media (max-width: 640px) {
+		.notes-cell.expanded {
+			position: absolute;
+			left: 1rem;
+			right: 1rem;
+			z-index: 10;
+			background: white;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+			border-radius: 8px;
+			padding: 0.5rem;
+			min-width: unset;
+		}
+
+		.notes-cell.expanded textarea {
+			min-height: 100px;
+		}
 	}
 
 	.climbs-table textarea {

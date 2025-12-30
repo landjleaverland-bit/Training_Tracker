@@ -525,6 +525,13 @@
 		border: 1px solid rgba(74, 155, 155, 0.15);
 	}
 
+	@media (max-width: 640px) {
+		.load-section {
+			padding: 0.8rem;
+			margin: 1rem 0;
+		}
+	}
+
 	.load-metrics {
 		display: flex;
 		gap: 1.5rem;
@@ -574,6 +581,13 @@
 		padding: 1.25rem;
 		margin: 1.5rem 0;
 		border: 1px solid rgba(74, 155, 155, 0.15);
+	}
+	
+	@media (max-width: 640px) {
+		.training-section {
+			padding: 0.8rem;
+			margin: 1rem 0;
+		}
 	}
 
 	.training-grid {

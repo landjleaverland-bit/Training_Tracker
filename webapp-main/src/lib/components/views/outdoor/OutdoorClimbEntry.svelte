@@ -27,6 +27,14 @@
         e.stopPropagation();
         onDelete();
     }
+
+	const attemptIcons: Record<string, string> = {
+		'Flash': '⚡',
+		'Onsight': '👁️',
+		'Redpoint': '🔴',
+		'Dogged': '🛠️',
+		'DNF': '❌'
+	};
 </script>
 
 <div class="climb-entry" class:expanded={isExpanded}>
@@ -50,9 +58,9 @@
 		</div>
 		<div class="climb-meta">
 			<span class="attempt-type" class:flash={climb.attemptType === 'Flash'}>
-				{climb.attemptType}
-				{#if climb.attemptType !== 'Flash'}
-					<span class="attempts-count">({climb.attemptsNum})</span>
+				<span class="icon">{attemptIcons[climb.attemptType] || climb.attemptType}</span>
+				{#if climb.attemptType !== 'Flash' && climb.attemptType !== 'Onsight'}
+					<span class="attempts-count">{climb.attemptsNum}</span>
 				{/if}
 			</span>
             <button class="delete-btn" onclick={handleDelete} aria-label="Delete climb" title="Delete climb">🗑️</button>
@@ -73,6 +81,7 @@
 			
 			<div class="tags">
 				<span class="tag type">{climb.isSport ? 'Sport' : 'Boulder'}</span>
+				<span class="tag attempt-text">{climb.attemptType}</span>
 			</div>
 		</div>
 	{/if}
@@ -100,6 +109,13 @@
 		transition: background 0.2s ease;
 	}
 
+	/* Reduce padding on mobile */
+	@media (max-width: 480px) {
+		.climb-header {
+			padding: 0.6rem 0.25rem;
+		}
+	}
+
 	.climb-header:hover {
 		background: rgba(74, 155, 155, 0.05);
 	}
@@ -110,7 +126,13 @@
 		gap: 0.75rem;
 		flex: 1; /* Allow it to take up space */
 		min-width: 0; /* Enable truncation for children */
-		margin-right: 1rem;
+		margin-right: 0.5rem;
+	}
+
+	@media (max-width: 480px) {
+		.climb-main-info {
+			gap: 0.5rem;
+		}
 	}
 
 	.grade-badge {
@@ -134,7 +156,8 @@
 		color: var(--text-primary);
 		font-size: 0.95rem;
 		white-space: nowrap;
-		flex-shrink: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
     .climb-type-tag {
@@ -145,6 +168,7 @@
         color: var(--text-secondary);
         font-weight: 600;
         text-transform: uppercase;
+		flex-shrink: 0;
     }
 
 	.notes-preview {
@@ -159,20 +183,32 @@
 	.climb-meta {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		gap: 0.75rem;
 		flex-shrink: 0;
 	}
 
+	@media (max-width: 480px) {
+		.climb-meta {
+			gap: 0.5rem;
+		}
+	}
+
 	.attempt-type {
-		font-size: 0.85rem;
+		font-size: 0.9rem;
 		color: var(--text-secondary);
 		display: flex;
 		align-items: center;
-		gap: 0.25rem;
+		gap: 0.2rem;
+		min-width: 30px;
+		justify-content: flex-end;
 	}
 
-	.attempt-type.flash {
-		color: var(--gold-secondary);
+	.attempt-type .icon {
+		font-size: 1rem;
+	}
+
+	.attempts-count {
+		font-size: 0.8rem;
 		font-weight: 600;
 	}
 
@@ -201,6 +237,12 @@
 	.climb-details {
 		padding: 0.5rem 1rem 1rem 3rem;
 		background: rgba(74, 155, 155, 0.02);
+	}
+	
+	@media (max-width: 480px) {
+		.climb-details {
+			padding: 0.5rem 0.5rem 1rem 1rem;
+		}
 	}
 
 	.detail-row {
@@ -244,4 +286,5 @@
 		background: rgba(0, 0, 0, 0.05);
 		color: var(--text-secondary);
 	}
+
 </style>
