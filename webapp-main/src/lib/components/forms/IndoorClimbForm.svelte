@@ -4,8 +4,9 @@
 	import { createIndoorSession as syncToServer, isOnline } from '$lib/services/api';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
 	const locations = [
-		'Rockstar Swindon',
-		'Flashpoint Swindon',
+		'Rockstar Unit 3',
+		'Rockstar Unit 5',
+		'Rockstar Techno',
 		'Flashpoint Bristol',
 		'Redpoint Bristol',
 		'TCH Bristol',
