@@ -46,7 +46,10 @@ export async function syncAllPending(): Promise<SyncResult> {
         try {
             const syncResult = await syncSession(session);
             if (syncResult.ok) {
-                // If server returned a new ID, update local session to match
+                // SUCCESSFUL SYNC LOGIC:
+                // 1. If server returned a new ID (it always should for creates), 
+                //    we MUST update the local session to match the server ID.
+                //    This transforms the "Temporary Local Session" into a "Permanent Remote Session" cache.
                 if (syncResult.id && syncResult.id !== session.id) {
                     const updated = updateSessionId(session.id, syncResult.id);
                     if (updated) {

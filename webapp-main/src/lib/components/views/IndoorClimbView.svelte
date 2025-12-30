@@ -4,7 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import IndoorClimbFilters, { type FilterParams } from './indoor/IndoorClimbFilters.svelte';
 	import IndoorClimbCard from './indoor/IndoorClimbCard.svelte';
-	import { getSessionsByType } from '$lib/services/cache';
+	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
 	import { getIndoorSessions, type RemoteIndoorSession } from '$lib/services/api';
 	import type { IndoorClimbSession } from '$lib/types/session';
 
@@ -56,9 +56,6 @@
 	}
 
 	function mergeRemoteData(remoteData: RemoteIndoorSession[]) {
-		const localIds = new Set(sessions.map(s => s.id));
-		let addedCount = 0;
-
 		// Convert remote sessions to IndoorClimbSession format
 		const formattedRemoteSessions: IndoorClimbSession[] = remoteData.map(remote => ({
 			...remote,
@@ -69,9 +66,13 @@
 			syncedAt: new Date().toISOString()
 		}));
 
-		// Add only valid non-duplicates
+		// Persist to local storage
+		mergeSessions(formattedRemoteSessions);
+
+		// Update local state (filtering duplicates for display)
+		const localIds = new Set(sessions.map(s => s.id));
 		const newSessions = formattedRemoteSessions.filter(remote => {
-			if (!remote.id) return false; // Skip if no ID
+			if (!remote.id) return false;
 			return !localIds.has(remote.id);
 		});
 
@@ -79,12 +80,7 @@
 			sessions = [...sessions, ...newSessions].sort((a, b) => 
 				new Date(b.date).getTime() - new Date(a.date).getTime()
 			);
-			addedCount = newSessions.length;
 			applyFilters();
-		}
-
-		if (addedCount === 0) {
-			// Optional: Show "No new data" toast
 		}
 	}
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getCompetitionSessions } from '$lib/services/cache';
+    import { getCompetitionSessions, mergeSessions } from '$lib/services/cache';
     import { getCompetitionSessions as fetchRemote } from '$lib/services/api';
     import type { CompetitionSession } from '$lib/types/session';
     import { slide } from 'svelte/transition';
@@ -19,27 +19,35 @@
         try {
             const result = await fetchRemote();
             if (result.ok && result.data) {
-                const newSessions = result.data
-                    .filter(r => !sessions.find(l => l.id === r.id))
-                    .map(r => ({
-                        ...r,
-                        activityType: 'competition' as const,
-                        type: r.type as 'Bouldering' | 'Lead' | 'Speed',
-                        rounds: r.rounds.map(round => ({
-                            ...round,
-                            climbs: round.climbs?.map(c => ({
-                                ...c,
-                                status: c.status as 'Flash' | 'Top' | 'Zone' | 'Attempt'
-                            }))
-                        })),
-                        // Fallback fields as per previous fix
-                        createdAt: r.createdAt || new Date().toISOString(),
-                        updatedAt: r.updatedAt || new Date().toISOString(),
-                        syncStatus: 'synced' as const
-                    }));
-                sessions = [...sessions, ...newSessions].sort((a, b) => 
-                    new Date(b.date).getTime() - new Date(a.date).getTime()
-                );
+                // Format remote sessions
+                const formattedRemoteSessions = result.data.map(r => ({
+                    ...r,
+                    activityType: 'competition' as const,
+                    type: r.type as 'Bouldering' | 'Lead' | 'Speed',
+                    rounds: r.rounds.map(round => ({
+                        ...round,
+                        climbs: round.climbs?.map(c => ({
+                            ...c,
+                            status: c.status as 'Flash' | 'Top' | 'Zone' | 'Attempt'
+                        }))
+                    })),
+                    // Fallback fields
+                    createdAt: r.createdAt || new Date().toISOString(),
+                    updatedAt: r.updatedAt || new Date().toISOString(),
+                    syncStatus: 'synced' as const
+                }));
+
+                // Persist
+                mergeSessions(formattedRemoteSessions);
+
+                // Update local state
+                const newSessions = formattedRemoteSessions.filter(r => !sessions.find(l => l.id === r.id));
+                
+                if (newSessions.length > 0) {
+                    sessions = [...sessions, ...newSessions].sort((a, b) => 
+                        new Date(b.date).getTime() - new Date(a.date).getTime()
+                    );
+                }
             }
         } catch (e) {
             console.error('Failed to sync', e);

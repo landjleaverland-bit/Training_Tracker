@@ -236,8 +236,21 @@ export function getCompetitionSessions(): CompetitionSession[] {
 }
 /**
  * Merge remote sessions into local cache
- * Only adds sessions that don't already exist locally (by ID)
- * This ensures we don't overwrite local pending changes or create duplicates
+ * 
+ * STRATEGY: "Local-First, Server-Augmented"
+ * 1. We fetch all sessions from the server.
+ * 2. We iterate through them and check if they exist locally by ID.
+ * 3. If a session ID is NOT found locally, we add it. This handles:
+ *    - Data created on other devices.
+ *    - Data restored after clearing local storage (if fetched from server).
+ * 4. If a session ID IS found locally, we SKIP it. We do NOT update it.
+ *    - WHY: This protects local, unsynced changes. If a user edits a session offline,
+ *      we don't want a stale remote version to overwrite their work before it syncs.
+ *    - TRADE-OFF: If the session was updated on another device, this device won't see 
+ *      the update until the local conflict is resolved (currently no complex resolution, 
+ *      local simply wins).
+ * 
+ * @param remoteSessions List of sessions fetched from the backend
  */
 export function mergeSessions(remoteSessions: Session[]): void {
     const localSessions = getAllSessions();
@@ -254,13 +267,19 @@ export function mergeSessions(remoteSessions: Session[]): void {
             } as Session);
             hasChanges = true;
         } else {
-            // We have it locally.
-            // If the local one is 'synced', we could potentially update it if the remote is newer.
-            // But for now, let's prioritize local state to avoid overwriting pending edits.
-            // If we wanted to support multi-device sync more robustly, we'd check timestamps here.
-
-            // OPTIONAL: If local is 'synced' and remote is different, we could update.
-            // strict deduplication is the primary goal here.
+            // Collision detected. 
+            // Current policy: Local wins. Ignore remote.
+            // This implicitly handles the case where we just created a session, 
+            // synced it (getting a new ID), but maybe the fetch happened before 
+            // the ID swap completed? No, ID swap happens immediately after create.
+            // 
+            // Scenario: 
+            // 1. App loads, has Session A (id: UUID-1).
+            // 2. Sync runs -> POST to backend -> Backend returns ID: Firestore-1.
+            // 3. updateSessionId(UUID-1, Firestore-1) runs. Local ID is now Firestore-1.
+            // 4. Fetch runs. Returns Session A (id: Firestore-1).
+            // 5. mergeSessions sees Firestore-1 exists locally. Skips.
+            // Result: Correct.
         }
     }
 
@@ -270,7 +289,17 @@ export function mergeSessions(remoteSessions: Session[]): void {
 }
 
 /**
- * Update a session's ID (used after syncing when server provides a permanent ID)
+ * Update a session's ID
+ * 
+ * CRITICAL for the Sync Workflow:
+ * When we create a session locally, we assign a temporary UUID (e.g., "local-123").
+ * When we sync this to the backend (Firestore), the backend assigns a permanent ID (e.g., "doc-abc").
+ * We MUST update the local record to use the backend ID so that:
+ * 1. Future updates target the correct document.
+ * 2. We don't ingest the same session as a "new" session next time we fetch from remote.
+ * 
+ * @param oldId The temporary local UUID
+ * @param newId The permanent backend ID
  */
 export function updateSessionId(oldId: string, newId: string): boolean {
     const sessions = getAllSessions();

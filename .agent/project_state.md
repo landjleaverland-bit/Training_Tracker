@@ -30,8 +30,9 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - **View Data Tab** (`/view`):
     - Activity type dropdown (same 5 options as Log Data)
     *   **View Data (`src/lib/components/views/`)**:
-        *   `IndoorClimbView.svelte`: Implemented. Features date/location/grade filtering and remote data fetching.
-        *   `OutdoorClimbView.svelte`: Implemented. Features date/area/crag filtering and remote data fetching. Supports cascading location display.
+        *   **Persistence:** All views now use `cache.mergeSessions()` to persist fetched remote data to local storage, ensuring offline availability.
+        *   `IndoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Location + Type. Features date/location/grade filtering.
+        *   `OutdoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Area + Crag + Type. Features date/area/crag filtering. Supports cascading location display.
         *   `FingerboardingView.svelte`: Implemented. Timeline view with date filtering and collapsible session details.
         *   `CompetitionView.svelte`: Implemented. Compact summary cards with expandable details for rounds and individual climb results.
         *   `indoor/IndoorClimbFilters.svelte`: Expandable filter panel.
@@ -55,7 +56,9 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **Cache service** in `$lib/services/cache.ts`:
   - Uses localStorage with key `training_tracker_sessions`
   - Tracks sync status: `pending` (not synced), `synced` (uploaded to cloud), `error` (sync failed)
-  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`
+  - **Deduplication Strategy:** "Local-First". When fetching remote data, we only add sessions that do not exist locally by ID. This protects local unsaturated changes.
+  - **ID Management:** Local sessions get temporary UUIDs. Upon successful sync, `updateSessionId` swaps these for permanent backend IDs to ensure future updates target the correct remote document.
+  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`, `mergeSessions`, `updateSessionId`
   - Helpers: `create...` and `get...` for specific session types
 * **Sync service** in `$lib/services/sync.ts`:
   - `syncAllPending()`: Batch syncs all pending sessions, returns success/failed counts

@@ -4,7 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import OutdoorClimbFilters, { type FilterParams } from './outdoor/OutdoorClimbFilters.svelte';
 	import OutdoorClimbCard from './outdoor/OutdoorClimbCard.svelte';
-	import { getSessionsByType } from '$lib/services/cache';
+	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
 	import { getOutdoorSessions, type RemoteOutdoorSession } from '$lib/services/api';
 	import type { OutdoorClimbSession } from '$lib/types/session';
 
@@ -57,8 +57,6 @@
 	}
 
 	function mergeRemoteData(remoteData: RemoteOutdoorSession[]) {
-		const localIds = new Set(sessions.map(s => s.id));
-
 		// Convert remote sessions to OutdoorClimbSession format
 		const formattedRemoteSessions: OutdoorClimbSession[] = remoteData.map(remote => ({
 			...remote,
@@ -68,6 +66,11 @@
 			syncStatus: 'synced', // It came from remote, so it's synced
 			syncedAt: new Date().toISOString()
 		}));
+
+		// Persist to local storage
+		mergeSessions(formattedRemoteSessions);
+
+		const localIds = new Set(sessions.map(s => s.id));
 
 		// Add only valid non-duplicates
 		const newSessions = formattedRemoteSessions.filter(remote => {

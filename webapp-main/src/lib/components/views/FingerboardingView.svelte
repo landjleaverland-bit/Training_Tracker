@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getFingerboardSessions } from '$lib/services/cache';
+    import { getFingerboardSessions, mergeSessions } from '$lib/services/cache';
     import { getFingerboardSessions as fetchRemote } from '$lib/services/api';
     import type { FingerboardSession } from '$lib/types/session';
     import { slide } from 'svelte/transition';
@@ -22,9 +22,7 @@
             const result = await fetchRemote();
             if (result.ok && result.data) {
                 // Determine what's new (simple logic: ID check)
-                const newSessions = result.data
-                    .filter(r => !sessions.find(l => l.id === r.id))
-                    .map(r => ({
+                const formattedRemoteSessions = result.data.map(r => ({
                         ...r,
                         activityType: 'fingerboarding' as const,
                         
@@ -34,9 +32,18 @@
                         syncStatus: 'synced' as const
                     }));
                 
-                sessions = [...sessions, ...newSessions].sort((a, b) => 
-                    new Date(b.date).getTime() - new Date(a.date).getTime()
-                );
+                // Persist
+                mergeSessions(formattedRemoteSessions);
+
+                // Update local state display
+                // Re-read local or merge in state. Merging in state is smoother.
+                const newSessions = formattedRemoteSessions.filter(r => !sessions.find(l => l.id === r.id));
+                
+                if (newSessions.length > 0) {
+                    sessions = [...sessions, ...newSessions].sort((a, b) => 
+                        new Date(b.date).getTime() - new Date(a.date).getTime()
+                    );
+                }
             }
         } catch (e) {
             console.error('Failed to sync', e);
