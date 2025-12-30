@@ -15,7 +15,10 @@
         getMaxHangStats,
         getGripLoadStats,
         getRecruitmentStats,
-        getMaxPickupStats
+        getMaxPickupStats,
+        getLoadStats,
+        movingAverage
+    } from '$lib/utils/stats';
     } from '$lib/utils/stats';
     import * as d3 from 'd3';
     
@@ -105,6 +108,34 @@
     let recruitmentData = $derived(getRecruitmentStats(filteredSessions));
     let maxPickupData = $derived(getMaxPickupStats(filteredSessions));
 
+    // 7. Load Tracking (15 Graphs)
+    // Helper to combine Raw + Average
+    const withAvg = (data: any[], name: string) => {
+        if (data.length === 0) return [];
+        return [...data, ...movingAverage(data, 4)]; // 4-week moving average
+    };
+
+    // 7.1 Activities (Count)
+    let loadClimbing = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType.includes('climb'), s => 1, 'Climbing Sessions'), 'Climbing Sessions'));
+    let loadFingerboard = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'fingerboarding', s => 1, 'Fingerboarding'), 'Fingerboarding'));
+    let loadIndoorBoulder = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'indoor_climb' && (s as any).climbingType === 'Boulder', s => 1, 'Indoor Bouldering'), 'Indoor Bouldering'));
+    let loadOutdoorBoulder = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'outdoor_climb' && (s as any).climbingType === 'Boulder', s => 1, 'Outdoor Bouldering'), 'Outdoor Bouldering'));
+    let loadIndoorLead = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'indoor_climb' && (s as any).climbingType === 'Lead', s => 1, 'Indoor Leading'), 'Indoor Leading')); // Note: climbingType might be different?
+    let loadOutdoorLead = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'outdoor_climb' && ['Sport','Trad'].includes((s as any).climbingType), s => 1, 'Outdoor Leading'), 'Outdoor Leading'));
+    let loadComps = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'competition', s => 1, 'Competitions'), 'Competitions'));
+
+    // 7.2 Body Parts (Load Sum)
+    let loadShoulders = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).shoulderLoad, s => (s as any).shoulderLoad || 0, 'Shoulders'), 'Shoulders'));
+    let loadForearms = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).forearmLoad, s => (s as any).forearmLoad || 0, 'Forearms'), 'Forearms'));
+    let loadFingers = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).fingerLoad, s => (s as any).fingerLoad || 0, 'Fingers'), 'Fingers'));
+
+    // 7.3 Grips (Grip Sum)
+    let loadOpen = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).openGrip, s => (s as any).openGrip || 0, 'Open Grips'), 'Open Grips'));
+    let loadCrimp = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).crimpGrip, s => (s as any).crimpGrip || 0, 'Crimps'), 'Crimps'));
+    let loadPinch = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).pinchGrip, s => (s as any).pinchGrip || 0, 'Pinches'), 'Pinches'));
+    let loadSloper = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).sloperGrip, s => (s as any).sloperGrip || 0, 'Slopers'), 'Slopers'));
+    let loadJug = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).jugGrip, s => (s as any).jugGrip || 0, 'Jugs'), 'Jugs'));
+
 
     // View Options
     const views = [
@@ -114,6 +145,7 @@
         { id: 'venues', label: 'Venue & Location Analysis' },
         { id: 'periodization', label: 'Periodization & Planning' },
         { id: 'strength', label: 'Finger Strength Metrics' },
+        { id: 'load', label: 'Load Tracking' },
     ];
 
     let currentViewLabel = $derived(views.find(v => v.id === selectedView)?.label);
@@ -368,6 +400,75 @@
                         {/if}
                     </div>
                  </div>
+                </div>
+            {:else if selectedView === 'load'}
+                <div class="chart-grid">
+                    <!-- 7.1 Activities -->
+                    <div class="chart-card full-width">
+                        <h3>Climbing Sessions</h3>
+                        {#if loadClimbing.length > 0}<LineChart data={loadClimbing} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Fingerboarding Sessions</h3>
+                        {#if loadFingerboard.length > 0}<LineChart data={loadFingerboard} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Indoor Bouldering</h3>
+                        {#if loadIndoorBoulder.length > 0}<LineChart data={loadIndoorBoulder} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Outdoor Bouldering</h3>
+                        {#if loadOutdoorBoulder.length > 0}<LineChart data={loadOutdoorBoulder} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Indoor Leading</h3>
+                        {#if loadIndoorLead.length > 0}<LineChart data={loadIndoorLead} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Outdoor Leading</h3>
+                        {#if loadOutdoorLead.length > 0}<LineChart data={loadOutdoorLead} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Competitions</h3>
+                        {#if loadComps.length > 0}<LineChart data={loadComps} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+
+                    <!-- 7.2 Body Parts -->
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Shoulders</h3>
+                        {#if loadShoulders.length > 0}<LineChart data={loadShoulders} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Forearms</h3>
+                        {#if loadForearms.length > 0}<LineChart data={loadForearms} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Fingers</h3>
+                        {#if loadFingers.length > 0}<LineChart data={loadFingers} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+
+                    <!-- 7.3 Grips -->
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Open Grips</h3>
+                        {#if loadOpen.length > 0}<LineChart data={loadOpen} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Crimps</h3>
+                        {#if loadCrimp.length > 0}<LineChart data={loadCrimp} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Pinches</h3>
+                        {#if loadPinch.length > 0}<LineChart data={loadPinch} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Slopers</h3>
+                        {#if loadSloper.length > 0}<LineChart data={loadSloper} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Load Tracking - Jugs</h3>
+                        {#if loadJug.length > 0}<LineChart data={loadJug} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
+                    </div>
+                </div>
             {/if}
 
         {/if}

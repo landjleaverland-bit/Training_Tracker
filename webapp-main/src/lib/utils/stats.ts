@@ -368,3 +368,59 @@ export function getMaxPickupStats(sessions: Session[]): TimeSeriesPoint[] {
 
     return points.sort((a, b) => a.date.getTime() - b.date.getTime());
 }
+
+// --- 7. Generic Load Tracking ---
+
+export function movingAverage(data: TimeSeriesPoint[], windowSize: number): TimeSeriesPoint[] {
+    if (data.length === 0) return [];
+
+    // Sort just in case
+    const sorted = [...data].sort((a, b) => a.date.getTime() - b.date.getTime());
+    const averaged: TimeSeriesPoint[] = [];
+
+    for (let i = 0; i < sorted.length; i++) {
+        const start = Math.max(0, i - windowSize + 1);
+        const windowSlice = sorted.slice(start, i + 1);
+        const sum = windowSlice.reduce((acc, curr) => acc + curr.value, 0);
+        const avg = sum / windowSlice.length;
+
+        averaged.push({
+            date: sorted[i].date,
+            value: avg,
+            series: `${sorted[i].series} (Avg)`
+        });
+    }
+
+    return averaged;
+}
+
+export function getLoadStats(
+    sessions: Session[],
+    filterFn: (s: Session) => boolean,
+    metricFn: (s: Session) => number,
+    seriesName: string
+): TimeSeriesPoint[] {
+    const weeks: Record<string, number> = {};
+    const weekFormat = d3.timeFormat("%Y-%W");
+
+    sessions.forEach(s => {
+        // First check if session matches the criteria (e.g. is Indoor Climb)
+        if (!filterFn(s)) return;
+
+        const date = getSessionDate(s);
+        const weekKey = weekFormat(date);
+
+        // Then extract the metric (e.g. 1 for count, or s.fingerLoad for specific load)
+        const val = metricFn(s);
+
+        weeks[weekKey] = (weeks[weekKey] || 0) + val;
+    });
+
+    const weekParse = d3.timeParse("%Y-%W");
+    return Object.entries(weeks).map(([key, value]) => ({
+        date: weekParse(key) || new Date(),
+        value,
+        series: seriesName
+    })).sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
