@@ -117,6 +117,39 @@ export function getTrainingSystemStats(sessions: Session[]): ChartDataPoint[] {
         .sort((a, b) => b.value - a.value);
 }
 
+const FRENCH_TO_HUECO: Record<string, string> = {
+    '3': 'V-easy',
+    '4-': 'V0-',
+    '4': 'V0',
+    '4+': 'V0+',
+    '5': 'V1',
+    '5+': 'V2',
+    '6A': 'V3',
+    '6A+': 'V3+',
+    '6B': 'V4',
+    '6B+': 'V4+',
+    '6C': 'V5',
+    '6C+': 'V5+',
+    '7A': 'V6',
+    '7A+': 'V7',
+    '7B': 'V8',
+    '7B+': 'V8+',
+    '7C': 'V9',
+    '7C+': 'V10',
+    '8A': 'V11',
+    '8A+': 'V12',
+    '8B': 'V13',
+    '8B+': 'V14',
+    '8C': 'V15',
+    '8C+': 'V16',
+    '9A': 'V17'
+};
+
+const HUECO_TO_FRENCH: Record<string, string> = Object.entries(FRENCH_TO_HUECO).reduce((acc, [french, hueco]) => {
+    acc[hueco] = french;
+    return acc;
+}, {} as Record<string, string>);
+
 // --- 3. Performance Grade Pyramids ---
 export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead'): ChartDataPoint[] {
     const grades: Record<string, number> = {};
@@ -130,7 +163,23 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead'): Ch
             const isSport = c.isSport;
 
             // Normalize grade case (v2 -> V2)
-            const gradeKey = c.grade.toUpperCase();
+            let gradeKey = c.grade.toUpperCase();
+
+            // Apply conversions if it's a boulder grade
+            if (type === 'boulder' && !isSport) {
+                // If it's a known French grade, convert it
+                if (FRENCH_TO_HUECO[gradeKey]) {
+                    gradeKey = FRENCH_TO_HUECO[gradeKey];
+                }
+            }
+
+            // Apply conversions if it's a lead grade (Sport)
+            if (type === 'lead' && isSport) {
+                // If it's a known Hueco grade, convert it to French
+                if (HUECO_TO_FRENCH[gradeKey]) {
+                    gradeKey = HUECO_TO_FRENCH[gradeKey];
+                }
+            }
 
             if (type === 'lead' && isSport) {
                 grades[gradeKey] = (grades[gradeKey] || 0) + 1;
