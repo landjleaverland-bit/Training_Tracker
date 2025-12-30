@@ -119,7 +119,9 @@
 			<div class="details-grid">
 				<div class="detail-item">
 					<span class="label">Training Type</span>
-					<span class="value">{session.trainingType}</span>
+					<span class="value">
+                        {session.trainingTypes?.length ? session.trainingTypes.join(', ') : 'None'}
+                    </span>
 				</div>
 				{#if session.difficulty}
 					<div class="detail-item">
@@ -127,16 +129,36 @@
 						<span class="value">{session.difficulty}</span>
 					</div>
 				{/if}
-				{#if session.category}
+				{#if session.categories?.length}
 					<div class="detail-item">
 						<span class="label">Category</span>
-						<span class="value">{session.category}</span>
+						<span class="value">
+                            {session.categories.join(', ')}
+                        </span>
 					</div>
 				{/if}
-				{#if session.techniqueFocus}
+				{#if session.techniqueFocuses?.length}
 					<div class="detail-item">
 						<span class="label">Focus</span>
-						<span class="value">{session.techniqueFocus}</span>
+						<span class="value">
+                            {session.techniqueFocuses.join(', ')}
+                        </span>
+					</div>
+				{/if}
+                {#if session.energySystems?.length}
+					<div class="detail-item">
+						<span class="label">Energy System</span>
+						<span class="value">
+                            {session.energySystems.join(', ')}
+                        </span>
+					</div>
+				{/if}
+                {#if session.wallAngles?.length}
+					<div class="detail-item">
+						<span class="label">Wall Angle</span>
+						<span class="value">
+                            {session.wallAngles.join(', ')}
+                        </span>
 					</div>
 				{/if}
 			</div>

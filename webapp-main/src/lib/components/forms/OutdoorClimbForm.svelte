@@ -3,18 +3,18 @@
 	import { createOutdoorClimbSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
 	import { createOutdoorSession as syncToServer, isOnline } from '$lib/services/api';
 	import { getAreas, getCrags } from '$lib/data/outdoor_locations';
-
+	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
+	
 	const areas = getAreas();
 	const climbingTypes = ['Boulder', 'Sport', 'Trad'];
 	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Dogged', 'DNF'];
 
 	// Training classification options
-	// Training classification options
-	const trainingTypes = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
+	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
-	const categories = ['None', 'Technique', 'Strength', 'Strength-endurance', 'Warm-up', 'Power'];
-	const energySystems = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
-	const techniqueFocuses = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
+	const categoryOptions = ['None', 'Technique', 'Strength', 'Strength-endurance', 'Warm-up', 'Power'];
+	const energySystemOptions = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
+	const techniqueFocusOptions = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
 
 	// Valid grades (case-insensitive matching)
 	const validGrades = [
@@ -41,11 +41,11 @@
 	let crag = $state('');
 	let sector = $state('');
 	let climbingType = $state('');
-	let trainingType = $state('None');
+	let trainingTypes = $state<string[]>([]);
 	let difficulty = $state('None');
-	let category = $state('None');
-	let energySystem = $state('None');
-	let techniqueFocus = $state('None');
+	let categories = $state<string[]>([]);
+	let energySystems = $state<string[]>([]);
+	let techniqueFocuses = $state<string[]>([]);
 	let fingerLoad = $state(3);
 	let shoulderLoad = $state(3);
 	let forearmLoad = $state(3);
@@ -127,7 +127,6 @@
 		if (!area) return 'Please select an area';
 		if (!crag) return 'Please select a crag';
 		if (!climbingType) return 'Please select a climbing type';
-		// Training type now defaults to None, so no check needed
 		
 		const invalidGrades = climbs.filter(c => c.grade.trim() && !isValidGrade(c.grade));
 		if (invalidGrades.length > 0) return 'Please fix invalid grades';
@@ -158,11 +157,11 @@
 				crag,
 				sector: sector || undefined,
 				climbingType,
-				trainingType,
+				trainingTypes,
 				difficulty,
-				category,
-				energySystem,
-				techniqueFocus,
+				categories,
+				energySystems,
+				techniqueFocuses,
 				fingerLoad,
 				shoulderLoad,
 				forearmLoad,
@@ -170,6 +169,7 @@
 			};
 
 			// Save to local cache first (offline-first)
+			// @ts-ignore
 			const localSession = createOutdoorClimbSession(sessionData);
 
 			// Try to sync to server if online
@@ -210,11 +210,11 @@
 		crag = '';
 		sector = '';
 		climbingType = '';
-		trainingType = 'None';
+		trainingTypes = [];
 		difficulty = 'None';
-		category = 'None';
-		energySystem = 'None';
-		techniqueFocus = 'None';
+		categories = [];
+		energySystems = [];
+		techniqueFocuses = [];
 		fingerLoad = 3;
 		shoulderLoad = 3;
 		forearmLoad = 3;
@@ -321,11 +321,12 @@
 		<div class="training-grid">
 			<div class="training-item">
 				<label for="training-type">Training Type</label>
-				<select id="training-type" bind:value={trainingType}>
-					{#each trainingTypes as type}
-						<option value={type}>{type}</option>
-					{/each}
-				</select>
+				<MultiSelect 
+                    options={trainingTypeOptions} 
+                    selected={trainingTypes} 
+                    placeholder="Select types..." 
+                    onChange={(val) => trainingTypes = val} 
+                />
 			</div>
 			<div class="training-item">
 				<label for="difficulty">Difficulty</label>
@@ -337,27 +338,30 @@
 			</div>
 			<div class="training-item">
 				<label for="category">Category</label>
-				<select id="category" bind:value={category}>
-					{#each categories as cat}
-						<option value={cat}>{cat}</option>
-					{/each}
-				</select>
+				<MultiSelect 
+                    options={categoryOptions} 
+                    selected={categories} 
+                    placeholder="Select categories..." 
+                    onChange={(val) => categories = val} 
+                />
 			</div>
 			<div class="training-item">
 				<label for="energy-system">Energy System</label>
-				<select id="energy-system" bind:value={energySystem}>
-					{#each energySystems as es}
-						<option value={es}>{es}</option>
-					{/each}
-				</select>
+				<MultiSelect 
+                    options={energySystemOptions} 
+                    selected={energySystems} 
+                    placeholder="Select systems..." 
+                    onChange={(val) => energySystems = val} 
+                />
 			</div>
 			<div class="training-item">
 				<label for="technique-focus">Technique Focus</label>
-				<select id="technique-focus" bind:value={techniqueFocus}>
-					{#each techniqueFocuses as tf}
-						<option value={tf}>{tf}</option>
-					{/each}
-				</select>
+				<MultiSelect 
+                    options={techniqueFocusOptions} 
+                    selected={techniqueFocuses} 
+                    placeholder="Select focus..." 
+                    onChange={(val) => techniqueFocuses = val} 
+                />
 			</div>
 		</div>
 	</div>

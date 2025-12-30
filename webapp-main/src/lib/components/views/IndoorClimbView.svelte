@@ -96,7 +96,10 @@
 			if (filters.location && session.location !== filters.location) return false;
 
 			// Session Type matches Training Type
-			if (filters.sessionType && session.trainingType !== filters.sessionType) return false;
+			if (filters.sessionType) {
+                const hasType = session.trainingTypes?.includes(filters.sessionType);
+                if (!hasType) return false;
+            }
 
 			// Grade (Exact match on any climb in the session)
 			if (filters.grade) {

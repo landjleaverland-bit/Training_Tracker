@@ -21,9 +21,11 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - Mobile-responsive (bottom-fixed tabs on mobile)
   - **Log Data Tab** (`/log`):
     - Activity type dropdown with 5 options: Indoor Climb, Outdoor Climb, Gym Session, Fingerboarding, Competition
-    - Conditional form components in `$lib/components/forms/`
-    - **IndoorClimbForm**: date, location (6 options + Other), climbing_type, session_type, load metrics (finger/shoulder/forearm 1-5), climbs table (sport?, name, grade, attempt type, attempts)
-    - **OutdoorClimbForm**: date, area (cascading dropdown -> crag), sector, climbing_type (Boulder/Sport/Trad), load metrics, climbs table
+  - **Components**:
+    - `MultiSelect.svelte`: Reusable component for multi-selection with chips/tags.
+    - Conditional form components in `$lib/components/forms/`:
+    - **IndoorClimbForm**: date, location (6 options + Other), climbing_type, **training_details** (Multi-select: Type, Category, Energy System, Technique, Wall Angle), load metrics, climbs table
+    - **OutdoorClimbForm**: date, area (cascading dropdown -> crag), sector, climbing_type, **training_details** (Multi-select), load metrics, climbs table
     - **FingerboardingForm**: date, exercise cards (Name, Grip), multi-set logging (Weight/Reps), notes
     - **CompetitionForm**: date, venue (list + Custom), type (Boulder/Lead/Speed), round configuration (Standard vs Result modes), dynamic climbs table or final position input
     - **Sync banner**: Shows when sessions are pending sync; includes "Sync Now" button when online, offline indicator when offline
@@ -52,8 +54,8 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 ## 4. Schema & Data Models
 * **Session types** defined in `$lib/types/session.ts`:
   - `BaseSession`: id, activityType, date, createdAt, updatedAt, **syncStatus** (pending/synced/error), syncedAt
-  - `IndoorClimbSession`: extends BaseSession with location, climbingType, sessionType, loads, climbs[]
-  - `OutdoorClimbSession`: extends BaseSession with area, crag, sector, climbingType, loads, climbs[]
+  - `IndoorClimbSession`: extends BaseSession with location, climbingType, **trainingTypes**, **categories**, **energySystems**, **techniqueFocuses**, **wallAngles**, loads, climbs[]
+  - `OutdoorClimbSession`: extends BaseSession with area, crag, sector, climbingType, **trainingTypes**, **categories**, **energySystems**, **techniqueFocuses**, loads, climbs[]
   - `FingerboardSession`: extends BaseSession with exercises[] (gripType, details[{ weight, reps }])
   - `CompetitionSession`: extends BaseSession with venue, type, loads, rounds[] (climbs/position)
 * **Cache service** in `$lib/services/cache.ts`:
@@ -74,7 +76,12 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - Functions: `create...` and `get...` for all 4 session types
   - Authenticates via `x-api-key` header
 
-## 5. Design Decisions
+* **Manual Schema Migration:**
+  - Transitioned from singular `trainingType` (etc.) to plural `trainingTypes` (`[]string`).
+  - Backward compatibility code was removed from the frontend to keep the codebase clean.
+  - Existing Firestore documents must be manually migrated to move data from the old singular fields to the new array fields, otherwise they will appear empty in the UI.
+
+## 6. Design Decisions
 * **Go Backend:** Chosen for high concurrency handling and fast cold-start times on Cloud Functions.
 * **SPA Mode:** Chosen for free hosting on GitHub Pages, relying on backend for all dynamic data.
 * **UI Modularization:** Distinct UI elements are split into separate files/folders. Shared components require strict documentation in Project State to prevent regression.
