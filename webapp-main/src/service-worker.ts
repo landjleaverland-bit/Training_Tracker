@@ -36,6 +36,11 @@ self.addEventListener('fetch', (event) => {
     // ignore POST requests etc
     if (event.request.method !== 'GET') return;
 
+    const url = new URL(event.request.url);
+
+    // Ignore non-http protocols (like chrome-extension://)
+    if (!url.protocol.startsWith('http')) return;
+
     // Skip Firebase/Firestore API calls - always go to network
     if (event.request.url.includes('firestore.googleapis.com') ||
         event.request.url.includes('firebase') ||

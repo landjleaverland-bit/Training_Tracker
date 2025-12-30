@@ -38,9 +38,9 @@
 	}
 
 	// Calculate stats
-	let climbCount = $derived(session.climbs.length);
+	let climbCount = $derived(session.climbs?.length ?? 0);
 	let maxGrade = $derived(
-		session.climbs.reduce((max, c) => {
+		(session.climbs || []).reduce((max, c) => {
 			// Basic comparison logic - improvements would need grade parsing
 			const num = parseInt(c.grade.replace(/\D/g, '')) || 0;
 			const maxNum = parseInt(max.replace(/\D/g, '')) || 0;
