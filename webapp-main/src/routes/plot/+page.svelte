@@ -19,7 +19,6 @@
         getLoadStats,
         movingAverage
     } from '$lib/utils/stats';
-    } from '$lib/utils/stats';
     import * as d3 from 'd3';
     
     import PieChart from '$lib/components/PieChart.svelte';
