@@ -129,10 +129,13 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead'): Ch
             // Use explicit isSport flag if available
             const isSport = c.isSport;
 
+            // Normalize grade case (v2 -> V2)
+            const gradeKey = c.grade.toUpperCase();
+
             if (type === 'lead' && isSport) {
-                grades[c.grade] = (grades[c.grade] || 0) + 1;
+                grades[gradeKey] = (grades[gradeKey] || 0) + 1;
             } else if (type === 'boulder' && !isSport) {
-                grades[c.grade] = (grades[c.grade] || 0) + 1;
+                grades[gradeKey] = (grades[gradeKey] || 0) + 1;
             }
         });
     });
