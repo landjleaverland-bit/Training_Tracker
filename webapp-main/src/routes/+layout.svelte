@@ -82,5 +82,9 @@
 		header {
 			position: static;
 		}
+
+		main {
+			padding: 0.5rem;
+		}
 	}
 </style>

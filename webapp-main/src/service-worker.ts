@@ -17,7 +17,6 @@ self.addEventListener('install', (event) => {
     }
 
     event.waitUntil(addFilesToCache());
-    // Force the waiting service worker to become the active service worker
     self.skipWaiting();
 });
 
@@ -30,7 +29,6 @@ self.addEventListener('activate', (event) => {
     }
 
     event.waitUntil(deleteOldCaches());
-    // Tell the active service worker to take control of the page immediately
     self.clients.claim();
 });
 
@@ -51,13 +49,14 @@ self.addEventListener('fetch', (event) => {
 
         // Serve build assets from the cache
         if (ASSETS.includes(url.pathname)) {
-            return cache.match(event.request);
+            const response = await cache.match(event.request);
+            if (response) return response;
         }
 
         // For everything else, try the network first, but
         // fall back to the cache if we're offline
         try {
-            constresponse = await fetch(event.request);
+            const response = await fetch(event.request);
 
             if (response.status === 200) {
                 cache.put(event.request, response.clone());
@@ -65,7 +64,26 @@ self.addEventListener('fetch', (event) => {
 
             return response;
         } catch {
-            return cache.match(event.request);
+            const cachedResponse = await cache.match(event.request);
+            if (cachedResponse) return cachedResponse;
+
+            // Fallback for navigation requests
+            if (event.request.mode === 'navigate') {
+                // Try multiple fallbacks for the SPA entry point
+                const fallbackUrls = [
+                    '/Training_Tracker/',
+                    '/Training_Tracker/index.html',
+                    '/'
+                ];
+
+                for (const fallback of fallbackUrls) {
+                    const fallbackResponse = await cache.match(fallback);
+                    if (fallbackResponse) return fallbackResponse;
+                }
+            }
+
+            // Return a fallback response to prevent "Failed to convert value to 'Response'" error
+            return new Response('Offline', { status: 404, statusText: 'Offline' });
         }
     }
 
