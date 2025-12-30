@@ -258,33 +258,79 @@ export function mergeSessions(remoteSessions: Session[]): void {
     let hasChanges = false;
 
     for (const remote of remoteSessions) {
-        if (!localIds.has(remote.id)) {
-            // It's a new session we don't have locally
-            localSessions.push({
-                ...remote,
-                syncStatus: 'synced', // It came from remote, so it's synced
-                syncedAt: now()
-            } as Session);
-            hasChanges = true;
-        } else {
-            // Collision detected. 
-            // Current policy: Local wins. Ignore remote.
-            // This implicitly handles the case where we just created a session, 
-            // synced it (getting a new ID), but maybe the fetch happened before 
-            // the ID swap completed? No, ID swap happens immediately after create.
-            // 
-            // Scenario: 
-            // 1. App loads, has Session A (id: UUID-1).
-            // 2. Sync runs -> POST to backend -> Backend returns ID: Firestore-1.
-            // 3. updateSessionId(UUID-1, Firestore-1) runs. Local ID is now Firestore-1.
-            // 4. Fetch runs. Returns Session A (id: Firestore-1).
-            // 5. mergeSessions sees Firestore-1 exists locally. Skips.
-            // Result: Correct.
+        if (localIds.has(remote.id)) {
+            // Exact ID match. Local wins. Skip.
+            continue;
         }
+
+        // Check for "Ghost" match (Pending local session with same key attributes)
+        // This handles the race condition where a session was uploaded but the ID update 
+        // hasn't happened locally yet.
+        const duplicate = localSessions.find(l =>
+            (l.syncStatus === 'pending' || l.syncStatus === 'error') &&
+            isSameSession(l, remote)
+        );
+
+        if (duplicate) {
+            // We found the local version of this remote session!
+            // Update the local ID to match the remote ID.
+            duplicate.id = remote.id;
+            duplicate.syncStatus = 'synced'; // It is now synced
+            duplicate.syncedAt = now();
+
+            // Mark new ID as known to prevent re-adding
+            localIds.add(remote.id);
+            hasChanges = true;
+            continue;
+        }
+
+        // No match found, add as new
+        localSessions.push({
+            ...remote,
+            syncStatus: 'synced', // It came from remote, so it's synced
+            syncedAt: now()
+        } as Session);
+        hasChanges = true;
     }
 
     if (hasChanges) {
         saveAllSessions(localSessions);
+    }
+}
+
+/**
+ * Helper to check if two sessions are semantically the same
+ * Used to detect duplicates during merge
+ */
+function isSameSession(a: Session, b: Session): boolean {
+    if (a.activityType !== b.activityType) return false;
+    if (a.date !== b.date) return false;
+
+    // Type-specific checks
+    switch (a.activityType) {
+        case 'indoor_climb':
+            const iA = a as IndoorClimbSession;
+            const iB = b as IndoorClimbSession;
+            return iA.location === iB.location && iA.climbingType === iB.climbingType;
+
+        case 'outdoor_climb':
+            const oA = a as OutdoorClimbSession;
+            const oB = b as OutdoorClimbSession;
+            return oA.area === oB.area && oA.crag === oB.crag;
+
+        case 'competition':
+            const cA = a as CompetitionSession;
+            const cB = b as CompetitionSession;
+            return cA.venue === cB.venue && cA.type === cB.type;
+
+        case 'fingerboarding':
+            const fA = a as FingerboardSession;
+            const fB = b as FingerboardSession;
+            // Fingerboarding might not have location, but if it does:
+            return fA.location === fB.location;
+
+        default:
+            return false;
     }
 }
 

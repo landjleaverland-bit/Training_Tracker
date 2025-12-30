@@ -70,20 +70,10 @@
 		// Persist to local storage
 		mergeSessions(formattedRemoteSessions);
 
-		const localIds = new Set(sessions.map(s => s.id));
-
-		// Add only valid non-duplicates
-		const newSessions = formattedRemoteSessions.filter(remote => {
-			if (!remote.id) return false; // Skip if no ID
-			return !localIds.has(remote.id);
-		});
-
-		if (newSessions.length > 0) {
-			sessions = [...sessions, ...newSessions].sort((a, b) => 
-				new Date(b.date).getTime() - new Date(a.date).getTime()
-			);
-			applyFilters();
-		}
+		// Reload from cache (source of truth)
+		const localData = getSessionsByType('outdoor_climb') as OutdoorClimbSession[];
+		sessions = localData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+		applyFilters();
 	}
 
 	function handleFilterChange(params: FilterParams) {

@@ -59,8 +59,9 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **Cache service** in `$lib/services/cache.ts`:
   - Uses localStorage with key `training_tracker_sessions`
   - Tracks sync status: `pending` (not synced), `synced` (uploaded to cloud), `error` (sync failed)
-  - **Deduplication Strategy:** "Local-First". When fetching remote data, we only add sessions that do not exist locally by ID. This protects local unsaturated changes.
-  - **ID Management:** Local sessions get temporary UUIDs. Upon successful sync, `updateSessionId` swaps these for permanent backend IDs to ensure future updates target the correct remote document.
+  - **Deduplication Strategy:** "Local-First". When fetching remote data, we only add sessions that do not exist locally by ID.
+  - **Smart Merge:** Detects "ghost" duplicates (remote session matches pending local session by content but has different ID). Updates local ID to match remote ID and marks as synced.
+  - **ID Management:** Local sessions get temporary UUIDs. Upon successful sync, `updateSessionId` swaps these for permanent backend IDs.
   - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`, `mergeSessions`, `updateSessionId`
   - Helpers: `create...` and `get...` for specific session types
 * **Sync service** in `$lib/services/sync.ts`:

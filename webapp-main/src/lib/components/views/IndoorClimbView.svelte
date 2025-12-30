@@ -69,19 +69,10 @@
 		// Persist to local storage
 		mergeSessions(formattedRemoteSessions);
 
-		// Update local state (filtering duplicates for display)
-		const localIds = new Set(sessions.map(s => s.id));
-		const newSessions = formattedRemoteSessions.filter(remote => {
-			if (!remote.id) return false;
-			return !localIds.has(remote.id);
-		});
-
-		if (newSessions.length > 0) {
-			sessions = [...sessions, ...newSessions].sort((a, b) => 
-				new Date(b.date).getTime() - new Date(a.date).getTime()
-			);
-			applyFilters();
-		}
+		// Update local state by reloading from cache (source of truth)
+		const localData = getSessionsByType('indoor_climb') as IndoorClimbSession[];
+		sessions = localData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+		applyFilters();
 	}
 
 	function handleFilterChange(params: FilterParams) {

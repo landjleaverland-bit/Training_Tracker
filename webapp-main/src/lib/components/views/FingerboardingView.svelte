@@ -36,14 +36,10 @@
                 mergeSessions(formattedRemoteSessions);
 
                 // Update local state display
-                // Re-read local or merge in state. Merging in state is smoother.
-                const newSessions = formattedRemoteSessions.filter(r => !sessions.find(l => l.id === r.id));
-                
-                if (newSessions.length > 0) {
-                    sessions = [...sessions, ...newSessions].sort((a, b) => 
-                        new Date(b.date).getTime() - new Date(a.date).getTime()
-                    );
-                }
+                // Reload local state to reflect merge & ID updates
+                sessions = getFingerboardSessions().sort((a, b) => 
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                );
             }
         } catch (e) {
             console.error('Failed to sync', e);

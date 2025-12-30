@@ -40,14 +40,11 @@
                 // Persist
                 mergeSessions(formattedRemoteSessions);
 
-                // Update local state
-                const newSessions = formattedRemoteSessions.filter(r => !sessions.find(l => l.id === r.id));
-                
-                if (newSessions.length > 0) {
-                    sessions = [...sessions, ...newSessions].sort((a, b) => 
-                        new Date(b.date).getTime() - new Date(a.date).getTime()
-                    );
-                }
+                // Update local state by reloading from cache (source of truth)
+                // This ensures we catch any ID swaps performed by mergeSessions
+                sessions = getCompetitionSessions().sort((a, b) => 
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                );
             }
         } catch (e) {
             console.error('Failed to sync', e);
