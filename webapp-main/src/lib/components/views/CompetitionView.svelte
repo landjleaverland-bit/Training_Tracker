@@ -75,7 +75,18 @@
 <div class="view-content">
 	<div class="header">
 		<h3>🏆 Competition Log</h3>
-		<button class="refresh-btn" onclick={loadSessions} title="Refresh">↻</button>
+		<button 
+			class="fetch-btn" 
+			onclick={loadSessions} 
+			disabled={loading}
+			title="Fetch data from cloud"
+		>
+			{#if loading}
+				<span class="spinner"></span> Fetching...
+			{:else}
+				☁️ Fetch Data
+			{/if}
+		</button>
 	</div>
 
     {#if loading && sessions.length === 0}
@@ -169,7 +180,44 @@
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 	h3 { margin: 0; color: var(--teal-secondary); }
 
-    .refresh-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); padding: 0 0.5rem; }
+	.fetch-btn {
+		background: var(--teal-secondary);
+		color: white;
+		border: none;
+		padding: 0.5rem 1rem;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 0.9rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		transition: background 0.2s ease, transform 0.1s ease;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.fetch-btn:hover:not(:disabled) {
+		background: var(--teal-primary);
+		transform: translateY(-1px);
+	}
+
+	.fetch-btn:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
+
+	.spinner {
+		width: 14px;
+		height: 14px;
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		border-top-color: white;
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
 
     .timeline { display: flex; flex-direction: column; gap: 0.8rem; }
 
