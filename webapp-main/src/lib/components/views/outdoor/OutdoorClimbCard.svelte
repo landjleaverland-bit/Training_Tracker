@@ -2,7 +2,7 @@
 	// Outdoor Climb Session Card
 	import { slide } from 'svelte/transition';
 	import type { OutdoorClimbSession } from '$lib/types/session';
-	import IndoorClimbEntry from '../indoor/IndoorClimbEntry.svelte'; // Reuse the generic entry component
+	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte'; // Use separate entry component
 
 	interface Props {
 		session: OutdoorClimbSession;
@@ -139,7 +139,7 @@
 				<h4>Climbs</h4>
 				<div class="climbs-container">
 					{#each session.climbs as climb}
-						<IndoorClimbEntry {climb} />
+						<OutdoorClimbEntry {climb} />
 					{/each}
 					{#if session.climbs.length === 0}
 						<p class="no-climbs">No climbs logged for this session.</p>
