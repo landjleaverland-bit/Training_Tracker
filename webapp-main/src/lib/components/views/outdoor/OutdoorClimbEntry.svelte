@@ -12,9 +12,10 @@
 			notes: string;
 		};
 		onDelete: () => void;
+        showClimbType?: boolean;
 	}
 
-	let { climb, onDelete }: Props = $props();
+	let { climb, onDelete, showClimbType = false }: Props = $props();
 
 	let isExpanded = $state(false);
 
@@ -40,6 +41,9 @@
 		<div class="climb-main-info">
 			<span class="grade-badge" class:sport={climb.isSport}>{climb.grade}</span>
 			<span class="climb-name">{climb.name || 'Unnamed Route'}</span>
+            {#if showClimbType}
+                <span class="climb-type-tag">{climb.isSport ? 'Sport' : 'Boulder'}</span>
+            {/if}
 			{#if !isExpanded && climb.notes}
 				<span class="notes-preview"> - {climb.notes}</span>
 			{/if}
@@ -132,6 +136,16 @@
 		white-space: nowrap;
 		flex-shrink: 0;
 	}
+
+    .climb-type-tag {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
 	.notes-preview {
 		color: var(--text-secondary);

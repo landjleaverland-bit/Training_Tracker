@@ -181,6 +181,7 @@
 						<OutdoorClimbEntry 
 							{climb} 
 							onDelete={() => handleClimbDelete(i)}
+                            showClimbType={session.climbingType === 'Mixed'}
 						/>
 					{/each}
 					{#if session.climbs.length === 0}
