@@ -32,6 +32,9 @@
 	let innerWidth = $derived(width - marginLeft - marginRight);
 	let innerHeight = $derived(height - marginTop - marginBottom);
 
+    // Dynamic font size based on width if needed, but for now just bump base size
+    let fontSize = 12;
+
     let isVertical = $derived(orientation === 'vertical');
 
     // Scales - using 'any' to avoid complex union type issues with d3 scales
@@ -91,12 +94,12 @@
 					<g transform="translate({xPos}, 0)">
 						{#if isVertical}
                             <!-- Vertical Bars -> Horizontal X labels -->
-                            <text dy="0.71em" y="9" text-anchor="end" transform="rotate(-45)" fill="currentColor" font-size="10">
+                            <text dy="0.71em" y="9" text-anchor="end" transform="rotate(-45)" fill="currentColor" font-size={fontSize}>
                                 {tick}
                             </text>
                         {:else}
                              <line y2="6" stroke="currentColor" />
-                             <text dy="0.71em" y="9" text-anchor="middle" fill="currentColor" font-size="10">
+                             <text dy="0.71em" y="9" text-anchor="middle" fill="currentColor" font-size={fontSize}>
                                 {tick}
                             </text>
                         {/if}
@@ -113,12 +116,12 @@
 					<g transform="translate(0, {yPos})">
                         {#if isVertical}
 						    <line x2="-6" stroke="currentColor" />
-						    <text x="-9" dy="0.32em" text-anchor="end" fill="currentColor" font-size="10">
+						    <text x="-9" dy="0.32em" text-anchor="end" fill="currentColor" font-size={fontSize}>
 						    	{tick}
 						    </text>
                             <line x2={innerWidth} stroke="currentColor" stroke-opacity="0.1" />
                         {:else}
-                             <text x="-9" dy="0.32em" text-anchor="end" fill="currentColor" font-size="10">
+                             <text x="-9" dy="0.32em" text-anchor="end" fill="currentColor" font-size={fontSize}>
                                 {tick}
                             </text>
                         {/if}

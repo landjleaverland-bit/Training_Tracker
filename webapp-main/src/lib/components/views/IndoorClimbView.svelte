@@ -9,6 +9,7 @@
 	import { getIndoorSessions, type RemoteIndoorSession } from '$lib/services/api';
 	import { syncAllPending } from '$lib/services/sync';
 	import type { IndoorClimbSession } from '$lib/types/session';
+    import { downloadCSV } from '$lib/utils/export';
 
 	// State
 	let sessions = $state<IndoorClimbSession[]>([]);
@@ -121,19 +122,29 @@
 <div class="view-container">
 	<div class="view-header">
 		<h2 class="view-title">🧗 Indoor Climbing History</h2>
-		<button 
-			class="fetch-btn" 
-			onclick={handleFetchData} 
-			disabled={isLoading}
-			title="Fetch data from cloud"
-		>
-			{#if isLoading}
-				<span class="spinner"></span> Fetching...
-			{:else}
-				☁️ Fetch Data
-			{/if}
-		</button>
+        <div class="header-actions">
+            <button 
+                class="action-btn secondary" 
+                onclick={() => downloadCSV(filteredSessions, 'indoor_climbs')}
+                title="Export filtered data to CSV"
+            >
+                📥 Export
+            </button>
+            <button 
+                class="action-btn" 
+                onclick={handleFetchData} 
+                disabled={isLoading}
+                title="Fetch data from cloud"
+            >
+                {#if isLoading}
+                    <span class="spinner"></span> Fetching...
+                {:else}
+                    ☁️ Fetch Data
+                {/if}
+            </button>
+        </div>
 	</div>
+
 
 	{#if fetchError}
 		<div class="error-banner" transition:slide>
@@ -190,6 +201,11 @@
 		margin-bottom: 1rem;
 	}
 
+    .header-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
 	.view-title {
 		font-size: 1.25rem;
 		font-weight: 600;
@@ -197,7 +213,7 @@
 		margin: 0;
 	}
 
-	.fetch-btn {
+	.action-btn {
 		background: var(--teal-secondary);
 		color: white;
 		border: none;
@@ -213,12 +229,22 @@
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 
-	.fetch-btn:hover:not(:disabled) {
+	.action-btn:hover:not(:disabled) {
 		background: var(--teal-primary);
 		transform: translateY(-1px);
 	}
 
-	.fetch-btn:disabled {
+    .action-btn.secondary {
+        background: white;
+        color: var(--teal-secondary);
+        border: 1px solid var(--teal-secondary);
+    }
+
+    .action-btn.secondary:hover {
+        background: #f0fcfc;
+    }
+
+	.action-btn:disabled {
 		opacity: 0.7;
 		cursor: not-allowed;
 	}
