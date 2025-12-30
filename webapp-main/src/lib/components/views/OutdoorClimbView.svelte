@@ -28,6 +28,10 @@
 		grade: ''
 	});
 
+	// Pagination state
+	let visibleCount = $state(20);
+	const ITEMS_PER_PAGE = 20;
+
 	// Load initial local data
 	onMount(() => {
 		loadLocalData();
@@ -93,6 +97,9 @@
 	}
 
 	function applyFilters() {
+		// Reset pagination
+		visibleCount = ITEMS_PER_PAGE;
+
 		// Filter raw sessions
 		filteredSessions = sessions.filter(session => {
 			// Date Range
@@ -122,6 +129,9 @@
 		});
 	}
 
+	function loadMore() {
+		visibleCount += ITEMS_PER_PAGE;
+	}
 </script>
 
 <div class="view-container">
@@ -173,7 +183,7 @@
 	</div>
 
 	<div class="sessions-list">
-		{#each filteredSessions as session (session.id)}
+		{#each filteredSessions.slice(0, visibleCount) as session (session.id)}
 			<OutdoorClimbCard {session} onDelete={loadLocalData} />
 		{/each}
 		
@@ -183,6 +193,14 @@
 				{#if sessions.length > 0}
 					<small>Try adjusting your filters.</small>
 				{/if}
+			</div>
+		{/if}
+
+		{#if visibleCount < filteredSessions.length}
+			<div class="load-more-container">
+				<button class="load-more-btn" onclick={loadMore}>
+					Load More ({filteredSessions.length - visibleCount} remaining)
+				</button>
 			</div>
 		{/if}
 	</div>
@@ -333,4 +351,29 @@
 	.dot.finger { background: #E57373; }
 	.dot.shoulder { background: #64B5F6; }
 	.dot.forearm { background: #81C784; }
+	
+	.load-more-container {
+		display: flex;
+		justify-content: center;
+		padding: 1rem 0;
+	}
+
+	.load-more-btn {
+		background: white;
+		border: 1px solid var(--teal-secondary);
+		color: var(--teal-secondary);
+		padding: 0.6rem 1.5rem;
+		border-radius: 20px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+	}
+
+	.load-more-btn:hover {
+		background: var(--teal-secondary);
+		color: white;
+		transform: translateY(-1px);
+		box-shadow: 0 4px 8px rgba(74, 155, 155, 0.2);
+	}
 </style>

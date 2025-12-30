@@ -12,6 +12,16 @@
     let endDate = $state('');
     let expandedDetails = $state<Set<string>>(new Set());
     
+    // Pagination
+    let visibleCount = $state(20);
+    const ITEMS_PER_PAGE = 20;
+
+    // Reset pagination when filters change
+    $effect(() => {
+        startDate; endDate;
+        visibleCount = ITEMS_PER_PAGE;
+    });
+
     // Delete state
     let showDeleteModal = $state(false);
     let selectedSessionId = $state<string | null>(null);
@@ -85,6 +95,10 @@
         })
     );
 
+    function loadMore() {
+        visibleCount += ITEMS_PER_PAGE;
+    }
+
     // Grouping by Date
     function groupByDate(sess: FingerboardSession[]) {
         const groups: Record<string, FingerboardSession[]> = {};
@@ -150,7 +164,7 @@
         </div>
     {:else}
         <div class="timeline">
-            {#each filteredSessions as session}
+            {#each filteredSessions.slice(0, visibleCount) as session}
                 <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
                     <div 
                         class="card-header" 
@@ -213,6 +227,14 @@
                     {/if}
                 </div>
             {/each}
+            
+            {#if visibleCount < filteredSessions.length}
+                <div class="load-more-container">
+                    <button class="load-more-btn" onclick={loadMore}>
+                        Load More ({filteredSessions.length - visibleCount} remaining)
+                    </button>
+                </div>
+            {/if}
         </div>
     {/if}
 </div>
@@ -445,5 +467,30 @@
         padding: 2rem;
         color: var(--text-secondary);
         font-style: italic;
+    }
+
+    .load-more-container {
+        display: flex;
+        justify-content: center;
+        padding: 1rem 0;
+    }
+
+    .load-more-btn {
+        background: white;
+        border: 1px solid var(--teal-secondary);
+        color: var(--teal-secondary);
+        padding: 0.6rem 1.5rem;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .load-more-btn:hover {
+        background: var(--teal-secondary);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(74, 155, 155, 0.2);
     }
 </style>

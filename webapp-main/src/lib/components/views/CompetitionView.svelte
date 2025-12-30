@@ -5,10 +5,14 @@
     import type { CompetitionSession } from '$lib/types/session';
     import { slide } from 'svelte/transition';
     import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-
+ 
     let sessions = $state<CompetitionSession[]>([]);
     let loading = $state(true);
     let expandedDetails = $state<Set<string>>(new Set());
+
+    // Pagination
+    let visibleCount = $state(20);
+    const ITEMS_PER_PAGE = 20;
 
     // Delete state
     let showDeleteModal = $state(false);
@@ -33,6 +37,8 @@
 
     async function loadSessions() {
         loading = true;
+        visibleCount = ITEMS_PER_PAGE;
+        
         // Load local first
         sessions = getCompetitionSessions().sort((a, b) => 
             new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -87,6 +93,10 @@
         expandedDetails = new Set(expandedDetails);
     }
 
+    function loadMore() {
+        visibleCount += ITEMS_PER_PAGE;
+    }
+
     function getResultSummary(session: CompetitionSession) {
         // Quick summary for header
         if (!session.rounds || session.rounds.length === 0) return 'No rounds';
@@ -126,7 +136,7 @@
         <div class="empty-state">No competitions logged yet.</div>
     {:else}
         <div class="timeline">
-            {#each sessions as session}
+            {#each sessions.slice(0, visibleCount) as session}
                 <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
                     <div 
                         class="card-header" 
@@ -216,6 +226,14 @@
                     {/if}
                 </div>
             {/each}
+
+            {#if visibleCount < sessions.length}
+                <div class="load-more-container">
+                    <button class="load-more-btn" onclick={loadMore}>
+                        Load More ({sessions.length - visibleCount} remaining)
+                    </button>
+                </div>
+            {/if}
         </div>
     {/if}
     <DeleteConfirmModal 
@@ -398,4 +416,29 @@
     .sync-status.synced { color: var(--teal-secondary); }
 
     .loading, .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); font-style: italic; }
+
+    .load-more-container {
+        display: flex;
+        justify-content: center;
+        padding: 1rem 0;
+    }
+
+    .load-more-btn {
+        background: white;
+        border: 1px solid var(--teal-secondary);
+        color: var(--teal-secondary);
+        padding: 0.6rem 1.5rem;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .load-more-btn:hover {
+        background: var(--teal-secondary);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(74, 155, 155, 0.2);
+    }
 </style>
