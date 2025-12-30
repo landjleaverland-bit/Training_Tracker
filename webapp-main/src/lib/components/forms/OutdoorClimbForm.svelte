@@ -9,10 +9,11 @@
 	const attemptTypes = ['Flash', 'Redpoint', 'Dogged'];
 
 	// Training classification options
-	const trainingTypes = ['Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
-	const difficulties = ['Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
+	// Training classification options
+	const trainingTypes = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
+	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
 	const categories = ['None', 'Technique', 'Strength', 'Strength-endurance', 'Warm-up', 'Power'];
-	const energySystems = ['Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
+	const energySystems = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
 	const techniqueFocuses = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
 
 	// Valid grades (case-insensitive matching)
@@ -40,11 +41,11 @@
 	let crag = $state('');
 	let sector = $state('');
 	let climbingType = $state('');
-	let trainingType = $state('');
-	let difficulty = $state('');
-	let category = $state('');
-	let energySystem = $state('');
-	let techniqueFocus = $state('');
+	let trainingType = $state('None');
+	let difficulty = $state('None');
+	let category = $state('None');
+	let energySystem = $state('None');
+	let techniqueFocus = $state('None');
 	let fingerLoad = $state(3);
 	let shoulderLoad = $state(3);
 	let forearmLoad = $state(3);
@@ -126,7 +127,7 @@
 		if (!area) return 'Please select an area';
 		if (!crag) return 'Please select a crag';
 		if (!climbingType) return 'Please select a climbing type';
-		if (!trainingType) return 'Please select a training type';
+		// Training type now defaults to None, so no check needed
 		
 		const invalidGrades = climbs.filter(c => c.grade.trim() && !isValidGrade(c.grade));
 		if (invalidGrades.length > 0) return 'Please fix invalid grades';
@@ -209,11 +210,11 @@
 		crag = '';
 		sector = '';
 		climbingType = '';
-		trainingType = '';
-		difficulty = '';
-		category = '';
-		energySystem = '';
-		techniqueFocus = '';
+		trainingType = 'None';
+		difficulty = 'None';
+		category = 'None';
+		energySystem = 'None';
+		techniqueFocus = 'None';
 		fingerLoad = 3;
 		shoulderLoad = 3;
 		forearmLoad = 3;
@@ -321,7 +322,6 @@
 			<div class="training-item">
 				<label for="training-type">Training Type</label>
 				<select id="training-type" bind:value={trainingType}>
-					<option value="" disabled>Select...</option>
 					{#each trainingTypes as type}
 						<option value={type}>{type}</option>
 					{/each}
@@ -330,7 +330,6 @@
 			<div class="training-item">
 				<label for="difficulty">Difficulty</label>
 				<select id="difficulty" bind:value={difficulty}>
-					<option value="" disabled>Select...</option>
 					{#each difficulties as diff}
 						<option value={diff}>{diff}</option>
 					{/each}
@@ -339,7 +338,6 @@
 			<div class="training-item">
 				<label for="category">Category</label>
 				<select id="category" bind:value={category}>
-					<option value="" disabled>Select...</option>
 					{#each categories as cat}
 						<option value={cat}>{cat}</option>
 					{/each}
@@ -348,7 +346,6 @@
 			<div class="training-item">
 				<label for="energy-system">Energy System</label>
 				<select id="energy-system" bind:value={energySystem}>
-					<option value="" disabled>Select...</option>
 					{#each energySystems as es}
 						<option value={es}>{es}</option>
 					{/each}
@@ -357,7 +354,6 @@
 			<div class="training-item">
 				<label for="technique-focus">Technique Focus</label>
 				<select id="technique-focus" bind:value={techniqueFocus}>
-					<option value="" disabled>Select...</option>
 					{#each techniqueFocuses as tf}
 						<option value={tf}>{tf}</option>
 					{/each}

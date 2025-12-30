@@ -218,6 +218,13 @@
             {/each}
         </div>
     {/if}
+    <DeleteConfirmModal 
+        isOpen={showDeleteModal}
+        title="Delete Competition"
+        message="Are you sure you want to delete this competition session? This action cannot be undone."
+        onConfirm={confirmDeleteSession}
+        onCancel={() => showDeleteModal = false}
+    />
 </div>
 
 <style>
