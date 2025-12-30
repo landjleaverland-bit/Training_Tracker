@@ -25,9 +25,11 @@
 	}
 
     // Initialize with one exercise if empty
-    if (exercises.length === 0) {
-        addExercise();
-    }
+    $effect(() => {
+        if (exercises.length === 0) {
+            addExercise();
+        }
+    });
 
 	function removeExercise(index: number) {
 		exercises = exercises.filter((_, i) => i !== index);
