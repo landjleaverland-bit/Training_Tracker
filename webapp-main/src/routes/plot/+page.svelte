@@ -337,6 +337,36 @@
                             <p class="no-data">No max hang data recorded in Fingerboarding sessions.</p>
                         {/if}
                     </div>
+
+                    <div class="chart-card full-width">
+                         <h3>Recruitment Pulls (Max Weight)</h3>
+                         {#if recruitmentData.length > 0}
+                            <LineChart 
+                                data={recruitmentData}
+                                xAccessor={d => d.date}
+                                yAccessor={d => d.value}
+                                 seriesAccessor={d => d.series}
+                                color="#9B59B6"
+                            />
+                        {:else}
+                            <p class="no-data">No recruitment pulls recorded.</p>
+                        {/if}
+                    </div>
+
+                    <div class="chart-card full-width">
+                         <h3>Max Pick-ups (Max Weight)</h3>
+                         {#if maxPickupData.length > 0}
+                            <LineChart 
+                                data={maxPickupData}
+                                xAccessor={d => d.date}
+                                yAccessor={d => d.value}
+                                 seriesAccessor={d => d.series}
+                                color="#3498DB"
+                            />
+                        {:else}
+                            <p class="no-data">No max pick-ups recorded.</p>
+                        {/if}
+                    </div>
                  </div>
             {/if}
 
