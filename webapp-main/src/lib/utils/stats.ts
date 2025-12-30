@@ -403,27 +403,56 @@ export function getLoadStats(
     sessions: Session[],
     filterFn: (s: Session) => boolean,
     metricFn: (s: Session) => number,
-    seriesName: string
+    seriesName: string,
+    groupBy: 'week' | 'day' = 'week',
+    dateRange?: { start: Date, end: Date }
 ): TimeSeriesPoint[] {
-    const weeks: Record<string, number> = {};
-    const weekFormat = d3.timeFormat("%Y-%W");
+    const groups: Record<string, number> = {};
+    const format = groupBy === 'week' ? d3.timeFormat("%Y-%W") : d3.timeFormat("%Y-%m-%d");
 
+    // 1. Populate with actual data
     sessions.forEach(s => {
         // First check if session matches the criteria (e.g. is Indoor Climb)
         if (!filterFn(s)) return;
 
         const date = getSessionDate(s);
-        const weekKey = weekFormat(date);
+        const key = format(date);
 
         // Then extract the metric (e.g. 1 for count, or s.fingerLoad for specific load)
         const val = metricFn(s);
 
-        weeks[weekKey] = (weeks[weekKey] || 0) + val;
+        groups[key] = (groups[key] || 0) + val;
     });
 
-    const weekParse = d3.timeParse("%Y-%W");
-    return Object.entries(weeks).map(([key, value]) => ({
-        date: weekParse(key) || new Date(),
+    // 2. Zero-fill if range is provided
+    if (dateRange) {
+        let current = new Date(dateRange.start);
+        const end = new Date(dateRange.end);
+
+        // Normalize start to beginning of day to avoid infinite loops with time offsets
+        current.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+
+        // Safety break: don't loop more than 366 * 10 iterations
+        let iterations = 0;
+        const maxIterations = 4000;
+
+        while (current <= end && iterations < maxIterations) {
+            const key = format(current);
+            // Only set if not already present (preserve actual data)
+            if (groups[key] === undefined) {
+                groups[key] = 0;
+            }
+            // Increment by 1 day
+            current.setDate(current.getDate() + 1);
+            iterations++;
+        }
+    }
+
+    const parse = groupBy === 'week' ? d3.timeParse("%Y-%W") : d3.timeParse("%Y-%m-%d");
+
+    return Object.entries(groups).map(([key, value]) => ({
+        date: parse(key) || new Date(),
         value,
         series: seriesName
     })).sort((a, b) => a.date.getTime() - b.date.getTime());

@@ -113,29 +113,78 @@
     // Helper to combine Raw + Average
     const withAvg = (data: any[], name: string) => {
         if (data.length === 0) return [];
-        return [...data, ...movingAverage(data, 4)]; // 4-week moving average
+        return [...data, ...movingAverage(data, 4)]; // 4-period moving average
     };
 
+    // Determine granularity for load tracking
+    let loadGranularity = $derived.by(() => {
+        if (['week', 'month', 'specific_week', 'specific_month'].includes(timeRange)) {
+            return 'day';
+        }
+        return 'week';
+    });
+
+    // Determine date range for zero-filling
+    let currentDateRange = $derived.by(() => {
+        const now = new Date();
+        const end = new Date();
+        const start = new Date();
+
+        if (timeRange === 'week') {
+            start.setDate(now.getDate() - 6); // Last 7 days inclusive
+            return { start, end };
+        } else if (timeRange === 'month') {
+            start.setMonth(now.getMonth() - 1);
+            return { start, end };
+        } else if (timeRange === 'specific_week' && selectedDateValue) {
+             const [yearStr, weekStr] = selectedDateValue.split('-W');
+             const year = parseInt(yearStr);
+             const week = parseInt(weekStr);
+             
+             // Calculate start of ISO week
+             const simple = new Date(year, 0, 1 + (week - 1) * 7);
+             const dow = simple.getDay();
+             const ISOweekStart = simple;
+             if (dow <= 4)
+                 ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+             else
+                 ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+             
+             const wStart = new Date(ISOweekStart);
+             const wEnd = new Date(ISOweekStart);
+             wEnd.setDate(wEnd.getDate() + 6);
+             return { start: wStart, end: wEnd };
+
+        } else if (timeRange === 'specific_month' && selectedDateValue) {
+             const [year, month] = selectedDateValue.split('-');
+             const mStart = new Date(parseInt(year), parseInt(month) - 1, 1);
+             const mEnd = new Date(parseInt(year), parseInt(month), 0);
+             return { start: mStart, end: mEnd };
+        }
+        
+        return undefined; // All time (no forced zero-fill logic needed? Or maybe calc from min/max session?)
+    });
+
     // 7.1 Activities (Count)
-    let loadClimbing = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType.includes('climb'), s => 1, 'Climbing Sessions'), 'Climbing Sessions'));
-    let loadFingerboard = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'fingerboarding', s => 1, 'Fingerboarding'), 'Fingerboarding'));
-    let loadIndoorBoulder = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'indoor_climb' && (s as any).climbingType === 'Boulder', s => 1, 'Indoor Bouldering'), 'Indoor Bouldering'));
-    let loadOutdoorBoulder = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'outdoor_climb' && (s as any).climbingType === 'Boulder', s => 1, 'Outdoor Bouldering'), 'Outdoor Bouldering'));
-    let loadIndoorLead = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'indoor_climb' && (s as any).climbingType === 'Lead', s => 1, 'Indoor Leading'), 'Indoor Leading')); // Note: climbingType might be different?
-    let loadOutdoorLead = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'outdoor_climb' && ['Sport','Trad'].includes((s as any).climbingType), s => 1, 'Outdoor Leading'), 'Outdoor Leading'));
-    let loadComps = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'competition', s => 1, 'Competitions'), 'Competitions'));
+    let loadClimbing = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType.includes('climb'), s => 1, 'Climbing Sessions', loadGranularity, currentDateRange), 'Climbing Sessions'));
+    let loadFingerboard = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'fingerboarding', s => 1, 'Fingerboarding', loadGranularity, currentDateRange), 'Fingerboarding'));
+    let loadIndoorBoulder = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'indoor_climb' && (s as any).climbingType === 'Boulder', s => 1, 'Indoor Bouldering', loadGranularity, currentDateRange), 'Indoor Bouldering'));
+    let loadOutdoorBoulder = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'outdoor_climb' && (s as any).climbingType === 'Boulder', s => 1, 'Outdoor Bouldering', loadGranularity, currentDateRange), 'Outdoor Bouldering'));
+    let loadIndoorLead = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'indoor_climb' && (s as any).climbingType === 'Lead', s => 1, 'Indoor Leading', loadGranularity, currentDateRange), 'Indoor Leading')); 
+    let loadOutdoorLead = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'outdoor_climb' && ['Sport','Trad'].includes((s as any).climbingType), s => 1, 'Outdoor Leading', loadGranularity, currentDateRange), 'Outdoor Leading'));
+    let loadComps = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType === 'competition', s => 1, 'Competitions', loadGranularity, currentDateRange), 'Competitions'));
 
     // 7.2 Body Parts (Load Sum)
-    let loadShoulders = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).shoulderLoad, s => (s as any).shoulderLoad || 0, 'Shoulders'), 'Shoulders'));
-    let loadForearms = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).forearmLoad, s => (s as any).forearmLoad || 0, 'Forearms'), 'Forearms'));
-    let loadFingers = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).fingerLoad, s => (s as any).fingerLoad || 0, 'Fingers'), 'Fingers'));
+    let loadShoulders = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).shoulderLoad, s => (s as any).shoulderLoad || 0, 'Shoulders', loadGranularity, currentDateRange), 'Shoulders'));
+    let loadForearms = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).forearmLoad, s => (s as any).forearmLoad || 0, 'Forearms', loadGranularity, currentDateRange), 'Forearms'));
+    let loadFingers = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).fingerLoad, s => (s as any).fingerLoad || 0, 'Fingers', loadGranularity, currentDateRange), 'Fingers'));
 
     // 7.3 Grips (Grip Sum)
-    let loadOpen = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).openGrip, s => (s as any).openGrip || 0, 'Open Grips'), 'Open Grips'));
-    let loadCrimp = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).crimpGrip, s => (s as any).crimpGrip || 0, 'Crimps'), 'Crimps'));
-    let loadPinch = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).pinchGrip, s => (s as any).pinchGrip || 0, 'Pinches'), 'Pinches'));
-    let loadSloper = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).sloperGrip, s => (s as any).sloperGrip || 0, 'Slopers'), 'Slopers'));
-    let loadJug = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).jugGrip, s => (s as any).jugGrip || 0, 'Jugs'), 'Jugs'));
+    let loadOpen = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).openGrip, s => (s as any).openGrip || 0, 'Open Grips', loadGranularity, currentDateRange), 'Open Grips'));
+    let loadCrimp = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).crimpGrip, s => (s as any).crimpGrip || 0, 'Crimps', loadGranularity, currentDateRange), 'Crimps'));
+    let loadPinch = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).pinchGrip, s => (s as any).pinchGrip || 0, 'Pinches', loadGranularity, currentDateRange), 'Pinches'));
+    let loadSloper = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).sloperGrip, s => (s as any).sloperGrip || 0, 'Slopers', loadGranularity, currentDateRange), 'Slopers'));
+    let loadJug = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).jugGrip, s => (s as any).jugGrip || 0, 'Jugs', loadGranularity, currentDateRange), 'Jugs'));
 
 
     // View Options
