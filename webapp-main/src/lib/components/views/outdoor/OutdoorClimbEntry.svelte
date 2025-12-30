@@ -11,19 +11,32 @@
 			attemptsNum: number;
 			notes: string;
 		};
+		onDelete: () => void;
 	}
 
-	let { climb }: Props = $props();
+	let { climb, onDelete }: Props = $props();
 
 	let isExpanded = $state(false);
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
 	}
+    
+    function handleDelete(e: MouseEvent) {
+        e.stopPropagation();
+        onDelete();
+    }
 </script>
 
 <div class="climb-entry" class:expanded={isExpanded}>
-	<button class="climb-header" onclick={toggleExpand} aria-expanded={isExpanded}>
+	<div 
+        class="climb-header" 
+        role="button" 
+        tabindex="0" 
+        onclick={toggleExpand} 
+        onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleExpand()}
+        aria-expanded={isExpanded}
+    >
 		<div class="climb-main-info">
 			<span class="grade-badge" class:sport={climb.isSport}>{climb.grade}</span>
 			<span class="climb-name">{climb.name || 'Unnamed Route'}</span>
@@ -38,9 +51,10 @@
 					<span class="attempts-count">({climb.attemptsNum})</span>
 				{/if}
 			</span>
+            <button class="delete-btn" onclick={handleDelete} aria-label="Delete climb" title="Delete climb">🗑️</button>
 			<span class="chevron">{isExpanded ? '▲' : '▼'}</span>
 		</div>
-	</button>
+	</div>
 
 	{#if isExpanded}
 		<div class="climb-details" transition:slide={{ duration: 150 }}>
@@ -147,6 +161,22 @@
 		color: var(--gold-secondary);
 		font-weight: 600;
 	}
+
+    .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+        font-size: 1rem;
+    }
+    
+    .delete-btn:hover {
+        opacity: 1;
+        background: rgba(255, 0, 0, 0.1);
+        border-radius: 4px;
+    }
 
 	.chevron {
 		color: var(--text-secondary);

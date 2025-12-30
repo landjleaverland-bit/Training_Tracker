@@ -177,8 +177,11 @@
 			<div class="climbs-list">
 				<h4>Climbs</h4>
 				<div class="climbs-container">
-					{#each session.climbs as climb}
-						<OutdoorClimbEntry {climb} />
+					{#each session.climbs as climb, i}
+						<OutdoorClimbEntry 
+							{climb} 
+							onDelete={() => handleClimbDelete(i)}
+						/>
 					{/each}
 					{#if session.climbs.length === 0}
 						<p class="no-climbs">No climbs logged for this session.</p>

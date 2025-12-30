@@ -35,6 +35,7 @@
 	let sessionType = $state(''); // Maps to trainingType in data
 	let grade = $state('');
     let isOtherArea = $state(false);
+    let isOtherCrag = $state(false);
 
 	// Reactive crag list based on selected area
     // If area is 'Other', we don't fetch crags
@@ -54,14 +55,11 @@
         } else {
             isOtherArea = false;
         }
-            isOtherArea = false;
-        }
+
         crag = ''; // Reset crag
         isOtherCrag = false;
         applyFilters();
     }
-    
-    let isOtherCrag = $state(false);
     
     function onCragChange() {
         if (crag === 'Other') {

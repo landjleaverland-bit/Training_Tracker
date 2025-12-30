@@ -879,9 +879,7 @@
         border-bottom-right-radius: 8px;
         border-left: 1.5px solid rgba(74, 155, 155, 0.3);
     }
-</style>
-		color: #d9534f;
-	}
+
 
 	.submit-btn {
 		padding: 0.75rem 2rem;
