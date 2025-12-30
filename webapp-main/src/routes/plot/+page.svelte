@@ -121,7 +121,7 @@
         if (['week', 'month', 'specific_week', 'specific_month'].includes(timeRange)) {
             return 'day';
         }
-        return 'week';
+        return 'week' as 'week' | 'day';
     });
 
     // Determine date range for zero-filling

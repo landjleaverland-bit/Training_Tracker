@@ -352,6 +352,19 @@
 		to { transform: rotate(360deg); }
 	}
 
+    .session-card {
+        background: white; border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;
+        overflow: hidden;
+        content-visibility: auto; 
+		contain-intrinsic-size: 100px;
+    }
+
+    .card-header {
+        width: 100%; display: flex; justify-content: space-between; align-items: flex-start;
+        padding: 0.8rem 1rem; background: white; border: none; cursor: pointer; text-align: left;
+    }
+
     .timeline {
         display: flex;
         flex-direction: column;

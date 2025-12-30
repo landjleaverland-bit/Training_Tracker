@@ -2,6 +2,7 @@
 	// Single climb entry row component
 	import { slide } from 'svelte/transition';
 
+
 	interface Props {
 		climb: {
 			isSport: boolean;

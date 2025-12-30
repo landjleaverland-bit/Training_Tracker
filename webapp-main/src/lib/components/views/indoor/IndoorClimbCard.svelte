@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Indoor Climb Session Card
 	import { slide } from 'svelte/transition';
+
 	import type { IndoorClimbSession } from '$lib/types/session';
 	import IndoorClimbEntry from './IndoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
@@ -300,6 +301,8 @@
 		margin-bottom: 1rem;
 		overflow: hidden;
 		transition: box-shadow 0.2s ease, border-color 0.2s ease;
+		content-visibility: auto; 
+		contain-intrinsic-size: 100px; /* Approximate height */
 	}
 
 	@media (max-width: 480px) {

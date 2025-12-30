@@ -319,6 +319,8 @@
         background: white; border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;
         overflow: hidden;
+        content-visibility: auto; 
+		contain-intrinsic-size: 100px;
     }
 
     .card-header {
