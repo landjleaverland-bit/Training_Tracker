@@ -3,9 +3,21 @@
  * Handles batch sync of pending sessions
  */
 
-import { getPendingSessions, markAsSynced, markAsSyncError } from './cache';
-import { createIndoorSession, isOnline } from './api';
-import type { Session, IndoorClimbSession } from '$lib/types/session';
+import { getPendingSessions, markAsSynced, markAsSyncError, updateSessionId } from './cache';
+import {
+    createIndoorSession,
+    createOutdoorSession,
+    createFingerboardSession,
+    createCompetitionSession,
+    isOnline
+} from './api';
+import type {
+    Session,
+    IndoorClimbSession,
+    OutdoorClimbSession,
+    FingerboardSession,
+    CompetitionSession
+} from '$lib/types/session';
 
 export interface SyncResult {
     success: number;
@@ -34,7 +46,18 @@ export async function syncAllPending(): Promise<SyncResult> {
         try {
             const syncResult = await syncSession(session);
             if (syncResult.ok) {
-                markAsSynced(session.id);
+                // If server returned a new ID, update local session to match
+                if (syncResult.id && syncResult.id !== session.id) {
+                    const updated = updateSessionId(session.id, syncResult.id);
+                    if (updated) {
+                        markAsSynced(syncResult.id);
+                    } else {
+                        // This shouldn't happen, but fallback to syncing the old ID if update failed
+                        markAsSynced(session.id);
+                    }
+                } else {
+                    markAsSynced(session.id);
+                }
                 result.success++;
             } else {
                 markAsSyncError(session.id);
@@ -54,20 +77,25 @@ export async function syncAllPending(): Promise<SyncResult> {
 /**
  * Sync a single session based on its type
  */
-async function syncSession(session: Session): Promise<{ ok: boolean; error?: string }> {
+async function syncSession(session: Session): Promise<{ ok: boolean; id?: string; error?: string }> {
     switch (session.activityType) {
         case 'indoor_climb':
             return syncIndoorClimbSession(session as IndoorClimbSession);
-        // Add other activity types here as they're implemented
+        case 'outdoor_climb':
+            return syncOutdoorSession(session as OutdoorClimbSession);
+        case 'fingerboarding':
+            return syncFingerboardSession(session as FingerboardSession);
+        case 'competition':
+            return syncCompetitionSession(session as CompetitionSession);
         default:
-            return { ok: false, error: `Unknown activity type: ${session.activityType}` };
+            return { ok: false, error: `Unknown activity type: ${(session as any).activityType}` };
     }
 }
 
 /**
  * Sync an indoor climb session
  */
-async function syncIndoorClimbSession(session: IndoorClimbSession): Promise<{ ok: boolean; error?: string }> {
+async function syncIndoorClimbSession(session: IndoorClimbSession): Promise<{ ok: boolean; id?: string; error?: string }> {
     const payload = {
         date: session.date,
         location: session.location,
@@ -86,6 +114,61 @@ async function syncIndoorClimbSession(session: IndoorClimbSession): Promise<{ ok
     };
 
     return createIndoorSession(payload);
+}
+
+/**
+ * Sync an outdoor climb session
+ */
+async function syncOutdoorSession(session: OutdoorClimbSession): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const payload = {
+        date: session.date,
+        area: session.area,
+        crag: session.crag,
+        sector: session.sector,
+        climbingType: session.climbingType,
+        trainingType: session.trainingType,
+        difficulty: session.difficulty,
+        category: session.category,
+        energySystem: session.energySystem,
+        techniqueFocus: session.techniqueFocus,
+        fingerLoad: session.fingerLoad,
+        shoulderLoad: session.shoulderLoad,
+        forearmLoad: session.forearmLoad,
+        climbs: session.climbs
+    };
+
+    return createOutdoorSession(payload);
+}
+
+/**
+ * Sync a fingerboard session
+ */
+async function syncFingerboardSession(session: FingerboardSession): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const payload = {
+        date: session.date,
+        location: session.location,
+        exercises: session.exercises
+    };
+
+    return createFingerboardSession(payload);
+}
+
+/**
+ * Sync a competition session
+ */
+async function syncCompetitionSession(session: CompetitionSession): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const payload = {
+        date: session.date,
+        venue: session.venue,
+        customVenue: session.customVenue,
+        type: session.type,
+        fingerLoad: session.fingerLoad,
+        shoulderLoad: session.shoulderLoad,
+        forearmLoad: session.forearmLoad,
+        rounds: session.rounds
+    };
+
+    return createCompetitionSession(payload);
 }
 
 /**

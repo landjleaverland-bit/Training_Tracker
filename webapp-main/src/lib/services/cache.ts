@@ -234,3 +234,37 @@ export function getFingerboardSessions(): FingerboardSession[] {
 export function getCompetitionSessions(): CompetitionSession[] {
     return getSessionsByType('competition') as CompetitionSession[];
 }
+/**
+ * Merge remote sessions into local cache
+ * Only adds sessions that don't already exist locally (by ID)
+ * This ensures we don't overwrite local pending changes or create duplicates
+ */
+export function mergeSessions(remoteSessions: Session[]): void {
+    const localSessions = getAllSessions();
+    const localIds = new Set(localSessions.map(s => s.id));
+    let hasChanges = false;
+
+    for (const remote of remoteSessions) {
+        if (!localIds.has(remote.id)) {
+            // It's a new session we don't have locally
+            localSessions.push({
+                ...remote,
+                syncStatus: 'synced', // It came from remote, so it's synced
+                syncedAt: now()
+            } as Session);
+            hasChanges = true;
+        } else {
+            // We have it locally.
+            // If the local one is 'synced', we could potentially update it if the remote is newer.
+            // But for now, let's prioritize local state to avoid overwriting pending edits.
+            // If we wanted to support multi-device sync more robustly, we'd check timestamps here.
+
+            // OPTIONAL: If local is 'synced' and remote is different, we could update.
+            // strict deduplication is the primary goal here.
+        }
+    }
+
+    if (hasChanges) {
+        saveAllSessions(localSessions);
+    }
+}

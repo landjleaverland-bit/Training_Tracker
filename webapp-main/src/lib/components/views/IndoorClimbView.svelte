@@ -93,8 +93,20 @@
 		applyFilters();
 	}
 
+	interface SessionGroup {
+		id: string; // Composite key
+		date: string;
+		sessions: IndoorClimbSession[]; // The underlying sessions
+		locationLabel: string;
+		gradeLabel: string;
+		climbCount: number;
+	}
+
+	let groupedSessions = $state<SessionGroup[]>([]);
+
 	function applyFilters() {
-		filteredSessions = sessions.filter(session => {
+		// 1. Filter raw sessions first
+		const filtered = sessions.filter(session => {
 			// Date Range
 			if (filters.startDate && session.date < filters.startDate) return false;
 			if (filters.endDate && session.date > filters.endDate) return false;
@@ -114,6 +126,40 @@
 
 			return true;
 		});
+
+		// 2. Group them
+		// Key: date|location|climbingType
+		const groups: Record<string, IndoorClimbSession[]> = {};
+		
+		filtered.forEach(s => {
+			const loc = s.customLocation || s.location;
+			const key = `${s.date}|${loc}|${s.climbingType}`;
+			if (!groups[key]) groups[key] = [];
+			groups[key].push(s);
+		});
+
+		// 3. Convert to SessionGroup objects
+		groupedSessions = Object.entries(groups).map(([key, groupSessions]) => {
+			const rep = groupSessions[0];
+			const loc = rep.customLocation || rep.location;
+			
+			const allGrades = groupSessions.flatMap(s => s.climbs.map(c => c.grade));
+			const uniqueGrades = [...new Set(allGrades)];
+			const gradeLabel = uniqueGrades.length > 3 
+				? `${uniqueGrades.length} grades`
+				: uniqueGrades.join(', ');
+
+			return {
+				id: key,
+				date: rep.date,
+				sessions: groupSessions,
+				locationLabel: loc,
+				gradeLabel,
+				climbCount: groupSessions.reduce((acc, s) => acc + s.climbs.length, 0)
+			};
+		}).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+		
+		filteredSessions = filtered;
 	}
 </script>
 
@@ -151,11 +197,17 @@
 	</div>
 
 	<div class="sessions-list">
-		{#each filteredSessions as session (session.id)}
-			<IndoorClimbCard {session} />
+		{#each groupedSessions as group (group.id)}
+			<!-- Create Virtual Merged Session -->
+			{@const mergedSession = {
+				...group.sessions[0],
+				climbs: group.sessions.flatMap(s => s.climbs),
+				syncStatus: (group.sessions.every(s => s.syncStatus === 'synced') ? 'synced' : 'pending') as 'synced' | 'pending' | 'error'
+			}}
+			<IndoorClimbCard session={mergedSession} />
 		{/each}
 		
-		{#if filteredSessions.length === 0}
+		{#if groupedSessions.length === 0}
 			<div class="empty-state">
 				<p>No indoor climbing sessions found.</p>
 				{#if sessions.length > 0}
