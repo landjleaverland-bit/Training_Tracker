@@ -119,9 +119,15 @@
 			<div class="details-grid">
 				<div class="detail-item">
 					<span class="label">Training Type</span>
-					<span class="value">
-                        {session.trainingTypes?.length ? session.trainingTypes.join(', ') : 'None'}
-                    </span>
+					<div class="value-chips">
+                        {#if session.trainingTypes && session.trainingTypes.length > 0 && !session.trainingTypes.includes('None')}
+                            {#each session.trainingTypes as item}
+                                <span class="chip">{item}</span>
+                            {/each}
+                        {:else}
+                            <span class="text-none">None</span>
+                        {/if}
+                    </div>
 				</div>
 				{#if session.difficulty}
 					<div class="detail-item">
@@ -132,33 +138,57 @@
 				{#if session.categories?.length}
 					<div class="detail-item">
 						<span class="label">Category</span>
-						<span class="value">
-                            {session.categories.join(', ')}
-                        </span>
+						<div class="value-chips">
+                            {#if session.categories.length > 0 && !session.categories.includes('None')}
+                                {#each session.categories as item}
+                                    <span class="chip">{item}</span>
+                                {/each}
+                            {:else}
+                                <span class="text-none">None</span>
+                            {/if}
+                        </div>
 					</div>
 				{/if}
 				{#if session.techniqueFocuses?.length}
 					<div class="detail-item">
 						<span class="label">Focus</span>
-						<span class="value">
-                            {session.techniqueFocuses.join(', ')}
-                        </span>
+						<div class="value-chips">
+                            {#if session.techniqueFocuses.length > 0 && !session.techniqueFocuses.includes('None')}
+                                {#each session.techniqueFocuses as item}
+                                    <span class="chip">{item}</span>
+                                {/each}
+                            {:else}
+                                <span class="text-none">None</span>
+                            {/if}
+                        </div>
 					</div>
 				{/if}
                 {#if session.energySystems?.length}
 					<div class="detail-item">
 						<span class="label">Energy System</span>
-						<span class="value">
-                            {session.energySystems.join(', ')}
-                        </span>
+						<div class="value-chips">
+                            {#if session.energySystems.length > 0 && !session.energySystems.includes('None')}
+                                {#each session.energySystems as item}
+                                    <span class="chip">{item}</span>
+                                {/each}
+                            {:else}
+                                <span class="text-none">None</span>
+                            {/if}
+                        </div>
 					</div>
 				{/if}
                 {#if session.wallAngles?.length}
 					<div class="detail-item">
 						<span class="label">Wall Angle</span>
-						<span class="value">
-                            {session.wallAngles.join(', ')}
-                        </span>
+						<div class="value-chips">
+                            {#if session.wallAngles.length > 0 && !session.wallAngles.includes('None')}
+                                {#each session.wallAngles as item}
+                                    <span class="chip">{item}</span>
+                                {/each}
+                            {:else}
+                                <span class="text-none">None</span>
+                            {/if}
+                        </div>
 					</div>
 				{/if}
 			</div>
@@ -423,6 +453,30 @@
 		color: var(--text-primary);
 		font-size: 0.95rem;
 	}
+
+    .value-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.1rem;
+    }
+
+    .chip {
+        background: rgba(74, 155, 155, 0.1);
+        color: var(--teal-secondary);
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .text-none {
+        color: var(--text-secondary);
+        font-style: italic;
+        font-size: 0.9rem;
+        opacity: 0.7;
+    }
 
 	.metrics-container {
 		display: flex;
