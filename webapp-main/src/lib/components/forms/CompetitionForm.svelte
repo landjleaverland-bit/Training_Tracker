@@ -332,6 +332,18 @@
     .col-status select { min-width: 90px; }
     .col-action button { background: none; border: none; color: #d9534f; cursor: pointer; padding: 0.5rem; }
     
+    .col-notes { position: relative; min-width: 40px; }
+    .col-notes input:focus {
+        position: absolute;
+        right: 0;
+        width: 220px;
+        max-width: 70vw;
+        z-index: 10;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
     .add-row-btn {
         width: 100%;
         margin-top: 0.5rem;

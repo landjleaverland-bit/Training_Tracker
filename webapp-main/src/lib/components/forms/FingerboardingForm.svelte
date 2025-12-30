@@ -324,7 +324,7 @@
 
 	.card-footer {
 		display: grid;
-		grid-template-columns: 80px 1fr;
+		grid-template-columns: 80px minmax(0, 1fr);
 		gap: 0.5rem;
 		border-top: 1px solid #eee;
 		padding-top: 1rem;
@@ -342,6 +342,7 @@
 	}
 
 	.meta-input input, .notes-input input {
+		width: 100%;
 		padding: 0.4rem;
 		border: 1px solid #ddd;
 		border-radius: 6px;
