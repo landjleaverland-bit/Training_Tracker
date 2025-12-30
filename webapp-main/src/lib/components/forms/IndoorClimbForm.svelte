@@ -12,7 +12,7 @@
 	];
 
 	const climbingTypes = ['Bouldering', 'Sport', 'Mixed'];
-	const attemptTypes = ['Flash', 'Redpoint', 'Dogged'];
+	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Dogged', 'DNF'];
 
 	// Training classification options
 	const trainingTypes = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
@@ -90,7 +90,7 @@
 
 	function handleAttemptTypeChange(index: number, value: string) {
 		climbs[index].attemptType = value;
-		if (value === 'Flash') {
+		if (value === 'Flash' || value === 'Onsight') {
 			climbs[index].attemptsNum = 1;
 		}
 	}
