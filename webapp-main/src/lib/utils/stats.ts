@@ -1,0 +1,246 @@
+import * as d3 from 'd3';
+import type { Session, IndoorClimbSession, OutdoorClimbSession, FingerboardSession } from '$lib/types/session';
+
+// --- Types ---
+
+export interface ChartDataPoint {
+    label: string;
+    value: number;
+    color?: string;
+}
+
+export interface TimeSeriesPoint {
+    date: Date;
+    value: number;
+    series: string; // e.g., "Crimp", "Sloper", "Training"
+}
+
+// --- Helpers ---
+
+const isClimbing = (s: Session): boolean =>
+    s.activityType === 'indoor_climb' || s.activityType === 'outdoor_climb';
+
+const isFingerboard = (s: Session): boolean =>
+    s.activityType === 'fingerboarding';
+
+const getSessionDate = (s: Session): Date => new Date(s.date);
+
+// --- 1. General Activity & Volume ---
+
+export function getClimbingVsRestStats(sessions: Session[]): ChartDataPoint[] {
+    if (sessions.length === 0) return [];
+
+    const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const firstDate = new Date(sorted[0].date);
+    const lastDate = new Date(); // Today
+
+    // Calculate total days in range
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay) + 1;
+
+    // Count climbing days (unique dates where activity is climb)
+    const climbingDays = new Set(
+        sessions
+            .filter(isClimbing)
+            .map(s => s.date.split('T')[0])
+    ).size;
+
+    const restDays = Math.max(0, totalDays - climbingDays);
+
+    return [
+        { label: 'Climbing Days', value: climbingDays, color: '#4A9B9B' },
+        { label: 'Rest Days', value: restDays, color: '#E5E7EB' }
+    ];
+}
+
+export function getFingerboardingConsistency(sessions: Session[]): ChartDataPoint[] {
+    if (sessions.length === 0) return [];
+
+    const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const firstDate = new Date(sorted[0].date);
+    const lastDate = new Date();
+
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay) + 1;
+
+    const fbDays = new Set(
+        sessions
+            .filter(isFingerboard)
+            .map(s => s.date.split('T')[0])
+    ).size;
+
+    return [
+        { label: 'Fingerboarding', value: fbDays, color: '#F4C430' },
+        { label: 'No Fingerboarding', value: Math.max(0, totalDays - fbDays), color: '#E5E7EB' }
+    ];
+}
+
+export function getSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
+    const counts: Record<string, number> = {};
+
+    sessions.forEach(s => {
+        let typeLabel = formatActivityType(s.activityType);
+
+        // Refine climbing types
+        if (s.activityType === 'indoor_climb' || s.activityType === 'outdoor_climb') {
+            const climb = s as IndoorClimbSession | OutdoorClimbSession;
+            typeLabel = `${s.activityType === 'indoor_climb' ? 'Indoor' : 'Outdoor'} ${climb.climbingType || 'Climb'}`;
+        }
+
+        counts[typeLabel] = (counts[typeLabel] || 0) + 1;
+    });
+
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
+}
+
+function formatActivityType(type: string): string {
+    return type.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+
+// --- 2. Training System Breakdown ---
+
+export function getTrainingSystemStats(sessions: Session[]): ChartDataPoint[] {
+    const systems: Record<string, number> = {};
+
+    sessions.forEach(s => {
+        const climb = s as IndoorClimbSession | OutdoorClimbSession;
+        if (climb.energySystems) {
+            climb.energySystems.forEach(sys => {
+                systems[sys] = (systems[sys] || 0) + 1;
+            });
+        }
+    });
+
+    return Object.entries(systems)
+        .map(([label, value]) => ({ label, value }))
+        .sort((a, b) => b.value - a.value);
+}
+
+// --- 3. Performance Grade Pyramids ---
+export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead'): ChartDataPoint[] {
+    const grades: Record<string, number> = {};
+
+    sessions.forEach(s => {
+        if (!isClimbing(s)) return;
+        const climbSession = s as IndoorClimbSession | OutdoorClimbSession;
+
+        climbSession.climbs?.forEach(c => {
+            // Use explicit isSport flag if available
+            const isSport = c.isSport;
+
+            if (type === 'lead' && isSport) {
+                grades[c.grade] = (grades[c.grade] || 0) + 1;
+            } else if (type === 'boulder' && !isSport) {
+                grades[c.grade] = (grades[c.grade] || 0) + 1;
+            }
+        });
+    });
+
+    return Object.entries(grades)
+        .map(([label, value]) => ({ label, value }))
+        .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+}
+
+// --- 4. Venue & Location ---
+
+export function getIndoorLocationStats(sessions: Session[]): ChartDataPoint[] {
+    const locs: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'indoor_climb') {
+            const loc = (s as IndoorClimbSession).location;
+            if (loc) locs[loc] = (locs[loc] || 0) + 1;
+        }
+    });
+
+    return Object.entries(locs).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+}
+
+// --- 5. Periodization (Time Series) ---
+
+export function getWeeklyLoadStats(sessions: Session[]): TimeSeriesPoint[] {
+    // Group by week
+    const weeks: Record<string, number> = {};
+    const weekFormat = d3.timeFormat("%Y-%W");
+
+    sessions.forEach(s => {
+        const date = getSessionDate(s);
+        const weekKey = weekFormat(date); // e.g., "2024-05"
+
+        // Calculate abstract load (sum of finger/shoulder/forearm load)
+        let load = 0;
+        if (isClimbing(s)) {
+            const c = s as IndoorClimbSession; // or Outdoor, fields satisfy structural shape
+            load = (c.fingerLoad || 0) + (c.shoulderLoad || 0) + (c.forearmLoad || 0);
+        } else if (s.activityType === 'competition') {
+            const c = s as unknown as any; // CompetitionSession
+            load = (c.fingerLoad || 0) + (c.shoulderLoad || 0) + (c.forearmLoad || 0);
+        }
+
+        weeks[weekKey] = (weeks[weekKey] || 0) + load;
+    });
+
+    // Convert back to array
+    const weekParse = d3.timeParse("%Y-%W");
+    return Object.entries(weeks).map(([key, value]) => ({
+        date: weekParse(key) || new Date(),
+        value,
+        series: 'Total Load'
+    })).sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+// --- 6. Finger Strength & Grip Load ---
+
+export function getMaxHangStats(sessions: Session[]): TimeSeriesPoint[] {
+    const points: TimeSeriesPoint[] = [];
+
+    sessions.filter(isFingerboard).forEach(s => {
+        const fb = s as FingerboardSession;
+        const date = getSessionDate(fb);
+
+        fb.exercises.forEach(ex => {
+            const maxWeight = Math.max(...ex.details.map(set => set.weight));
+            if (maxWeight > 0) {
+                points.push({
+                    date,
+                    value: maxWeight,
+                    series: ex.gripType
+                });
+            }
+        });
+    });
+
+    return points.sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+export function getGripLoadStats(sessions: Session[]): TimeSeriesPoint[] {
+    const weeks: Record<string, Record<string, number>> = {}; // week -> series -> value
+    const weekFormat = d3.timeFormat("%Y-%W");
+
+    sessions.filter(isClimbing).forEach(s => {
+        const c = s as IndoorClimbSession; // Shape compatible for grip fields
+        const date = getSessionDate(c);
+        const weekKey = weekFormat(date);
+
+        if (!weeks[weekKey]) weeks[weekKey] = {};
+
+        // Aggregate loads (Summing them for "Weekly Load")
+        if (c.crimpGrip) weeks[weekKey]['Crimp'] = (weeks[weekKey]['Crimp'] || 0) + c.crimpGrip;
+        if (c.openGrip) weeks[weekKey]['Open Hand'] = (weeks[weekKey]['Open Hand'] || 0) + c.openGrip;
+        if (c.pinchGrip) weeks[weekKey]['Pinch'] = (weeks[weekKey]['Pinch'] || 0) + c.pinchGrip;
+        if (c.sloperGrip) weeks[weekKey]['Sloper'] = (weeks[weekKey]['Sloper'] || 0) + c.sloperGrip;
+        if (c.jugGrip) weeks[weekKey]['Jug'] = (weeks[weekKey]['Jug'] || 0) + c.jugGrip;
+    });
+
+    const parsedData: TimeSeriesPoint[] = [];
+    const weekParse = d3.timeParse("%Y-%W");
+
+    Object.entries(weeks).forEach(([weekKey, seriesData]) => {
+        const date = weekParse(weekKey) || new Date();
+        Object.entries(seriesData).forEach(([series, value]) => {
+            parsedData.push({ date, value, series });
+        });
+    });
+
+    return parsedData.sort((a, b) => a.date.getTime() - b.date.getTime());
+}

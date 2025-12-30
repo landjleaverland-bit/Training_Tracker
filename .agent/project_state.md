@@ -87,3 +87,25 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
 * **UI Modularization:** Distinct UI elements are split into separate files/folders. Shared components require strict documentation in Project State to prevent regression.
 * **Deployment:** Using 'gh-pages' branch to separate source code (main) from production build artifacts.
 * **Form-to-Page Communication:** Forms dispatch `window.dispatchEvent(new CustomEvent('session-saved'))` after saving sessions. Parent pages listen for this event to update sync banner pending counts.
+
+## 7. Visualization & Plotting
+* **Plot Data Tab** (`/plot`):
+  - **Technology:** Svelte 5 Runes (`$state`, `$derived`, `$props`) + D3.js (for scales and path generation).
+  - **Components (`$lib/components/`)**:
+    - `PieChart.svelte`: Donut-style, with external responsive legend suitable for mobile. Center hole displays total count.
+    - `BarChart.svelte`: Supports both Vertical and Horizontal orientations to handle long labels (e.g., Venue names) on mobile.
+    - `LineChart.svelte`: Supports Multi-Series plotting (multiple lines) with auto-generated legend.
+  - **Logic (`$lib/utils/stats.ts`)**:
+    - Aggregates data purely from the local cache (`getAllSessions()`).
+    - **Logic handled:**
+      - "Rest Days" calculated against the full date range of logs.
+      - "Weekly Load" (Finger+Shoulder+Forearm sum) aggregated by week.
+      - "Grip Load" (Subjective 1-5) grouped by grip type (Crimp, Open Hand, etc.) and week.
+      - "Grade Pyramids" split distinctly between **Boulder** (non-sport) and **Lead/Sport** climbs.
+  - **Views (Dropdown Controlled):**
+    1. General Activity (Pie Charts: Climb vs Rest, Fingerboard Consistency).
+    2. Training Systems (Horizontal Bar).
+    3. Performance Grade Pyramids (Vertical Bar, split Boulder/Lead).
+    4. Venue Analysis (Horizontal Bar).
+    5. Periodization (Monthly/Weekly Load Bar).
+    6. Finger Strength (Multi-line charts for Grip Load and Max Hang).

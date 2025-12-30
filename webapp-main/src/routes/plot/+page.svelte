@@ -1,106 +1,374 @@
 <script lang="ts">
-	import LineChart from '$lib/components/LineChart.svelte';
+    import { onMount } from 'svelte';
+    import { getAllSessions } from '$lib/services/cache';
+    import type { Session } from '$lib/types/session';
+    import { 
+        getClimbingVsRestStats, 
+        getFingerboardingConsistency, 
+        getSessionTypeBreakdown,
+        getTrainingSystemStats,
+        getGradeStats,
+        getIndoorLocationStats,
+        getWeeklyLoadStats,
+        getMaxHangStats,
+        getGripLoadStats
+    } from '$lib/utils/stats';
+    import * as d3 from 'd3';
+    
+    import PieChart from '$lib/components/PieChart.svelte';
+    import BarChart from '$lib/components/BarChart.svelte';
+    import LineChart from '$lib/components/LineChart.svelte';
 
-	// Plot Data page - for visualizing training progress
+    let sessions = $state<Session[]>([]);
+    let selectedView = $state('general');
 
-	// Sample data generation
-	const generateData = () => {
-		const data = [];
-		const startDate = new Date('2024-01-01');
-		for (let i = 0; i < 30; i++) {
-			const date = new Date(startDate);
-			date.setDate(startDate.getDate() + i);
-			// Random value between 10 and 50 with some trend
-			const value = 10 + i + Math.random() * 10;
-			data.push({ date, value });
-		}
-		return data;
-	};
+    onMount(() => {
+        sessions = getAllSessions();
+    });
 
-	let sampleData = $state(generateData());
+    // --- Derived Data for Views ---
 
-	// Dimensions
-	let width = 800;
-	let height = 400;
+    // 1. General
+    let climbVsRest = $derived(getClimbingVsRestStats(sessions));
+    let fbConsistency = $derived(getFingerboardingConsistency(sessions));
+    let sessionTypes = $derived(getSessionTypeBreakdown(sessions));
+
+    // 2. Training Systems
+    let trainingSystems = $derived(getTrainingSystemStats(sessions));
+
+    // 3. Performance Grade
+    let boulderGrades = $derived(getGradeStats(sessions, 'boulder'));
+    let leadGrades = $derived(getGradeStats(sessions, 'lead'));
+
+    // 4. Venue
+    let indoorVenues = $derived(getIndoorLocationStats(sessions));
+
+    // 5. Periodization
+    let weeklyLoad = $derived(getWeeklyLoadStats(sessions));
+
+    // 6. Finger Strength
+    let maxHangData = $derived(getMaxHangStats(sessions));
+    let gripLoadData = $derived(getGripLoadStats(sessions));
+
+
+    // View Options
+    const views = [
+        { id: 'general', label: 'General Activity & Volume' },
+        { id: 'systems', label: 'Training System Breakdown' },
+        { id: 'grades', label: 'Performance Grade Pyramids' },
+        { id: 'venues', label: 'Venue & Location Analysis' },
+        { id: 'periodization', label: 'Periodization & Planning' },
+        { id: 'strength', label: 'Finger Strength Metrics' },
+    ];
+
+    let currentViewLabel = $derived(views.find(v => v.id === selectedView)?.label);
+
 </script>
 
 <div class="page">
-	<div class="page-header">
-		<h1>📈 Plot Data</h1>
-		<p class="subtitle">Visualize your progress</p>
-	</div>
-	
-	<div class="content-card">
-		{#if sampleData.length > 0}
-			<div class="chart-wrapper">
-				<h3>Performance Trend</h3>
-				<LineChart
-					data={sampleData}
-					xAccessor={(d) => d.date}
-					yAccessor={(d) => d.value}
-					{width}
-					{height}
-					color="var(--teal-primary)"
-				/>
-			</div>
-		{:else}
-			<p class="placeholder-text">No data available to plot.</p>
-		{/if}
-	</div>
+    <div class="page-header">
+        <h1>📈 Plot Data</h1>
+        <p class="subtitle">Visualize your progress</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-card">
+        <label for="view-select">Select Analysis:</label>
+        <div class="select-wrapper">
+            <select id="view-select" bind:value={selectedView}>
+                {#each views as view}
+                    <option value={view.id}>{view.label}</option>
+                {/each}
+            </select>
+            <div class="select-arrow">▼</div>
+        </div>
+    </div>
+    
+    <!-- Content Area -->
+    <div class="content-card">
+        <h2 class="view-title">{currentViewLabel}</h2>
+
+        {#if sessions.length === 0}
+            <div class="empty-state">
+                <p>No sessions found. Log some data to see charts!</p>
+            </div>
+        {:else}
+            
+            {#if selectedView === 'general'}
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Climbing vs Rest</h3>
+                        <PieChart data={climbVsRest} valueAccessor={d => d.value} labelAccessor={d => d.label} colorAccesor={d => d.color} />
+                    </div>
+                    <div class="chart-card">
+                        <h3>Fingerboarding Consistency</h3>
+                        <PieChart data={fbConsistency} valueAccessor={d => d.value} labelAccessor={d => d.label} colorAccesor={d => d.color} />
+                    </div>
+                    <div class="chart-card full-width">
+                        <h3>Session Type Breakdown</h3>
+                        <BarChart 
+                            data={sessionTypes} 
+                            xAccessor={d => d.label} 
+                            yAccessor={d => d.value} 
+                            orientation="vertical"
+                            height={300}
+                        />
+                    </div>
+                </div>
+
+            {:else if selectedView === 'systems'}
+                <div class="chart-card full-width">
+                    <h3>Energy Systems Profile</h3>
+                    {#if trainingSystems.length > 0}
+                        <BarChart 
+                            data={trainingSystems} 
+                            xAccessor={d => d.label} 
+                            yAccessor={d => d.value} 
+                            orientation="horizontal"
+                            marginLeft={140}
+                            color="#E6B72B"
+                        />
+                    {:else}
+                        <p class="no-data">No energy system data recorded.</p>
+                    {/if}
+                </div>
+
+            {:else if selectedView === 'grades'}
+                <div class="chart-grid">
+                    <div class="chart-card full-width">
+                        <h3>Boulder Grade Pyramid</h3>
+                        {#if boulderGrades.length > 0}
+                             <BarChart 
+                                data={boulderGrades} 
+                                xAccessor={d => d.label} 
+                                yAccessor={d => d.value} 
+                                orientation="vertical"
+                                color="#4A9B9B"
+                            />
+                        {:else}
+                            <p class="no-data">No climbs with grades recorded.</p>
+                        {/if}
+                    </div>
+
+                    <div class="chart-card full-width">
+                        <h3>Lead/Sport Grade Pyramid</h3>
+                        {#if leadGrades.length > 0}
+                             <BarChart 
+                                data={leadGrades} 
+                                xAccessor={d => d.label} 
+                                yAccessor={d => d.value} 
+                                orientation="vertical"
+                                color="#E6B72B"
+                            />
+                        {:else}
+                            <p class="no-data">No sport climbs recorded.</p>
+                        {/if}
+                    </div>
+                </div>
+
+            {:else if selectedView === 'venues'}
+                <div class="chart-card full-width">
+                    <h3>Indoor Gym Frequency</h3>
+                    {#if indoorVenues.length > 0}
+                        <BarChart 
+                            data={indoorVenues} 
+                            xAccessor={d => d.label} 
+                            yAccessor={d => d.value} 
+                            orientation="horizontal"
+                            marginLeft={150}
+                            color="#2E8B8B"
+                        />
+                    {:else}
+                         <p class="no-data">No indoor sessions with location.</p>
+                    {/if}
+                </div>
+
+            {:else if selectedView === 'periodization'}
+                <div class="chart-card full-width">
+                    <h3>Weekly Training Load</h3>
+                    {#if weeklyLoad.length > 0}
+                         <BarChart 
+                            data={weeklyLoad} 
+                            xAccessor={d => d3.timeFormat("%Y-%W")(d.date)} 
+                            yAccessor={d => d.value} 
+                            orientation="vertical"
+                            color="#F4C430"
+                        />
+                    {:else}
+                        <p class="no-data">No load metrics available.</p>
+                    {/if}
+                </div>
+
+            {:else if selectedView === 'strength'}
+                 <div class="chart-grid">
+                    <div class="chart-card full-width">
+                        <h3>Weekly Grip Load (Subjective 1-5)</h3>
+                         {#if gripLoadData.length > 0}
+                            <LineChart 
+                                data={gripLoadData} 
+                                xAccessor={d => d.date} 
+                                yAccessor={d => d.value}
+                                zAccessor={d => d.series}
+                            />
+                        {:else}
+                             <p class="no-data">No grip load data recorded.</p>
+                        {/if}
+                    </div>
+
+                    <div class="chart-card full-width">
+                        <h3>Max Hang Progression (Kg)</h3>
+                        {#if maxHangData.length > 0}
+                            <LineChart 
+                                data={maxHangData} 
+                                xAccessor={d => d.date} 
+                                yAccessor={d => d.value}
+                                zAccessor={d => d.series}
+                            />
+                        {:else}
+                            <p class="no-data">No max hang data recorded in Fingerboarding sessions.</p>
+                        {/if}
+                    </div>
+                 </div>
+            {/if}
+
+        {/if}
+    </div>
 </div>
 
 <style>
-	.page {
-		animation: fadeIn 0.3s ease;
-	}
+    .page {
+        animation: fadeIn 0.3s ease;
+        padding-bottom: 2rem;
+    }
 
-	@keyframes fadeIn {
-		from { opacity: 0; transform: translateY(8px); }
-		to { opacity: 1; transform: translateY(0); }
-	}
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-	.page-header {
-		margin-bottom: 1.5rem;
-	}
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
 
-	.page-header h1 {
-		font-size: 1.75rem;
-		font-weight: 700;
-		color: var(--teal-secondary);
-		margin: 0 0 0.5rem 0;
-	}
+    .page-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--teal-secondary);
+        margin: 0 0 0.5rem 0;
+    }
 
-	.subtitle {
-		color: var(--text-secondary);
-		font-size: 1rem;
-		margin: 0;
-	}
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin: 0;
+    }
 
-	.content-card {
-		background: rgba(255, 255, 255, 0.9);
-		border-radius: 16px;
-		padding: 2rem;
-		box-shadow: 0 4px 20px rgba(74, 155, 155, 0.1);
-		border: 1px solid rgba(74, 155, 155, 0.15);
-		overflow-x: auto; /* Handle smaller screens */
-	}
+    .controls-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .controls-card label {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
 
-	.chart-wrapper {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
+    .select-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+    }
 
-	.chart-wrapper h3 {
-		color: var(--text-primary);
-		margin-bottom: 1rem;
-	}
+    select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        appearance: none;
+        background: white;
+        color: var(--text-primary);
+        cursor: pointer;
+    }
 
-	.placeholder-text {
-		color: var(--text-secondary);
-		font-style: italic;
-		text-align: center;
-		margin: 2rem 0;
-	}
+    .select-arrow {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+    }
+
+    .content-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(74, 155, 155, 0.1);
+        border: 1px solid rgba(74, 155, 155, 0.15);
+    }
+
+    .view-title {
+        color: var(--text-primary);
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--gold-primary);
+        display: inline-block;
+        padding-bottom: 0.25rem;
+    }
+
+    /* Grid Layout */
+    .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid #eee;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chart-card h3 {
+        margin-top: 0;
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+
+    .empty-state, .no-data {
+        text-align: center;
+        color: var(--text-secondary);
+        font-style: italic;
+        padding: 2rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .chart-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .content-card {
+            padding: 1rem;
+        }
+    }
 </style>

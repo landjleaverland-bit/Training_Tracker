@@ -5,23 +5,25 @@
 		data: any[];
 		xAccessor: (d: any) => Date;
 		yAccessor: (d: any) => number;
+        zAccessor?: (d: any) => string; // Series accessor
 		width?: number;
 		height?: number;
 		marginTop?: number;
 		marginRight?: number;
 		marginBottom?: number;
 		marginLeft?: number;
-		color?: string;
+		color?: string; // Fallback color if zAccessor not used
 	}
 
 	let {
 		data,
 		xAccessor,
 		yAccessor,
+        zAccessor,
 		width = 640,
 		height = 400,
 		marginTop = 20,
-		marginRight = 20,
+		marginRight = 100, // Increased for legendary legend
 		marginBottom = 30,
 		marginLeft = 40,
 		color = "steelblue"
@@ -41,14 +43,19 @@
 		.range([innerHeight, 0])
 		.nice());
 
+    let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
 	// Line Generator
 	let lineGenerator = $derived(d3.line<any>()
 		.x(d => xScale(xAccessor(d)))
 		.y(d => yScale(yAccessor(d)))
 		.curve(d3.curveMonotoneX));
 
-	// Path data
-	let pathD = $derived(lineGenerator(data) ?? "");
+    // Group data by series
+    let series = $derived(zAccessor 
+        ? d3.groups(data, zAccessor) 
+        : [[null, data]] // Single series
+    );
 
 	// Ticks
 	let xTicks = $derived(xScale.ticks(width / 80));
@@ -86,15 +93,29 @@
 				{/each}
 			</g>
 
-			<!-- Line Path -->
-			<path
-				d={pathD}
-				fill="none"
-				stroke={color}
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			/>
+			<!-- Lines -->
+            {#each series as [key, values]}
+                <path
+                    d={lineGenerator(values as any[]) ?? ""}
+                    fill="none"
+                    stroke={zAccessor && key ? colorScale(key as string) : color}
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+            {/each}
+
+            <!-- Legend (if multi-series) -->
+            {#if zAccessor}
+                <g transform="translate({innerWidth + 10}, 0)">
+                    {#each series as [key, _], i}
+                        <g transform="translate(0, {i * 20})">
+                            <rect width="10" height="10" fill={colorScale(key as string)} rx="2"/>
+                            <text x="15" y="9" font-size="10" fill="currentColor">{key}</text>
+                        </g>
+                    {/each}
+                </g>
+            {/if}
 		</g>
 	</svg>
 </div>
