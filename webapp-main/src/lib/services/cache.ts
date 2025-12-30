@@ -268,3 +268,28 @@ export function mergeSessions(remoteSessions: Session[]): void {
         saveAllSessions(localSessions);
     }
 }
+
+/**
+ * Update a session's ID (used after syncing when server provides a permanent ID)
+ */
+export function updateSessionId(oldId: string, newId: string): boolean {
+    const sessions = getAllSessions();
+    const index = sessions.findIndex(s => s.id === oldId);
+
+    if (index === -1) return false;
+
+    // Check if new ID already exists (shouldn't happen, but safety first)
+    if (sessions.some(s => s.id === newId)) {
+        console.warn('Cannot update session ID: new ID already exists');
+        return false;
+    }
+
+    sessions[index] = {
+        ...sessions[index],
+        id: newId
+    };
+
+    saveAllSessions(sessions);
+    return true;
+}
+
