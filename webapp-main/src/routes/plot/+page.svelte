@@ -376,7 +376,7 @@
                                 data={recruitmentData}
                                 xAccessor={d => d.date}
                                 yAccessor={d => d.value}
-                                 seriesAccessor={d => d.series}
+                                zAccessor={d => d.series}
                                 color="#9B59B6"
                             />
                         {:else}
@@ -391,7 +391,7 @@
                                 data={maxPickupData}
                                 xAccessor={d => d.date}
                                 yAccessor={d => d.value}
-                                 seriesAccessor={d => d.series}
+                                zAccessor={d => d.series}
                                 color="#3498DB"
                             />
                         {:else}
@@ -399,7 +399,6 @@
                         {/if}
                     </div>
                  </div>
-                </div>
             {:else if selectedView === 'load'}
                 <div class="chart-grid">
                     <!-- 7.1 Activities -->

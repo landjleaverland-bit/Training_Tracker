@@ -68,7 +68,12 @@
 			createdAt: new Date().toISOString(), // Fallback
 			updatedAt: new Date().toISOString(), // Fallback
 			syncStatus: 'synced', // It came from remote, so it's synced
-			syncedAt: new Date().toISOString()
+			syncedAt: new Date().toISOString(),
+            openGrip: 0,
+            crimpGrip: 0,
+            pinchGrip: 0,
+            sloperGrip: 0,
+            jugGrip: 0
 		}));
 
 		// Persist to local storage
