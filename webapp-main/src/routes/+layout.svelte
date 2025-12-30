@@ -4,6 +4,7 @@
 	import TabBar from '$lib/components/TabBar.svelte';
 	import Login from '$lib/components/Login.svelte';
 	import { isAuthenticated } from '$lib/services/auth';
+	import ReloadPrompt from '$lib/components/common/ReloadPrompt.svelte';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
@@ -43,6 +44,8 @@
 		</main>
 	</div>
 {/if}
+
+<ReloadPrompt />
 
 <style>
 	.loading-container {
