@@ -220,6 +220,18 @@ export function getOutdoorCragStats(sessions: Session[]): ChartDataPoint[] {
     return Object.entries(crags).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 }
 
+export function getOutdoorAreaStats(sessions: Session[]): ChartDataPoint[] {
+    const areas: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'outdoor_climb') {
+            const area = (s as OutdoorClimbSession).area;
+            if (area) areas[area] = (areas[area] || 0) + 1;
+        }
+    });
+
+    return Object.entries(areas).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+}
+
 // --- 5. Periodization (Time Series) ---
 
 export function getWeeklyLoadStats(sessions: Session[]): TimeSeriesPoint[] {

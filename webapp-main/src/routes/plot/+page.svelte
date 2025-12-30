@@ -10,6 +10,7 @@
         getGradeStats,
         getIndoorLocationStats,
         getOutdoorCragStats,
+        getOutdoorAreaStats,
         getWeeklyLoadStats,
         getMaxHangStats,
         getGripLoadStats
@@ -44,6 +45,7 @@
     // 4. Venue
     let indoorVenues = $derived(getIndoorLocationStats(sessions));
     let outdoorVenues = $derived(getOutdoorCragStats(sessions));
+    let outdoorAreas = $derived(getOutdoorAreaStats(sessions));
 
     // 5. Periodization
     let weeklyLoad = $derived(getWeeklyLoadStats(sessions));
@@ -195,6 +197,22 @@
                             orientation="horizontal"
                             marginLeft={150}
                             color="#F4C430"
+                        />
+                    {:else}
+                        <p class="no-data">No outdoor sessions recorded.</p>
+                    {/if}
+                </div>
+
+                <div class="chart-card full-width">
+                    <h3>Outdoor Area Frequency</h3>
+                    {#if outdoorAreas.length > 0}
+                        <BarChart 
+                            data={outdoorAreas} 
+                            xAccessor={d => d.label} 
+                            yAccessor={d => d.value} 
+                            orientation="horizontal"
+                            marginLeft={150}
+                            color="#8B4513"
                         />
                     {:else}
                         <p class="no-data">No outdoor sessions recorded.</p>
