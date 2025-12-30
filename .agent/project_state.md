@@ -24,21 +24,24 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
     - Conditional form components in `$lib/components/forms/`
     - **IndoorClimbForm**: date, location (6 options + Other), climbing_type, session_type, load metrics (finger/shoulder/forearm 1-5), climbs table (sport?, name, grade, attempt type, attempts)
     - **OutdoorClimbForm**: date, area (cascading dropdown -> crag), sector, climbing_type (Boulder/Sport/Trad), load metrics, climbs table
+    - **FingerboardingForm**: date, exercise cards (Name, Grip), multi-set logging (Weight/Reps), notes
+    - **CompetitionForm**: date, venue (list + Custom), type (Boulder/Lead/Speed), round configuration (Standard vs Result modes), dynamic climbs table or final position input
     - **Sync banner**: Shows when sessions are pending sync; includes "Sync Now" button when online, offline indicator when offline
   - **View Data Tab** (`/view`):
     - Activity type dropdown (same 5 options as Log Data)
     *   **View Data (`src/lib/components/views/`)**:
         *   `IndoorClimbView.svelte`: Implemented. Features date/location/grade filtering and remote data fetching.
+        *   `FingerboardingView.svelte`: Implemented. Timeline view with detailed set breakdowns.
+        *   `CompetitionView.svelte`: Implemented. Summary cards with round details and result badges.
         *   `indoor/IndoorClimbFilters.svelte`: Expandable filter panel.
         *   `indoor/IndoorClimbCard.svelte`: Expandable session card with collapsed load metrics summary and sync status.
         *   `indoor/IndoorClimbEntry.svelte`: Nested expandable climb details.
-        *   (Other activity views are placeholders)
 * **Backend:** Go 1.21 Cloud Function with Firestore integration.
-  - `function.go`: Main entry point with CORS, auth, routing
-  - `handlers.go`: CRUD handlers for indoor and outdoor sessions
-  - `firestore.go`: Client init (database: `climbing-tracker-db`, collections: `Indoor_Climbs`, `Outdoor_Climbs`)
-  - `models.go`: Go structs for IndoorSession and OutdoorSession
-  - Endpoints: GET/POST/PUT/DELETE `/indoor_sessions` and `/outdoor_sessions`
+  - `function.go`: Main entry point with CORS, auth, naming routing for indoor/outdoor/fingerboard/competition
+  - `handlers.go`: CRUD handlers for all 4 session types
+  - `firestore.go`: Client init (database: `climbing-tracker-db`, collections: `Indoor_Climbs`, `Outdoor_Climbs`, `Fingerboarding`, `Competitions`)
+  - `models.go`: Go structs for Indoor, Outdoor, Fingerboard, and Competition sessions
+  - Endpoints: GET/POST/PUT/DELETE for `/indoor_sessions`, `/outdoor_sessions`, `/fingerboard_sessions`, `/competition_sessions`
 * **Infrastructure:** Project and DB created manually.
 
 ## 4. Schema & Data Models
@@ -46,17 +49,20 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - `BaseSession`: id, activityType, date, createdAt, updatedAt, **syncStatus** (pending/synced/error), syncedAt
   - `IndoorClimbSession`: extends BaseSession with location, climbingType, sessionType, loads, climbs[]
   - `OutdoorClimbSession`: extends BaseSession with area, crag, sector, climbingType, loads, climbs[]
+  - `FingerboardSession`: extends BaseSession with exercises[] (gripType, details[{ weight, reps }])
+  - `CompetitionSession`: extends BaseSession with venue, type, loads, rounds[] (climbs/position)
 * **Cache service** in `$lib/services/cache.ts`:
   - Uses localStorage with key `training_tracker_sessions`
   - Tracks sync status: `pending` (not synced), `synced` (uploaded to cloud), `error` (sync failed)
   - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`
+  - Helpers: `create...` and `get...` for specific session types
 * **Sync service** in `$lib/services/sync.ts`:
   - `syncAllPending()`: Batch syncs all pending sessions, returns success/failed counts
   - `getPendingCount()`: Returns count of unsynced sessions
-  - Handles per-activity-type syncing (currently supports indoor_climb)
+  - Handles per-activity-type syncing (supports indoor, outdoor, fingerboard, competition)
 * **API service** in `$lib/services/api.ts`:
   - URL: `https://func-workout-api-825153765638.europe-west1.run.app`
-  - Functions: `createIndoorSession`, `createOutdoorSession`, `getIndoorSessions`, `getOutdoorSessions`, `isOnline`
+  - Functions: `create...` and `get...` for all 4 session types
   - Authenticates via `x-api-key` header
 
 ## 5. Design Decisions

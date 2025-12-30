@@ -3,7 +3,7 @@
  * Uses localStorage with sync status tracking
  */
 
-import type { Session, IndoorClimbSession, OutdoorClimbSession } from '$lib/types/session';
+import type { Session, IndoorClimbSession, OutdoorClimbSession, FingerboardSession, CompetitionSession } from '$lib/types/session';
 
 const CACHE_KEY = 'training_tracker_sessions';
 
@@ -187,3 +187,50 @@ export function createOutdoorClimbSession(data: {
     }) as OutdoorClimbSession;
 }
 
+
+/**
+ * Helper to create a Fingerboard session
+ */
+export function createFingerboardSession(data: {
+    date: string;
+    location: string;
+    exercises: FingerboardSession['exercises'];
+}): FingerboardSession {
+    return addSession({
+        activityType: 'fingerboarding',
+        ...data
+    }) as FingerboardSession;
+}
+
+/**
+ * Helper to create a Competition session
+ */
+export function createCompetitionSession(data: {
+    date: string;
+    venue: string;
+    customVenue?: string;
+    type: 'Bouldering' | 'Lead' | 'Speed';
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    rounds: CompetitionSession['rounds'];
+}): CompetitionSession {
+    return addSession({
+        activityType: 'competition',
+        ...data
+    }) as CompetitionSession;
+}
+
+/**
+ * Get all Fingerboard sessions
+ */
+export function getFingerboardSessions(): FingerboardSession[] {
+    return getSessionsByType('fingerboarding') as FingerboardSession[];
+}
+
+/**
+ * Get all Competition sessions
+ */
+export function getCompetitionSessions(): CompetitionSession[] {
+    return getSessionsByType('competition') as CompetitionSession[];
+}

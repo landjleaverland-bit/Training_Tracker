@@ -59,6 +59,52 @@ export interface OutdoorClimbSession extends BaseSession {
     climbs: ClimbEntry[];
 }
 
+// Fingerboarding session
+export interface ExerciseSet {
+    weight: number;
+    reps: number;
+}
+
+export interface FingerboardExercise {
+    id: string;
+    name: string;
+    gripType: string;
+    sets: number;
+    details: ExerciseSet[];
+    notes: string;
+}
+
+export interface FingerboardSession extends BaseSession {
+    activityType: 'fingerboarding';
+    location: string;
+    exercises: FingerboardExercise[];
+}
+
+// Competition session
+export interface CompetitionClimbResult {
+    name: string;
+    status: 'Flash' | 'Top' | 'Zone' | 'Attempt';
+    attemptCount: number;
+    notes: string;
+}
+
+export interface CompetitionRound {
+    name: string;
+    position?: number | null;
+    climbs?: CompetitionClimbResult[];
+}
+
+export interface CompetitionSession extends BaseSession {
+    activityType: 'competition';
+    venue: string;
+    customVenue?: string;
+    type: 'Bouldering' | 'Lead' | 'Speed';
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    rounds: CompetitionRound[];
+}
+
 // Union of all session types
-export type Session = IndoorClimbSession | OutdoorClimbSession;
+export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession;
 

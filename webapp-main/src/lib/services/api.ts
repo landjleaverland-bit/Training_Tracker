@@ -176,3 +176,89 @@ export async function createOutdoorSession(
 export async function getOutdoorSessions(): Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }> {
     return apiRequest<RemoteOutdoorSession[]>('/outdoor_sessions', { method: 'GET' });
 }
+
+/**
+ * Fingerboard Session data for API
+ */
+export interface FingerboardSessionPayload {
+    date: string;
+    location: string;
+    exercises: Array<{
+        id: string;
+        name: string;
+        gripType: string;
+        sets: number;
+        details: Array<{
+            weight: number;
+            reps: number;
+        }>;
+        notes: string;
+    }>;
+}
+
+export interface RemoteFingerboardSession extends FingerboardSessionPayload {
+    id: string;
+}
+
+export async function createFingerboardSession(
+    session: FingerboardSessionPayload
+): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const result = await apiRequest<{ id: string }>('/fingerboard_sessions', {
+        method: 'POST',
+        body: JSON.stringify(session)
+    });
+
+    if (result.ok && result.data) {
+        return { ok: true, id: result.data.id };
+    }
+    return { ok: false, error: result.error };
+}
+
+export async function getFingerboardSessions(): Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }> {
+    return apiRequest<RemoteFingerboardSession[]>('/fingerboard_sessions', { method: 'GET' });
+}
+
+/**
+ * Competition Session data for API
+ */
+export interface CompetitionSessionPayload {
+    date: string;
+    venue: string;
+    customVenue?: string;
+    type: string;
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    rounds: Array<{
+        name: string;
+        position?: number | null;
+        climbs?: Array<{
+            name: string;
+            status: string;
+            attemptCount: number;
+            notes: string;
+        }>;
+    }>;
+}
+
+export interface RemoteCompetitionSession extends CompetitionSessionPayload {
+    id: string;
+}
+
+export async function createCompetitionSession(
+    session: CompetitionSessionPayload
+): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const result = await apiRequest<{ id: string }>('/competition_sessions', {
+        method: 'POST',
+        body: JSON.stringify(session)
+    });
+
+    if (result.ok && result.data) {
+        return { ok: true, id: result.data.id };
+    }
+    return { ok: false, error: result.error };
+}
+
+export async function getCompetitionSessions(): Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }> {
+    return apiRequest<RemoteCompetitionSession[]>('/competition_sessions', { method: 'GET' });
+}
