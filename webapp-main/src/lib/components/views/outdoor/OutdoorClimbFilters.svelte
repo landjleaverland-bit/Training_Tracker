@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Filter component for Outdoor Climbs
 	import { slide } from 'svelte/transition';
+	import { getAreas, getCrags } from '$lib/data/outdoor_locations';
 
 	// Props
 	interface Props {
@@ -18,6 +19,9 @@
 		grade: string;
 	}
 
+    // Get areas from data source
+	const areas = getAreas();
+	
 	// Extract standard training types used in the form
 	const trainingTypes = ['Projecting', 'Onsighting', 'Campusing', 'Repeaters', 'Fun', 'Volume'];
 
@@ -30,6 +34,29 @@
 	let crag = $state('');
 	let sessionType = $state(''); // Maps to trainingType in data
 	let grade = $state('');
+    let isOtherArea = $state(false);
+
+	// Reactive crag list based on selected area
+    // If area is 'Other', we don't fetch crags
+	let availableCrags = $derived(area && area !== 'Other' ? getCrags(area) : []);
+
+    // Reset details when area changes
+    function onAreaChange() {
+        if (area === 'Other') {
+            isOtherArea = true;
+            // Clear filtering area value if it was 'Other' so we don't filter by literal "Other"
+            // Wait, typically we want to allow typing. 
+            // In the filter context, selecting 'Other' likely implies "I want to type a manual area".
+            // So we'll clear the 'area' bound value to allow typing?
+            // No, the UI pattern usually is: Select 'Other' -> input box appears.
+            // Let's implement that.
+            area = ''; // Clear so they can type
+        } else {
+            isOtherArea = false;
+        }
+        crag = ''; // Reset crag
+        applyFilters();
+    }
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
@@ -42,6 +69,7 @@
 		crag = '';
 		sessionType = '';
 		grade = '';
+        isOtherArea = false;
 		applyFilters();
 	}
 
@@ -83,23 +111,51 @@
 				</div>
 				<div class="filter-item">
 					<label for="area-filter">Area</label>
-					<input 
-						type="text" 
-						id="area-filter" 
-						bind:value={area} 
-						placeholder="e.g. Portland" 
-						oninput={applyFilters}
-					/>
+                    {#if isOtherArea}
+                        <div class="input-with-action">
+                            <input 
+                                type="text" 
+                                id="area-filter-text" 
+                                bind:value={area} 
+                                placeholder="Type area name..." 
+                                oninput={applyFilters}
+                                class="flat-left"
+                            />
+                            <button 
+                                class="action-btn flat-right" 
+                                onclick={() => { isOtherArea = false; area = ''; applyFilters(); }}
+                                title="Back to list"
+                            >✕</button>
+                        </div>
+                    {:else}
+                        <select id="area-filter" bind:value={area} onchange={onAreaChange}>
+                            <option value="">All Areas</option>
+                            {#each areas as a}
+                                <option value={a}>{a}</option>
+                            {/each}
+                            <option value="Other">Other (Manual Entry)</option>
+                        </select>
+                    {/if}
 				</div>
 				<div class="filter-item">
 					<label for="crag-filter">Crag</label>
-					<input 
-						type="text" 
-						id="crag-filter" 
-						bind:value={crag} 
-						placeholder="e.g. Battleship" 
-						oninput={applyFilters}
-					/>
+                    {#if !isOtherArea && area && availableCrags.length > 0}
+                         <select id="crag-filter" bind:value={crag} onchange={applyFilters}>
+                            <option value="">All Crags</option>
+                            {#each availableCrags as c}
+                                <option value={c}>{c}</option>
+                            {/each}
+                        </select>
+                    {:else}
+                        <input 
+                            type="text" 
+                            id="crag-filter-text" 
+                            bind:value={crag} 
+                            placeholder={area ? "Filter crag..." : "Select area first"} 
+                            oninput={applyFilters}
+                            disabled={!isOtherArea && !area} 
+                        />
+                    {/if}
 				</div>
 				<div class="filter-item">
 					<label for="session-type-filter">Session Type</label>
@@ -240,4 +296,40 @@
 	.reset-btn:hover {
 		color: var(--teal-secondary);
 	}
+
+    .input-with-action {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .input-with-action input {
+        flex: 1;
+    }
+
+    .input-with-action input.flat-left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+    }
+
+    .action-btn {
+        padding: 0.5rem 0.8rem;
+        background: #f8f9fa;
+        border: 1px solid rgba(74, 155, 155, 0.3);
+        color: #666;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    
+    .action-btn:hover {
+        background: #eee;
+        color: #333;
+    }
+
+    .action-btn.flat-right {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-left: 1px solid rgba(74, 155, 155, 0.3);
+    }
 </style>
