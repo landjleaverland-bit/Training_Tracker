@@ -208,6 +208,18 @@ export function getIndoorLocationStats(sessions: Session[]): ChartDataPoint[] {
     return Object.entries(locs).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 }
 
+export function getOutdoorCragStats(sessions: Session[]): ChartDataPoint[] {
+    const crags: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'outdoor_climb') {
+            const crag = (s as OutdoorClimbSession).crag;
+            if (crag) crags[crag] = (crags[crag] || 0) + 1;
+        }
+    });
+
+    return Object.entries(crags).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+}
+
 // --- 5. Periodization (Time Series) ---
 
 export function getWeeklyLoadStats(sessions: Session[]): TimeSeriesPoint[] {
