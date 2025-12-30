@@ -345,4 +345,10 @@
 		padding-top: 1.5rem;
 		border-top: 1px solid rgba(74, 155, 155, 0.15);
 	}
+
+	@media (max-width: 640px) {
+		.page {
+			padding-bottom: 6rem;
+		}
+	}
 </style>
