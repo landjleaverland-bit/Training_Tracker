@@ -472,7 +472,7 @@
     .load-more-container {
         display: flex;
         justify-content: center;
-        padding: 1rem 0;
+        padding: 1rem 0 6rem 0;
     }
 
     .load-more-btn {
