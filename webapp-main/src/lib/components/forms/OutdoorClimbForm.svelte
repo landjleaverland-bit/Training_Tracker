@@ -55,13 +55,28 @@
 
 	// Reactive crag list based on selected area
 	let availableCrags = $derived(area ? getCrags(area) : []);
+    
+    let isOtherCrag = $state(false);
 
 	// Reset crag when area changes
 	$effect(() => {
 		if (area) {
 			crag = '';
+            isOtherCrag = false;
 		}
 	});
+
+    function onCragChange() {
+        if (crag === 'Other') {
+            isOtherCrag = true;
+            crag = '';
+        }
+    }
+
+    function cancelOtherCrag() {
+        isOtherCrag = false;
+        crag = '';
+    }
 
 	function addClimb() {
 		climbs = [...climbs, { isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
@@ -232,12 +247,33 @@
 	<div class="form-row">
 		<div class="form-group">
 			<label for="crag">Crag</label>
-			<select id="crag" bind:value={crag} disabled={!area}>
-				<option value="" disabled>{area ? 'Select crag...' : 'Select area first...'}</option>
-				{#each availableCrags as c}
-					<option value={c}>{c}</option>
-				{/each}
-			</select>
+            {#if isOtherCrag}
+                <div class="input-with-action">
+                    <input 
+                        type="text" 
+                        id="crag-manual" 
+                        bind:value={crag} 
+                        placeholder="Enter custom crag name..." 
+                        class="flat-left"
+                    />
+                    <button 
+                        type="button"
+                        class="action-btn flat-right" 
+                        onclick={cancelOtherCrag}
+                        title="Back to list"
+                    >✕</button>
+                </div>
+            {:else}
+                <select id="crag" bind:value={crag} disabled={!area} onchange={onCragChange}>
+                    <option value="" disabled>{area ? 'Select crag...' : 'Select area first...'}</option>
+                    {#each availableCrags as c}
+                        <option value={c}>{c}</option>
+                    {/each}
+                    {#if area}
+                        <option value="Other">Other (Manual Entry)</option>
+                    {/if}
+                </select>
+            {/if}
 		</div>
 		
 		<div class="form-group">
@@ -798,6 +834,52 @@
 
 	.save-message.error {
 		background: rgba(217, 83, 79, 0.15);
+		color: #d9534f;
+	}
+
+    /* Input with Action (Manual Entry) */
+    .input-with-action {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        position: relative;
+    }
+
+    .input-with-action input {
+        flex: 1;
+    }
+
+    .input-with-action input.flat-left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+    }
+
+    .action-btn {
+        padding: 0.6rem 1rem;
+        background: #f8f9fa;
+        border: 1.5px solid rgba(74, 155, 155, 0.3);
+        color: #666;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .action-btn:hover {
+        background: #eee;
+        color: #333;
+        border-color: rgba(74, 155, 155, 0.5);
+    }
+
+    .action-btn.flat-right {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-left: 1.5px solid rgba(74, 155, 155, 0.3);
+    }
+</style>
 		color: #d9534f;
 	}
 

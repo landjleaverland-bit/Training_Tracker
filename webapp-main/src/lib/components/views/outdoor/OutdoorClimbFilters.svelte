@@ -54,7 +54,22 @@
         } else {
             isOtherArea = false;
         }
+            isOtherArea = false;
+        }
         crag = ''; // Reset crag
+        isOtherCrag = false;
+        applyFilters();
+    }
+    
+    let isOtherCrag = $state(false);
+    
+    function onCragChange() {
+        if (crag === 'Other') {
+            isOtherCrag = true;
+            crag = '';
+        } else {
+            isOtherCrag = false;
+        }
         applyFilters();
     }
 
@@ -70,6 +85,7 @@
 		sessionType = '';
 		grade = '';
         isOtherArea = false;
+        isOtherCrag = false;
 		applyFilters();
 	}
 
@@ -139,12 +155,29 @@
 				</div>
 				<div class="filter-item">
 					<label for="crag-filter">Crag</label>
-                    {#if !isOtherArea && area && availableCrags.length > 0}
-                         <select id="crag-filter" bind:value={crag} onchange={applyFilters}>
+                    {#if isOtherCrag}
+                        <div class="input-with-action">
+                             <input 
+                                type="text" 
+                                id="crag-filter-text" 
+                                bind:value={crag} 
+                                placeholder="Type crag name..." 
+                                oninput={applyFilters}
+                                class="flat-left"
+                            />
+                            <button 
+                                class="action-btn flat-right" 
+                                onclick={() => { isOtherCrag = false; crag = ''; applyFilters(); }}
+                                title="Back to list"
+                            >✕</button>
+                        </div>
+                    {:else if !isOtherArea && area && availableCrags.length > 0}
+                         <select id="crag-filter" bind:value={crag} onchange={onCragChange}>
                             <option value="">All Crags</option>
                             {#each availableCrags as c}
                                 <option value={c}>{c}</option>
                             {/each}
+                            <option value="Other">Other (Manual Entry)</option>
                         </select>
                     {:else}
                         <input 
