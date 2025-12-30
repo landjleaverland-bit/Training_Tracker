@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { getCompetitionSessions, markAsSynced, markAsSyncError } from '$lib/services/cache';
+    import { getCompetitionSessions } from '$lib/services/cache';
     import { getCompetitionSessions as fetchRemote } from '$lib/services/api';
     import type { CompetitionSession } from '$lib/types/session';
+    import { slide } from 'svelte/transition';
 
     let sessions = $state<CompetitionSession[]>([]);
     let loading = $state(true);
+    let expandedDetails = $state<Set<string>>(new Set());
 
     async function loadSessions() {
         loading = true;
@@ -30,11 +32,11 @@
                                 status: c.status as 'Flash' | 'Top' | 'Zone' | 'Attempt'
                             }))
                         })),
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
+                        // Fallback fields as per previous fix
+                        createdAt: r.createdAt || new Date().toISOString(),
+                        updatedAt: r.updatedAt || new Date().toISOString(),
                         syncStatus: 'synced' as const
                     }));
-
                 sessions = [...sessions, ...newSessions].sort((a, b) => 
                     new Date(b.date).getTime() - new Date(a.date).getTime()
                 );
@@ -46,23 +48,26 @@
         }
     }
 
-    // Load on mount
     loadSessions();
 
+    function toggleExpand(id: string) {
+        if (expandedDetails.has(id)) expandedDetails.delete(id);
+        else expandedDetails.add(id);
+        expandedDetails = new Set(expandedDetails);
+    }
+
     function getResultSummary(session: CompetitionSession) {
+        // Quick summary for header
         if (!session.rounds || session.rounds.length === 0) return 'No rounds';
-        const lastRound = session.rounds[session.rounds.length - 1];
+        const lastRound = session.rounds[session.rounds.length - 1]; // usually Final
         
-        if (lastRound.position !== undefined && lastRound.position !== null) {
-            return `Position: #${lastRound.position}`;
-        }
+        if (lastRound.position) return `#${lastRound.position} ${lastRound.name}`;
         
         if (lastRound.climbs) {
             const tops = lastRound.climbs.filter(c => c.status === 'Top' || c.status === 'Flash').length;
             const zones = lastRound.climbs.filter(c => c.status === 'Zone').length;
-            return `${tops} Tops · ${zones + tops} Zones`;
+            return `${session.rounds.length} Rnds · Final: ${tops}T ${zones + tops}Z`;
         }
-        
         return lastRound.name;
     }
 </script>
@@ -80,52 +85,77 @@
     {:else}
         <div class="timeline">
             {#each sessions as session}
-                <div class="session-card">
-                    <div class="card-top">
-                        <div class="session-date">
-                            {new Date(session.date).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}
-                        </div>
-                        <div class="venue-badge">{session.customVenue || session.venue}</div>
-                    </div>
-                    
-                    <div class="session-info">
-                        <div class="info-row">
-                            <span class="type-tag">{session.type}</span>
-                            <span class="result-summary">{getResultSummary(session)}</span>
-                        </div>
-                        
-                        {#if session.rounds}
-                            <div class="rounds-list">
-                                {#each session.rounds as round}
-                                    <div class="round-item">
-                                        <div class="round-name">{round.name}</div>
-                                        {#if round.climbs}
-                                            <div class="climbs-grid">
-                                                {#each round.climbs as climb}
-                                                    <div class="climb-badge" class:top={climb.status === 'Top' || climb.status === 'Flash'} class:zone={climb.status === 'Zone'}>
-                                                        <span class="c-name">{climb.name}</span>
-                                                        <span class="c-status">
-                                                            {#if climb.status === 'Flash'}⚡
-                                                            {:else if climb.status === 'Top'}T
-                                                            {:else if climb.status === 'Zone'}Z
-                                                            {:else}-
-                                                            {/if}
-                                                        </span>
-                                                    </div>
-                                                {/each}
-                                            </div>
-                                        {/if}
-                                    </div>
-                                {/each}
+                <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
+                    <button class="card-header" onclick={() => toggleExpand(session.id)}>
+                        <div class="header-main">
+                            <div class="left-col">
+                                <span class="venue">{session.customVenue || session.venue}</span>
+                                <span class="date">{new Date(session.date).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}</span>
                             </div>
-                        {/if}
-                    </div>
+                            <div class="right-col">
+                                <div class="badges">
+                                    <span class="type-tag">{session.type}</span>
+                                    <span class="result-tag">{getResultSummary(session)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="chevron">{expandedDetails.has(session.id) ? '▲' : '▼'}</span>
+                    </button>
 
-                    <div class="session-meta">
-                        <span class="sync-status" class:synced={session.syncStatus === 'synced'}>
-                            {session.syncStatus === 'synced' ? '✓ Synced' : '☁ Local'}
-                        </span>
-                    </div>
+                    {#if expandedDetails.has(session.id)}
+                        <div class="card-body" transition:slide={{ duration: 200 }}>
+                            {#if session.rounds}
+                                <div class="rounds-list">
+                                    {#each session.rounds as round}
+                                        <div class="round-item">
+                                            <div class="round-header">
+                                                <span class="round-name">{round.name}</span>
+                                                {#if round.position}
+                                                    <span class="round-pos">#{round.position}</span>
+                                                {/if}
+                                            </div>
+                                            
+                                            {#if round.climbs}
+                                                <div class="climbs-list">
+                                                    {#each round.climbs as climb}
+                                                        <div class="climb-row">
+                                                            <div class="climb-info">
+                                                                <span class="c-name">{climb.name}</span>
+                                                                {#if climb.attemptCount > 1}
+                                                                    <span class="c-attempts">({climb.attemptCount} tries)</span>
+                                                                {/if}
+                                                            </div>
+                                                            <div class="climb-result">
+                                                                <span class="status-badge" class:top={climb.status === 'Top' || climb.status === 'Flash'} class:zone={climb.status === 'Zone'}>
+                                                                    {climb.status}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        {#if climb.notes}
+                                                            <div class="climb-notes">"{climb.notes}"</div>
+                                                        {/if}
+                                                    {/each}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/if}
+
+                            <!-- Load info if exists -->
+                            {#if session.fingerLoad || session.shoulderLoad}
+                                <div class="load-meta">
+                                    <span>Detailed Load: Fingers {session.fingerLoad}/5, Shoulders {session.shoulderLoad}/5, Forearms {session.forearmLoad}/5</span>
+                                </div>
+                            {/if}
+
+                            <div class="session-footer">
+                                <span class="sync-status" class:synced={session.syncStatus === 'synced'}>
+                                    {session.syncStatus === 'synced' ? '✓ Synced' : '☁ Local'}
+                                </span>
+                            </div>
+                        </div>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -136,46 +166,75 @@
 	.view-content { animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 	h3 { margin: 0; color: var(--teal-secondary); }
 
     .refresh-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); padding: 0 0.5rem; }
 
-    .timeline { display: flex; flex-direction: column; gap: 1rem; }
+    .timeline { display: flex; flex-direction: column; gap: 0.8rem; }
 
     .session-card {
-        background: white; border-radius: 12px; padding: 1rem;
+        background: white; border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #eee;
+        overflow: hidden;
     }
 
-    .card-top { display: flex; justify-content: space-between; margin-bottom: 0.8rem; align-items: center; }
-    .session-date { font-weight: 600; color: var(--text-primary); }
-    .venue-badge { font-size: 0.8rem; background: #f8f9fa; padding: 0.2rem 0.6rem; border-radius: 4px; color: var(--text-secondary); border: 1px solid #eee; }
+    .card-header {
+        width: 100%; display: flex; justify-content: space-between; align-items: center;
+        padding: 0.8rem 1rem; background: white; border: none; cursor: pointer; text-align: left;
+    }
 
-    .info-row { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 1rem; }
-    .type-tag { font-size: 0.75rem; background: var(--teal-primary); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; }
-    .result-summary { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
-
-    .rounds-list { display: flex; flex-direction: column; gap: 0.8rem; }
-    .round-name { font-size: 0.8rem; font-weight: 600; color: #aaa; margin-bottom: 0.4rem; text-transform: uppercase; }
-
-    .climbs-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .header-main { display: flex; flex: 1; justify-content: space-between; align-items: center; padding-right: 1rem; }
     
-    .climb-badge {
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        width: 40px; height: 40px; border-radius: 6px;
-        background: #f8f9fa; border: 1px solid #eee;
-        font-size: 0.75rem;
+    .left-col { display: flex; flex-direction: column; }
+    .venue { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
+    .date { font-size: 0.8rem; color: #aaa; }
+
+    .right-col { display: flex; align-items: center; }
+    .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    
+    .type-tag { font-size: 0.7rem; background: #eefdfd; color: var(--teal-secondary); padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid rgba(74,155,155,0.1); }
+    .result-tag { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); }
+
+    .chevron { color: #ccc; font-size: 0.8rem; }
+
+    .card-body { border-top: 1px solid #f5f5f5; background: #fafafa; padding: 1rem; }
+
+    .rounds-list { display: flex; flex-direction: column; gap: 1rem; }
+    .round-item { background: white; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+    
+    .round-header {
+        background: #f8f9fa; padding: 0.5rem 0.8rem; border-bottom: 1px solid #eee;
+        display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);
     }
+    .round-pos { color: var(--teal-primary); }
 
-    .climb-badge.top { background: #d4edda; border-color: #c3e6cb; color: #155724; }
-    .climb-badge.zone { background: #fff3cd; border-color: #ffeeba; color: #856404; }
+    .climb-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.6rem 0.8rem; border-bottom: 1px solid #f9f9f9;
+        font-size: 0.9rem;
+    }
+    .climb-row:last-child { border-bottom: none; }
 
-    .c-name { font-weight: 600; font-size: 0.7rem; margin-bottom: -2px; }
-    .c-status { font-weight: 700; font-size: 0.9rem; }
+    .c-name { font-weight: 500; color: var(--text-primary); }
+    .c-attempts { font-size: 0.8rem; color: #aaa; margin-left: 0.4rem; }
 
-    .session-meta { margin-top: 1rem; display: flex; justify-content: flex-end; border-top: 1px solid #f5f5f5; padding-top: 0.5rem; }
-    .sync-status { font-size: 0.75rem; color: #aaa; }
+    .status-badge {
+        font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 10px;
+        background: #eee; color: #777; font-weight: 600;
+    }
+    .status-badge.top { background: #d4edda; color: #155724; }
+    .status-badge.zone { background: #fff3cd; color: #856404; }
+
+    .climb-notes {
+        padding: 0 0.8rem 0.6rem 0.8rem; font-size: 0.8rem; color: #888; font-style: italic; border-bottom: 1px solid #f9f9f9;
+    }
+    .climb-notes:last-child { border-bottom: none; }
+
+    .load-meta { margin-top: 1rem; font-size: 0.75rem; color: #aaa; text-align: center; }
+
+    .session-footer { margin-top: 0.8rem; display: flex; justify-content: flex-end; }
+    .sync-status { font-size: 0.7rem; color: #ccc; }
     .sync-status.synced { color: var(--teal-secondary); }
 
     .loading, .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); font-style: italic; }

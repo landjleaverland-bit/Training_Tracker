@@ -198,6 +198,8 @@ export interface FingerboardSessionPayload {
 
 export interface RemoteFingerboardSession extends FingerboardSessionPayload {
     id: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export async function createFingerboardSession(
@@ -243,6 +245,8 @@ export interface CompetitionSessionPayload {
 
 export interface RemoteCompetitionSession extends CompetitionSessionPayload {
     id: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export async function createCompetitionSession(
