@@ -19,7 +19,7 @@
 	// Training classification options
 	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
-	const categoryOptions = ['None', 'Technique', 'Strength', 'Strength-endurance', 'Warm-up', 'Power'];
+	const categoryOptions = ['None', 'Strength', 'Strength-endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang technique', 'Warm-up', 'Power'];
 	const energySystemOptions = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
 	const techniqueFocusOptions = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
 	const wallAngleOptions = ['None', 'Overhang', 'Slab', 'Roof'];
