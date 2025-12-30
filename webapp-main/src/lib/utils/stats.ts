@@ -320,3 +320,51 @@ export function getGripLoadStats(sessions: Session[]): TimeSeriesPoint[] {
 
     return parsedData.sort((a, b) => a.date.getTime() - b.date.getTime());
 }
+
+export function getRecruitmentStats(sessions: Session[]): TimeSeriesPoint[] {
+    const points: TimeSeriesPoint[] = [];
+
+    sessions.filter(isFingerboard).forEach(s => {
+        const fb = s as FingerboardSession;
+        const date = getSessionDate(fb);
+
+        fb.exercises.forEach(ex => {
+            if (ex.name === 'Recruitment Pulls') {
+                const maxWeight = Math.max(...ex.details.map(set => set.weight));
+                if (maxWeight > 0) {
+                    points.push({
+                        date,
+                        value: maxWeight,
+                        series: 'Recruitment Pulls'
+                    });
+                }
+            }
+        });
+    });
+
+    return points.sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+export function getMaxPickupStats(sessions: Session[]): TimeSeriesPoint[] {
+    const points: TimeSeriesPoint[] = [];
+
+    sessions.filter(isFingerboard).forEach(s => {
+        const fb = s as FingerboardSession;
+        const date = getSessionDate(fb);
+
+        fb.exercises.forEach(ex => {
+            if (ex.name === 'Max pick-ups') {
+                const maxWeight = Math.max(...ex.details.map(set => set.weight));
+                if (maxWeight > 0) {
+                    points.push({
+                        date,
+                        value: maxWeight,
+                        series: 'Max pick-ups'
+                    });
+                }
+            }
+        });
+    });
+
+    return points.sort((a, b) => a.date.getTime() - b.date.getTime());
+}

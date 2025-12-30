@@ -93,19 +93,23 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - **Technology:** Svelte 5 Runes (`$state`, `$derived`, `$props`) + D3.js (for scales and path generation).
   - **Components (`$lib/components/`)**:
     - `PieChart.svelte`: Donut-style, with external responsive legend suitable for mobile. Center hole displays total count.
-    - `BarChart.svelte`: Supports both Vertical and Horizontal orientations to handle long labels (e.g., Venue names) on mobile.
+    - `BarChart.svelte`: Supports both Vertical and Horizontal orientations to handle long labels.
     - `LineChart.svelte`: Supports Multi-Series plotting (multiple lines) with auto-generated legend.
   - **Logic (`$lib/utils/stats.ts`)**:
     - Aggregates data purely from the local cache (`getAllSessions()`).
+    - **Grade Normalization:** Automatically converts and creates a unified scale.
+        - **Boulder:** Converts French/Font grades to Hueco (V-Scale).
+        - **Sport:** Converts Hueco grades to French.
+        - **Case Insensitive:** Handles `v2` vs `V2`.
     - **Logic handled:**
       - "Rest Days" calculated against the full date range of logs.
-      - "Weekly Load" (Finger+Shoulder+Forearm sum) aggregated by week.
-      - "Grip Load" (Subjective 1-5) grouped by grip type (Crimp, Open Hand, etc.) and week.
-      - "Grade Pyramids" split distinctly between **Boulder** (non-sport) and **Lead/Sport** climbs.
+      - "Grip Load" aggregated by week and grip type.
+      - "Recruitment/Max Pickups" filtered by specific exercise filtering.
+  - **Filtering:** "Time Range" selector (Past Week, Past Month, Specific Week, Specific Month, All Time).
   - **Views (Dropdown Controlled):**
     1. General Activity (Pie Charts: Climb vs Rest, Fingerboard Consistency).
     2. Training Systems (Horizontal Bar).
     3. Performance Grade Pyramids (Vertical Bar, split Boulder/Lead).
-    4. Venue Analysis (Horizontal Bar).
+    4. Venue Analysis (Horizontal Bar: Indoor Gym, Outdoor Crag, Outdoor Area).
     5. Periodization (Monthly/Weekly Load Bar).
-    6. Finger Strength (Multi-line charts for Grip Load and Max Hang).
+    6. Finger Strength (Multi-line charts: Grip Load, Max Hang, Recruitment Pulls, Max Pick-ups).

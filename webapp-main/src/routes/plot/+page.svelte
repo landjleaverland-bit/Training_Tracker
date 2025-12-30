@@ -13,7 +13,9 @@
         getOutdoorAreaStats,
         getWeeklyLoadStats,
         getMaxHangStats,
-        getGripLoadStats
+        getGripLoadStats,
+        getRecruitmentStats,
+        getMaxPickupStats
     } from '$lib/utils/stats';
     import * as d3 from 'd3';
     
@@ -23,36 +25,85 @@
 
     let sessions = $state<Session[]>([]);
     let selectedView = $state('general');
+    let timeRange = $state<'week' | 'month' | 'specific_week' | 'specific_month' | 'all'>('all');
+    let selectedDateValue = $state('');
 
     onMount(() => {
         sessions = getAllSessions();
     });
 
+    // Filtered Sessions
+    let filteredSessions = $derived.by(() => {
+        if (timeRange === 'all') return sessions;
+
+        const now = new Date();
+        const cutoff = new Date();
+
+        if (timeRange === 'week') {
+            cutoff.setDate(now.getDate() - 7);
+            return sessions.filter(s => new Date(s.date) >= cutoff);
+        } else if (timeRange === 'month') {
+            cutoff.setMonth(now.getMonth() - 1);
+            return sessions.filter(s => new Date(s.date) >= cutoff);
+        } else if (timeRange === 'specific_week' && selectedDateValue) {
+             // value is "YYYY-Www" (e.g. 2024-W05)
+             // We'll parse the date and check if it falls in that ISO week
+             // Simple approach: d3.timeParse("%Y-W%V") or check ISO string
+             // HTML input week is ISO week
+             const [yearStr, weekStr] = selectedDateValue.split('-W');
+             const year = parseInt(yearStr);
+             const week = parseInt(weekStr);
+             
+             // Filter
+             // Helper to get ISO week from a date
+             const getISOWeek = (d: Date) => {
+                const date = new Date(d.getTime());
+                date.setHours(0, 0, 0, 0);
+                date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+                const week1 = new Date(date.getFullYear(), 0, 4);
+                return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+             };
+             
+             return sessions.filter(s => {
+                 const d = new Date(s.date);
+                 return d.getFullYear() === year && getISOWeek(d) === week;
+             });
+
+        } else if (timeRange === 'specific_month' && selectedDateValue) {
+            // value is "YYYY-MM"
+             return sessions.filter(s => s.date.startsWith(selectedDateValue));
+        }
+
+        return sessions;
+    });
+
     // --- Derived Data for Views ---
 
     // 1. General
-    let climbVsRest = $derived(getClimbingVsRestStats(sessions));
-    let fbConsistency = $derived(getFingerboardingConsistency(sessions));
-    let sessionTypes = $derived(getSessionTypeBreakdown(sessions));
+    let climbVsRest = $derived(getClimbingVsRestStats(filteredSessions));
+    let fbConsistency = $derived(getFingerboardingConsistency(filteredSessions));
+    let sessionTypes = $derived(getSessionTypeBreakdown(filteredSessions));
 
     // 2. Training Systems
-    let trainingSystems = $derived(getTrainingSystemStats(sessions));
+    let trainingSystems = $derived(getTrainingSystemStats(filteredSessions));
 
     // 3. Performance Grade
-    let boulderGrades = $derived(getGradeStats(sessions, 'boulder'));
-    let leadGrades = $derived(getGradeStats(sessions, 'lead'));
+    let boulderGrades = $derived(getGradeStats(filteredSessions, 'boulder'));
+    let leadGrades = $derived(getGradeStats(filteredSessions, 'lead'));
 
     // 4. Venue
-    let indoorVenues = $derived(getIndoorLocationStats(sessions));
-    let outdoorVenues = $derived(getOutdoorCragStats(sessions));
-    let outdoorAreas = $derived(getOutdoorAreaStats(sessions));
+    let indoorVenues = $derived(getIndoorLocationStats(filteredSessions));
+    let outdoorVenues = $derived(getOutdoorCragStats(filteredSessions));
+    let outdoorAreas = $derived(getOutdoorAreaStats(filteredSessions));
 
     // 5. Periodization
-    let weeklyLoad = $derived(getWeeklyLoadStats(sessions));
+    let weeklyLoad = $derived(getWeeklyLoadStats(filteredSessions));
 
     // 6. Finger Strength
-    let maxHangData = $derived(getMaxHangStats(sessions));
-    let gripLoadData = $derived(getGripLoadStats(sessions));
+    let maxHangData = $derived(getMaxHangStats(filteredSessions));
+    let gripLoadData = $derived(getGripLoadStats(filteredSessions));
+    let recruitmentData = $derived(getRecruitmentStats(filteredSessions));
+    let maxPickupData = $derived(getMaxPickupStats(filteredSessions));
 
 
     // View Options
@@ -86,6 +137,28 @@
             </select>
             <div class="select-arrow">▼</div>
         </div>
+
+        <label for="time-select" style="margin-top: 1rem;">Time Range:</label>
+        <div class="select-wrapper">
+            <select id="time-select" bind:value={timeRange}>
+                <option value="week">Past Week</option>
+                <option value="month">Past Month</option>
+                <option value="specific_week">Specific Week</option>
+                <option value="specific_month">Specific Month</option>
+                <option value="all">All Time</option>
+            </select>
+            <div class="select-arrow">▼</div>
+        </div>
+
+        {#if timeRange === 'specific_week'}
+            <div class="specific-date-input" style="margin-top: 0.5rem;">
+                <input type="week" bind:value={selectedDateValue} class="date-picker" />
+            </div>
+        {:else if timeRange === 'specific_month'}
+             <div class="specific-date-input" style="margin-top: 0.5rem;">
+                <input type="month" bind:value={selectedDateValue} class="date-picker" />
+            </div>
+        {/if}
     </div>
     
     <!-- Content Area -->
