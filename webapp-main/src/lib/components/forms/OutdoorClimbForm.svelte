@@ -49,6 +49,11 @@
 	let fingerLoad = $state(3);
 	let shoulderLoad = $state(3);
 	let forearmLoad = $state(3);
+	let openGrip = $state(3);
+	let crimpGrip = $state(3);
+	let pinchGrip = $state(3);
+	let sloperGrip = $state(3);
+	let jugGrip = $state(3);
 	
 	let climbs = $state<ClimbEntry[]>([
 		{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
@@ -165,6 +170,11 @@
 				fingerLoad,
 				shoulderLoad,
 				forearmLoad,
+				openGrip,
+				crimpGrip,
+				pinchGrip,
+				sloperGrip,
+				jugGrip,
 				climbs: preparedClimbs
 			};
 
@@ -218,6 +228,11 @@
 		fingerLoad = 3;
 		shoulderLoad = 3;
 		forearmLoad = 3;
+		openGrip = 3;
+		crimpGrip = 3;
+		pinchGrip = 3;
+		sloperGrip = 3;
+		jugGrip = 3;
 		climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
 		saveStatus = 'idle';
 		saveMessage = '';
@@ -310,6 +325,35 @@
 			<div class="load-item">
 				<label for="forearm-load">Forearm</label>
 				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+		</div>
+
+		<h4 class="mt-4">Grip Metrics</h4>
+		<div class="load-metrics">
+			<div class="load-item">
+				<label for="open-grip">Open</label>
+				<input type="number" id="open-grip" bind:value={openGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="crimp-grip">Crimp</label>
+				<input type="number" id="crimp-grip" bind:value={crimpGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="pinch-grip">Pinch</label>
+				<input type="number" id="pinch-grip" bind:value={pinchGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="sloper-grip">Sloper</label>
+				<input type="number" id="sloper-grip" bind:value={sloperGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="jug-grip">Jug</label>
+				<input type="number" id="jug-grip" bind:value={jugGrip} min="1" max="5" />
 				<span class="load-scale">/ 5</span>
 			</div>
 		</div>
@@ -491,6 +535,10 @@
 		color: var(--text-primary);
 		font-size: 1rem;
 		font-weight: 600;
+	}
+
+	.mt-4 {
+		margin-top: 1.5rem !important;
 	}
 
 	/* Form Layout */

@@ -216,6 +216,51 @@
 					</div>
 					<span class="score">{session.forearmLoad}/5</span>
 				</div>
+                {#if session.openGrip}
+				<div class="metric">
+					<span class="label">Open Grip</span>
+					<div class="bar-container">
+						<div class="bar-fill" style="width: {(session.openGrip / 5) * 100}%"></div>
+					</div>
+					<span class="score">{session.openGrip}/5</span>
+				</div>
+                {/if}
+                {#if session.crimpGrip}
+				<div class="metric">
+					<span class="label">Crimp Grip</span>
+					<div class="bar-container">
+						<div class="bar-fill" style="width: {(session.crimpGrip / 5) * 100}%"></div>
+					</div>
+					<span class="score">{session.crimpGrip}/5</span>
+				</div>
+                {/if}
+                {#if session.pinchGrip}
+				<div class="metric">
+					<span class="label">Pinch Grip</span>
+					<div class="bar-container">
+						<div class="bar-fill" style="width: {(session.pinchGrip / 5) * 100}%"></div>
+					</div>
+					<span class="score">{session.pinchGrip}/5</span>
+				</div>
+                {/if}
+                {#if session.sloperGrip}
+				<div class="metric">
+					<span class="label">Sloper Grip</span>
+					<div class="bar-container">
+						<div class="bar-fill" style="width: {(session.sloperGrip / 5) * 100}%"></div>
+					</div>
+					<span class="score">{session.sloperGrip}/5</span>
+				</div>
+                {/if}
+                {#if session.jugGrip}
+				<div class="metric">
+					<span class="label">Jug Grip</span>
+					<div class="bar-container">
+						<div class="bar-fill" style="width: {(session.jugGrip / 5) * 100}%"></div>
+					</div>
+					<span class="score">{session.jugGrip}/5</span>
+				</div>
+                {/if}
 			</div>
 
 			<!-- Climbs List -->

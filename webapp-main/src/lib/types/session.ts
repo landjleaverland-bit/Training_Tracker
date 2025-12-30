@@ -38,6 +38,11 @@ export interface IndoorClimbSession extends BaseSession {
     fingerLoad: number;           // 1-5
     shoulderLoad: number;         // 1-5
     forearmLoad: number;          // 1-5
+    openGrip: number;             // 1-5
+    crimpGrip: number;            // 1-5
+    pinchGrip: number;            // 1-5
+    sloperGrip: number;           // 1-5
+    jugGrip: number;              // 1-5
     climbs: ClimbEntry[];
 }
 
@@ -56,6 +61,11 @@ export interface OutdoorClimbSession extends BaseSession {
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;
+    openGrip: number;
+    crimpGrip: number;
+    pinchGrip: number;
+    sloperGrip: number;
+    jugGrip: number;
     climbs: ClimbEntry[];
 }
 
