@@ -21,7 +21,34 @@
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
 	const categoryOptions = ['None', 'Strength', 'Strength-endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang technique', 'Warm-up', 'Power'];
 	const energySystemOptions = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
-	const techniqueFocusOptions = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
+	const techniqueFocusOptions = [
+		'None',
+		'Trusting feet',
+		'Double-clutch',
+		'Standing on volumes',
+		'Deadpointing',
+		'Flagging',
+		'Swapping feet',
+		'Edging',
+		'Smearing',
+		'Matching',
+		'Backstepping',
+		'Drop Knee',
+		'Stemming',
+		'Bridging',
+		'Laybacking',
+		'Mantling',
+		'Kneebar',
+		'Dyno',
+		'Pogo',
+		'Coordination Moves',
+		'Gastoning',
+		'Underclinging',
+		'Compressing',
+		'Heel Hook',
+		'Toe Hook',
+		'Bicycle'
+	];
 	const wallAngleOptions = ['None', 'Overhang', 'Slab', 'Roof', 'Moon Board', 'Kilter Board', 'Beast', 'Circuit Board'];
 
 	// Valid grades (case-insensitive matching)
