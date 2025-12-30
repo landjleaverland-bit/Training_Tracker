@@ -2,18 +2,39 @@
 	// Outdoor Climb Session Card
 	import { slide } from 'svelte/transition';
 	import type { OutdoorClimbSession } from '$lib/types/session';
-	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte'; // Use separate entry component
+	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte';
+	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
+	import { deleteSession, updateSession } from '$lib/services/cache';
 
 	interface Props {
 		session: OutdoorClimbSession;
+		onDelete: () => void;
 	}
 
-	let { session }: Props = $props();
+	let { session, onDelete }: Props = $props();
 
 	let isExpanded = $state(false);
+	let showDeleteModal = $state(false);
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
+	}
+
+	function handleDeleteSession() {
+		showDeleteModal = true;
+	}
+
+	function confirmDeleteSession() {
+		deleteSession(session.id);
+		showDeleteModal = false;
+		onDelete();
+	}
+
+	function handleClimbDelete(climbIndex: number) {
+		const newClimbs = [...session.climbs];
+		newClimbs.splice(climbIndex, 1);
+		updateSession(session.id, { climbs: newClimbs });
+		onDelete();
 	}
 
 	// Calculate stats
@@ -29,7 +50,14 @@
 </script>
 
 <div class="session-card" class:expanded={isExpanded}>
-	<button class="card-header" onclick={toggleExpand} aria-expanded={isExpanded}>
+	<div 
+		class="card-header" 
+		role="button" 
+		tabindex="0" 
+		onclick={toggleExpand} 
+		onkeydown={(e) => e.key === 'Enter' && toggleExpand()} 
+		aria-expanded={isExpanded}
+	>
 		<div class="header-main">
 			<div class="date-badge">
 				<span class="day">{new Date(session.date).getDate()}</span>
@@ -71,15 +99,26 @@
 			</div>
 		</div>
 
-		<div class="header-status">
-			{#if session.syncStatus === 'pending'}
-				<span class="status-icon pending" title="Waiting to sync">🔄</span>
-			{:else if session.syncStatus === 'error'}
-				<span class="status-icon error" title="Sync error">⚠️</span>
-			{/if}
+		<div class="header-actions">
+			<div class="header-status">
+				{#if session.syncStatus === 'pending'}
+					<span class="status-icon pending" title="Waiting to sync">🔄</span>
+				{:else if session.syncStatus === 'error'}
+					<span class="status-icon error" title="Sync error">⚠️</span>
+				{/if}
+			</div>
+			
+			<button 
+				class="btn-icon delete-session" 
+				title="Delete Session"
+				onclick={(e) => { e.stopPropagation(); handleDeleteSession(); }}
+			>
+				🗑️
+			</button>
+
 			<span class="chevron">{isExpanded ? '▲' : '▼'}</span>
 		</div>
-	</button>
+	</div>
 
 	{#if isExpanded}
 		<div class="card-body" transition:slide={{ duration: 200 }}>
@@ -149,6 +188,14 @@
 		</div>
 	{/if}
 </div>
+
+<DeleteConfirmModal 
+	isOpen={showDeleteModal}
+	title="Delete Session"
+	message="Are you sure you want to delete this session and all its climbs? This cannot be undone."
+	onConfirm={confirmDeleteSession}
+	onCancel={() => showDeleteModal = false}
+/>
 
 <style>
 	.session-card {
@@ -410,6 +457,36 @@
 		color: var(--text-secondary);
 		font-style: italic;
 		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	.header-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.8rem;
+	}
+
+	.btn-icon {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 1rem;
+		opacity: 0.6;
+		transition: opacity 0.2s, transform 0.1s;
+		padding: 0.2rem;
+		border-radius: 4px;
+	}
+
+	.btn-icon:hover {
+		opacity: 1;
+		background: rgba(0,0,0,0.05);
+	}
+
+	.btn-icon:active {
+		transform: scale(0.95);
+	}
+
+	.delete-session {
 		font-size: 0.9rem;
 	}
 </style>

@@ -3,36 +3,44 @@
 	import { slide } from 'svelte/transition';
 	import type { IndoorClimbSession } from '$lib/types/session';
 	import IndoorClimbEntry from './IndoorClimbEntry.svelte';
+	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
+	import { deleteSession, updateSession } from '$lib/services/cache';
 
 	interface Props {
 		session: IndoorClimbSession;
+		onDelete: () => void;
 	}
 
-	let { session }: Props = $props();
+	let { session, onDelete }: Props = $props();
 
 	let isExpanded = $state(false);
+	let showDeleteModal = $state(false);
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
 	}
 
-	// Format date nicely
-	function formatDate(dateStr: string): string {
-		const d = new Date(dateStr);
-		return d.toLocaleDateString('en-GB', { 
-			weekday: 'short', 
-			day: 'numeric', 
-			month: 'short',
-			year: 'numeric'
-		});
+	function handleDeleteSession() {
+		showDeleteModal = true;
+	}
+
+	function confirmDeleteSession() {
+		deleteSession(session.id);
+		showDeleteModal = false;
+		onDelete();
+	}
+
+	function handleClimbDelete(climbIndex: number) {
+		const newClimbs = [...session.climbs];
+		newClimbs.splice(climbIndex, 1);
+		updateSession(session.id, { climbs: newClimbs });
+		onDelete();
 	}
 
 	// Calculate stats
 	let climbCount = $derived(session.climbs.length);
 	let maxGrade = $derived(
 		session.climbs.reduce((max, c) => {
-			// Extract number from grade (e.g. V4 -> 4) for basic comparison 
-			// A real implementation would need a proper grade parsing util
 			const num = parseInt(c.grade.replace(/\D/g, '')) || 0;
 			const maxNum = parseInt(max.replace(/\D/g, '')) || 0;
 			return num > maxNum ? c.grade : max;
@@ -41,7 +49,14 @@
 </script>
 
 <div class="session-card" class:expanded={isExpanded}>
-	<button class="card-header" onclick={toggleExpand} aria-expanded={isExpanded}>
+	<div 
+		class="card-header" 
+		role="button" 
+		tabindex="0" 
+		onclick={toggleExpand} 
+		onkeydown={(e) => e.key === 'Enter' && toggleExpand()}
+		aria-expanded={isExpanded}
+	>
 		<div class="header-main">
 			<div class="date-badge">
 				<span class="day">{new Date(session.date).getDate()}</span>
@@ -75,15 +90,28 @@
 			</div>
 		</div>
 
-		<div class="header-status">
-			{#if session.syncStatus === 'pending'}
-				<span class="status-icon pending" title="Waiting to sync">🔄</span>
-			{:else if session.syncStatus === 'error'}
-				<span class="status-icon error" title="Sync error">⚠️</span>
-			{/if}
+		<div class="header-actions">
+			<div class="header-status">
+				{#if session.syncStatus === 'pending'}
+					<span class="status-icon pending" title="Waiting to sync">🔄</span>
+				{:else if session.syncStatus === 'error'}
+					<span class="status-icon error" title="Sync error">⚠️</span>
+				{/if}
+			</div>
+			
+			<!-- Delete Button (Only visible when expanded or via hover, but better always accessible or in expanded view) -->
+			<!-- Let's put it in the header but propagation stop -->
+			<button 
+				class="btn-icon delete-session" 
+				title="Delete Session"
+				onclick={(e) => { e.stopPropagation(); handleDeleteSession(); }}
+			>
+				🗑️
+			</button>
+
 			<span class="chevron">{isExpanded ? '▲' : '▼'}</span>
 		</div>
-	</button>
+	</div>
 
 	{#if isExpanded}
 		<div class="card-body" transition:slide={{ duration: 200 }}>
@@ -142,8 +170,11 @@
 			<div class="climbs-list">
 				<h4>Climbs</h4>
 				<div class="climbs-container">
-					{#each session.climbs as climb}
-						<IndoorClimbEntry {climb} />
+					{#each session.climbs as climb, i}
+						<IndoorClimbEntry 
+							{climb} 
+							onDelete={() => handleClimbDelete(i)}
+						/>
 					{/each}
 					{#if session.climbs.length === 0}
 						<p class="no-climbs">No climbs logged for this session.</p>
@@ -153,6 +184,14 @@
 		</div>
 	{/if}
 </div>
+
+<DeleteConfirmModal 
+	isOpen={showDeleteModal}
+	title="Delete Session"
+	message="Are you sure you want to delete this session and all its climbs? This cannot be undone."
+	onConfirm={confirmDeleteSession}
+	onCancel={() => showDeleteModal = false}
+/>
 
 <style>
 	.session-card {

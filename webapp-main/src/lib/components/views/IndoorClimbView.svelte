@@ -6,6 +6,7 @@
 	import IndoorClimbCard from './indoor/IndoorClimbCard.svelte';
 	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
 	import { getIndoorSessions, type RemoteIndoorSession } from '$lib/services/api';
+	import { syncAllPending } from '$lib/services/sync';
 	import type { IndoorClimbSession } from '$lib/types/session';
 
 	// State
@@ -41,6 +42,9 @@
 		fetchError = '';
 
 		try {
+			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
+			// This ensures our local queue is empty before we pull down new data.
+			await syncAllPending();
 			const result = await getIndoorSessions();
 			
 			if (result.ok && result.data) {
@@ -80,20 +84,9 @@
 		applyFilters();
 	}
 
-	interface SessionGroup {
-		id: string; // Composite key
-		date: string;
-		sessions: IndoorClimbSession[]; // The underlying sessions
-		locationLabel: string;
-		gradeLabel: string;
-		climbCount: number;
-	}
-
-	let groupedSessions = $state<SessionGroup[]>([]);
-
 	function applyFilters() {
-		// 1. Filter raw sessions first
-		const filtered = sessions.filter(session => {
+		// Filter raw sessions
+		filteredSessions = sessions.filter(session => {
 			// Date Range
 			if (filters.startDate && session.date < filters.startDate) return false;
 			if (filters.endDate && session.date > filters.endDate) return false;
@@ -113,40 +106,6 @@
 
 			return true;
 		});
-
-		// 2. Group them
-		// Key: date|location|climbingType
-		const groups: Record<string, IndoorClimbSession[]> = {};
-		
-		filtered.forEach(s => {
-			const loc = s.customLocation || s.location;
-			const key = `${s.date}|${loc}|${s.climbingType}`;
-			if (!groups[key]) groups[key] = [];
-			groups[key].push(s);
-		});
-
-		// 3. Convert to SessionGroup objects
-		groupedSessions = Object.entries(groups).map(([key, groupSessions]) => {
-			const rep = groupSessions[0];
-			const loc = rep.customLocation || rep.location;
-			
-			const allGrades = groupSessions.flatMap(s => s.climbs.map(c => c.grade));
-			const uniqueGrades = [...new Set(allGrades)];
-			const gradeLabel = uniqueGrades.length > 3 
-				? `${uniqueGrades.length} grades`
-				: uniqueGrades.join(', ');
-
-			return {
-				id: key,
-				date: rep.date,
-				sessions: groupSessions,
-				locationLabel: loc,
-				gradeLabel,
-				climbCount: groupSessions.reduce((acc, s) => acc + s.climbs.length, 0)
-			};
-		}).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		
-		filteredSessions = filtered;
 	}
 </script>
 
@@ -184,17 +143,11 @@
 	</div>
 
 	<div class="sessions-list">
-		{#each groupedSessions as group (group.id)}
-			<!-- Create Virtual Merged Session -->
-			{@const mergedSession = {
-				...group.sessions[0],
-				climbs: group.sessions.flatMap(s => s.climbs),
-				syncStatus: (group.sessions.every(s => s.syncStatus === 'synced') ? 'synced' : 'pending') as 'synced' | 'pending' | 'error'
-			}}
-			<IndoorClimbCard session={mergedSession} />
+		{#each filteredSessions as session (session.id)}
+			<IndoorClimbCard {session} onDelete={loadLocalData} />
 		{/each}
 		
-		{#if groupedSessions.length === 0}
+		{#if filteredSessions.length === 0}
 			<div class="empty-state">
 				<p>No indoor climbing sessions found.</p>
 				{#if sessions.length > 0}

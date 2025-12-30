@@ -31,10 +31,10 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
     - Activity type dropdown (same 5 options as Log Data)
     *   **View Data (`src/lib/components/views/`)**:
         *   **Persistence:** All views now use `cache.mergeSessions()` to persist fetched remote data to local storage, ensuring offline availability.
-        *   `IndoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Location + Type. Features date/location/grade filtering.
-        *   `OutdoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Area + Crag + Type. Features date/area/crag filtering. Supports cascading location display.
-        *   `FingerboardingView.svelte`: Implemented. Timeline view with date filtering and collapsible session details.
-        *   `CompetitionView.svelte`: Implemented. Compact summary cards with expandable details for rounds and individual climb results.
+        *   `IndoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Location + Type. Features date/location/grade filtering. **Sync:** Calls `syncAllPending()` before fetching.
+        *   `OutdoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Area + Crag + Type. Features date/area/crag filtering. Supports cascading location display. **Sync:** Calls `syncAllPending()` before fetching.
+        *   `FingerboardingView.svelte`: Implemented. Timeline view with date filtering and collapsible session details. **Sync:** Calls `syncAllPending()` before fetching.
+        *   `CompetitionView.svelte`: Implemented. Compact summary cards with expandable details for rounds and individual climb results. **Sync:** Calls `syncAllPending()` before fetching.
         *   `indoor/IndoorClimbFilters.svelte`: Expandable filter panel.
         *   `indoor/IndoorClimbCard.svelte`: Expandable session card with collapsed load metrics summary and sync status.
         *   `indoor/IndoorClimbEntry.svelte`: Nested expandable climb details.
@@ -62,10 +62,11 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - **Deduplication Strategy:** "Local-First". When fetching remote data, we only add sessions that do not exist locally by ID.
   - **Smart Merge:** Detects "ghost" duplicates (remote session matches pending local session by content but has different ID). Updates local ID to match remote ID and marks as synced.
   - **ID Management:** Local sessions get temporary UUIDs. Upon successful sync, `updateSessionId` swaps these for permanent backend IDs.
-  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`, `mergeSessions`, `updateSessionId`
+  - **Delete Handling:** Deletes prompt local removel immediately. If session was synced, ID is added to `pending_deletes` queue in localStorage for sync.
+  - Functions: `getAllSessions`, `addSession`, `updateSession`, `deleteSession`, `getPendingSessions`, `markAsSynced`, `markAsSyncError`, `mergeSessions`, `updateSessionId`, `getPendingDeletes`, `addPendingDelete`, `removePendingDelete`
   - Helpers: `create...` and `get...` for specific session types
 * **Sync service** in `$lib/services/sync.ts`:
-  - `syncAllPending()`: Batch syncs all pending sessions, returns success/failed counts
+  - `syncAllPending()`: Batch syncs all pending sessions AND deletes. Pushes pending deletes first, then pending creates/updates. Returns success/failed counts.
   - `getPendingCount()`: Returns count of unsynced sessions
   - Handles per-activity-type syncing (supports indoor, outdoor, fingerboard, competition)
 * **API service** in `$lib/services/api.ts`:

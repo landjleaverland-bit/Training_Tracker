@@ -1,12 +1,35 @@
 <script lang="ts">
-    import { getCompetitionSessions, mergeSessions } from '$lib/services/cache';
+    import { getCompetitionSessions, mergeSessions, deleteSession } from '$lib/services/cache';
+    import { syncAllPending } from '$lib/services/sync';
     import { getCompetitionSessions as fetchRemote } from '$lib/services/api';
     import type { CompetitionSession } from '$lib/types/session';
     import { slide } from 'svelte/transition';
+    import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 
     let sessions = $state<CompetitionSession[]>([]);
     let loading = $state(true);
     let expandedDetails = $state<Set<string>>(new Set());
+
+    // Delete state
+    let showDeleteModal = $state(false);
+    let selectedSessionId = $state<string | null>(null);
+
+    function handleDeleteSession(id: string) {
+        selectedSessionId = id;
+        showDeleteModal = true;
+    }
+
+    function confirmDeleteSession() {
+        if (selectedSessionId) {
+            deleteSession(selectedSessionId);
+            selectedSessionId = null;
+            showDeleteModal = false;
+            // Reload local data
+            sessions = getCompetitionSessions().sort((a, b) => 
+                new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+        }
+    }
 
     async function loadSessions() {
         loading = true;
@@ -17,6 +40,9 @@
 
         // Then try remote sync
         try {
+            // Sync ALL pending local changes (deletes, creates, updates) to the server first.
+            // This ensures our local queue is empty before we pull down new data.
+            await syncAllPending();
             const result = await fetchRemote();
             if (result.ok && result.data) {
                 // Format remote sessions
@@ -102,7 +128,13 @@
         <div class="timeline">
             {#each sessions as session}
                 <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
-                    <button class="card-header" onclick={() => toggleExpand(session.id)}>
+                    <div 
+                        class="card-header" 
+                        role="button" 
+                        tabindex="0" 
+                        onclick={() => toggleExpand(session.id)}
+                        onkeydown={(e) => e.key === 'Enter' && toggleExpand(session.id)}
+                    >
                         <div class="header-main">
                             <div class="left-col">
                                 <span class="venue">{session.customVenue || session.venue}</span>
@@ -115,8 +147,18 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="chevron">{expandedDetails.has(session.id) ? '▲' : '▼'}</span>
-                    </button>
+                        <div class="header-status">
+                            <span class="sync-dot" class:synced={session.syncStatus === 'synced'} title={session.syncStatus === 'synced' ? 'Synced' : 'Local'}>●</span>
+                            <button 
+                                class="btn-icon delete-btn" 
+                                title="Delete Session"
+                                onclick={(e) => { e.stopPropagation(); handleDeleteSession(session.id); }}
+                            >
+                                🗑️
+                            </button>
+                            <span class="chevron">{expandedDetails.has(session.id) ? '▲' : '▼'}</span>
+                        </div>
+                    </div>
 
                     {#if expandedDetails.has(session.id)}
                         <div class="card-body" transition:slide={{ duration: 200 }}>
@@ -210,6 +252,28 @@
 		opacity: 0.7;
 		cursor: not-allowed;
 	}
+
+    .header-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon:hover {
+        opacity: 1;
+        background: rgba(0,0,0,0.05);
+        border-radius: 4px;
+    }
 
 	.spinner {
 		width: 14px;

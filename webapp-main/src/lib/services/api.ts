@@ -99,6 +99,20 @@ export interface RemoteIndoorSession extends IndoorSessionPayload {
 }
 
 /**
+ * Update an indoor session
+ */
+export async function updateIndoorSession(
+    id: string,
+    session: IndoorSessionPayload
+): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/indoor_sessions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(session)
+    });
+}
+
+
+/**
  * Get all indoor sessions from the server
  */
 export async function getIndoorSessions(): Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }> {
@@ -171,10 +185,30 @@ export async function createOutdoorSession(
 }
 
 /**
+ * Update an outdoor session
+ */
+export async function updateOutdoorSession(
+    id: string,
+    session: OutdoorSessionPayload
+): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/outdoor_sessions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(session)
+    });
+}
+
+/**
  * Get all outdoor sessions from the server
  */
 export async function getOutdoorSessions(): Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }> {
     return apiRequest<RemoteOutdoorSession[]>('/outdoor_sessions', { method: 'GET' });
+}
+
+/**
+ * Delete an outdoor session
+ */
+export async function deleteOutdoorSession(id: string): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/outdoor_sessions/${id}`, { method: 'DELETE' });
 }
 
 /**
@@ -216,8 +250,28 @@ export async function createFingerboardSession(
     return { ok: false, error: result.error };
 }
 
+/**
+ * Update a fingerboard session
+ */
+export async function updateFingerboardSession(
+    id: string,
+    session: FingerboardSessionPayload
+): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/fingerboard_sessions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(session)
+    });
+}
+
 export async function getFingerboardSessions(): Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }> {
     return apiRequest<RemoteFingerboardSession[]>('/fingerboard_sessions', { method: 'GET' });
+}
+
+/**
+ * Delete a fingerboard session
+ */
+export async function deleteFingerboardSession(id: string): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/fingerboard_sessions/${id}`, { method: 'DELETE' });
 }
 
 /**
@@ -263,6 +317,26 @@ export async function createCompetitionSession(
     return { ok: false, error: result.error };
 }
 
+/**
+ * Update a competition session
+ */
+export async function updateCompetitionSession(
+    id: string,
+    session: CompetitionSessionPayload
+): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/competition_sessions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(session)
+    });
+}
+
 export async function getCompetitionSessions(): Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }> {
     return apiRequest<RemoteCompetitionSession[]>('/competition_sessions', { method: 'GET' });
+}
+
+/**
+ * Delete a competition session
+ */
+export async function deleteCompetitionSession(id: string): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/competition_sessions/${id}`, { method: 'DELETE' });
 }

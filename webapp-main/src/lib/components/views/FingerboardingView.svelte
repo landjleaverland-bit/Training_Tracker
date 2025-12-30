@@ -1,14 +1,37 @@
 <script lang="ts">
-    import { getFingerboardSessions, mergeSessions } from '$lib/services/cache';
+    import { getFingerboardSessions, mergeSessions, deleteSession } from '$lib/services/cache';
+    import { syncAllPending } from '$lib/services/sync';
     import { getFingerboardSessions as fetchRemote } from '$lib/services/api';
     import type { FingerboardSession } from '$lib/types/session';
     import { slide } from 'svelte/transition';
+    import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 
     let sessions = $state<FingerboardSession[]>([]);
     let loading = $state(true);
     let startDate = $state('');
     let endDate = $state('');
     let expandedDetails = $state<Set<string>>(new Set());
+    
+    // Delete state
+    let showDeleteModal = $state(false);
+    let selectedSessionId = $state<string | null>(null);
+
+    function handleDeleteSession(id: string) {
+        selectedSessionId = id;
+        showDeleteModal = true;
+    }
+
+    function confirmDeleteSession() {
+        if (selectedSessionId) {
+            deleteSession(selectedSessionId);
+            selectedSessionId = null;
+            showDeleteModal = false;
+            // Reload local data
+            sessions = getFingerboardSessions().sort((a, b) => 
+                new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+        }
+    }
 
     async function loadSessions() {
         loading = true;
@@ -19,6 +42,9 @@
 
         // Then try remote sync
         try {
+            // Sync ALL pending local changes (deletes, creates, updates) to the server first.
+            // This ensures our local queue is empty before we pull down new data.
+            await syncAllPending();
             const result = await fetchRemote();
             if (result.ok && result.data) {
                 // Determine what's new (simple logic: ID check)
@@ -126,7 +152,13 @@
         <div class="timeline">
             {#each filteredSessions as session}
                 <div class="session-card" class:expanded={expandedDetails.has(session.id)}>
-                    <button class="card-header" onclick={() => toggleExpand(session.id)}>
+                    <div 
+                        class="card-header" 
+                        role="button" 
+                        tabindex="0" 
+                        onclick={() => toggleExpand(session.id)}
+                        onkeydown={(e) => e.key === 'Enter' && toggleExpand(session.id)}
+                    >
                         <div class="header-main">
                             <span class="session-date">
                                 {new Date(session.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
@@ -140,9 +172,18 @@
                         </div>
                         <div class="header-status">
                             <span class="sync-dot" class:synced={session.syncStatus === 'synced'} title={session.syncStatus === 'synced' ? 'Synced' : 'Local'}>●</span>
+                            
+                            <button 
+                                class="btn-icon delete-btn" 
+                                title="Delete Session"
+                                onclick={(e) => { e.stopPropagation(); handleDeleteSession(session.id); }}
+                            >
+                                🗑️
+                            </button>
+
                             <span class="chevron">{expandedDetails.has(session.id) ? '▲' : '▼'}</span>
                         </div>
-                    </button>
+                    </div>
 
                     {#if expandedDetails.has(session.id)}
                         <div class="card-body" transition:slide={{ duration: 200 }}>
@@ -175,6 +216,14 @@
         </div>
     {/if}
 </div>
+
+<DeleteConfirmModal 
+    isOpen={showDeleteModal}
+    title="Delete Fingerboard Session"
+    message="Are you sure you want to delete this session? This cannot be undone."
+    onConfirm={confirmDeleteSession}
+    onCancel={() => showDeleteModal = false}
+/>
 
 <style>
 	.view-content {
@@ -250,6 +299,23 @@
 		opacity: 0.7;
 		cursor: not-allowed;
 	}
+
+    .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+        font-size: 0.9rem;
+        margin-left: 0.5rem;
+    }
+
+    .btn-icon:hover {
+        opacity: 1;
+        background: rgba(0,0,0,0.05);
+        border-radius: 4px;
+    }
 
 	.spinner {
 		width: 14px;

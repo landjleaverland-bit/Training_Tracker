@@ -6,6 +6,7 @@
 import type { Session, IndoorClimbSession, OutdoorClimbSession, FingerboardSession, CompetitionSession } from '$lib/types/session';
 
 const CACHE_KEY = 'training_tracker_sessions';
+const PENDING_DELETES_KEY = 'training_tracker_pending_deletes';
 
 // Generate a unique ID
 function generateId(): string {
@@ -40,6 +41,42 @@ export function getAllSessions(): Session[] {
 function saveAllSessions(sessions: Session[]): void {
     if (typeof localStorage === 'undefined') return;
     localStorage.setItem(CACHE_KEY, JSON.stringify(sessions));
+}
+
+/**
+ * Get pending delete IDs
+ */
+export function getPendingDeletes(): string[] {
+    if (typeof localStorage === 'undefined') return [];
+    const data = localStorage.getItem(PENDING_DELETES_KEY);
+    if (!data) return [];
+    try {
+        return JSON.parse(data) as string[];
+    } catch {
+        return [];
+    }
+}
+
+/**
+ * Add ID to pending deletes
+ */
+function addPendingDelete(id: string): void {
+    if (typeof localStorage === 'undefined') return;
+    const pending = getPendingDeletes();
+    if (!pending.includes(id)) {
+        pending.push(id);
+        localStorage.setItem(PENDING_DELETES_KEY, JSON.stringify(pending));
+    }
+}
+
+/**
+ * Remove ID from pending deletes (after sync)
+ */
+export function removePendingDelete(id: string): void {
+    if (typeof localStorage === 'undefined') return;
+    const pending = getPendingDeletes();
+    const filtered = pending.filter(pId => pId !== id);
+    localStorage.setItem(PENDING_DELETES_KEY, JSON.stringify(filtered));
 }
 
 /**
@@ -85,14 +122,25 @@ export function updateSession(id: string, updates: Partial<Session>): Session | 
 
 /**
  * Delete a session from the cache
+ * If session was synced, it queues a delete request for next sync.
  */
 export function deleteSession(id: string): boolean {
     const sessions = getAllSessions();
+    const sessionToDelete = sessions.find(s => s.id === id);
+
+    if (!sessionToDelete) return false;
+
+    // Hard delete from local storage
     const filtered = sessions.filter(s => s.id !== id);
-
-    if (filtered.length === sessions.length) return false;
-
     saveAllSessions(filtered);
+
+    // If it was already synced (or failed sync but might have partially succeeded/exists on server),
+    // we need to tell the server to delete it.
+    // 'pending' input that hasn't touched server yet doesn't need API delete.
+    if (sessionToDelete.syncStatus === 'synced' || sessionToDelete.syncStatus === 'error') {
+        addPendingDelete(id);
+    }
+
     return true;
 }
 

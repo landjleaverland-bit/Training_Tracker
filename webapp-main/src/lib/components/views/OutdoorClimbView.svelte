@@ -6,6 +6,7 @@
 	import OutdoorClimbCard from './outdoor/OutdoorClimbCard.svelte';
 	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
 	import { getOutdoorSessions, type RemoteOutdoorSession } from '$lib/services/api';
+	import { syncAllPending } from '$lib/services/sync';
 	import type { OutdoorClimbSession } from '$lib/types/session';
 
 	// State
@@ -42,6 +43,9 @@
 		fetchError = '';
 
 		try {
+			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
+			// This ensures our local queue is empty before we pull down new data.
+			await syncAllPending();
 			const result = await getOutdoorSessions();
 			
 			if (result.ok && result.data) {
@@ -81,21 +85,9 @@
 		applyFilters();
 	}
 
-	interface SessionGroup {
-		id: string; // Composite key
-		date: string;
-		sessions: OutdoorClimbSession[]; // The underlying sessions
-		// Aggregated fields for display
-		locationLabel: string;
-		gradeLabel: string; // e.g. "6a - 7b"
-		climbCount: number;
-	}
-
-	let groupedSessions = $state<SessionGroup[]>([]);
-
 	function applyFilters() {
-		// 1. Filter raw sessions first
-		const filtered = sessions.filter(session => {
+		// Filter raw sessions
+		filteredSessions = sessions.filter(session => {
 			// Date Range
 			if (filters.startDate && session.date < filters.startDate) return false;
 			if (filters.endDate && session.date > filters.endDate) return false;
@@ -118,44 +110,6 @@
 
 			return true;
 		});
-
-		// 2. Group them
-		// Key: date|area|crag|climbingType
-		const groups: Record<string, OutdoorClimbSession[]> = {};
-		
-		filtered.forEach(s => {
-			// Normalize keys to ensure matching
-			const key = `${s.date}|${s.area.trim()}|${s.crag.trim()}|${s.climbingType}`;
-			if (!groups[key]) groups[key] = [];
-			groups[key].push(s);
-		});
-
-		// 3. Convert to SessionGroup objects
-		groupedSessions = Object.entries(groups).map(([key, groupSessions]) => {
-			// Use the first session as representative for shared fields
-			const rep = groupSessions[0];
-			
-			// Calculate grade range
-			const allGrades = groupSessions.flatMap(s => s.climbs.map(c => c.grade));
-			// (Simple display for now, could be more complex sorting)
-			const uniqueGrades = [...new Set(allGrades)];
-			const gradeLabel = uniqueGrades.length > 3 
-				? `${uniqueGrades.length} grades`
-				: uniqueGrades.join(', ');
-
-			return {
-				id: key,
-				date: rep.date,
-				sessions: groupSessions,
-				locationLabel: `${rep.area} - ${rep.crag}`,
-				gradeLabel,
-				climbCount: groupSessions.reduce((acc, s) => acc + s.climbs.length, 0)
-			};
-		}).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		
-		// For backward compatibility with existing "filteredSessions" usage if strictly needed,
-		// but we will update the view loop to use groupedSessions.
-		filteredSessions = filtered; 
 	}
 
 </script>
@@ -194,22 +148,11 @@
 	</div>
 
 	<div class="sessions-list">
-		{#each groupedSessions as group (group.id)}
-			<!-- 
-				Create a "Virtual" session that merges all climbs from the group.
-				We pick metadata from the first session.
-			-->
-			{@const mergedSession = {
-				...group.sessions[0],
-				climbs: group.sessions.flatMap(s => s.climbs),
-				// If any session in group is synced, show as synced (or show mixed status?)
-				// Let's rely on the first one or show 'synced' only if all are synced.
-				syncStatus: (group.sessions.every(s => s.syncStatus === 'synced') ? 'synced' : 'pending') as 'synced' | 'pending' | 'error'
-			}}
-			<OutdoorClimbCard session={mergedSession} />
+		{#each filteredSessions as session (session.id)}
+			<OutdoorClimbCard {session} onDelete={loadLocalData} />
 		{/each}
 		
-		{#if groupedSessions.length === 0}
+		{#if filteredSessions.length === 0}
 			<div class="empty-state">
 				<p>No outdoor climbing sessions found.</p>
 				{#if sessions.length > 0}
