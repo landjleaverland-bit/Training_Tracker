@@ -8,29 +8,22 @@
 		<link rel="manifest" href="./manifest.json" />
 		<link rel="apple-touch-icon" href="./icon-192.png" />
 		
-		<link rel="modulepreload" href="./_app/immutable/entry/start.BQ_mSOhG.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/C8w_S9ZG.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/CLLqIroS.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/b6ntCrib.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.YUUccFms.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/B3P2p6-W.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DFOW_6n2.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/CFKLpgVY.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/pRblHy0t.js">
-		<script>
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('/Training_Tracker/service-worker.js')
-						.catch(err => console.log('Service worker registration failed:', err));
-				});
-			}
-		</script>
+		<link rel="modulepreload" href="./_app/immutable/entry/start.BBBM2rCa.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/Dc6KyNeG.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/yFHbHBSN.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/DvPVDa4V.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.CpkB2AUD.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/thJOzIHm.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/DniD0FMI.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/C-6T9e8d.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/9Nh2VD-z.js">
+
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_q0du28 = {
+					__sveltekit_wzpqor = {
 						base: new URL(".", location).pathname.slice(0, -1),
 						assets: "/Training_Tracker"
 					};
@@ -38,11 +31,17 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("./_app/immutable/entry/start.BQ_mSOhG.js"),
-						import("./_app/immutable/entry/app.YUUccFms.js")
+						import("./_app/immutable/entry/start.BBBM2rCa.js"),
+						import("./_app/immutable/entry/app.CpkB2AUD.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
+
+					if ('serviceWorker' in navigator) {
+						addEventListener('load', function () {
+							navigator.serviceWorker.register('./service-worker.js');
+						});
+					}
 				}
 			</script>
 		</div>
