@@ -1,10 +1,13 @@
 <script lang="ts">
 	// View Data page - for viewing training history
+	import { fade, scale } from 'svelte/transition';
 	import IndoorClimbView from '$lib/components/views/IndoorClimbView.svelte';
 	import OutdoorClimbView from '$lib/components/views/OutdoorClimbView.svelte';
 	import GymSessionView from '$lib/components/views/GymSessionView.svelte';
 	import FingerboardingView from '$lib/components/views/FingerboardingView.svelte';
 	import CompetitionView from '$lib/components/views/CompetitionView.svelte';
+	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
+	import { clearCache } from '$lib/services/cache';
 
 	const activityTypes = [
 		{ value: 'indoor_climb', label: 'Indoor Climb', icon: '🧗' },
@@ -15,13 +18,74 @@
 	];
 
 	let selectedActivity = $state('');
+	let isSettingsOpen = $state(false);
+	let isClearCacheConfirmOpen = $state(false);
+
+	function openSettings() {
+		isSettingsOpen = true;
+	}
+
+	function closeSettings() {
+		isSettingsOpen = false;
+	}
+
+	function handleClearCacheClick() {
+		// Close settings first? Or keep it open behind? 
+		// Let's close settings and open confirm
+		isSettingsOpen = false;
+		isClearCacheConfirmOpen = true;
+	}
+
+	function confirmClearCache() {
+		clearCache();
+		// Page reloads, so no need to clean up state
+	}
 </script>
 
 <div class="page">
 	<div class="page-header">
-		<h1>📊 View Data</h1>
-		<p class="subtitle">Browse your training history</p>
+		<div>
+			<h1>📊 View Data</h1>
+			<p class="subtitle">Browse your training history</p>
+		</div>
+		<button class="settings-btn" onclick={openSettings} aria-label="Settings">
+			⚙️
+		</button>
 	</div>
+	
+	{#if isSettingsOpen}
+		<!-- Backdrop -->
+		<button class="backdrop" onclick={closeSettings} transition:fade={{ duration: 200 }} aria-label="Close settings"></button>
+
+		<!-- Settings Modal -->
+		<div class="settings-modal" role="dialog" aria-modal="true" transition:scale={{ duration: 200, start: 0.9 }}>
+			<div class="settings-header">
+				<h3>Settings</h3>
+				<button class="close-btn" onclick={closeSettings}>✕</button>
+			</div>
+			
+			<div class="settings-content">
+				<div class="setting-item">
+					<div class="setting-info">
+						<span class="setting-label">Local Data</span>
+						<span class="setting-desc">Clear all cached data on this device</span>
+					</div>
+					<button class="btn-clear-cache" onclick={handleClearCacheClick}>
+						Clear Cache
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<DeleteConfirmModal 
+		isOpen={isClearCacheConfirmOpen}
+		title="Clear all local data?"
+		message="Are you sure you want to clear all locally cached data? This will remove all sessions stored on this device. Data already synced to the cloud will be preserved."
+		confirmKeyword="clear"
+		onConfirm={confirmClearCache}
+		onCancel={() => isClearCacheConfirmOpen = false}
+	/>
 	
 	<div class="content-card">
 		<div class="form-group">
@@ -64,6 +128,128 @@
 
 	.page-header {
 		margin-bottom: 1.5rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+
+	.settings-btn {
+		background: rgba(255, 255, 255, 0.5);
+		border: 1px solid rgba(74, 155, 155, 0.2);
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.25rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.settings-btn:hover {
+		background: white;
+		transform: rotate(45deg);
+		box-shadow: 0 2px 10px rgba(74, 155, 155, 0.1);
+	}
+
+	.backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 1000;
+		border: none;
+		cursor: pointer;
+	}
+
+	.settings-modal {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: white;
+		padding: 1.5rem;
+		border-radius: 16px;
+		box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+		z-index: 1001;
+		width: 90%;
+		max-width: 400px;
+	}
+
+	.settings-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.5rem;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid #eee;
+	}
+
+	.settings-header h3 {
+		margin: 0;
+		color: var(--text-primary);
+		font-size: 1.25rem;
+	}
+
+	.close-btn {
+		background: transparent;
+		border: none;
+		font-size: 1.2rem;
+		color: var(--text-secondary);
+		cursor: pointer;
+		padding: 0.25rem;
+		line-height: 1;
+		border-radius: 4px;
+	}
+
+	.close-btn:hover {
+		background: #f5f5f5;
+		color: var(--text-primary);
+	}
+
+	.setting-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.setting-info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.setting-label {
+		font-weight: 600;
+		color: var(--text-primary);
+		font-size: 0.95rem;
+	}
+
+	.setting-desc {
+		font-size: 0.8rem;
+		color: var(--text-secondary);
+	}
+
+	.btn-clear-cache {
+		padding: 0.5rem 1rem;
+		border-radius: 8px;
+		border: 1px solid #ff4d4d;
+		background: rgba(255, 77, 77, 0.1);
+		color: #ff4d4d;
+		font-weight: 600;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+	}
+
+	.btn-clear-cache:hover {
+		background: #ff4d4d;
+		color: white;
 	}
 
 	.page-header h1 {

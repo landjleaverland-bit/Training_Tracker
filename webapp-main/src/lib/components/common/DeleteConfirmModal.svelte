@@ -4,19 +4,21 @@
     let { 
         isOpen = false, 
         title = 'Confirm Delete', 
-        message = 'Are you sure you want to delete this item? This action cannot be undone.', 
+        message = 'Are you sure you want to delete this item? This action cannot be undone.',
+        confirmKeyword = 'delete',
         onConfirm, 
         onCancel 
     } = $props<{
         isOpen: boolean;
         title?: string;
         message?: string;
+        confirmKeyword?: string;
         onConfirm: () => void;
         onCancel: () => void;
     }>();
 
     let input = $state('');
-    let canConfirm = $derived(input.toLowerCase() === 'delete');
+    let canConfirm = $derived(input.toLowerCase() === confirmKeyword.toLowerCase());
 
     function handleConfirm() {
         if (canConfirm) {
@@ -41,12 +43,12 @@
         <p>{message}</p>
         
         <div class="input-group">
-            <label for="delete-confirm">Type <strong>delete</strong> to confirm:</label>
+            <label for="delete-confirm">Type <strong>{confirmKeyword}</strong> to confirm:</label>
             <input 
                 type="text" 
                 id="delete-confirm"
                 bind:value={input} 
-                placeholder="delete"
+                placeholder={confirmKeyword}
                 autocomplete="off"
             />
         </div>

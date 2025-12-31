@@ -416,3 +416,16 @@ export function updateSessionId(oldId: string, newId: string): boolean {
     return true;
 }
 
+
+/**
+ * Clear all local cache and reload the application
+ */
+export function clearCache(): void {
+    if (typeof localStorage === 'undefined') return;
+
+    localStorage.removeItem(CACHE_KEY);
+    localStorage.removeItem(PENDING_DELETES_KEY);
+
+    // Force reload to reset application state
+    window.location.reload();
+}
