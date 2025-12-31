@@ -200,9 +200,9 @@
                     </div>
 
                     {#if expandedDetails.has(session.id)}
-                        <div class="card-body" transition:slide={{ duration: 200 }}>
+                        <div class="card-body" transition:slide={{ duration: 150 }}>
                             <div class="exercises-list">
-                                {#each session.exercises as exercise}
+                                {#each session.exercises || [] as exercise}
                                     <div class="exercise-item">
                                         <div class="ex-header">
                                             <span class="ex-name">{exercise.name}</span>

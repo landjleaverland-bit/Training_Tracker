@@ -115,7 +115,7 @@
 	</div>
 
 	{#if isExpanded}
-		<div class="card-body" transition:slide={{ duration: 200 }}>
+		<div class="card-body" transition:slide={{ duration: 150 }}>
 			<!-- Session Details -->
 			<div class="details-grid">
 				<div class="detail-item">
@@ -268,14 +268,14 @@
 			<div class="climbs-list">
 				<h4>Climbs</h4>
 				<div class="climbs-container">
-					{#each session.climbs as climb, i}
+					{#each session.climbs || [] as climb, i}
 						<IndoorClimbEntry 
 							{climb} 
 							onDelete={() => handleClimbDelete(i)}
                             showClimbType={session.climbingType === 'Mixed'}
 						/>
 					{/each}
-					{#if session.climbs.length === 0}
+					{#if (session.climbs || []).length === 0}
 						<p class="no-climbs">No climbs logged for this session.</p>
 					{/if}
 				</div>

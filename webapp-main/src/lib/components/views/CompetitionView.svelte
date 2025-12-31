@@ -171,10 +171,10 @@
                     </div>
 
                     {#if expandedDetails.has(session.id)}
-                        <div class="card-body" transition:slide={{ duration: 200 }}>
+                        <div class="card-body" transition:slide={{ duration: 150 }}>
                             {#if session.rounds}
                                 <div class="rounds-list">
-                                    {#each session.rounds as round}
+                                    {#each session.rounds || [] as round}
                                         <div class="round-item">
                                             <div class="round-header">
                                                 <span class="round-name">{round.name}</span>
@@ -185,7 +185,7 @@
                                             
                                             {#if round.climbs}
                                                 <div class="climbs-list">
-                                                    {#each round.climbs as climb}
+                                                    {#each round.climbs || [] as climb}
                                                         <div class="climb-row">
                                                             <div class="climb-info">
                                                                 <span class="c-name">{climb.name}</span>
