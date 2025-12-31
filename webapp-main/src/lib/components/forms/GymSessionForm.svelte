@@ -257,6 +257,13 @@
         gap: 1rem;
     }
 
+    @media (max-width: 640px) {
+        .meta-row {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+
     label {
         display: flex;
         flex-direction: column;
