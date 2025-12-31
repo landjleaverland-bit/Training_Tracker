@@ -134,15 +134,30 @@
 
     <!-- Exercise Picker Modal -->
     {#if showExercisePicker}
-        <div class="modal-overlay" on:click={() => showExercisePicker = false} transition:fade>
-            <div class="picker-modal" on:click|stopPropagation transition:fly={{ y: 100, duration: 300 }}>
+        <div 
+            class="modal-overlay" 
+            role="button"
+            tabindex="0"
+            on:click={() => showExercisePicker = false} 
+            on:keydown={(e) => e.key === 'Escape' && (showExercisePicker = false)}
+            transition:fade
+            aria-label="Close modal"
+        >
+            <div 
+                class="picker-modal" 
+                role="dialog"
+                aria-modal="true"
+                on:click|stopPropagation 
+                on:keydown|stopPropagation
+                tabindex="-1"
+                transition:fly={{ y: 100, duration: 300 }}
+            >
                 <div class="picker-header">
                     <h3>Add Exercise</h3>
                     <input 
                         type="text" 
                         placeholder="Search exercises..." 
                         bind:value={searchQuery} 
-                        autoFocus
                     />
                 </div>
                 <div class="picker-list">

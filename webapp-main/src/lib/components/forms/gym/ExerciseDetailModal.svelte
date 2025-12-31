@@ -14,12 +14,27 @@
 </script>
 
 {#if visible}
-    <div class="modal-overlay" on:click={close}>
-        <div class="modal-content" transition:fly={{ y: 50, duration: 300 }} on:click|stopPropagation>
+    <div 
+        class="modal-overlay" 
+        role="button"
+        tabindex="0"
+        on:click={close}
+        on:keydown={(e) => e.key === 'Escape' && close()}
+        aria-label="Close modal"
+    >
+        <div 
+            class="modal-content" 
+            role="dialog"
+            aria-modal="true"
+            transition:fly={{ y: 50, duration: 300 }} 
+            on:click|stopPropagation
+            on:keydown|stopPropagation
+            tabindex="-1"
+        >
             <div class="header">
                 <h3>{exercise.name}</h3>
                 <span class="category">{exercise.category}</span>
-                <button class="close-btn" on:click={close}>×</button>
+                <button class="close-btn" on:click={close} aria-label="Close">×</button>
             </div>
             
             <div class="visual-placeholder">

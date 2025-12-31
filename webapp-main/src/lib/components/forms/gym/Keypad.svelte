@@ -42,8 +42,8 @@
 
 <div class="keypad">
     <div class="header">
-        <label>{label}</label>
-        <div class="display">{value || 0}</div>
+        <span class="label">{label}</span>
+        <div class="display" role="textbox" aria-readonly="true" aria-label={label}>{value || 0}</div>
     </div>
     <div class="quick-adds">
         <button on:click={() => add(2.5)}>+2.5</button>
@@ -81,6 +81,11 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1rem;
+    }
+
+    .label {
+        color: var(--text-secondary);
+        font-weight: bold;
     }
     
     .display {
