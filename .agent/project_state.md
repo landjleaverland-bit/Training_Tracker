@@ -26,6 +26,7 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
     - Conditional form components in `$lib/components/forms/`:
     - **IndoorClimbForm**: date, location (6 options + Other), climbing_type, **training_details** (Multi-select: Type, Category, Energy System, Technique, Wall Angle), load metrics, climbs table
     - **OutdoorClimbForm**: date, area (cascading dropdown -> crag), sector, climbing_type, **training_details** (Multi-select), load metrics, climbs table
+    - **GymSessionForm**: date, name, bodyweight, exercise flow (search/add exercise), rich set logging (weight/reps, RPE, tags: Warmup/Failure/Drop), rest timer, plate calculator
     - **FingerboardingForm**: date, exercise cards (Name, Grip), multi-set logging (Weight/Reps), notes
     - **CompetitionForm**: date, venue (list + Custom), type (Boulder/Lead/Speed), round configuration (Standard vs Result modes), dynamic climbs table or final position input
     - **Sync banner**: Shows when sessions are pending sync; includes "Sync Now" button when online, offline indicator when offline
@@ -35,6 +36,7 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
         *   **Persistence:** All views now use `cache.mergeSessions()` to persist fetched remote data to local storage, ensuring offline availability.
         *   `IndoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Location + Type. Features date/location/grade filtering. **Sync:** Calls `syncAllPending()` before fetching.
         *   `OutdoorClimbView.svelte`: Implemented. **Visual Grouping:** Groups sessions by Date + Area + Crag + Type. Features date/area/crag filtering. Supports cascading location display. **Sync:** Calls `syncAllPending()` before fetching.
+        *   `GymSessionView.svelte`: Implemented. **Visual Grouping:** List of sessions. Features date/name filtering. **Sync:** Calls `syncAllPending()` before fetching.
         *   `FingerboardingView.svelte`: Implemented. Timeline view with date filtering and collapsible session details. **Sync:** Calls `syncAllPending()` before fetching.
         *   `CompetitionView.svelte`: Implemented. Compact summary cards with expandable details for rounds and individual climb results. **Sync:** Calls `syncAllPending()` before fetching.
         *   `indoor/IndoorClimbFilters.svelte`: Expandable filter panel.
@@ -43,12 +45,14 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
         *   `outdoor/OutdoorClimbFilters.svelte`: Expandable filter panel.
         *   `outdoor/OutdoorClimbCard.svelte`: Expandable session card with collapsed load metrics summary and sync status.
         *   `outdoor/OutdoorClimbEntry.svelte`: Nested expandable climb details (distinct from indoor).
+        *   `gym/GymSessionFilters.svelte`: Expandable filter panel.
+        *   `gym/GymSessionCard.svelte`: Expandable session card with stats summary and detailed exercise list.
 * **Backend:** Go 1.21 Cloud Function with Firestore integration.
   - `function.go`: Main entry point with CORS, auth, naming routing for indoor/outdoor/fingerboard/competition
   - `handlers.go`: CRUD handlers for all 4 session types
   - `firestore.go`: Client init (database: `climbing-tracker-db`, collections: `Indoor_Climbs`, `Outdoor_Climbs`, `Fingerboarding`, `Competitions`)
   - `models.go`: Go structs for Indoor, Outdoor, Fingerboard, and Competition sessions
-  - Endpoints: GET/POST/PUT/DELETE for `/indoor_sessions`, `/outdoor_sessions`, `/fingerboard_sessions`, `/competition_sessions`
+  - Endpoints: GET/POST/PUT/DELETE for `/indoor_sessions`, `/outdoor_sessions`, `/gym_sessions`, `/fingerboard_sessions`, `/competition_sessions`
 * **Infrastructure:** Project and DB created manually.
 
 ## 4. Schema & Data Models
@@ -56,6 +60,7 @@ A secure, serverless gym workout logger using SvelteKit (SPA) and Go (Cloud Func
   - `BaseSession`: id, activityType, date, createdAt, updatedAt, **syncStatus** (pending/synced/error), syncedAt
   - `IndoorClimbSession`: extends BaseSession with location, climbingType, **trainingTypes**, **categories**, **energySystems**, **techniqueFocuses**, **wallAngles**, loads, climbs[]
   - `OutdoorClimbSession`: extends BaseSession with area, crag, sector, climbingType, **trainingTypes**, **categories**, **energySystems**, **techniqueFocuses**, loads, climbs[]
+  - `GymSession`: extends BaseSession with name, bodyweight, exercises[] (name, notes, linkedTo, sets[{ weight, reps, tags... }])
   - `FingerboardSession`: extends BaseSession with exercises[] (gripType, details[{ weight, reps }])
   - `CompetitionSession`: extends BaseSession with venue, type, loads, rounds[] (climbs/position)
 * **Cache service** in `$lib/services/cache.ts`:
