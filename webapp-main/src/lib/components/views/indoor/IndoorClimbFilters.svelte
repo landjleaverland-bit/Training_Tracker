@@ -38,6 +38,8 @@
 	let sessionType = $state(''); // Maps to trainingType in data
 	let grade = $state('');
 
+    let isOtherLocation = $state(false);
+
 	function toggleExpand() {
 		isExpanded = !isExpanded;
 	}
@@ -46,6 +48,7 @@
 		startDate = '';
 		endDate = '';
 		location = '';
+        isOtherLocation = false;
 		sessionType = '';
 		grade = '';
 		applyFilters();
@@ -60,6 +63,22 @@
 			grade
 		});
 	}
+
+    function onLocationChange() {
+        if (location === 'Other') {
+            isOtherLocation = true;
+            location = '';
+            // Don't apply filters yet, let user type
+        } else {
+            applyFilters();
+        }
+    }
+
+    function cancelOtherLocation() {
+        isOtherLocation = false;
+        location = '';
+        applyFilters();
+    }
 </script>
 
 <div class="filter-container">
@@ -88,12 +107,31 @@
 				</div>
 				<div class="filter-item">
 					<label for="location-filter">Location</label>
-					<select id="location-filter" bind:value={location} onchange={applyFilters}>
-						<option value="">Any Location</option>
-						{#each locations as loc}
-							<option value={loc}>{loc}</option>
-						{/each}
-					</select>
+                    {#if isOtherLocation}
+                        <div class="input-with-action">
+                            <input 
+                                type="text" 
+                                id="location-manual" 
+                                bind:value={location} 
+                                placeholder="Custom location..." 
+                                class="flat-left"
+                                oninput={applyFilters}
+                            />
+                            <button 
+                                type="button"
+                                class="action-btn flat-right" 
+                                onclick={cancelOtherLocation}
+                                title="Back to list"
+                            >✕</button>
+                        </div>
+                    {:else}
+                        <select id="location-filter" bind:value={location} onchange={onLocationChange}>
+                            <option value="">Any Location</option>
+                            {#each locations as loc}
+                                <option value={loc}>{loc}</option>
+                            {/each}
+                        </select>
+                    {/if}
 				</div>
 				<div class="filter-item">
 					<label for="session-type-filter">Session Type</label>
@@ -234,4 +272,48 @@
 	.reset-btn:hover {
 		color: var(--teal-secondary);
 	}
+
+    /* Input with Action (Manual Entry) */
+    .input-with-action {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        position: relative;
+    }
+
+    .input-with-action input {
+        flex: 1;
+    }
+
+    .input-with-action input.flat-left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+    }
+
+    .action-btn {
+        padding: 0.5rem 0.75rem;
+        background: #f8f9fa;
+        border: 1px solid rgba(74, 155, 155, 0.3);
+        color: #666;
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Match height of filter inputs */
+        height: 38px; 
+    }
+    
+    .action-btn:hover {
+        background: #eee;
+        color: #333;
+        border-color: rgba(74, 155, 155, 0.5);
+    }
+
+    .action-btn.flat-right {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-left: 1px solid rgba(74, 155, 155, 0.3);
+    }
 </style>

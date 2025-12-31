@@ -93,7 +93,7 @@
 	// Form state
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let location = $state('');
-	let customLocation = $state('');
+	// customLocation removed in favor of inline entry
 	let climbingType = $state('');
 	let trainingTypes = $state<string[]>(['None']);
 	let difficulty = $state('None');
@@ -113,6 +113,20 @@
 	let climbs = $state<ClimbEntry[]>([
 		{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
 	]);
+    
+    let isOtherLocation = $state(false);
+
+    function onLocationChange() {
+        if (location === 'Other') {
+            isOtherLocation = true;
+            location = '';
+        }
+    }
+
+    function cancelOtherLocation() {
+        isOtherLocation = false;
+        location = '';
+    }
 
 	function addClimb() {
 		climbs = [...climbs, { isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
@@ -160,7 +174,7 @@
 	// Validate form before saving
 	function validateForm(): string | null {
 		if (!location) return 'Please select a location';
-		if (location === 'Other' && !customLocation.trim()) return 'Please enter a custom location';
+		// Removed check for customLocation since it's now inline in location
 		if (!climbingType) return 'Please select a climbing type';
 		
 		// Check for invalid grades
@@ -190,8 +204,8 @@
 
 			const sessionData = {
 				date,
-				location: location === 'Other' ? customLocation : location,
-				customLocation: location === 'Other' ? customLocation : undefined,
+				location, // Location now holds the final value (custom or selected)
+				customLocation: isOtherLocation ? location : undefined,
 				climbingType,
 				trainingTypes, // Array
 				difficulty,
@@ -249,7 +263,7 @@
 	function resetForm() {
 		date = new Date().toISOString().split('T')[0];
 		location = '';
-		customLocation = '';
+        isOtherLocation = false;
 		climbingType = '';
 		trainingTypes = ['None'];
 		difficulty = 'None';
@@ -283,21 +297,34 @@
 		
 		<div class="form-group">
 			<label for="location">Location</label>
-			<select id="location" bind:value={location}>
-				<option value="" disabled>Select location...</option>
-				{#each locations as loc}
-					<option value={loc}>{loc}</option>
-				{/each}
-			</select>
+            {#if isOtherLocation}
+                <div class="input-with-action">
+                    <input 
+                        type="text" 
+                        id="location-manual" 
+                        bind:value={location} 
+                        placeholder="Enter custom location..." 
+                        class="flat-left"
+                    />
+                    <button 
+                        type="button"
+                        class="action-btn flat-right" 
+                        onclick={cancelOtherLocation}
+                        title="Back to list"
+                    >✕</button>
+                </div>
+            {:else}
+                <select id="location" bind:value={location} onchange={onLocationChange}>
+                    <option value="" disabled>Select location...</option>
+                    {#each locations as loc}
+                        <option value={loc}>{loc}</option>
+                    {/each}
+                </select>
+            {/if}
 		</div>
 	</div>
 
-	{#if location === 'Other'}
-		<div class="form-group">
-			<label for="custom-location">Custom Location</label>
-			<input type="text" id="custom-location" bind:value={customLocation} placeholder="Enter location name..." />
-		</div>
-	{/if}
+	<!-- Custom Location input block removed -->
 
 	<div class="form-group">
 		<label for="climbing-type">Climbing Type</label>
@@ -902,6 +929,52 @@
 		padding-top: 1.5rem;
 		border-top: 1px solid rgba(74, 155, 155, 0.15);
 	}
+
+
+    /* Input with Action (Manual Entry) */
+    .input-with-action {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        position: relative;
+    }
+
+    .input-with-action input {
+        flex: 1;
+    }
+
+    .input-with-action input.flat-left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+    }
+
+    .action-btn {
+        padding: 0.6rem 1rem;
+        background: #f8f9fa;
+        border: 1.5px solid rgba(74, 155, 155, 0.3);
+        color: #666;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        /* Ensure height matches input */
+        min-height: 42px; 
+    }
+    
+    .action-btn:hover {
+        background: #eee;
+        color: #333;
+        border-color: rgba(74, 155, 155, 0.5);
+    }
+
+    .action-btn.flat-right {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-left: 1.5px solid rgba(74, 155, 155, 0.3);
+    }
 
 	.submit-btn {
 		width: 100%;
