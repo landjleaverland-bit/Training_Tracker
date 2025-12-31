@@ -111,8 +111,11 @@
 
             // Climbing Type
             if (filters.climbingType) {
-                if (session.climbingType === filters.climbingType) {
-                    // Exact match (e.g. session is explicitly 'Sport')
+                // Treat 'Leading' as 'Sport' for filtering purposes
+                const effectiveSessionType = session.climbingType === 'Leading' ? 'Sport' : session.climbingType;
+
+                if (effectiveSessionType === filters.climbingType) {
+                    // Exact match (or Leading/Sport alias match)
                     // keep true
                 } else if (session.climbingType === 'Mixed') {
                     // If session is Mixed, check if it contains relevant climbs
