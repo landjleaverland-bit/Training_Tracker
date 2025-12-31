@@ -9,7 +9,7 @@ export interface ExerciseDefinition {
     category: 'Climbing Antagonists' | 'Legs (Compound)' | 'Legs (Isolation)' | 'Push (Chest)' | 'Push (Shoulders)' | 'Pull (Back)' | 'Arms (Biceps)' | 'Arms (Triceps)' | 'Core' | 'Other';
     targetMuscles: string[]; // Primary muscles
     instructions: string[]; // Steps
-    image?: string; // Path to static illustration
+    images?: string[]; // Paths to animation frames
 }
 
 export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
