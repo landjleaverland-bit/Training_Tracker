@@ -152,7 +152,8 @@ const HUECO_TO_FRENCH: Record<string, string> = Object.entries(FRENCH_TO_HUECO).
 
 // --- 3. Performance Grade Pyramids ---
 export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', location: 'indoor' | 'outdoor' | 'all' = 'all'): ChartDataPoint[] {
-    const grades: Record<string, number> = {};
+    // Structure: Grade -> { total: number, flash: number, redpoint: number, dogged: number, dnf: number }
+    const grades: Record<string, { total: number, flash: number, redpoint: number, dogged: number, dnf: number }> = {};
 
     sessions.forEach(s => {
         if (!isClimbing(s)) return;
@@ -199,16 +200,41 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', loc
                 }
             }
 
-            if (type === 'lead' && isLeadItem) {
-                grades[gradeKey] = (grades[gradeKey] || 0) + 1;
-            } else if (type === 'boulder' && isBoulderItem) {
-                grades[gradeKey] = (grades[gradeKey] || 0) + 1;
+            // Determine specific type
+            if ((type === 'lead' && isLeadItem) || (type === 'boulder' && isBoulderItem)) {
+                if (!grades[gradeKey]) {
+                    grades[gradeKey] = { total: 0, flash: 0, redpoint: 0, dogged: 0, dnf: 0 };
+                }
+
+                grades[gradeKey].total++;
+
+                const attempt = c.attemptType;
+                if (attempt === 'Flash' || attempt === 'Onsight') {
+                    grades[gradeKey].flash++;
+                } else if (attempt === 'Redpoint') {
+                    grades[gradeKey].redpoint++;
+                } else if (attempt === 'Dogged') {
+                    grades[gradeKey].dogged++;
+                } else if (attempt === 'DNF') {
+                    grades[gradeKey].dnf++;
+                } else {
+                    // Fallback for unknown types (count as redpoint? or just ignore breakdown but keep usage in total?)
+                    // Let's count as redpoint for backward compatibility if "attemptType" is missing or odd
+                    grades[gradeKey].redpoint++;
+                }
             }
         });
     });
 
     return Object.entries(grades)
-        .map(([label, value]) => ({ label, value }))
+        .map(([label, stats]) => ({
+            label,
+            value: stats.total,
+            flashCount: stats.flash,
+            redpointCount: stats.redpoint,
+            doggedCount: stats.dogged,
+            dnfCount: stats.dnf
+        }))
         .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
 }
 

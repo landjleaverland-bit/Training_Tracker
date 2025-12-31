@@ -23,7 +23,14 @@
     
     import PieChart from '$lib/components/PieChart.svelte';
     import BarChart from '$lib/components/BarChart.svelte';
+    import StackedBarChart from '$lib/components/StackedBarChart.svelte';
     import LineChart from '$lib/components/LineChart.svelte';
+
+    // Colors: Flash(Blue), Redpoint(Green), Dogged(Orange), DNF(Red)
+    const gradeStackKeys = ['flashCount', 'redpointCount', 'doggedCount', 'dnfCount'];
+    const gradeStackColors = ['#3B82F6', '#22C55E', '#F97316', '#EF4444'];
+    const gradeStackLabels = ['Flash/Onsight', 'Redpoint', 'Dogged', 'DNF'];
+
 
     let sessions = $state<Session[]>([]);
     let selectedView = $state('general');
@@ -322,12 +329,12 @@
                     <div class="chart-card full-width">
                         <h3>🧗 Indoor Boulder Grades</h3>
                         {#if indoorBoulderGrades.length > 0}
-                             <BarChart 
+                             <StackedBarChart 
                                 data={indoorBoulderGrades} 
                                 xAccessor={d => d.label} 
-                                yAccessor={d => d.value} 
-                                orientation="vertical"
-                                color="#4A9B9B"
+                                keys={gradeStackKeys}
+                                colors={gradeStackColors}
+                                labels={gradeStackLabels}
                             />
                         {:else}
                             <p class="no-data">No indoor boulders recorded.</p>
@@ -337,12 +344,12 @@
                     <div class="chart-card full-width">
                         <h3>⛰️ Outdoor Boulder Grades</h3>
                         {#if outdoorBoulderGrades.length > 0}
-                             <BarChart 
+                             <StackedBarChart 
                                 data={outdoorBoulderGrades} 
                                 xAccessor={d => d.label} 
-                                yAccessor={d => d.value} 
-                                orientation="vertical"
-                                color="#E6B72B"
+                                keys={gradeStackKeys}
+                                colors={gradeStackColors}
+                                labels={gradeStackLabels}
                             />
                         {:else}
                             <p class="no-data">No outdoor boulders recorded.</p>
@@ -352,12 +359,12 @@
                     <div class="chart-card full-width">
                         <h3>🧗 Indoor Lead/Sport Grades</h3>
                         {#if indoorLeadGrades.length > 0}
-                             <BarChart 
+                             <StackedBarChart 
                                 data={indoorLeadGrades} 
                                 xAccessor={d => d.label} 
-                                yAccessor={d => d.value} 
-                                orientation="vertical"
-                                color="#2E8B8B"
+                                keys={gradeStackKeys}
+                                colors={gradeStackColors}
+                                labels={gradeStackLabels}
                             />
                         {:else}
                             <p class="no-data">No indoor lead climbs recorded.</p>
@@ -367,12 +374,12 @@
                     <div class="chart-card full-width">
                         <h3>⛰️ Outdoor Lead/Sport Grades</h3>
                         {#if outdoorLeadGrades.length > 0}
-                             <BarChart 
+                             <StackedBarChart 
                                 data={outdoorLeadGrades} 
                                 xAccessor={d => d.label} 
-                                yAccessor={d => d.value} 
-                                orientation="vertical"
-                                color="#F4C430"
+                                keys={gradeStackKeys}
+                                colors={gradeStackColors}
+                                labels={gradeStackLabels}
                             />
                         {:else}
                             <p class="no-data">No outdoor sport climbs recorded.</p>
