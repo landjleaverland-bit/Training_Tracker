@@ -23,7 +23,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Sit with forearm on thigh, palm facing down holding a dumbbell.',
             'Extend your wrist upward (knuckles to ceiling).',
             'Slowly lower back down.'
-        ]
+        ],
+        images: ['/exercises/reverse_wrist_curl.webp']
     },
     {
         id: 'finger_extensions',
@@ -34,7 +35,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Place a resistance band around the tips of your fingers.',
             'Spread your fingers apart against the resistance.',
             'Slowly return to a closed hand position.'
-        ]
+        ],
+        images: ['/exercises/finger_extensions.webp']
     },
     {
         id: 'rice_bucket_iron_fist',
@@ -45,7 +47,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Plunge hands deep into a bucket of rice.',
             'Squeeze rice forcefully into a fist.',
             'Release and repeat rhythmically.'
-        ]
+        ],
+        images: ['/exercises/rice_bucket_iron_fist.webp']
     },
     {
         id: 'rice_bucket_extensors',
@@ -56,7 +59,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Bury closed fists into the rice.',
             'Forcefully open fingers against the resistance (splaying them out).',
             'Close fist and repeat.'
-        ]
+        ],
+        images: ['/exercises/rice_bucket_extensors.webp']
     },
     {
         id: 'wall_angels',
@@ -67,7 +71,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand with back flat against a wall, arms in a "W" shape.',
             'Slide arms upward to a "Y", keeping elbows/wrists touching the wall.',
             'Slide back down to "W".'
-        ]
+        ],
+        images: ['/exercises/wall_angels.webp']
     },
     {
         id: 'face_pull',
@@ -78,7 +83,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Set a cable to face height with a rope attachment.',
             'Pull rope to forehead, separating hands and driving elbows back.',
             'Externally rotate shoulders at the peak.'
-        ]
+        ],
+        images: ['/exercises/face_pull.webp']
     },
     {
         id: 'i_y_t_raises',
@@ -89,7 +95,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Lie prone on an incline bench or use TRX straps.',
             'Raise arms to form an "I", then a "Y", then a "T" shape.',
             'Focus on scapular retraction.'
-        ]
+        ],
+        images: ['/exercises/i_y_t_raises.webp']
     },
     {
         id: 'push_up',
@@ -100,7 +107,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Plank position, hands shoulder-width.',
             'Lower chest to floor, elbows tucked at 45 degrees.',
             'Press back up. Note: Pushing opposes the pulling motion of climbing.'
-        ]
+        ],
+        images: ['/exercises/push_up.webp']
     },
     // Legs (Compound)
     {
@@ -112,7 +120,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand with feet shoulder-width apart.',
             'Hinge hips back and bend knees to lower until thighs are parallel to floor.',
             'Drive through feet to stand, keeping chest up.'
-        ]
+        ],
+        images: ['/exercises/bodyweight_squat.webp']
     },
     {
         id: 'barbell_squat',
@@ -124,7 +133,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Hinge hips back and bend knees to lower until thighs are parallel to floor.',
             'Drive through feet to stand.'
         ],
-        images: ['/exercises/barbell_squat_1.png', '/exercises/barbell_squat_2.png']
+        images: ['/exercises/barbell_squat.webp']
     },
     {
         id: 'goblet_squat',
@@ -135,7 +144,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Hold a dumbbell or kettlebell against your chest.',
             'Squat down, keeping your chest tall.',
             'Ensure elbows track inside the knees.'
-        ]
+        ],
+        images: ['/exercises/goblet_squat.webp']
     },
     {
         id: 'deadlift',
@@ -146,7 +156,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand with bar over mid-foot. Hinge at hips to grip bar.',
             'Flatten back, drive hips forward and push floor away to stand up.',
             'Lower with control.'
-        ]
+        ],
+        images: ['/exercises/deadlift.webp']
     },
     {
         id: 'romanian_deadlift',
@@ -157,7 +168,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Start standing with weight.',
             'Hinge hips back with a slight knee bend.',
             'Lower weight until a hamstring stretch is felt, then drive hips forward.'
-        ]
+        ],
+        images: ['/exercises/romanian_deadlift.webp']
     },
     // Legs (Isolation)
     {
@@ -168,7 +180,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         instructions: [
             'Step forward, lowering rear knee toward the ground.',
             'Drive off the front foot to step through to the next lunge.'
-        ]
+        ],
+        images: ['/exercises/walking_lunge.webp']
     },
     {
         id: 'leg_press',
@@ -179,7 +192,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Sit in machine, feet on platform.',
             'Lower weight until knees are at 90 degrees.',
             'Press weight up without locking knees.'
-        ]
+        ],
+        images: ['/exercises/leg_press.webp']
     },
     {
         id: 'calf_raise',
@@ -190,7 +204,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand with balls of feet on a step/platform.',
             'Lower heels for a deep stretch.',
             'Raise up onto toes fully.'
-        ]
+        ],
+        images: ['/exercises/calf_raise.webp']
     },
     // Push (Chest)
     {
@@ -202,7 +217,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Lie on bench, eyes under bar. Unrack with straight arms.',
             'Lower bar to mid-chest.',
             'Press bar back up.'
-        ]
+        ],
+        images: ['/exercises/barbell_bench_press.webp']
     },
     {
         id: 'incline_dumbbell_press',
@@ -213,7 +229,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Set bench to 30-45 degrees.',
             'Press dumbbells overhead, converging slightly at the top.',
             'Lower for a deep stretch at the bottom.'
-        ]
+        ],
+        images: ['/exercises/incline_dumbbell_press.webp']
     },
     // Push (Shoulders)
     {
@@ -225,7 +242,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand with bar on front delts.',
             'Press bar vertically until arms locked out.',
             'Lower slowly to collarbone.'
-        ]
+        ],
+        images: ['/exercises/overhead_press.webp']
     },
     {
         id: 'dumbbell_lateral_raise',
@@ -236,7 +254,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand with dumbbells at sides, palms facing in.',
             'Raise arms outward until parallel to floor, keeping a slight bend in elbows.',
             'Lower with control.'
-        ]
+        ],
+        images: ['/exercises/dumbbell_lateral_raise.webp']
     },
     {
         id: 'arnold_press',
@@ -247,7 +266,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Hold DBs in front of shoulders, palms facing you.',
             'Press up while rotating palms to face away.',
             'Reverse rotation on the way down.'
-        ]
+        ],
+        images: ['/exercises/arnold_press.webp']
     },
     // Pull (Back)
     {
@@ -259,7 +279,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Grip bar wider than shoulders.',
             'Pull chest up toward the bar, driving elbows down.',
             'Lower until arms are fully extended.'
-        ]
+        ],
+        images: ['/exercises/pull_ups.webp']
     },
     {
         id: 'bent_over_row',
@@ -270,7 +291,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Hinge at hips so torso is near parallel to floor.',
             'Pull weight toward your hip pocket.',
             'Squeeze back muscles and lower slowly.'
-        ]
+        ],
+        images: ['/exercises/bent_over_row.webp']
     },
     {
         id: 'lat_pulldown',
@@ -281,7 +303,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Sit in machine, secure knees under pad.',
             'Pull bar down to upper chest, leading with elbows.',
             'Control the ascent.'
-        ]
+        ],
+        images: ['/exercises/lat_pulldown.webp']
     },
     {
         id: 'single_arm_db_row',
@@ -292,7 +315,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Place hand and knee on a bench for support.',
             'Pull dumbbell to hip pocket in a sawing motion.',
             'Lower to full stretch.'
-        ]
+        ],
+        images: ['/exercises/single_arm_db_row.webp']
     },
     // Arms (Biceps)
     {
@@ -304,7 +328,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Stand holding dumbbells, palms facing forward (supinated).',
             'Curl weight toward shoulders, keeping elbows pinned to sides.',
             'Lower fully with control.'
-        ]
+        ],
+        images: ['/exercises/dumbbell_bicep_curls.webp']
     },
     {
         id: 'hammer_curl',
@@ -314,7 +339,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         instructions: [
             'Hold DBs with palms facing each other (neutral grip).',
             'Curl up toward shoulders. Excellent for climbers grip strength.'
-        ]
+        ],
+        images: ['/exercises/hammer_curl.webp']
     },
     // Arms (Triceps)
     {
@@ -326,7 +352,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Attach rope/bar to high cable pulley.',
             'Pin elbows to sides.',
             'Extend arm fully down and squeeze triceps.'
-        ]
+        ],
+        images: ['/exercises/tricep_pulldown.webp']
     },
     {
         id: 'skullcrusher',
@@ -337,7 +364,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Lie on bench, holding EZ bar or DBs over chest.',
             'Bend elbows to lower weight to forehead/behind head.',
             'Extend arms back to start.'
-        ]
+        ],
+        images: ['/exercises/skullcrusher.webp']
     },
     // Core
     {
@@ -349,7 +377,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Lie on back, knees bent, feet flat.',
             'Lift torso all the way up to a sitting position.',
             'Lower back down slowly.'
-        ]
+        ],
+        images: ['/exercises/sit_up.webp']
     },
     {
         id: 'crunch',
@@ -360,7 +389,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Lie on back, knees bent. Hands behind head.',
             'Lift only head and shoulders off the floor, squeezing abs.',
             'Lower back down without relaxing fully.'
-        ]
+        ],
+        images: ['/exercises/crunch.webp']
     },
     {
         id: 'plank',
@@ -371,7 +401,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Support body on forearms and toes.',
             'Maintain a straight line from head to heels.',
             'Hold for time, bracing core tight.'
-        ]
+        ],
+        images: ['/exercises/plank.webp']
     },
     {
         id: 'russian_twist',
@@ -381,7 +412,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         instructions: [
             'Sit on floor, feet elevated, leaning back slightly.',
             'Rotate torso side to side, touching hands/weight to floor.'
-        ]
+        ],
+        images: ['/exercises/russian_twists.webp']
     },
     {
         id: 'hanging_leg_raise',
@@ -392,6 +424,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Hang from a pull-up bar.',
             'Raise legs (straight or bent) until hips curl up.',
             'Control the descent to avoid swinging.'
-        ]
+        ],
+        images: ['/exercises/hanging_leg_raise.webp']
     }
 ];

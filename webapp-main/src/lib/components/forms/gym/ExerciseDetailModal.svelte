@@ -163,8 +163,8 @@
     .animation-frame {
         position: relative;
         width: 100%;
-        aspect-ratio: 4/3; /* Default aspect ratio */
-        max-height: 250px;
+        aspect-ratio: 2/1; /* Updated to 2:1 horizontal as requested */
+        max-height: 300px;
         overflow: hidden;
         border-radius: 8px;
         background: white;
