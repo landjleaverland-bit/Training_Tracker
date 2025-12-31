@@ -115,6 +115,31 @@ export interface CompetitionSession extends BaseSession {
     rounds: CompetitionRound[];
 }
 
+// Gym session (Strong/Hevy style)
+export interface GymSet {
+    weight: number;      // kg or lbs based on user pref (store as number)
+    reps: number;
+    isWarmup: boolean;
+    isFailure: boolean;
+    isDropSet: boolean;
+    completed: boolean;  // If the user checked it off
+}
+
+export interface GymExercise {
+    id: string;          // Unique ID for this exercise instance in the session
+    name: string;        // "Barbell Squat"
+    sets: GymSet[];
+    notes?: string;
+    linkedTo?: string;   // ID of another exercise if supersetted
+}
+
+export interface GymSession extends BaseSession {
+    activityType: 'gym_session';
+    name: string;        // e.g., "Leg Day", "Push A"
+    exercises: GymExercise[];
+    bodyweight?: number; // Optional bodyweight at time of session
+}
+
 // Union of all session types
-export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession;
+export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession | GymSession;
 

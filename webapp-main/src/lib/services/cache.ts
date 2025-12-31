@@ -282,6 +282,28 @@ export function getFingerboardSessions(): FingerboardSession[] {
 export function getCompetitionSessions(): CompetitionSession[] {
     return getSessionsByType('competition') as CompetitionSession[];
 }
+
+/**
+ * Get all Gym sessions
+ */
+export function getGymSessions(): any[] { // Return any until import is fixed or just cast
+    return getSessionsByType('gym_session');
+}
+
+/**
+ * Helper to create a Gym session
+ */
+export function createGymSession(data: {
+    date: string;
+    name: string;
+    bodyweight?: number;
+    exercises: any[]; // Use definitions from session.ts
+}): any {
+    return addSession({
+        activityType: 'gym_session',
+        ...data
+    });
+}
 /**
  * Merge remote sessions into local cache
  * 
@@ -376,6 +398,13 @@ function isSameSession(a: Session, b: Session): boolean {
             const fB = b as FingerboardSession;
             // Fingerboarding might not have location, but if it does:
             return fA.location === fB.location;
+
+        case 'gym_session':
+            // For gym sessions, we assume if date and session name match, it's the same.
+            // (e.g. "Leg Day" on "2023-10-27")
+            const gA = a as any; // Cast to avoid TS issues if types aren't fully propagated yet
+            const gB = b as any;
+            return gA.name === gB.name;
 
         default:
             return false;

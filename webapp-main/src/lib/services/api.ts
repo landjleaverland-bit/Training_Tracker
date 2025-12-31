@@ -340,3 +340,67 @@ export async function getCompetitionSessions(): Promise<{ ok: boolean; data?: Re
 export async function deleteCompetitionSession(id: string): Promise<{ ok: boolean; error?: string }> {
     return apiRequest(`/competition_sessions/${id}`, { method: 'DELETE' });
 }
+/**
+ * Gym Session data for API
+ */
+export interface GymSessionPayload {
+    date: string;
+    name: string;
+    bodyweight?: number;
+    exercises: Array<{
+        id: string;
+        name: string;
+        notes?: string;
+        linkedTo?: string;
+        sets: Array<{
+            weight: number;
+            reps: number;
+            isWarmup: boolean;
+            isFailure: boolean;
+            isDropSet: boolean;
+            completed: boolean;
+        }>;
+    }>;
+}
+
+export interface RemoteGymSession extends GymSessionPayload {
+    id: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+// Create
+export async function createGymSession(
+    session: GymSessionPayload
+): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const result = await apiRequest<{ id: string }>('/gym_sessions', {
+        method: 'POST',
+        body: JSON.stringify(session)
+    });
+
+    if (result.ok && result.data) {
+        return { ok: true, id: result.data.id };
+    }
+    return { ok: false, error: result.error };
+}
+
+// Update
+export async function updateGymSession(
+    id: string,
+    session: GymSessionPayload
+): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/gym_sessions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(session)
+    });
+}
+
+// Get
+export async function getGymSessions(): Promise<{ ok: boolean; data?: RemoteGymSession[]; error?: string }> {
+    return apiRequest<RemoteGymSession[]>('/gym_sessions', { method: 'GET' });
+}
+
+// Delete
+export async function deleteGymSession(id: string): Promise<{ ok: boolean; error?: string }> {
+    return apiRequest(`/gym_sessions/${id}`, { method: 'DELETE' });
+}
