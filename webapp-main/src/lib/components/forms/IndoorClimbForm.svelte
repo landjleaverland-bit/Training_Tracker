@@ -101,14 +101,14 @@
 	let energySystems = $state<string[]>(['None']);
 	let techniqueFocuses = $state<string[]>(['None']);
 	let wallAngles = $state<string[]>(['None']);
-	let fingerLoad = $state(3);
-	let shoulderLoad = $state(3);
-	let forearmLoad = $state(3);
-	let openGrip = $state(3);
-	let crimpGrip = $state(3);
-	let pinchGrip = $state(3);
-	let sloperGrip = $state(3);
-	let jugGrip = $state(3);
+	let fingerLoad = $state(0);
+	let shoulderLoad = $state(0);
+	let forearmLoad = $state(0);
+	let openGrip = $state(0);
+	let crimpGrip = $state(0);
+	let pinchGrip = $state(0);
+	let sloperGrip = $state(0);
+	let jugGrip = $state(0);
 	
 	let climbs = $state<ClimbEntry[]>([
 		{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
@@ -257,14 +257,14 @@
 		energySystems = ['None'];
 		techniqueFocuses = ['None'];
 		wallAngles = ['None'];
-		fingerLoad = 3;
-		shoulderLoad = 3;
-		forearmLoad = 3;
-		openGrip = 3;
-		crimpGrip = 3;
-		pinchGrip = 3;
-		sloperGrip = 3;
-		jugGrip = 3;
+		fingerLoad = 0;
+		shoulderLoad = 0;
+		forearmLoad = 0;
+		openGrip = 0;
+		crimpGrip = 0;
+		pinchGrip = 0;
+		sloperGrip = 0;
+		jugGrip = 0;
 		climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
 		saveStatus = 'idle';
 		saveMessage = '';
