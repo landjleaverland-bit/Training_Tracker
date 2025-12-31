@@ -116,6 +116,26 @@
                 {exercise} 
                 on:focus={(e) => handleSetFocus(e, i, exercises[i].sets.indexOf(e.detail.set))}
                 on:complete={handleSetComplete}
+                on:delete={() => {
+                    exercises = exercises.filter((_, idx) => idx !== i);
+                }}
+                on:info={() => {
+                    // Find definition from library
+                    const def = EXERCISE_LIBRARY.find(e => e.name === exercise.name);
+                    if (def) {
+                        activeExerciseDetail = def;
+                    }
+                }}
+                on:delete={() => {
+                    exercises = exercises.filter((_, idx) => idx !== i);
+                }}
+                on:info={() => {
+                    // Find definition from library
+                    const def = EXERCISE_LIBRARY.find(e => e.name === exercise.name);
+                    if (def) {
+                        activeExerciseDetail = def;
+                    }
+                }}
             />
         {/each}
     </div>
@@ -170,6 +190,15 @@
                 </div>
             </div>
         </div>
+    {/if}
+
+    <!-- Exercise Detail Modal -->
+    {#if activeExerciseDetail}
+        <ExerciseDetailModal 
+            exercise={activeExerciseDetail} 
+            visible={true} 
+            on:close={() => activeExerciseDetail = null} 
+        />
     {/if}
 
     <!-- Keypad Overlay -->
@@ -243,6 +272,7 @@
         padding: 0.5rem;
         border-radius: 6px;
         color: var(--text-primary);
+        font-size: 1rem; /* Prevent iOS zoom */
     }
 
     .add-exercise-btn {

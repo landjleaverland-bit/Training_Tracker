@@ -32,8 +32,8 @@
         <h4>{exercise.name}</h4>
         <div class="actions">
             <!-- Options for superset, info, etc. -->
-            <button class="icon-btn">?</button> 
-            <button class="icon-btn">...</button>
+            <button class="icon-btn" on:click={() => dispatch('info', exercise)}>?</button> 
+            <button class="icon-btn" on:click={() => dispatch('delete', exercise)}>🗑️</button>
         </div>
     </div>
     

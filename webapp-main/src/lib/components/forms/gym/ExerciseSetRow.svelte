@@ -17,7 +17,7 @@
     }
 
     function handleFocus(field: 'weight' | 'reps') {
-        dispatch('focus', { field, value: set[field] });
+        dispatch('focus', { field, value: set[field], set });
     }
 </script>
 
