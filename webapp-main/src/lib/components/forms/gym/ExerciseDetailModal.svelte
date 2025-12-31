@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onDestroy, createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
+    import { base } from '$app/paths';
     import type { ExerciseDefinition } from '$lib/data/exercises';
     
     export let exercise: ExerciseDefinition;
@@ -68,7 +69,7 @@
                     <div class="animation-frame">
                         {#each exercise.images as src, i}
                             <img 
-                                {src} 
+                                src="{base}{src}"
                                 alt="{exercise.name} frame {i+1}" 
                                 class:active={i === currentImageIndex}
                             />
