@@ -1,36 +1,10 @@
-<script lang="ts">
-    import { onDestroy } from 'svelte';
-    
+    import { createEventDispatcher } from 'svelte';
+    import { fly } from 'svelte/transition';
+
     export let exercise: ExerciseDefinition;
     export let visible: boolean = false;
 
     const dispatch = createEventDispatcher();
-    
-    let currentImageIndex = 0;
-    let interval: ReturnType<typeof setInterval>;
-    
-    function startAnimation() {
-        if (exercise.images && exercise.images.length > 0) {
-            currentImageIndex = 0;
-            interval = setInterval(() => {
-                currentImageIndex = (currentImageIndex + 1) % exercise.images!.length;
-            }, 800); // Switch frames every 800ms
-        }
-    }
-    
-    function stopAnimation() {
-        if (interval) clearInterval(interval);
-    }
-
-    $: if (visible && exercise.images?.length) {
-        startAnimation();
-    } else {
-        stopAnimation();
-    }
-    
-    onDestroy(() => {
-        stopAnimation();
-    });
 
     function close() {
         dispatch('close');
@@ -62,19 +36,16 @@
             </div>
             
             <div class="visual-container">
-                {#if exercise.images && exercise.images.length > 0}
-                    <div class="animation-frame">
-                        {#each exercise.images as src, i}
-                            <img 
-                                {src} 
-                                alt="{exercise.name} frame {i+1}" 
-                                class:active={i === currentImageIndex}
-                            />
-                        {/each}
+                {#if exercise.image}
+                    <div class="illustration-container">
+                        <img 
+                            src={exercise.image} 
+                            alt="{exercise.name} illustration" 
+                        />
                     </div>
                 {:else}
                     <div class="visual-placeholder">
-                        <span>No animation available</span>
+                        <span>No illustration available</span>
                     </div>
                 {/if}
                 <div class="muscles">
@@ -158,29 +129,22 @@
         border-bottom: 1px solid var(--border-primary);
     }
 
-    .animation-frame {
-        position: relative;
+    .illustration-container {
         width: 100%;
-        aspect-ratio: 4/3; /* Default aspect ratio */
-        max-height: 250px;
+        aspect-ratio: 1/1; /* Square aspect ratio as requested */
+        max-height: 300px;
         overflow: hidden;
         border-radius: 8px;
         background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .animation-frame img {
-        position: absolute;
-        top: 0;
-        left: 0;
+    .illustration-container img {
         width: 100%;
         height: 100%;
         object-fit: contain;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .animation-frame img.active {
-        opacity: 1;
     }
 
     .visual-placeholder {
@@ -200,6 +164,7 @@
         color: var(--teal-primary);
         text-align: center;
     }
+
 
     .instructions {
         padding: 1.5rem;
