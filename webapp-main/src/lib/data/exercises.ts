@@ -9,6 +9,7 @@ export interface ExerciseDefinition {
     category: 'Climbing Antagonists' | 'Legs (Compound)' | 'Legs (Isolation)' | 'Push (Chest)' | 'Push (Shoulders)' | 'Pull (Back)' | 'Arms (Biceps)' | 'Arms (Triceps)' | 'Core' | 'Other';
     targetMuscles: string[]; // Primary muscles
     instructions: string[]; // Steps
+    images?: string[]; // Paths to animation frames
 }
 
 export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
@@ -122,7 +123,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Place bar on upper back. Feet shoulder-width.',
             'Hinge hips back and bend knees to lower until thighs are parallel to floor.',
             'Drive through feet to stand.'
-        ]
+        ],
+        images: ['/exercises/barbell_squat_1.png', '/exercises/barbell_squat_2.png']
     },
     {
         id: 'goblet_squat',

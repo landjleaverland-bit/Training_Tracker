@@ -1,12 +1,36 @@
 <script lang="ts">
-    import type { ExerciseDefinition } from '$lib/data/exercises';
-    import { createEventDispatcher } from 'svelte';
-    import { fly } from 'svelte/transition';
-
+    import { onDestroy } from 'svelte';
+    
     export let exercise: ExerciseDefinition;
     export let visible: boolean = false;
 
     const dispatch = createEventDispatcher();
+    
+    let currentImageIndex = 0;
+    let interval: ReturnType<typeof setInterval>;
+    
+    function startAnimation() {
+        if (exercise.images && exercise.images.length > 0) {
+            currentImageIndex = 0;
+            interval = setInterval(() => {
+                currentImageIndex = (currentImageIndex + 1) % exercise.images!.length;
+            }, 800); // Switch frames every 800ms
+        }
+    }
+    
+    function stopAnimation() {
+        if (interval) clearInterval(interval);
+    }
+
+    $: if (visible && exercise.images?.length) {
+        startAnimation();
+    } else {
+        stopAnimation();
+    }
+    
+    onDestroy(() => {
+        stopAnimation();
+    });
 
     function close() {
         dispatch('close');
@@ -37,9 +61,22 @@
                 <button class="close-btn" on:click={close} aria-label="Close">×</button>
             </div>
             
-            <div class="visual-placeholder">
-                <!-- Placeholder for 3D animation/video -->
-                <span>Animation would play here</span>
+            <div class="visual-container">
+                {#if exercise.images && exercise.images.length > 0}
+                    <div class="animation-frame">
+                        {#each exercise.images as src, i}
+                            <img 
+                                {src} 
+                                alt="{exercise.name} frame {i+1}" 
+                                class:active={i === currentImageIndex}
+                            />
+                        {/each}
+                    </div>
+                {:else}
+                    <div class="visual-placeholder">
+                        <span>No animation available</span>
+                    </div>
+                {/if}
                 <div class="muscles">
                     Targets: {exercise.targetMuscles.join(', ')}
                 </div>
@@ -112,22 +149,56 @@
         cursor: pointer;
     }
 
-    .visual-placeholder {
-        background: var(--bg-tertiary);
-        height: 200px;
+    .visual-container {
+        padding: 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
+        background: var(--bg-tertiary);
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    .animation-frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4/3; /* Default aspect ratio */
+        max-height: 250px;
+        overflow: hidden;
+        border-radius: 8px;
+        background: white;
+    }
+
+    .animation-frame img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .animation-frame img.active {
+        opacity: 1;
+    }
+
+    .visual-placeholder {
+        height: 200px;
+        width: 100%;
+        display: flex;
+        align-items: center;
         justify-content: center;
         color: var(--text-secondary);
-        margin: 1rem;
         border-radius: 8px;
+        background: rgba(0,0,0,0.03);
     }
     
     .muscles {
         margin-top: 1rem;
         font-weight: bold;
         color: var(--teal-primary);
+        text-align: center;
     }
 
     .instructions {
