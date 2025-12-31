@@ -1,1 +1,0 @@
-import{f as t,a as r}from"../chunks/CKcnA5P_.js";import{i as s}from"../chunks/DMFvxL8W.js";import{p as i,o as e,a as m}from"../chunks/4c6jdw0Z.js";import{g as n,b as f}from"../chunks/EkzY5TsP.js";var g=t('<div class="loading svelte-1uha8ag"><p>Loading...</p></div>');function c(a,o){i(o,!1),e(()=>{n(`${f}/log`,{replaceState:!0})}),s();var p=g();r(a,p),m()}export{c as component};
