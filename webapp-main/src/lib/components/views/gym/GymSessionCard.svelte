@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { EXERCISE_LIBRARY } from '$lib/data/exercises';
+    import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
+    import { deleteSession } from '$lib/services/cache';
+    import { slide } from 'svelte/transition';
+    import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 
 	interface Props {
 		session: GymSession;
@@ -31,9 +35,9 @@
 
 	// Stats
 	let exerciseCount = $derived(session.exercises?.length ?? 0);
-	let totalSets = $derived((session.exercises || []).reduce((sum, ex) => sum + (ex.sets?.length || 0), 0));
-	let totalVolume = $derived((session.exercises || []).reduce((sum, ex) => {
-		return sum + (ex.sets || []).reduce((sSum, set) => sSum + (set.weight || 0) * (set.reps || 0), 0);
+	let totalSets = $derived((session.exercises || []).reduce((sum: number, ex: GymExercise) => sum + (ex.sets?.length || 0), 0));
+	let totalVolume = $derived((session.exercises || []).reduce((sum: number, ex: GymExercise) => {
+		return sum + (ex.sets || []).reduce((sSum: number, set: GymSet) => sSum + (set.weight || 0) * (set.reps || 0), 0);
 	}, 0));
 
 </script>
@@ -162,7 +166,7 @@
 
 	.session-card.expanded {
 		border-color: var(--teal-primary);
-        ring: 1px solid var(--teal-primary);
+        box-shadow: 0 0 0 1px var(--teal-primary);
 	}
 
 	.card-header {

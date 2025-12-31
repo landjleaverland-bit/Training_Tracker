@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { onDestroy } from 'svelte';
+    import { onDestroy, createEventDispatcher } from 'svelte';
+    import { fly } from 'svelte/transition';
+    import type { ExerciseDefinition } from '$lib/data/exercises';
     
     export let exercise: ExerciseDefinition;
     export let visible: boolean = false;
