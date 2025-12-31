@@ -23,6 +23,7 @@
 		startDate: '',
 		endDate: '',
 		location: '',
+        climbingType: '',
 		sessionType: '',
 		grade: ''
 	});
@@ -107,6 +108,9 @@
 
 			// Location
 			if (filters.location && session.location !== filters.location) return false;
+
+            // Climbing Type
+            if (filters.climbingType && session.climbingType !== filters.climbingType) return false;
 
 			// Session Type matches Training Type
 			if (filters.sessionType) {

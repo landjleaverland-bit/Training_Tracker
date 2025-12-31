@@ -13,6 +13,7 @@
 		startDate: string;
 		endDate: string;
 		location: string;
+		climbingType: string;
 		sessionType: string;
 		grade: string;
 	}
@@ -26,6 +27,8 @@
 		'Other'
 	];
 
+    const climbingTypes = ['Bouldering', 'Sport', 'Mixed'];
+
 	// Extract standard training types used in the form
 	const trainingTypes = ['Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
 
@@ -35,6 +38,7 @@
 	let startDate = $state('');
 	let endDate = $state('');
 	let location = $state('');
+    let climbingType = $state('');
 	let sessionType = $state(''); // Maps to trainingType in data
 	let grade = $state('');
 
@@ -48,6 +52,7 @@
 		startDate = '';
 		endDate = '';
 		location = '';
+        climbingType = '';
         isOtherLocation = false;
 		sessionType = '';
 		grade = '';
@@ -59,6 +64,7 @@
 			startDate,
 			endDate,
 			location,
+            climbingType,
 			sessionType,
 			grade
 		});
@@ -132,6 +138,15 @@
                             {/each}
                         </select>
                     {/if}
+				</div>
+                <div class="filter-item">
+					<label for="climbing-type-filter">Climb Type</label>
+					<select id="climbing-type-filter" bind:value={climbingType} onchange={applyFilters}>
+						<option value="">Any Type</option>
+						{#each climbingTypes as type}
+							<option value={type}>{type}</option>
+						{/each}
+					</select>
 				</div>
 				<div class="filter-item">
 					<label for="session-type-filter">Session Type</label>

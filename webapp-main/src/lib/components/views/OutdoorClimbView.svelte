@@ -24,6 +24,7 @@
 		endDate: '',
 		area: '',
         crag: '',
+        climbingType: '',
 		sessionType: '',
 		grade: ''
 	});
@@ -111,6 +112,9 @@
             
             // Crag (Partial match)
             if (filters.crag && !session.crag.toLowerCase().includes(filters.crag.toLowerCase())) return false;
+
+            // Climbing Type
+            if (filters.climbingType && session.climbingType !== filters.climbingType) return false;
 
 			// Session Type matches Training Type
 			if (filters.sessionType) {
