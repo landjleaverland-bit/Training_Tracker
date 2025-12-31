@@ -31,7 +31,10 @@
     let plateCalcWeight = 0;
     let showRestTimer = false;
     let activeExerciseDetail: ExerciseDefinition | null = null;
+    let showRestTimer = false;
+    let activeExerciseDetail: ExerciseDefinition | null = null;
     let exerciseToDeleteIndex: number | null = null;
+    let showSuccess = false;
 
     // Filtered exercises for picker
     // Filtered exercises for picker
@@ -89,7 +92,12 @@
             exercises
         });
 
-        dispatch('save');
+        showSuccess = true;
+        
+        setTimeout(() => {
+            showSuccess = false;
+            dispatch('save');
+        }, 1500);
     }
 
     function closeKeypad() {
@@ -146,8 +154,17 @@
 
     <!-- Save Button -->
     {#if exercises.length > 0}
-        <button class="save-btn" on:click={saveSession}>
-            Finish Workout
+        <button 
+            class="save-btn" 
+            class:success={showSuccess}
+            on:click={saveSession}
+            disabled={showSuccess}
+        >
+            {#if showSuccess}
+                <span>Saved! ✓</span>
+            {:else}
+                Finish Workout
+            {/if}
         </button>
     {/if}
 
@@ -359,6 +376,13 @@
         border-radius: 12px;
         font-size: 1.1rem;
         cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .save-btn.success {
+        background: #4ade80; /* Green color */
+        color: #064e3b;
+        transform: scale(0.98);
     }
 
     /* Modal Styles */
