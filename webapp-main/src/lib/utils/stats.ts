@@ -164,14 +164,27 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', loc
         const climbSession = s as IndoorClimbSession | OutdoorClimbSession;
 
         climbSession.climbs?.forEach(c => {
-            // Use explicit isSport flag if available
-            const isSport = c.isSport;
+            // Check for explicit climbing type, otherwise fallback to isSport
+            let isBoulderItem = !c.isSport;
+            let isLeadItem = c.isSport;
+
+            // Cast to any to check for climbingType that might exist in data but not type definition
+            const typeTag = (c as any).climbingType;
+            if (typeTag) {
+                if (typeTag === 'Boulder') {
+                    isBoulderItem = true;
+                    isLeadItem = false;
+                } else if (['Sport', 'Trad', 'Lead'].includes(typeTag)) {
+                    isBoulderItem = false;
+                    isLeadItem = true;
+                }
+            }
 
             // Normalize grade case (v2 -> V2)
             let gradeKey = c.grade.toUpperCase();
 
             // Apply conversions if it's a boulder grade
-            if (type === 'boulder' && !isSport) {
+            if (type === 'boulder' && isBoulderItem) {
                 // If it's a known French grade, convert it
                 if (FRENCH_TO_HUECO[gradeKey]) {
                     gradeKey = FRENCH_TO_HUECO[gradeKey];
@@ -179,16 +192,16 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', loc
             }
 
             // Apply conversions if it's a lead grade (Sport)
-            if (type === 'lead' && isSport) {
+            if (type === 'lead' && isLeadItem) {
                 // If it's a known Hueco grade, convert it to French
                 if (HUECO_TO_FRENCH[gradeKey]) {
                     gradeKey = HUECO_TO_FRENCH[gradeKey];
                 }
             }
 
-            if (type === 'lead' && isSport) {
+            if (type === 'lead' && isLeadItem) {
                 grades[gradeKey] = (grades[gradeKey] || 0) + 1;
-            } else if (type === 'boulder' && !isSport) {
+            } else if (type === 'boulder' && isBoulderItem) {
                 grades[gradeKey] = (grades[gradeKey] || 0) + 1;
             }
         });
