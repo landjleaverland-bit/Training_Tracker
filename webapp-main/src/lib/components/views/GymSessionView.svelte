@@ -65,7 +65,9 @@
 			...remote,
 			activityType: 'gym_session',
 			syncStatus: 'synced',
-			syncedAt: new Date().toISOString()
+			syncedAt: new Date().toISOString(),
+			createdAt: remote.createdAt || new Date().toISOString(),
+			updatedAt: remote.updatedAt || new Date().toISOString()
 		}));
 
 		mergeSessions(formattedRemoteSessions);

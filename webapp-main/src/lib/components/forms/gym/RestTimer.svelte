@@ -7,7 +7,7 @@
 
     let remaining = duration;
     let interval: any;
-    let visible = true;
+    export let visible = true;
 
     function start() {
         clearInterval(interval);
