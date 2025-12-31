@@ -110,7 +110,26 @@
 			if (filters.location && session.location !== filters.location) return false;
 
             // Climbing Type
-            if (filters.climbingType && session.climbingType !== filters.climbingType) return false;
+            if (filters.climbingType) {
+                if (session.climbingType === filters.climbingType) {
+                    // Exact match (e.g. session is explicitly 'Sport')
+                    // keep true
+                } else if (session.climbingType === 'Mixed') {
+                    // If session is Mixed, check if it contains relevant climbs
+                    if (filters.climbingType === 'Bouldering') {
+                        // Look for non-sport (boulder) climbs
+                        if (!session.climbs.some(c => !c.isSport)) return false;
+                    } else if (filters.climbingType === 'Sport') {
+                        // Look for sport climbs
+                        if (!session.climbs.some(c => c.isSport)) return false;
+                    } else {
+                        // If filter is mixed/other and types don't match
+                        return false;
+                    }
+                } else {
+                     return false;
+                }
+            }
 
 			// Session Type matches Training Type
 			if (filters.sessionType) {
