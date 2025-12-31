@@ -208,14 +208,15 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', loc
 
                 grades[gradeKey].total++;
 
-                const attempt = c.attemptType;
-                if (attempt === 'Flash' || attempt === 'Onsight') {
+                const attempt = c.attemptType ? c.attemptType.trim().toLowerCase() : '';
+
+                if (['flash', 'onsight'].includes(attempt)) {
                     grades[gradeKey].flash++;
-                } else if (attempt === 'Redpoint') {
+                } else if (attempt === 'redpoint') {
                     grades[gradeKey].redpoint++;
-                } else if (attempt === 'Dogged') {
+                } else if (attempt === 'dogged') {
                     grades[gradeKey].dogged++;
-                } else if (attempt === 'DNF') {
+                } else if (attempt === 'dnf') {
                     grades[gradeKey].dnf++;
                 } else {
                     // Fallback for unknown types (count as redpoint? or just ignore breakdown but keep usage in total?)
