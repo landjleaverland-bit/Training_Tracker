@@ -24,6 +24,7 @@
     // UI State
     let showExercisePicker = false;
     let searchQuery = '';
+    let selectedCategory = '';
     let activeKeypadField: { exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' } | null = null;
     let showPlateCalc = false;
     let plateCalcWeight = 0;
@@ -31,10 +32,15 @@
     let activeExerciseDetail: ExerciseDefinition | null = null;
 
     // Filtered exercises for picker
-    $: filteredExercises = EXERCISE_LIBRARY.filter(e => 
-        e.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        e.targetMuscles.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    // Filtered exercises for picker
+    $: filteredExercises = EXERCISE_LIBRARY.filter(e => {
+        const matchesSearch = e.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            e.targetMuscles.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesCategory = selectedCategory ? e.category === selectedCategory : true;
+        return matchesSearch && matchesCategory;
+    });
+
+    const categories = Array.from(new Set(EXERCISE_LIBRARY.map(e => e.category))).sort();
 
     function addExercise(def: ExerciseDefinition) {
         const newExercise: GymExercise = {
@@ -47,6 +53,7 @@
         exercises = [...exercises, newExercise];
         showExercisePicker = false;
         searchQuery = '';
+        selectedCategory = '';
     }
 
     function handleSetFocus(event: CustomEvent, exerciseIndex: number, setIndex: number) {
@@ -174,11 +181,19 @@
             >
                 <div class="picker-header">
                     <h3>Add Exercise</h3>
-                    <input 
-                        type="text" 
-                        placeholder="Search exercises..." 
-                        bind:value={searchQuery} 
-                    />
+                    <div class="search-row">
+                        <input 
+                            type="text" 
+                            placeholder="Search exercises..." 
+                            bind:value={searchQuery} 
+                        />
+                        <select bind:value={selectedCategory}>
+                            <option value="">All Categories</option>
+                            {#each categories as cat}
+                                <option value={cat}>{cat}</option>
+                            {/each}
+                        </select>
+                    </div>
                 </div>
                 <div class="picker-list">
                     {#each filteredExercises as def}
@@ -262,6 +277,31 @@
             flex-direction: column;
             gap: 0.5rem;
         }
+
+        .search-row {
+            flex-direction: column;
+        }
+    }
+
+    .search-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .search-row input {
+        flex: 1;
+        margin-top: 0;
+    }
+
+    .search-row select {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 8px;
+        color: var(--text-primary);
+        padding: 0 0.75rem;
+        font-size: 1rem;
+        max-width: 150px;
     }
 
     label {
