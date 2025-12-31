@@ -27,11 +27,17 @@
 
     let sessions = $state<Session[]>([]);
     let selectedView = $state('general');
-    let timeRange = $state<'week' | 'month' | 'specific_week' | 'specific_month' | 'all'>('all');
+    let timeRange = $state<'week' | 'month' | 'year' | 'specific_week' | 'specific_month' | 'specific_year' | 'all'>('all');
     let selectedDateValue = $state('');
 
     onMount(() => {
         sessions = getAllSessions();
+    });
+
+    // Available years for dropdown
+    let availableYears = $derived.by(() => {
+        const years = new Set(sessions.map(s => new Date(s.date).getFullYear()));
+        return Array.from(years).sort((a, b) => b - a); // Descending
     });
 
     // Filtered Sessions
@@ -47,17 +53,14 @@
         } else if (timeRange === 'month') {
             cutoff.setMonth(now.getMonth() - 1);
             return sessions.filter(s => new Date(s.date) >= cutoff);
+        } else if (timeRange === 'year') {
+            cutoff.setFullYear(now.getFullYear() - 1);
+            return sessions.filter(s => new Date(s.date) >= cutoff);
         } else if (timeRange === 'specific_week' && selectedDateValue) {
-             // value is "YYYY-Www" (e.g. 2024-W05)
-             // We'll parse the date and check if it falls in that ISO week
-             // Simple approach: d3.timeParse("%Y-W%V") or check ISO string
-             // HTML input week is ISO week
              const [yearStr, weekStr] = selectedDateValue.split('-W');
              const year = parseInt(yearStr);
              const week = parseInt(weekStr);
              
-             // Filter
-             // Helper to get ISO week from a date
              const getISOWeek = (d: Date) => {
                 const date = new Date(d.getTime());
                 date.setHours(0, 0, 0, 0);
@@ -73,6 +76,8 @@
 
         } else if (timeRange === 'specific_month' && selectedDateValue) {
             // value is "YYYY-MM"
+             return sessions.filter(s => s.date.startsWith(selectedDateValue));
+        } else if (timeRange === 'specific_year' && selectedDateValue) {
              return sessions.filter(s => s.date.startsWith(selectedDateValue));
         }
 
@@ -136,6 +141,9 @@
         } else if (timeRange === 'month') {
             start.setMonth(now.getMonth() - 1);
             return { start, end };
+        } else if (timeRange === 'year') {
+            start.setFullYear(now.getFullYear() - 1);
+            return { start, end };
         } else if (timeRange === 'specific_week' && selectedDateValue) {
              const [yearStr, weekStr] = selectedDateValue.split('-W');
              const year = parseInt(yearStr);
@@ -160,9 +168,14 @@
              const mStart = new Date(parseInt(year), parseInt(month) - 1, 1);
              const mEnd = new Date(parseInt(year), parseInt(month), 0);
              return { start: mStart, end: mEnd };
+        } else if (timeRange === 'specific_year' && selectedDateValue) {
+            const year = parseInt(selectedDateValue);
+            const mStart = new Date(year, 0, 1);
+            const mEnd = new Date(year, 11, 31);
+            return { start: mStart, end: mEnd };
         }
         
-        return undefined; // All time (no forced zero-fill logic needed? Or maybe calc from min/max session?)
+        return undefined; // All time
     });
 
     // 7.1 Activities (Count)
@@ -225,8 +238,10 @@
             <select id="time-select" bind:value={timeRange}>
                 <option value="week">Past Week</option>
                 <option value="month">Past Month</option>
+                <option value="year">Past Year</option>
                 <option value="specific_week">Specific Week</option>
                 <option value="specific_month">Specific Month</option>
+                <option value="specific_year">Specific Year</option>
                 <option value="all">All Time</option>
             </select>
             <div class="select-arrow">▼</div>
@@ -239,6 +254,16 @@
         {:else if timeRange === 'specific_month'}
              <div class="specific-date-input" style="margin-top: 0.5rem;">
                 <input type="month" bind:value={selectedDateValue} class="date-picker" />
+            </div>
+        {:else if timeRange === 'specific_year'}
+            <div class="select-wrapper" style="margin-top: 0.5rem;">
+                <select bind:value={selectedDateValue} class="date-picker">
+                    <option value="" disabled selected>Select Year</option>
+                    {#each availableYears as year}
+                        <option value={String(year)}>{year}</option>
+                    {/each}
+                </select>
+                <div class="select-arrow">▼</div>
             </div>
         {/if}
     </div>
