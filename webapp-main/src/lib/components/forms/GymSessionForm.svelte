@@ -31,8 +31,6 @@
     let plateCalcWeight = 0;
     let showRestTimer = false;
     let activeExerciseDetail: ExerciseDefinition | null = null;
-    let showRestTimer = false;
-    let activeExerciseDetail: ExerciseDefinition | null = null;
     let exerciseToDeleteIndex: number | null = null;
     let showSuccess = false;
 
