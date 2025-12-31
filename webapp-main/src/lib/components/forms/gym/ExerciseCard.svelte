@@ -29,12 +29,13 @@
 
 <div class="exercise-card">
     <div class="header">
-        <h4>{exercise.name}</h4>
-        <div class="actions">
-            <!-- Options for superset, info, etc. -->
-            <button class="icon-btn" on:click={() => dispatch('info', exercise)}>?</button> 
-            <button class="icon-btn" on:click={() => dispatch('delete', exercise)}>🗑️</button>
+        <div class="title-group">
+            <button class="icon-btn info-btn" on:click={() => dispatch('info', exercise)} aria-label="Exercise Info">
+                <div class="info-icon">?</div>
+            </button> 
+            <h4>{exercise.name}</h4>
         </div>
+        <button class="icon-btn delete-btn" on:click={() => dispatch('delete', exercise)} aria-label="Delete Exercise">🗑️</button>
     </div>
     
     <div class="table-header">
@@ -114,12 +115,45 @@
         background: rgba(45, 212, 191, 0.1);
     }
     
+    .title-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .info-btn {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .info-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1.5px solid var(--teal-primary);
+        color: var(--teal-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
     .icon-btn {
         background: none;
         border: none;
-        color: var(--text-secondary);
         cursor: pointer;
+        padding: 0.25rem;
+        transition: opacity 0.2s;
+    }
+    
+    .icon-btn:hover {
+        opacity: 0.8;
+    }
+
+    .delete-btn {
         font-size: 1.2rem;
-        padding: 0 0.5rem;
     }
 </style>

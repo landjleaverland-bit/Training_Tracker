@@ -11,6 +11,7 @@
     import RestTimer from './gym/RestTimer.svelte';
     import PlateCalculator from './gym/PlateCalculator.svelte';
     import ExerciseDetailModal from './gym/ExerciseDetailModal.svelte';
+    import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
     import { fly, fade } from 'svelte/transition';
 
     const dispatch = createEventDispatcher();
@@ -30,6 +31,7 @@
     let plateCalcWeight = 0;
     let showRestTimer = false;
     let activeExerciseDetail: ExerciseDefinition | null = null;
+    let exerciseToDeleteIndex: number | null = null;
 
     // Filtered exercises for picker
     // Filtered exercises for picker
@@ -124,17 +126,7 @@
                 on:focus={(e) => handleSetFocus(e, i, exercises[i].sets.indexOf(e.detail.set))}
                 on:complete={handleSetComplete}
                 on:delete={() => {
-                    exercises = exercises.filter((_, idx) => idx !== i);
-                }}
-                on:info={() => {
-                    // Find definition from library
-                    const def = EXERCISE_LIBRARY.find(e => e.name === exercise.name);
-                    if (def) {
-                        activeExerciseDetail = def;
-                    }
-                }}
-                on:delete={() => {
-                    exercises = exercises.filter((_, idx) => idx !== i);
+                    exerciseToDeleteIndex = i;
                 }}
                 on:info={() => {
                     // Find definition from library
@@ -235,6 +227,23 @@
 
     <!-- Rest Timer -->
     <RestTimer bind:visible={showRestTimer} />
+
+    <!-- Delete Confirmation -->
+    {#if exerciseToDeleteIndex !== null}
+        <DeleteConfirmModal 
+            isOpen={true}
+            title="Delete Exercise"
+            message="Are you sure you want to delete {exercises[exerciseToDeleteIndex].name}?"
+            requireInput={false}
+            onConfirm={() => {
+                if (exerciseToDeleteIndex !== null) {
+                    exercises = exercises.filter((_, idx) => idx !== exerciseToDeleteIndex);
+                    exerciseToDeleteIndex = null;
+                }
+            }}
+            onCancel={() => exerciseToDeleteIndex = null}
+        />
+    {/if}
 
 </div>
 
