@@ -9,6 +9,7 @@ import {
     createOutdoorSession, updateOutdoorSession, deleteOutdoorSession,
     createFingerboardSession, updateFingerboardSession, deleteFingerboardSession,
     createCompetitionSession, updateCompetitionSession, deleteCompetitionSession,
+    createGymSession, updateGymSession, deleteGymSession,
     isOnline
 } from './api';
 import type {
@@ -16,7 +17,8 @@ import type {
     IndoorClimbSession,
     OutdoorClimbSession,
     FingerboardSession,
-    CompetitionSession
+    CompetitionSession,
+    GymSession
 } from '$lib/types/session';
 
 export interface SyncResult {
@@ -79,6 +81,13 @@ export async function syncAllPending(): Promise<SyncResult> {
                 const r4 = await deleteCompetitionSession(deleteId);
                 if (r4.ok) deleted = true;
             }
+
+            // Try Gym Session
+            if (!deleted) {
+                const r5 = await deleteGymSession(deleteId);
+                if (r5.ok) deleted = true;
+            }
+
 
             // If we reached here, assuming we cleaned it up or it was already gone
             removePendingDelete(deleteId);
@@ -152,6 +161,10 @@ async function syncSession(session: Session): Promise<{ ok: boolean; id?: string
             return isUpdate
                 ? updateCompetitionClimbSession(session as CompetitionSession)
                 : syncCompetitionSession(session as CompetitionSession);
+        case 'gym_session':
+            return isUpdate
+                ? updateGymSessionWrapper(session as GymSession)
+                : syncGymSession(session as GymSession);
         default:
             return { ok: false, error: `Unknown activity type: ${(session as any).activityType}` };
     }
@@ -304,6 +317,31 @@ async function updateCompetitionClimbSession(session: CompetitionSession): Promi
     };
 
     return updateCompetitionSession(session.id, payload);
+}
+
+/**
+ * Sync a gym session
+ */
+async function syncGymSession(session: GymSession): Promise<{ ok: boolean; id?: string; error?: string }> {
+    const payload = {
+        date: session.date,
+        name: session.name,
+        bodyweight: session.bodyweight,
+        exercises: session.exercises
+    };
+
+    return createGymSession(payload);
+}
+
+async function updateGymSessionWrapper(session: GymSession): Promise<{ ok: boolean; error?: string }> {
+    const payload = {
+        date: session.date,
+        name: session.name,
+        bodyweight: session.bodyweight,
+        exercises: session.exercises
+    };
+
+    return updateGymSession(session.id, payload);
 }
 
 /**

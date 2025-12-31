@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Outdoor Climb form for logging outdoor climbing sessions
-	import { createOutdoorClimbSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+	import { createOutdoorClimbSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
 	import { createOutdoorSession as syncToServer, isOnline } from '$lib/services/api';
 	import { getAreas, getCrags } from '$lib/data/outdoor_locations';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
@@ -186,7 +186,10 @@
 			if (isOnline()) {
 				const result = await syncToServer(sessionData);
 				if (result.ok) {
-					markAsSynced(localSession.id);
+					// Update local ID to match server ID to prevent duplicates
+					updateSessionId(localSession.id, result.id!);
+					// Mark formatted/updated session as synced
+					markAsSynced(result.id!);
 					saveStatus = 'success';
 					saveMessage = 'Session saved and synced!';
 				} else {

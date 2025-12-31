@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createFingerboardSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+    import { createFingerboardSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
     import { createFingerboardSession as syncToServer, isOnline } from '$lib/services/api';
     import type { FingerboardExercise, ExerciseSet } from '$lib/types/session';
 
@@ -69,7 +69,10 @@
             if (isOnline()) {
                 const result = await syncToServer(sessionData);
                 if (result.ok) {
-                    markAsSynced(localSession.id);
+                    // Update local ID to match server ID to prevent duplicates
+                    updateSessionId(localSession.id, result.id!);
+                    // Mark formatted/updated session as synced
+                    markAsSynced(result.id!);
                     saveStatus = 'success';
                     saveMessage = 'Session saved and synced!';
                 } else {

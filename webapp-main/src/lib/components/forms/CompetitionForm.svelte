@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createCompetitionSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+    import { createCompetitionSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
     import { createCompetitionSession as syncToServer, isOnline } from '$lib/services/api';
     import type { CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
 
@@ -93,7 +93,10 @@
             if (isOnline()) {
                 const result = await syncToServer(sessionData);
                 if (result.ok) {
-                    markAsSynced(localSession.id);
+                    // Update local ID to match server ID to prevent duplicates
+                    updateSessionId(localSession.id, result.id!);
+                    // Mark formatted/updated session as synced
+                    markAsSynced(result.id!);
                     saveStatus = 'success';
                     saveMessage = 'Competition saved and synced!';
                 } else {

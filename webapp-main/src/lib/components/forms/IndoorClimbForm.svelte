@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Indoor Climb form for logging climbing sessions
-	import { createIndoorClimbSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+	import { createIndoorClimbSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
 	import { createIndoorSession as syncToServer, isOnline } from '$lib/services/api';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
 	const locations = [
@@ -232,7 +232,10 @@
 			if (isOnline()) {
 				const result = await syncToServer(sessionData);
 				if (result.ok) {
-					markAsSynced(localSession.id);
+					// Update local ID to match server ID to prevent duplicates
+					updateSessionId(localSession.id, result.id!);
+					// Mark formatted/updated session as synced
+					markAsSynced(result.id!);
 					saveStatus = 'success';
 					saveMessage = 'Session saved and synced!';
 				} else {
