@@ -26,14 +26,6 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         images: ['/exercises/pull-ups.webp']
     },
     {
-        id: 'weighted_pull_up',
-        name: 'Weighted Pull-Up',
-        category: 'Pull',
-        subcategory: 'Vertical Pull',
-        targetMuscles: ['Lats', 'Biceps'],
-        instructions: ['Use a dip belt or hold a dumbbell.', 'Perform a pull-up.']
-    },
-    {
         id: 'lat_pulldown',
         name: 'Lat Pulldown',
         category: 'Pull',
@@ -41,31 +33,6 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         targetMuscles: ['Lats'],
         instructions: ['Sit in machine.', 'Pull bar down to upper chest.'],
         images: ['/exercises/lat_pulldown.webp']
-    },
-    { // Correction: Plan listed "Machine Pull" as a subcategory containing Lat Pulldown and Seated Row.
-        id: 'lat_pulldown_machine',
-        name: 'Lat Pulldown',
-        category: 'Pull',
-        subcategory: 'Machine Pull',
-        targetMuscles: ['Lats'],
-        instructions: ['Sit in machine.', 'Pull bar down to upper chest.'],
-        images: ['/exercises/lat_pulldown.webp']
-    },
-    {
-        id: 'front_lever_raises',
-        name: 'Front Lever Raises',
-        category: 'Pull',
-        subcategory: 'Vertical Pull',
-        targetMuscles: ['Lats', 'Core'],
-        instructions: ['Hang from bar.', 'Raise body to horizontal using lats.']
-    },
-    {
-        id: 'offset_pull_ups',
-        name: 'Offset Pull-Ups',
-        category: 'Pull',
-        subcategory: 'Vertical Pull',
-        targetMuscles: ['Lats', 'Biceps'],
-        instructions: ['Hang with one hand higher or using a towel/band.', 'Pull up emphasizing one side.']
     },
     {
         id: 'one_arm_assisted_pull_up',
@@ -78,7 +45,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
     // Horizontal Pull
     {
         id: 'bent_over_row',
-        name: 'Bent Over Row',
+        name: 'Barbell Row',
         category: 'Pull',
         subcategory: 'Horizontal Pull',
         targetMuscles: ['Lats', 'Rhomboids'],
@@ -87,29 +54,112 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
     },
     {
         id: 'single_arm_db_row',
-        name: 'Single-Arm DB Row',
+        name: 'Dumbbell Row',
         category: 'Pull',
         subcategory: 'Horizontal Pull',
         targetMuscles: ['Lats', 'Rhomboids'],
         instructions: ['Support on bench.', 'Pull dumbbell to hip.'],
         images: ['/exercises/single_arm_db_row.webp']
     },
+    // Lock-offs
     {
-        id: 'pendlay_row',
-        name: 'Pendlay Row',
+        id: 'one_arm_negatives',
+        name: 'One Arm Negatives',
         category: 'Pull',
-        subcategory: 'Horizontal Pull',
-        targetMuscles: ['Lats', 'Upper Back'],
-        instructions: ['Start each rep from the floor.', 'Explosively pull bar to chest.']
+        subcategory: 'Lock-offs',
+        targetMuscles: ['Lats', 'Biceps', 'Forearms'],
+        instructions: ['Jump or assist up to the top position.', 'Lower yourself as slowly as possible with one arm.']
+    },
+    {
+        id: 'full_lock_offs',
+        name: 'Full Lock-offs',
+        category: 'Pull',
+        subcategory: 'Lock-offs',
+        targetMuscles: ['Lats', 'Biceps'],
+        instructions: ['Hold the top position of a pull-up.', 'Maintain chin above the bar for time.']
+    },
+    {
+        id: '90_degree_lock_offs',
+        name: '90 Lock-offs',
+        category: 'Pull',
+        subcategory: 'Lock-offs',
+        targetMuscles: ['Lats', 'Biceps'],
+        instructions: ['Hold a pull-up position with elbows at 90 degrees.', 'Keep core tight and hold for time.']
+    },
+    {
+        id: '120_degree_lock_offs',
+        name: '120 Lock-offs',
+        category: 'Pull',
+        subcategory: 'Lock-offs',
+        targetMuscles: ['Lats', 'Biceps'],
+        instructions: ['Hold a pull-up position with elbows at 120 degrees (slightly bent).', 'Maintain tension for time.']
+    },
+    // Curls
+    {
+        id: 'bicep_curls',
+        name: 'Bicep Curls',
+        category: 'Pull',
+        subcategory: 'Curls',
+        targetMuscles: ['Biceps'],
+        instructions: ['Hold dumbbells at sides.', 'Curl weights toward shoulders.', 'Lower with control.']
+    },
+    {
+        id: 'hammer_curls',
+        name: 'Hammer Curls',
+        category: 'Pull',
+        subcategory: 'Curls',
+        targetMuscles: ['Biceps', 'Forearms'],
+        instructions: ['Hold dumbbells with neutral grip (palms facing in).', 'Curl weights toward shoulders.', 'Lower with control.']
+    },
+    {
+        id: 'barbell_curls',
+        name: 'Barbell Curls',
+        category: 'Pull',
+        subcategory: 'Curls',
+        targetMuscles: ['Biceps'],
+        instructions: ['Hold barbell with underhand grip.', 'Curl bar toward chest.', 'Lower with control.']
+    },
+    // Shoulders
+    {
+        id: 'front_raises',
+        name: 'Front Raises',
+        category: 'Pull', // Often categorized as Push or accessory
+        subcategory: 'Shoulders',
+        targetMuscles: ['Front Delts'],
+        instructions: ['Hold weights in front of thighs.', 'Raise arms straight in front to shoulder height.']
+    },
+    {
+        id: 'kettlebell_swings',
+        name: 'Kettlebell Swings',
+        category: 'Pull', // Hinge movement
+        subcategory: 'Shoulders',
+        targetMuscles: ['Glutes', 'Hamstrings', 'Lower Back'],
+        instructions: ['Hinge at hips holding kettlebell.', 'Snap hips forward to swing weight up.']
+    },
+    {
+        id: 'muscle_ups',
+        name: 'Muscle Ups',
+        category: 'Pull', // Compound pull + push
+        subcategory: 'Shoulders',
+        targetMuscles: ['Lats', 'Triceps', 'Chest'],
+        instructions: ['Explosive pull-up.', 'Transition wrists over bar.', 'Press out at top.']
     },
     // Machine Pull
     {
         id: 'seated_row',
         name: 'Seated Row',
         category: 'Pull',
-        subcategory: 'Machine Pull',
+        subcategory: 'Horizontal Pull',
         targetMuscles: ['Lats', 'Rhomboids'],
         instructions: ['Sit at machine.', 'Pull handle to torso.']
+    },
+    {
+        id: 'supine_trx_row',
+        name: 'Supine TRX Row',
+        category: 'Pull',
+        subcategory: 'Horizontal Pull',
+        targetMuscles: ['Lats', 'Rhomboids'],
+        instructions: ['Feet in TRX straps.', 'Pull handle to torso.']
     },
 
     // --- PUSH ---
