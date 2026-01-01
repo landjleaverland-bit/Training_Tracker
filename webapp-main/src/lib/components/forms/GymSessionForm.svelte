@@ -466,6 +466,11 @@
         z-index: 900;
         padding-bottom: 2rem; /* Save area */
         box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-height: 90vh;
+        overflow-y: auto;
     }
 
     .keypad-header {
@@ -476,6 +481,8 @@
         align-items: center;
         color: var(--text-secondary);
         font-size: 0.9rem;
+        width: 100%;
+        max-width: 300px; /* Match Keypad max-width */
     }
 
     .keypad-header button {
