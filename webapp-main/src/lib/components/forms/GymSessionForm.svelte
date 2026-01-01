@@ -21,7 +21,7 @@
     let sessionName = '';
     let bodyweight: number | undefined;
     let exercises: GymExercise[] = [];
-    let startTime = new Date().toISOString().slice(0, 16);
+    let startTime = new Date().toISOString().split('T')[0];
     let trainingBlock: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance' = 'Strength';
     let previousSession: GymSession | null = null;
     
@@ -29,7 +29,7 @@
         const allSessions = getGymSessions();
         const blockSessions = allSessions.filter(s => 
             (s.trainingBlock || 'Strength') === trainingBlock &&
-            s.date < startTime.split('T')[0]
+            s.date < startTime
         );
         blockSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         previousSession = blockSessions.length > 0 ? blockSessions[0] : null;
@@ -54,7 +54,7 @@
                 const data = JSON.parse(saved);
                 if (data.sessionName) sessionName = data.sessionName;
                 if (data.bodyweight) bodyweight = data.bodyweight;
-                if (data.startTime) startTime = data.startTime;
+                if (data.startTime) startTime = data.startTime.split('T')[0];
                 if (data.trainingBlock) trainingBlock = data.trainingBlock;
                 if (data.exercises) exercises = data.exercises;
             } catch (e) {
@@ -126,7 +126,7 @@
         if (exercises.length === 0) return;
 
         createGymSession({
-            date: startTime.split('T')[0],
+            date: startTime,
             name: sessionName || 'Gym Workout', // Default name logic could be better (e.g. "Legs")
             bodyweight,
             trainingBlock,
@@ -158,8 +158,8 @@
         />
         <div class="meta-row">
             <label>
-                Start Time
-                <input type="datetime-local" bind:value={startTime} />
+                Date
+                <input type="date" bind:value={startTime} />
             </label>
             <label>
                 Bodyweight (kg)
@@ -391,7 +391,7 @@
         flex: 1;
     }
 
-    input[type="number"], input[type="datetime-local"], .meta-row select {
+    input[type="number"], input[type="date"], .meta-row select {
         background: var(--bg-tertiary);
         border: 1px solid var(--border-primary);
         padding: 0.5rem;
