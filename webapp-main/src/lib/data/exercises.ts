@@ -96,7 +96,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Raise arms to form an "I", then a "Y", then a "T" shape.',
             'Focus on scapular retraction.'
         ],
-        images: ['/exercises/i_y_t_raises.webp']
+        images: ['/exercises/i-y-t_raises.webp']
     },
     {
         id: 'push_up',
