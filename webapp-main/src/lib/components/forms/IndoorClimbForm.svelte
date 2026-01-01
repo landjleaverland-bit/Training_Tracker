@@ -20,8 +20,8 @@
 	// Training classification options
 	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
-	const categoryOptions = ['None', 'Strength', 'Strength-endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang technique', 'Warm-up', 'Power'];
-	const energySystemOptions = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
+	const categoryOptions = ['None', 'Strength', 'Strength Endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique', 'Power', 'Strength Capacity', 'Power Capacity'];
+	const energySystemOptions = ['None', 'Aerobic Lactic Capacity', 'Aerobic Lactic Power', 'Anaerobic Alactic Capacity', 'Anaerobic Alactic Power', 'Anaerobic Power', 'Anaerobic Lactic Capacity'];
 	const techniqueFocusOptions = [
 		'None',
 		'Trusting feet',
@@ -35,7 +35,6 @@
 		'Matching',
 		'Backstepping',
 		'Drop Knee',
-		'Stemming',
 		'Bridging',
 		'Laybacking',
 		'Mantling',
@@ -44,7 +43,7 @@
 		'Pogo',
 		'Coordination Moves',
 		'Gastoning',
-		'Underclinging',
+		'Undercutting',
 		'Compressing',
 		'Heel Hook',
 		'Toe Hook',

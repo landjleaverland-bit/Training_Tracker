@@ -13,9 +13,33 @@
 	// Training classification options
 	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
-	const categoryOptions = ['None', 'Technique', 'Strength', 'Strength-endurance', 'Warm-up', 'Power'];
-	const energySystemOptions = ['None', 'Aerobic capacity', 'Aerobic lactic power', 'Anaerobic alactic capacity', 'Anaerobic alactic power', 'Anaerobic power', 'Anaerobic lactic capacity'];
-	const techniqueFocusOptions = ['None', 'Double-clutch', 'Standing on volumes', 'Trusting feet'];
+	const categoryOptions = ['None', 'Strength', 'Strength Endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique', 'Power', 'Strength Capacity', 'Power Capacity'];
+	const energySystemOptions = ['None', 'Aerobic Lactic Capacity', 'Aerobic Lactic Power', 'Anaerobic Alactic Capacity', 'Anaerobic Alactic Power', 'Anaerobic Power', 'Anaerobic Lactic Capacity'];
+	const techniqueFocusOptions = [
+		'None',
+		'Trusting feet',
+		'Double-clutch',
+		'Deadpointing',
+		'Flagging',
+		'Swapping feet',
+		'Edging',
+		'Smearing',
+		'Matching',
+		'Backstepping',
+		'Drop Knee',
+		'Bridging',
+		'Laybacking',
+		'Mantling',
+		'Kneebar',
+		'Dyno',
+		'Coordination Moves',
+		'Gastoning',
+		'Undercutting',
+		'Compressing',
+		'Heel Hook',
+		'Toe Hook',
+		'Bicycle'
+	];
 
 	// Valid grades (case-insensitive matching)
 	const validGrades = [

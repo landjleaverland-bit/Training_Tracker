@@ -31,7 +31,7 @@ export interface IndoorClimbSession extends BaseSession {
     climbingType: string;         // Bouldering, Sport, Mixed
     trainingTypes: string[];      // Projecting, Onsighting, Campusing, Repeaters
     difficulty?: string;          // Easy, Medium, Hard, Max, Limit+
-    categories?: string[];        // None, Technique, Strength, Strength-endurance, Warm-up, Power
+    categories?: string[];        // None, Technique, Strength, Strength-endurance, Power, Strength Capacity, Power Capacity
     energySystems?: string[];     // Aerobic capacity, Aerobic lactic power, etc.
     techniqueFocuses?: string[];  // None, Double-clutch, Standing on volumes, Trusting feet
     wallAngles?: string[];        // None, Overhang, Slab, Roof
