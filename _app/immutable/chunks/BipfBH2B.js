@@ -1,1 +1,0 @@
-const s=globalThis.__sveltekit_4kuho7?.base??"/Training_Tracker",a=globalThis.__sveltekit_4kuho7?.assets??s??"";export{a,s as b};
