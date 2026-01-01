@@ -138,6 +138,7 @@ export interface GymSession extends BaseSession {
     name: string;        // e.g., "Leg Day", "Push A"
     exercises: GymExercise[];
     bodyweight?: number; // Optional bodyweight at time of session
+    trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
 }
 
 // Union of all session types

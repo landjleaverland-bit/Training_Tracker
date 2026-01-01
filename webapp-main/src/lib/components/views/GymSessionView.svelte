@@ -21,7 +21,8 @@
 	let filters = $state<FilterParams>({
 		startDate: '',
 		endDate: '',
-		name: ''
+		name: '',
+		trainingBlock: ''
 	});
 
 	// Pagination state
@@ -89,6 +90,7 @@
 			if (filters.startDate && session.date < filters.startDate) return false;
 			if (filters.endDate && session.date > filters.endDate) return false;
 			if (filters.name && !session.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
+			if (filters.trainingBlock && session.trainingBlock !== filters.trainingBlock) return false;
 			return true;
 		});
 	}

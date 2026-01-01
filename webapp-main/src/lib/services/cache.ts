@@ -297,6 +297,7 @@ export function createGymSession(data: {
     date: string;
     name: string;
     bodyweight?: number;
+    trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
     exercises: GymSession['exercises']; // Use definitions from session.ts
 }): GymSession {
     return addSession({

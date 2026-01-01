@@ -11,6 +11,7 @@
 		startDate: string;
 		endDate: string;
 		name: string;
+		trainingBlock: string;
 	}
 
 	let isExpanded = $state(false);
@@ -18,6 +19,7 @@
 	let startDate = $state('');
 	let endDate = $state('');
 	let name = $state('');
+	let trainingBlock = $state('');
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
@@ -27,6 +29,7 @@
 		startDate = '';
 		endDate = '';
 		name = '';
+		trainingBlock = '';
 		applyFilters();
 	}
 
@@ -34,7 +37,8 @@
 		onFilterParamsChange({
 			startDate,
 			endDate,
-			name
+			name,
+			trainingBlock
 		});
 	}
 </script>
@@ -72,6 +76,16 @@
 						placeholder="e.g. Leg Day" 
 						oninput={applyFilters}
 					/>
+				</div>
+				<div class="filter-item">
+					<label for="block-filter">Training Block</label>
+					<select id="block-filter" bind:value={trainingBlock} onchange={applyFilters}>
+						<option value="">All Blocks</option>
+						<option value="Strength">Strength</option>
+						<option value="Power">Power</option>
+						<option value="Power Endurance">Power Endurance</option>
+						<option value="Muscular Endurance">Muscular Endurance</option>
+					</select>
 				</div>
 			</div>
 			
@@ -155,7 +169,7 @@
 		color: var(--text-secondary);
 	}
 
-	.filter-item input {
+	.filter-item input, .filter-item select {
 		padding: 0.5rem 0.75rem;
 		border-radius: 8px;
 		border: 1px solid rgba(74, 155, 155, 0.3);
@@ -164,7 +178,7 @@
 		background: white;
 	}
 
-	.filter-item input:focus {
+	.filter-item input:focus, .filter-item select:focus {
 		outline: none;
 		border-color: var(--teal-primary);
 		box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.1);

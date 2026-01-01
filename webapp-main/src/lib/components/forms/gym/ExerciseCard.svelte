@@ -4,6 +4,7 @@
     import ExerciseSetRow from './ExerciseSetRow.svelte';
 
     export let exercise: GymExercise;
+    export let prevExercise: GymExercise | undefined = undefined;
     // Potentially pass in history for ghost text logic later
 
     const dispatch = createEventDispatcher();
@@ -51,6 +52,7 @@
              <ExerciseSetRow 
                 setNumber={i + 1} 
                 bind:set={set} 
+                prevSet={prevExercise?.sets[i] || null} 
                 on:complete 
                 on:focus 
                 on:change 

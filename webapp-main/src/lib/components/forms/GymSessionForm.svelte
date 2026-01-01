@@ -3,7 +3,7 @@
     import { createEventDispatcher } from 'svelte';
     import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
     import { EXERCISE_LIBRARY, type ExerciseDefinition } from '$lib/data/exercises';
-    import { createGymSession } from '$lib/services/cache';
+    import { createGymSession, getGymSessions } from '$lib/services/cache';
     
     // Components
     import ExerciseCard from './gym/ExerciseCard.svelte';
@@ -21,6 +21,18 @@
     let bodyweight: number | undefined;
     let exercises: GymExercise[] = [];
     let startTime = new Date().toISOString().slice(0, 16);
+    let trainingBlock: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance' = 'Strength';
+    let previousSession: GymSession | null = null;
+    
+    $: {
+        const allSessions = getGymSessions();
+        const blockSessions = allSessions.filter(s => 
+            (s.trainingBlock || 'Strength') === trainingBlock &&
+            s.date < startTime.split('T')[0]
+        );
+        blockSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        previousSession = blockSessions.length > 0 ? blockSessions[0] : null;
+    }
     
     // UI State
     let showExercisePicker = false;
@@ -87,6 +99,7 @@
             date: startTime.split('T')[0],
             name: sessionName || 'Gym Workout', // Default name logic could be better (e.g. "Legs")
             bodyweight,
+            trainingBlock,
             exercises
         });
 
@@ -121,6 +134,15 @@
                 Bodyweight (kg)
                 <input type="number" bind:value={bodyweight} placeholder="Optional" />
             </label>
+            <label>
+                Block
+                <select bind:value={trainingBlock}>
+                    <option value="Strength">Strength</option>
+                    <option value="Power">Power</option>
+                    <option value="Power Endurance">Power Endurance</option>
+                    <option value="Muscular Endurance">Muscular Endurance</option>
+                </select>
+            </label>
         </div>
     </div>
 
@@ -129,6 +151,7 @@
         {#each exercises as exercise, i}
             <ExerciseCard 
                 {exercise} 
+                prevExercise={previousSession?.exercises.find(e => e.name === exercise.name)} 
                 on:focus={(e) => handleSetFocus(e, i, exercises[i].sets.indexOf(e.detail.set))}
                 on:complete={handleSetComplete}
                 on:delete={() => {
@@ -337,7 +360,7 @@
         flex: 1;
     }
 
-    input[type="number"], input[type="datetime-local"] {
+    input[type="number"], input[type="datetime-local"], .meta-row select {
         background: var(--bg-tertiary);
         border: 1px solid var(--border-primary);
         padding: 0.5rem;
