@@ -280,7 +280,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
             'Pull chest up toward the bar, driving elbows down.',
             'Lower until arms are fully extended.'
         ],
-        images: ['/exercises/pull_ups.webp']
+        images: ['/exercises/pull-ups.webp']
     },
     {
         id: 'bent_over_row',
