@@ -242,27 +242,69 @@
             >
                 <div class="picker-header">
                     <h3>Add Exercise</h3>
+                    
+                    <!-- Search Bar -->
                     <div class="search-row">
                         <input 
                             type="text" 
                             placeholder="Search exercises..." 
                             bind:value={searchQuery} 
                         />
-                        <select bind:value={selectedCategory}>
-                            <option value="">All Categories</option>
-                            {#each categories as cat}
-                                <option value={cat}>{cat}</option>
-                            {/each}
-                        </select>
                     </div>
+
+                    <!-- Category Tabs (only show if no search query) -->
+                    {#if !searchQuery}
+                        <div class="tabs-scroll-container">
+                            <div class="tabs-header">
+                                {#each categories as cat}
+                                    <button 
+                                        class="tab-btn" 
+                                        class:active={selectedCategory === cat}
+                                        on:click={() => selectedCategory = cat}
+                                    >
+                                        {cat}
+                                    </button>
+                                {/each}
+                            </div>
+                        </div>
+                    {/if}
                 </div>
-                <div class="picker-list">
-                    {#each filteredExercises as def}
-                        <button class="exercise-item" on:click={() => addExercise(def)}>
-                            <span class="name">{def.name}</span>
-                            <span class="muscles">{def.targetMuscles.join(', ')}</span>
-                        </button>
-                    {/each}
+
+                <div class="picker-content">
+                    {#if searchQuery}
+                         <!-- Flat list for search results -->
+                         <div class="search-results">
+                            {#each filteredExercises as def}
+                                <button class="exercise-item" on:click={() => addExercise(def)}>
+                                    <span class="name">{def.name}</span>
+                                    <span class="details">{def.category} - {def.subcategory}</span>
+                                </button>
+                            {/each}
+                            {#if filteredExercises.length === 0}
+                                <div class="no-results">No exercises found</div>
+                            {/if}
+                         </div>
+                    {:else}
+                        <!-- Grouped Grid View -->
+                        <div class="subcategory-grid">
+                             {#each Object.entries(EXERCISE_LIBRARY.filter(e => e.category === selectedCategory).reduce((acc, curr) => {
+                                 if (!acc[curr.subcategory]) acc[curr.subcategory] = [];
+                                 acc[curr.subcategory].push(curr);
+                                 return acc;
+                             }, {} as Record<string, ExerciseDefinition[]>)) as [subcat, exercises]}
+                                 <div class="subcategory-column">
+                                     <h4 class="subcategory-title">{subcat}</h4>
+                                     <div class="subcategory-list">
+                                         {#each exercises as def}
+                                             <button class="exercise-item-dence" on:click={() => addExercise(def)}>
+                                                 {def.name}
+                                             </button>
+                                         {/each}
+                                     </div>
+                                 </div>
+                             {/each}
+                        </div>
+                    {/if}
                 </div>
             </div>
         </div>
@@ -372,16 +414,6 @@
         margin-top: 0;
     }
 
-    .search-row select {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-primary);
-        border-radius: 8px;
-        color: var(--text-primary);
-        padding: 0 0.75rem;
-        font-size: 1rem;
-        max-width: 150px;
-    }
-
     label {
         display: flex;
         flex-direction: column;
@@ -478,14 +510,7 @@
         font-size: 1rem;
     }
 
-    .picker-list {
-        overflow-y: auto;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
+    /* Old picker styles removed or repurposed */
     .exercise-item {
         background: var(--bg-tertiary);
         padding: 1rem;
@@ -503,9 +528,103 @@
         font-weight: bold;
     }
 
-    .exercise-item .muscles {
+    .exercise-item .details {
         color: var(--text-secondary);
         font-size: 0.8rem;
+    }
+
+    /* Tabs & Grid Layout */
+    .tabs-scroll-container {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-primary);
+        margin: 0 -1rem -1px -1rem; /* Full width border */
+    }
+
+    .tabs-header {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0 1rem;
+        min-width: max-content;
+    }
+
+    .tab-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+        color: var(--teal-primary);
+        border-bottom-color: var(--teal-primary);
+    }
+
+    .picker-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
+    .subcategory-grid {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        align-items: flex-start;
+    }
+
+    .subcategory-column {
+        min-width: 250px;
+        flex-shrink: 0;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+
+    .subcategory-title {
+        color: var(--teal-primary);
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+        border-bottom: 1px solid var(--border-primary);
+        padding-bottom: 0.25rem;
+    }
+
+    .subcategory-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .exercise-item-dence {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        padding: 0.5rem;
+        border-radius: 6px;
+        text-align: left;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    .exercise-item-dence:hover {
+        border-color: var(--teal-primary);
+    }
+    
+    .search-results {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .no-results {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-top: 1rem;
     }
 
     /* Keypad Overlay */

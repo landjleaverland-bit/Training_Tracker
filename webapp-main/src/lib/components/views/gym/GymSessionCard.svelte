@@ -40,6 +40,17 @@
 		return sum + (ex.sets || []).reduce((sSum: number, set: GymSet) => sSum + (set.weight || 0) * (set.reps || 0), 0);
 	}, 0));
 
+    let groupedExercises = $derived((session.exercises || []).reduce((acc, ex) => {
+        const def = getExerciseDef(ex.name);
+        const cat = def?.category || 'Other';
+        const subcat = def?.subcategory || 'Misc';
+        
+        if (!acc[cat]) acc[cat] = {};
+        if (!acc[cat][subcat]) acc[cat][subcat] = [];
+        acc[cat][subcat].push(ex);
+        return acc;
+    }, {} as Record<string, Record<string, GymExercise[]>>));
+
 </script>
 
 <div class="session-card" class:expanded={isExpanded}>
@@ -99,40 +110,50 @@
 			{/if}
 			
 			<div class="exercises-list">
-				{#each session.exercises as exercise}
-					{@const def = getExerciseDef(exercise.name)}
-					<div class="exercise-item">
-						<div class="exercise-header">
-							<h4>{exercise.name}</h4>
-							{#if def}
-								<div class="muscle-tags">
-									{#each def.targetMuscles.slice(0, 3) as muscle}
-										<span class="muscle-tag">{muscle}</span>
-									{/each}
-									{#if def.targetMuscles.length > 3}
-										<span class="muscle-tag">+{def.targetMuscles.length - 3}</span>
-									{/if}
-								</div>
-							{/if}
-						</div>
+                {#each Object.entries(groupedExercises) as [category, subcategories]}
+                    <div class="category-group">
+                        <h4 class="category-header">{category}</h4>
+                        {#each Object.entries(subcategories) as [subcategory, exercises]}
+                            <div class="subcategory-group">
+                                <h5 class="subcategory-header">{subcategory}</h5>
+                                {#each exercises as exercise}
+                                    {@const def = getExerciseDef(exercise.name)}
+                                    <div class="exercise-item">
+                                        <div class="exercise-header">
+                                            <h4>{exercise.name}</h4>
+                                            {#if def}
+                                                <div class="muscle-tags">
+                                                    {#each def.targetMuscles.slice(0, 3) as muscle}
+                                                        <span class="muscle-tag">{muscle}</span>
+                                                    {/each}
+                                                    {#if def.targetMuscles.length > 3}
+                                                        <span class="muscle-tag">+{def.targetMuscles.length - 3}</span>
+                                                    {/if}
+                                                </div>
+                                            {/if}
+                                        </div>
 
-						<div class="sets-grid">
-							{#each exercise.sets as set, i}
-								<div class="set-pill" class:completed={set.completed} class:warmup={set.isWarmup}>
-									<span class="set-num">{i + 1}</span>
-									{#if set.isWarmup}<span class="tag w">W</span>{/if}
-									{#if set.isFailure}<span class="tag f">F</span>{/if}
-									{#if set.isDropSet}<span class="tag d">D</span>{/if}
-									<span class="val">
-                                        <span class="weight">{set.weight}kg</span>
-                                        <span class="x">x</span>
-                                        <span class="reps">{set.reps}</span>
-                                    </span>
-								</div>
-							{/each}
-						</div>
-					</div>
-				{/each}
+                                        <div class="sets-grid">
+                                            {#each exercise.sets as set, i}
+                                                <div class="set-pill" class:completed={set.completed} class:warmup={set.isWarmup}>
+                                                    <span class="set-num">{i + 1}</span>
+                                                    {#if set.isWarmup}<span class="tag w">W</span>{/if}
+                                                    {#if set.isFailure}<span class="tag f">F</span>{/if}
+                                                    {#if set.isDropSet}<span class="tag d">D</span>{/if}
+                                                    <span class="val">
+                                                        <span class="weight">{set.weight}kg</span>
+                                                        <span class="x">x</span>
+                                                        <span class="reps">{set.reps}</span>
+                                                    </span>
+                                                </div>
+                                            {/each}
+                                        </div>
+                                    </div>
+                                {/each}
+                            </div>
+                        {/each}
+                    </div>
+                {/each}
 			</div>
 		</div>
 	{/if}
@@ -407,5 +428,36 @@
     .tag.w { background: rgba(251, 191, 36, 0.2); color: #b45309; }
     .tag.f { background: rgba(239, 68, 68, 0.2); color: #b91c1c; }
     .tag.d { background: rgba(99, 102, 241, 0.2); color: #4338ca; }
+
+    .category-group {
+        margin-bottom: 1.5rem;
+        background: white;
+        border-radius: 8px;
+    }
+
+    .category-header {
+        margin: 0 0 0.5rem 0;
+        color: var(--teal-secondary);
+        font-size: 1.1rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid rgba(74, 155, 155, 0.1);
+        padding-bottom: 0.25rem;
+    }
+
+    .subcategory-group {
+        margin-bottom: 1rem;
+        padding-left: 0.5rem;
+        border-left: 2px solid rgba(0,0,0,0.05);
+    }
+
+    .subcategory-header {
+        margin: 0 0 0.5rem 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
 </style>
