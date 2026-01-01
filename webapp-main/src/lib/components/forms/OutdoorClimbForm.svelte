@@ -91,6 +91,8 @@
 
     const STORAGE_KEY = 'outdoor_climb_draft';
 
+    let loaded = $state(false);
+
     onMount(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -123,9 +125,11 @@
                 console.error('Failed to restore draft', e);
             }
         }
+        loaded = true;
     });
 
     $effect(() => {
+        if (!loaded) return;
         const draft = {
             date, area, crag, sector, isOtherCrag, climbingType, trainingTypes, difficulty,
             categories, energySystems, techniqueFocuses,
@@ -544,7 +548,7 @@
 									type="number" 
 									bind:value={climb.attemptsNum} 
 									min="1" 
-									disabled={climb.attemptType === 'Flash'}
+									disabled={climb.attemptType === 'Flash' || climb.attemptType === 'Onsight'}
 								/>
 							</td>
 							<td class="notes-cell" class:expanded={expandedNoteIndex === index}>

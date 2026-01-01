@@ -66,7 +66,9 @@
                     // Fallback fields
                     createdAt: r.createdAt || new Date().toISOString(),
                     updatedAt: r.updatedAt || new Date().toISOString(),
-                    syncStatus: 'synced' as const
+
+                    syncStatus: 'synced' as const,
+                    isSimulation: r.isSimulation
                 }));
 
                 // Persist
@@ -99,6 +101,17 @@
 
     function getResultSummary(session: CompetitionSession) {
         // Quick summary for header
+        if (session.isSimulation) {
+            // Logic for simulation summary
+            if (session.rounds && session.rounds.length > 0 && session.rounds[0].climbs) {
+                const climbs = session.rounds[0].climbs;
+                 const tops = climbs.filter(c => c.status === 'Top' || c.status === 'Flash').length;
+                 const zones = climbs.filter(c => c.status === 'Zone').length;
+                 return `${tops}T ${zones + tops}Z`;
+            }
+            return 'Simulation';
+        }
+
         if (!session.rounds || session.rounds.length === 0) return 'No rounds';
         const lastRound = session.rounds[session.rounds.length - 1]; // usually Final
         
@@ -153,6 +166,9 @@
                             <div class="right-col">
                                 <div class="badges">
                                     <span class="type-tag">{session.type}</span>
+                                    {#if session.isSimulation}
+                                        <span class="type-tag simulation-tag">Simulation</span>
+                                    {/if}
                                     <span class="result-tag">{getResultSummary(session)}</span>
                                 </div>
                             </div>
@@ -352,6 +368,7 @@
     }
     
     .type-tag { font-size: 0.7rem; background: #eefdfd; color: var(--teal-secondary); padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid rgba(74,155,155,0.1); }
+    .simulation-tag { background: #fff3cd; color: #856404; border-color: rgba(133, 100, 4, 0.1); }
     .result-tag { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); }
 
     .chevron { color: #ccc; font-size: 0.8rem; margin-top: 2px; }

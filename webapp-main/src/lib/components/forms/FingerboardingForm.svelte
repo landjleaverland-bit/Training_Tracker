@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import { createFingerboardSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
     import { createFingerboardSession as syncToServer, isOnline } from '$lib/services/api';
     import type { FingerboardExercise, ExerciseSet } from '$lib/types/session';
@@ -24,11 +25,40 @@
 		];
 	}
 
-    // Initialize with one exercise if empty
-    $effect(() => {
+    const STORAGE_KEY = 'fingerboard_session_draft';
+
+    let loaded = $state(false);
+
+    // Initialize with one exercise if empty, or load from storage
+    onMount(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.date) date = data.date;
+                if (data.exercises && Array.isArray(data.exercises)) {
+                    exercises = data.exercises;
+                }
+            } catch (e) {
+                console.error('Failed to restore draft', e);
+            }
+        }
+        
+        // Ensure at least one exercise exists if storage was empty or invalid
         if (exercises.length === 0) {
             addExercise();
         }
+        loaded = true;
+    });
+
+    // Save to storage whenever state changes
+    $effect(() => {
+        if (!loaded) return;
+        const draft = {
+            date,
+            exercises
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
 
 	function removeExercise(index: number) {
@@ -75,14 +105,17 @@
                     markAsSynced(result.id!);
                     saveStatus = 'success';
                     saveMessage = 'Session saved and synced!';
+                    localStorage.removeItem(STORAGE_KEY);
                 } else {
                     markAsSyncError(localSession.id);
                     saveStatus = 'success';
                     saveMessage = 'Saved locally. Sync failed: ' + (result.error || 'Unknown error');
+                    localStorage.removeItem(STORAGE_KEY);
                 }
             } else {
                 saveStatus = 'success';
                 saveMessage = 'Saved locally. Will sync when online.';
+                localStorage.removeItem(STORAGE_KEY);
             }
 
             window.dispatchEvent(new CustomEvent('session-saved'));

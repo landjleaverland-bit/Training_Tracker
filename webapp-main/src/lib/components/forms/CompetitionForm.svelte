@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import { createCompetitionSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
     import { createCompetitionSession as syncToServer, isOnline } from '$lib/services/api';
     import type { CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
@@ -15,6 +16,7 @@
     let venue = $state('');
     let customVenue = $state('');
     let type = $state('Bouldering');
+    let isSimulation = $state(false);
     
     // Load Metrics
     let fingerLoad = $state(4);
@@ -31,8 +33,47 @@
         { name: '#1', status: 'Flash', attemptCount: 1, notes: '' }
     ]);
 
+    const STORAGE_KEY = 'competition_session_draft';
+
+    let loaded = $state(false);
+
+    onMount(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+             try {
+                const data = JSON.parse(saved);
+                if (data.date) date = data.date;
+                if (data.venue) venue = data.venue;
+                if (data.customVenue) customVenue = data.customVenue;
+                if (data.type) type = data.type;
+                if (data.fingerLoad) fingerLoad = data.fingerLoad;
+                if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+                if (data.forearmLoad) forearmLoad = data.forearmLoad;
+                if (data.roundName) roundName = data.roundName;
+                if (data.customRoundName) customRoundName = data.customRoundName;
+                if (data.finalPosition) finalPosition = data.finalPosition;
+                if (data.climbs) climbs = data.climbs;
+                if (typeof data.isSimulation === 'boolean') isSimulation = data.isSimulation;
+             } catch (e) {
+                 console.error('Failed to restore draft', e);
+             }
+        }
+        loaded = true;
+    });
+
+    $effect(() => {
+        if (!loaded) return;
+        const draft = {
+            date, venue, customVenue, type,
+            fingerLoad, shoulderLoad, forearmLoad,
+            roundName, customRoundName, finalPosition,
+            climbs, isSimulation
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    });
+
     // Computed states
-    let isResultMode = $derived(roundName === 'Result');
+    let isResultMode = $derived(!isSimulation && roundName === 'Result');
     let showCustomVenue = $derived(venue === 'Other');
     let showCustomRound = $derived(roundName === 'Other');
     let actualRoundName = $derived(roundName === 'Other' ? customRoundName : roundName);
@@ -72,7 +113,7 @@
         
         try {
             const roundData: CompetitionRound = {
-                name: actualRoundName,
+                name: isSimulation ? 'Simulation' : actualRoundName,
                 position: isResultMode ? finalPosition : undefined,
                 climbs: isResultMode ? undefined : JSON.parse(JSON.stringify(climbs))
             };
@@ -82,6 +123,7 @@
                 venue: venue === 'Other' ? customVenue : venue,
                 customVenue: venue === 'Other' ? customVenue : undefined,
                 type: type as any,
+                isSimulation,
                 fingerLoad: isResultMode ? undefined : fingerLoad,
                 shoulderLoad: isResultMode ? undefined : shoulderLoad,
                 forearmLoad: isResultMode ? undefined : forearmLoad,
@@ -99,14 +141,17 @@
                     markAsSynced(result.id!);
                     saveStatus = 'success';
                     saveMessage = 'Competition saved and synced!';
+                    localStorage.removeItem(STORAGE_KEY);
                 } else {
                     markAsSyncError(localSession.id);
                     saveStatus = 'success';
                     saveMessage = 'Saved locally. Sync failed: ' + (result.error || 'Unknown error');
+                    localStorage.removeItem(STORAGE_KEY);
                 }
             } else {
                 saveStatus = 'success';
                 saveMessage = 'Saved locally. Will sync when online.';
+                localStorage.removeItem(STORAGE_KEY);
             }
 
             window.dispatchEvent(new CustomEvent('session-saved'));
@@ -163,9 +208,17 @@
         </select>
     </div>
 
+    <div class="form-group mb-4 checkbox-group">
+        <label for="isSimulation" class="checkbox-label">
+            <input type="checkbox" id="isSimulation" bind:checked={isSimulation} />
+            Simulation (Practice/Mock comp)
+        </label>
+    </div>
+
     <!-- Round Configuration -->
     <div class="round-section">
-        <div class="form-group">
+        {#if !isSimulation}
+            <div class="form-group">
             <label for="round">Round</label>
             <select id="round" bind:value={roundName}>
                 {#each roundOptions as r}
@@ -175,7 +228,8 @@
             {#if showCustomRound}
                 <input type="text" bind:value={customRoundName} placeholder="Round name" class="mt-2" />
             {/if}
-        </div>
+            </div>
+        {/if}
 
         {#if isResultMode}
             <!-- RESULT MODE -->
@@ -401,4 +455,21 @@
 
 	.save-message.success { background: #d4edda; color: #155724; }
 	.save-message.error { background: #f8d7da; color: #721c24; }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+    }
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer; 
+        font-weight: normal !important;
+        color: var(--text-primary) !important;
+    }
+    .checkbox-label input {
+        width: auto;
+        margin: 0;
+    }
 </style>

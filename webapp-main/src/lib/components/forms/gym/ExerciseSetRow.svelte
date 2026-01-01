@@ -1,9 +1,8 @@
 <script lang="ts">
-    import type { GymSet } from '$lib/types/session';
     import { createEventDispatcher } from 'svelte';
+    import type { GymSet } from '$lib/types/session';
 
     export let setNumber: number;
-    export let prevSet: GymSet | null = null;
     export let set: GymSet;
 
     const dispatch = createEventDispatcher();
@@ -25,18 +24,11 @@
     <div class="col set-num">
         {setNumber}
     </div>
-    <div class="col prev">
-        {#if prevSet}
-            {prevSet.weight}kg x {prevSet.reps}
-        {:else}
-            -
-        {/if}
-    </div>
     <div class="col weight">
         <input 
             type="number" 
             bind:value={set.weight} 
-            placeholder={prevSet ? prevSet.weight.toString() : '-'} 
+            placeholder="-" 
             on:focus={() => handleFocus('weight')}
         />
     </div>
@@ -44,7 +36,7 @@
         <input 
             type="number" 
             bind:value={set.reps} 
-            placeholder={prevSet ? prevSet.reps.toString() : '-'} 
+            placeholder="-" 
             on:focus={() => handleFocus('reps')}
         />
     </div>
@@ -60,7 +52,7 @@
 <style>
     .set-row {
         display: grid;
-        grid-template-columns: 30px 1fr 80px 80px 40px;
+        grid-template-columns: 30px 1fr 1fr 40px; /* Adjusted grid */
         gap: 0.5rem;
         align-items: center;
         padding: 0.5rem;
@@ -80,10 +72,7 @@
         text-align: center;
     }
 
-    .prev {
-        color: var(--text-secondary);
-        font-size: 0.8rem;
-    }
+    /* prev class removed */
 
     input {
         width: 100%;

@@ -24,15 +24,50 @@
     let startTime = new Date().toISOString().split('T')[0];
     let trainingBlock: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance' = 'Strength';
     let previousSession: GymSession | null = null;
+    let allSessions: GymSession[] = [];
     
     $: {
-        const allSessions = getGymSessions();
+        allSessions = getGymSessions();
         const blockSessions = allSessions.filter(s => 
             (s.trainingBlock || 'Strength') === trainingBlock &&
             s.date < startTime
         );
         blockSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         previousSession = blockSessions.length > 0 ? blockSessions[0] : null;
+    }
+
+    function getBenchmarks(exerciseName: string) {
+        const result: Record<string, { weight: number, reps: number } | null> = {
+            Green: null, Yellow: null, Orange: null, Red: null
+        };
+        
+        // Sort sessions descending by date (newest first)
+        const sortedSessions = [...allSessions].sort((a, b) => 
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+
+        for (const session of sortedSessions) {
+            // Optimization: if all filled, break
+            if (result.Green && result.Yellow && result.Orange && result.Red) break;
+
+            const ex = session.exercises.find(e => e.name === exerciseName);
+            if (ex && ex.difficulty && !result[ex.difficulty]) {
+                 // Find best set (Max weight)
+                 let bestSet: GymSet | null = null;
+                 for (const set of ex.sets) {
+                      if (!bestSet || set.weight > bestSet.weight) {
+                          bestSet = set;
+                      } else if (set.weight === bestSet.weight && set.reps > bestSet.reps) {
+                          bestSet = set;
+                      }
+                 }
+                 
+                 if (bestSet) {
+                     result[ex.difficulty] = { weight: bestSet.weight, reps: bestSet.reps };
+                 }
+            }
+        }
+        return result;
     }
     
     // UI State
@@ -48,7 +83,37 @@
     let exerciseToDeleteIndex: number | null = null;
     let showSuccess = false;
 
-    // ... onMount ...
+    // Persistence
+    let loaded = false;
+    onMount(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.sessionName) sessionName = data.sessionName;
+                if (data.bodyweight) bodyweight = data.bodyweight;
+                if (data.startTime) startTime = data.startTime;
+                if (data.trainingBlock) trainingBlock = data.trainingBlock;
+                if (data.exercises) exercises = data.exercises;
+            } catch (e) {
+                console.error('Failed to restore draft', e);
+            }
+        }
+        loaded = true;
+    });
+
+    $: {
+        if (loaded && typeof localStorage !== 'undefined') {
+             const draft = {
+                sessionName,
+                bodyweight,
+                startTime,
+                trainingBlock,
+                exercises
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        }
+    }
 
     // Filtered exercises for picker
     $: filteredExercises = EXERCISE_LIBRARY.filter(e => {
@@ -172,7 +237,7 @@
         {#each exercises as exercise, i}
             <ExerciseCard 
                 {exercise} 
-                prevExercise={previousSession?.exercises.find(e => e.name === exercise.name)} 
+                benchmarks={getBenchmarks(exercise.name)}
                 on:focus={(e) => handleSetFocus(e, i, exercises[i].sets.indexOf(e.detail.set))}
                 on:complete={handleSetComplete}
                 on:delete={() => {

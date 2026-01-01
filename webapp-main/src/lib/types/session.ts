@@ -113,6 +113,7 @@ export interface CompetitionSession extends BaseSession {
     shoulderLoad?: number;
     forearmLoad?: number;
     rounds: CompetitionRound[];
+    isSimulation?: boolean;
 }
 
 // Gym session (Strong/Hevy style)
@@ -131,6 +132,7 @@ export interface GymExercise {
     sets: GymSet[];
     notes?: string;
     linkedTo?: string;   // ID of another exercise if supersetted
+    difficulty?: 'Green' | 'Yellow' | 'Orange' | 'Red';
 }
 
 export interface GymSession extends BaseSession {
