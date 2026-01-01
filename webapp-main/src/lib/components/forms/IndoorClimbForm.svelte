@@ -1,5 +1,6 @@
 <script lang="ts">
 	// Indoor Climb form for logging climbing sessions
+	import { onMount } from 'svelte';
 	import { createIndoorClimbSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
 	import { createIndoorSession as syncToServer, isOnline } from '$lib/services/api';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
@@ -115,6 +116,52 @@
 	]);
     
     let isOtherLocation = $state(false);
+    
+    const STORAGE_KEY = 'indoor_climb_draft';
+
+    onMount(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.date) date = data.date;
+                if (data.location) location = data.location;
+                if (data.isOtherLocation) isOtherLocation = data.isOtherLocation;
+                if (data.climbingType) climbingType = data.climbingType;
+                if (data.trainingTypes) trainingTypes = data.trainingTypes;
+                if (data.difficulty) difficulty = data.difficulty;
+                if (data.categories) categories = data.categories;
+                if (data.energySystems) energySystems = data.energySystems;
+                if (data.techniqueFocuses) techniqueFocuses = data.techniqueFocuses;
+                if (data.wallAngles) wallAngles = data.wallAngles;
+                
+                if (data.fingerLoad) fingerLoad = data.fingerLoad;
+                if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+                if (data.forearmLoad) forearmLoad = data.forearmLoad;
+                
+                if (data.openGrip) openGrip = data.openGrip;
+                if (data.crimpGrip) crimpGrip = data.crimpGrip;
+                if (data.pinchGrip) pinchGrip = data.pinchGrip;
+                if (data.sloperGrip) sloperGrip = data.sloperGrip;
+                if (data.jugGrip) jugGrip = data.jugGrip;
+                
+                if (data.climbs) climbs = data.climbs;
+            } catch (e) {
+                console.error('Failed to restore draft', e);
+            }
+        }
+    });
+
+    $effect(() => {
+        const draft = {
+            date, location, isOtherLocation, climbingType, trainingTypes, difficulty,
+            categories, energySystems, techniqueFocuses, wallAngles,
+            fingerLoad, shoulderLoad, forearmLoad,
+            openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
+            climbs
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    });
 
     function onLocationChange() {
         if (location === 'Other') {
@@ -238,14 +285,17 @@
 					markAsSynced(result.id!);
 					saveStatus = 'success';
 					saveMessage = 'Session saved and synced!';
+                    localStorage.removeItem(STORAGE_KEY); // Clear draft
 				} else {
 					markAsSyncError(localSession.id);
 					saveStatus = 'success';
 					saveMessage = 'Saved locally. Sync failed: ' + (result.error || 'Unknown error');
+                    localStorage.removeItem(STORAGE_KEY); // Clear draft
 				}
 			} else {
 				saveStatus = 'success';
 				saveMessage = 'Saved locally. Will sync when online.';
+                localStorage.removeItem(STORAGE_KEY); // Clear draft
 			}
 
 			// Dispatch custom event to notify parent of session save

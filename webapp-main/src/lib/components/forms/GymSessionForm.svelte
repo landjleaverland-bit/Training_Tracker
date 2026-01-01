@@ -15,6 +15,7 @@
     import { fly, fade } from 'svelte/transition';
 
     const dispatch = createEventDispatcher();
+    const STORAGE_KEY = 'gym_session_draft';
 
     // State
     let sessionName = '';
@@ -45,6 +46,35 @@
     let activeExerciseDetail: ExerciseDefinition | null = null;
     let exerciseToDeleteIndex: number | null = null;
     let showSuccess = false;
+
+    onMount(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.sessionName) sessionName = data.sessionName;
+                if (data.bodyweight) bodyweight = data.bodyweight;
+                if (data.startTime) startTime = data.startTime;
+                if (data.trainingBlock) trainingBlock = data.trainingBlock;
+                if (data.exercises) exercises = data.exercises;
+            } catch (e) {
+                console.error('Failed to restore draft', e);
+            }
+        }
+    });
+
+    $: {
+        if (typeof localStorage !== 'undefined') {
+            const draft = {
+                sessionName,
+                bodyweight,
+                startTime,
+                trainingBlock,
+                exercises
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        }
+    }
 
     // Filtered exercises for picker
     // Filtered exercises for picker
@@ -104,6 +134,7 @@
         });
 
         showSuccess = true;
+        localStorage.removeItem(STORAGE_KEY); // Clear draft
         
         setTimeout(() => {
             showSuccess = false;
