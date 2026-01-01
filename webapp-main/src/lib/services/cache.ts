@@ -403,10 +403,12 @@ function isSameSession(a: Session, b: Session): boolean {
         case 'gym_session':
             const gA = a as GymSession;
             const gB = b as GymSession;
-            // Match if name matches AND exercise count matches.
+            // Match if name, trainingBlock, AND exercise count matches.
             // This is a heuristic to differentiate two "Pull Day" sessions on same day
             // (e.g. morning and evening)
-            return gA.name === gB.name && gA.exercises.length === gB.exercises.length;
+            return gA.name === gB.name &&
+                gA.trainingBlock === gB.trainingBlock &&
+                gA.exercises.length === gB.exercises.length;
 
         default:
             return false;
