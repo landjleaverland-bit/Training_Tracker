@@ -239,14 +239,14 @@
 
     .diff-circles {
         display: flex;
-        gap: 0.75rem;
+        gap: 1rem;
     }
 
     .diff-circle {
-        width: 24px;
-        height: 24px;
+        width: 32px; /* Larger tap target */
+        height: 32px;
         border-radius: 50%;
-        border: 2px solid var(--circle-color);
+        border: 3px solid var(--circle-color); /* Thicker border */
         background: transparent;
         cursor: pointer;
         padding: 0;
@@ -255,11 +255,12 @@
 
     .diff-circle.selected {
         background: var(--circle-color);
-        box-shadow: 0 0 10px var(--circle-color);
+        box-shadow: 0 0 12px var(--circle-color);
         transform: scale(1.1);
     }
 
     .diff-circle:hover {
         transform: scale(1.1);
+        background: rgba(var(--circle-color), 0.1);
     }
 </style>
