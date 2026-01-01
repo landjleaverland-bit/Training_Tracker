@@ -5,7 +5,8 @@
 	import type { IndoorClimbSession } from '$lib/types/session';
 	import IndoorClimbEntry from './IndoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-	import { deleteSession, updateSession } from '$lib/services/cache';
+    import { updateIndoorSession, isOnline } from '$lib/services/api';
+	import { deleteSession, updateSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
 
 	interface Props {
 		session: IndoorClimbSession;
@@ -37,6 +38,62 @@
 		updateSession(session.id, { climbs: newClimbs });
 		onDelete();
 	}
+
+    function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
+        const newClimbs = [...session.climbs];
+        newClimbs[climbIndex] = updatedClimb;
+        saveUpdates(newClimbs);
+    }
+
+    async function saveUpdates(newClimbs: any[]) {
+        // Optimistic update locally
+        updateSession(session.id, { climbs: newClimbs });
+        
+        // Propagate changes to parent (updates the list view immediately)
+        session.climbs = newClimbs;
+
+        // Sync to server
+        if (isOnline()) {
+             // We need to send the FULL session structure required by the API
+             const sessionPayload = {
+                date: session.date,
+                location: session.location,
+                customLocation: session.customLocation,
+                climbingType: session.climbingType,
+                trainingTypes: session.trainingTypes || [],
+                difficulty: session.difficulty,
+                categories: session.categories || [],
+                energySystems: session.energySystems || [],
+                techniqueFocuses: session.techniqueFocuses || [],
+                wallAngles: session.wallAngles || [],
+                fingerLoad: session.fingerLoad,
+                shoulderLoad: session.shoulderLoad,
+                forearmLoad: session.forearmLoad,
+                openGrip: session.openGrip,
+                crimpGrip: session.crimpGrip,
+                pinchGrip: session.pinchGrip,
+                sloperGrip: session.sloperGrip,
+                jugGrip: session.jugGrip,
+                climbs: newClimbs
+             };
+
+             try {
+                const result = await updateIndoorSession(session.id, sessionPayload);
+                if (result.ok) {
+                    markAsSynced(session.id);
+                    session.syncStatus = 'synced';
+                } else {
+                    console.error('Failed to sync update:', result.error);
+                    markAsSyncError(session.id);
+                    session.syncStatus = 'error';
+                }
+             } catch (e) {
+                 console.error('Exception syncing update:', e);
+                 markAsSyncError(session.id);
+                 session.syncStatus = 'error';
+             }
+        }
+    }
 
 	// Calculate stats
 	let climbCount = $derived(session.climbs?.length ?? 0);
@@ -272,6 +329,7 @@
 						<IndoorClimbEntry 
 							{climb} 
 							onDelete={() => handleClimbDelete(i)}
+                            onUpdate={(updated) => handleClimbUpdate(i, updated)}
                             showClimbType={session.climbingType === 'Mixed'}
 						/>
 					{/each}
@@ -283,15 +341,6 @@
 		</div>
 	{/if}
 </div>
-
-<DeleteConfirmModal 
-	isOpen={showDeleteModal}
-	title="Delete Session"
-	message="Are you sure you want to delete this session and all its climbs? This cannot be undone."
-	onConfirm={confirmDeleteSession}
-	onCancel={() => showDeleteModal = false}
-/>
-
 <style>
 	.session-card {
 		background: white;

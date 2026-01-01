@@ -5,7 +5,8 @@
 	import type { OutdoorClimbSession } from '$lib/types/session';
 	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-	import { deleteSession, updateSession } from '$lib/services/cache';
+    import { updateOutdoorSession, isOnline } from '$lib/services/api';
+	import { deleteSession, updateSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
 
 	interface Props {
 		session: OutdoorClimbSession;
@@ -37,6 +38,57 @@
 		updateSession(session.id, { climbs: newClimbs });
 		onDelete();
 	}
+    
+    function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
+        const newClimbs = [...session.climbs];
+        newClimbs[climbIndex] = updatedClimb;
+        saveUpdates(newClimbs);
+    }
+
+    async function saveUpdates(newClimbs: any[]) {
+        // Optimistic update locally
+        updateSession(session.id, { climbs: newClimbs });
+        
+        // Propagate changes to parent (updates the list view immediately)
+        session.climbs = newClimbs;
+
+        // Sync to server
+        if (isOnline()) {
+             // We need to send the FULL session structure
+             const sessionPayload = {
+                date: session.date,
+                area: session.area,
+                crag: session.crag,
+                sector: session.sector,
+                climbingType: session.climbingType,
+                trainingTypes: session.trainingTypes || [],
+                difficulty: session.difficulty,
+                categories: session.categories || [],
+                energySystems: session.energySystems || [],
+                techniqueFocuses: session.techniqueFocuses || [],
+                fingerLoad: session.fingerLoad,
+                shoulderLoad: session.shoulderLoad,
+                forearmLoad: session.forearmLoad,
+                climbs: newClimbs
+             };
+
+             try {
+                const result = await updateOutdoorSession(session.id, sessionPayload);
+                if (result.ok) {
+                    markAsSynced(session.id);
+                    session.syncStatus = 'synced';
+                } else {
+                    console.error('Failed to sync update:', result.error);
+                    markAsSyncError(session.id);
+                    session.syncStatus = 'error';
+                }
+             } catch (e) {
+                 console.error('Exception syncing update:', e);
+                 markAsSyncError(session.id);
+                 session.syncStatus = 'error';
+             }
+        }
+    }
 
 	// Calculate stats
 	let climbCount = $derived(session.climbs?.length ?? 0);
@@ -265,6 +317,7 @@
 						<OutdoorClimbEntry 
 							{climb} 
 							onDelete={() => handleClimbDelete(i)}
+                            onUpdate={(updated) => handleClimbUpdate(i, updated)}
                             showClimbType={session.climbingType === 'Mixed'}
 						/>
 					{/each}
@@ -276,15 +329,6 @@
 		</div>
 	{/if}
 </div>
-
-<DeleteConfirmModal 
-	isOpen={showDeleteModal}
-	title="Delete Session"
-	message="Are you sure you want to delete this session and all its climbs? This cannot be undone."
-	onConfirm={confirmDeleteSession}
-	onCancel={() => showDeleteModal = false}
-/>
-
 <style>
 	.session-card {
 		background: white;
@@ -295,7 +339,7 @@
 		overflow: hidden;
 		transition: box-shadow 0.2s ease, border-color 0.2s ease;
 		content-visibility: auto; 
-		contain-intrinsic-size: 100px;
+		contain-intrinsic-size: 100px; /* Approximate height */
 	}
 
 	@media (max-width: 480px) {
@@ -373,7 +417,7 @@
 		justify-content: space-between;
 		gap: 0.5rem;
 		flex: 1;
-		flex-wrap: wrap;
+		flex-wrap: wrap; /* Wraps on very small screens */
 	}
 
 	.session-text {
@@ -389,12 +433,6 @@
 		font-weight: 600;
 		color: var(--text-primary);
 	}
-    
-    .sector-meta {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        font-style: italic;
-    }
 
 	.session-meta {
 		display: flex;
@@ -405,8 +443,8 @@
 	}
 
 	.type-tag {
-		background: var(--tag-bg, rgba(244, 196, 48, 0.15));
-		color: var(--tag-text, #bfa00d);
+		background: rgba(244, 196, 48, 0.15);
+		color: #bfa00d;
 		padding: 0.1rem 0.4rem;
 		border-radius: 4px;
 		font-weight: 600;
@@ -609,36 +647,6 @@
 		color: var(--text-secondary);
 		font-style: italic;
 		margin: 0;
-		font-size: 0.9rem;
-	}
-
-	.header-actions {
-		display: flex;
-		align-items: center;
-		gap: 0.8rem;
-	}
-
-	.btn-icon {
-		background: none;
-		border: none;
-		cursor: pointer;
-		font-size: 1rem;
-		opacity: 0.6;
-		transition: opacity 0.2s, transform 0.1s;
-		padding: 0.2rem;
-		border-radius: 4px;
-	}
-
-	.btn-icon:hover {
-		opacity: 1;
-		background: rgba(0,0,0,0.05);
-	}
-
-	.btn-icon:active {
-		transform: scale(0.95);
-	}
-
-	.delete-session {
 		font-size: 0.9rem;
 	}
 </style>
