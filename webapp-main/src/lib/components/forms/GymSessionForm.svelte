@@ -20,7 +20,7 @@
     let sessionName = '';
     let bodyweight: number | undefined;
     let exercises: GymExercise[] = [];
-    let startTime = new Date().toISOString();
+    let startTime = new Date().toISOString().slice(0, 16);
     
     // UI State
     let showExercisePicker = false;
@@ -115,7 +115,7 @@
         <div class="meta-row">
             <label>
                 Start Time
-                <input type="datetime-local" value={startTime.slice(0, 16)} disabled />
+                <input type="datetime-local" bind:value={startTime} />
             </label>
             <label>
                 Bodyweight (kg)
