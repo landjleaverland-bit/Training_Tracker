@@ -39,6 +39,7 @@
     let showExercisePicker = false;
     let searchQuery = '';
     let selectedCategory = '';
+    let selectedSubcategory = ''; // New state
     let activeKeypadField: { exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' } | null = null;
     let showPlateCalc = false;
     let plateCalcWeight = 0;
@@ -47,45 +48,33 @@
     let exerciseToDeleteIndex: number | null = null;
     let showSuccess = false;
 
-    onMount(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.sessionName) sessionName = data.sessionName;
-                if (data.bodyweight) bodyweight = data.bodyweight;
-                if (data.startTime) startTime = data.startTime.split('T')[0];
-                if (data.trainingBlock) trainingBlock = data.trainingBlock;
-                if (data.exercises) exercises = data.exercises;
-            } catch (e) {
-                console.error('Failed to restore draft', e);
-            }
-        }
-    });
+    // ... onMount ...
 
-    $: {
-        if (typeof localStorage !== 'undefined') {
-            const draft = {
-                sessionName,
-                bodyweight,
-                startTime,
-                trainingBlock,
-                exercises
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-        }
-    }
-
-    // Filtered exercises for picker
     // Filtered exercises for picker
     $: filteredExercises = EXERCISE_LIBRARY.filter(e => {
-        const matchesSearch = e.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-            e.targetMuscles.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()));
+        // Search overrides filters
+        if (searchQuery) {
+            return e.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                   e.targetMuscles.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()));
+        }
+        
+        // Otherwise filter by dropdowns
         const matchesCategory = selectedCategory ? e.category === selectedCategory : true;
-        return matchesSearch && matchesCategory;
+        const matchesSubcategory = selectedSubcategory ? e.subcategory === selectedSubcategory : true;
+        return matchesCategory && matchesSubcategory;
     });
 
     const categories = Array.from(new Set(EXERCISE_LIBRARY.map(e => e.category))).sort();
+    
+    // Reactive subcategories based on selected category
+    $: availableSubcategories = selectedCategory 
+        ? Array.from(new Set(EXERCISE_LIBRARY.filter(e => e.category === selectedCategory).map(e => e.subcategory))).sort()
+        : [];
+
+    // Reset subcategory when category changes
+    function handleCategoryChange() {
+        selectedSubcategory = '';
+    }
 
     function addExercise(def: ExerciseDefinition) {
         const newExercise: GymExercise = {
@@ -99,6 +88,7 @@
         showExercisePicker = false;
         searchQuery = '';
         selectedCategory = '';
+        selectedSubcategory = '';
     }
 
     function handleSetFocus(event: CustomEvent, exerciseIndex: number, setIndex: number) {
@@ -252,59 +242,50 @@
                         />
                     </div>
 
-                    <!-- Category Tabs (only show if no search query) -->
+                    <!-- Category Dropdowns (only show if no search query) -->
                     {#if !searchQuery}
-                        <div class="tabs-scroll-container">
-                            <div class="tabs-header">
+                        <div class="filter-row">
+                            <select 
+                                bind:value={selectedCategory} 
+                                on:change={handleCategoryChange}
+                                class="category-select"
+                            >
+                                <option value="">Select Category...</option>
                                 {#each categories as cat}
-                                    <button 
-                                        class="tab-btn" 
-                                        class:active={selectedCategory === cat}
-                                        on:click={() => selectedCategory = cat}
-                                    >
-                                        {cat}
-                                    </button>
+                                    <option value={cat}>{cat}</option>
                                 {/each}
-                            </div>
+                            </select>
+
+                            <select 
+                                bind:value={selectedSubcategory} 
+                                disabled={!selectedCategory}
+                                class="subcategory-select"
+                            >
+                                <option value="">Select Subcategory...</option>
+                                {#each availableSubcategories as sub}
+                                    <option value={sub}>{sub}</option>
+                                {/each}
+                            </select>
                         </div>
                     {/if}
                 </div>
 
                 <div class="picker-content">
-                    {#if searchQuery}
-                         <!-- Flat list for search results -->
-                         <div class="search-results">
-                            {#each filteredExercises as def}
-                                <button class="exercise-item" on:click={() => addExercise(def)}>
-                                    <span class="name">{def.name}</span>
+                    <div class="exercise-list-simple">
+                        {#each filteredExercises as def}
+                            <button class="exercise-item-simple" on:click={() => addExercise(def)}>
+                                <span class="name">{def.name}</span>
+                                {#if searchQuery}
                                     <span class="details">{def.category} - {def.subcategory}</span>
-                                </button>
-                            {/each}
-                            {#if filteredExercises.length === 0}
-                                <div class="no-results">No exercises found</div>
-                            {/if}
-                         </div>
-                    {:else}
-                        <!-- Grouped Grid View -->
-                        <div class="subcategory-grid">
-                             {#each Object.entries(EXERCISE_LIBRARY.filter(e => e.category === selectedCategory).reduce((acc, curr) => {
-                                 if (!acc[curr.subcategory]) acc[curr.subcategory] = [];
-                                 acc[curr.subcategory].push(curr);
-                                 return acc;
-                             }, {} as Record<string, ExerciseDefinition[]>)) as [subcat, exercises]}
-                                 <div class="subcategory-column">
-                                     <h4 class="subcategory-title">{subcat}</h4>
-                                     <div class="subcategory-list">
-                                         {#each exercises as def}
-                                             <button class="exercise-item-dence" on:click={() => addExercise(def)}>
-                                                 {def.name}
-                                             </button>
-                                         {/each}
-                                     </div>
-                                 </div>
-                             {/each}
-                        </div>
-                    {/if}
+                                {/if}
+                            </button>
+                        {/each}
+                        {#if filteredExercises.length === 0}
+                            <div class="no-results">
+                                {searchQuery ? 'No exercises found' : 'Select a category and subcategory to view exercises.'}
+                            </div>
+                        {/if}
+                    </div>
                 </div>
             </div>
         </div>
@@ -401,12 +382,37 @@
         .search-row {
             flex-direction: column;
         }
+        
+        .filter-row {
+            flex-direction: column;
+        }
     }
 
     .search-row {
         display: flex;
         gap: 0.5rem;
         margin-top: 0.5rem;
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .filter-row select {
+        flex: 1;
+        padding: 0.75rem;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-primary);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+
+    .filter-row select:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
     .search-row input {
@@ -510,115 +516,44 @@
         font-size: 1rem;
     }
 
-    /* Old picker styles removed or repurposed */
-    .exercise-item {
-        background: var(--bg-tertiary);
-        padding: 1rem;
-        border: none;
-        border-radius: 8px;
-        text-align: left;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .exercise-item .name {
-        color: var(--text-primary);
-        font-weight: bold;
-    }
-
-    .exercise-item .details {
-        color: var(--text-secondary);
-        font-size: 0.8rem;
-    }
-
-    /* Tabs & Grid Layout */
-    .tabs-scroll-container {
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border-primary);
-        margin: 0 -1rem -1px -1rem; /* Full width border */
-    }
-
-    .tabs-header {
-        display: flex;
-        gap: 0.5rem;
-        padding: 0 1rem;
-        min-width: max-content;
-    }
-
-    .tab-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        padding: 0.5rem 1rem;
-        font-weight: bold;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-        color: var(--teal-primary);
-        border-bottom-color: var(--teal-primary);
-    }
-
     .picker-content {
         flex: 1;
         overflow-y: auto;
         padding: 1rem;
     }
 
-    .subcategory-grid {
+    .exercise-list-simple {
         display: flex;
-        gap: 1.5rem;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
-    .subcategory-column {
-        min-width: 250px;
-        flex-shrink: 0;
+    .exercise-item-simple {
         background: var(--bg-tertiary);
+        padding: 1rem;
+        border: none;
         border-radius: 8px;
-        padding: 0.75rem;
-    }
-
-    .subcategory-title {
-        color: var(--teal-primary);
-        margin-bottom: 0.75rem;
-        font-size: 1rem;
-        border-bottom: 1px solid var(--border-primary);
-        padding-bottom: 0.25rem;
-    }
-
-    .subcategory-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .exercise-item-dence {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-primary);
-        padding: 0.5rem;
-        border-radius: 6px;
         text-align: left;
-        color: var(--text-primary);
-        font-size: 0.9rem;
         cursor: pointer;
-    }
-
-    .exercise-item-dence:hover {
-        border-color: var(--teal-primary);
-    }
-    
-    .search-results {
+        color: var(--text-primary);
+        font-size: 1rem;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.25rem;
+    }
+
+    .exercise-item-simple .name {
+        font-weight: bold;
+    }
+
+    .exercise-item-simple .details {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .exercise-item-simple:hover {
+        background: var(--bg-primary); 
+        box-shadow: 0 0 0 1px var(--teal-primary);
     }
 
     .no-results {
