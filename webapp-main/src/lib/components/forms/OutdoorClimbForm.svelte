@@ -8,11 +8,11 @@
 	
 	const areas = getAreas();
 	const climbingTypes = ['Boulder', 'Sport', 'Trad'];
-	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Dogged', 'DNF'];
+	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Repeat', 'Dogged', 'DNF'];
 
 	// Training classification options
     // Copied from IndoorClimbForm for consistency, though 'Roof' might be rare outdoors it's still possible.
-	const climbWallOptions = ['None', 'Overhang', 'Slab', 'Roof'];
+	const climbWallOptions = ['None', 'Overhang', 'Vertical', 'Slab', 'Roof'];
 	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters', 'Comp Sim'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
 	const categoryOptions = ['None', 'Strength', 'Power', 'Strength Capacity', 'Power Capacity', 'Strength Endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique'];

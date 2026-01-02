@@ -15,7 +15,7 @@
 	];
 
 	const climbingTypes = ['Bouldering', 'Sport', 'Mixed'];
-	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Dogged', 'DNF'];
+	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Repeat', 'Dogged', 'DNF'];
 
 	// Training classification options
 	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters', 'Comp Sim'];
@@ -50,7 +50,7 @@
 		'Bicycle'
 	];
     // Split options per user request
-	const climbWallOptions = ['None', 'Overhang', 'Slab', 'Roof'];
+	const climbWallOptions = ['None', 'Overhang', 'Vertical', 'Slab', 'Roof'];
     const sessionWallOptions = ['None', 'Moon Board', 'Kilter Board', 'Beast', 'Circuit Board', 'Boulder wall', 'Lead wall', 'Comp wall', 'Auto belays'];
 
 	// Valid grades (case-insensitive matching)
