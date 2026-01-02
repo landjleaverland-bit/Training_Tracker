@@ -26,6 +26,15 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         images: ['/exercises/pull-ups.webp']
     },
     {
+        id: 'weighted_pull_ups',
+        name: 'Weighted Pull-Up',
+        category: 'Pull',
+        subcategory: 'Vertical Pull',
+        targetMuscles: ['Lats', 'Biceps'],
+        instructions: ['Grip bar wider than shoulders.', 'Pull chest up toward the bar.'],
+        images: ['/exercises/weighted_pull_ups.webp']
+    },
+    {
         id: 'lat_pulldown',
         name: 'Lat Pulldown',
         category: 'Pull',
@@ -170,34 +179,51 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'barbell_bench_press',
         name: 'Barbell Bench Press',
         category: 'Push',
-        subcategory: 'Chest & Dips',
+        subcategory: 'Horizontal Push',
         targetMuscles: ['Chest', 'Triceps'],
         instructions: ['Lower bar to chest.', 'Press back up.'],
         images: ['/exercises/barbell_bench_press.webp']
     },
     {
-        id: 'incline_dumbbell_press',
-        name: 'Incline Dumbbell Press',
+        id: 'dumbbell_bench_press',
+        name: 'Dumbbell Chest Press',
         category: 'Push',
-        subcategory: 'Chest & Dips',
+        subcategory: 'Horizontal Push',
         targetMuscles: ['Upper Chest'],
-        instructions: ['Press dumbbells overhead on incline bench.'],
-        images: ['/exercises/incline_dumbbell_press.webp']
+        instructions: ['Press dumbbells whilst lying on bench.'],
+        images: ['/exercises/dumbbell_bench_press.webp']
+    },
+    {
+        id: 'dumbbell_bench_press',
+        name: 'Dumbbell Chest Press',
+        category: 'Push',
+        subcategory: 'Horizontal Push',
+        targetMuscles: ['Upper Chest'],
+        instructions: ['Press dumbbells whilst lying on bench.'],
+        images: ['/exercises/dumbbell_bench_press.webp']
+    },
+    {
+        id: 'chest_press',
+        name: 'Chest Press Machine',
+        category: 'Push',
+        subcategory: 'Horizontal Push',
+        targetMuscles: ['Chest', 'Triceps'],
+        instructions: ['From seated position, push handles overhead.'],
     },
     {
         id: 'push_up',
         name: 'Push-Up',
         category: 'Push',
-        subcategory: 'Chest & Dips',
-        targetMuscles: ['Chest', 'Triceps'],
-        instructions: ['Plank position.', 'Lower chest to floor.'],
+        subcategory: 'Horizontal Push',
+        targetMuscles: ['Triceps', 'Chest'],
+        instructions: ['Hands wide, lower to floor.', 'Press back up.'],
         images: ['/exercises/push_up.webp']
     },
     {
         id: 'narrow_push_up',
         name: 'Narrow Push-Up',
         category: 'Push',
-        subcategory: 'Chest & Dips',
+        subcategory: 'Horizontal Push',
         targetMuscles: ['Triceps', 'Chest'],
         instructions: ['Hands close together.', 'Keep elbows tucked.']
     },
@@ -205,18 +231,9 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'trx_push_up',
         name: 'TRX Push-Up',
         category: 'Push',
-        subcategory: 'Chest & Dips',
+        subcategory: 'Horizontal Push',
         targetMuscles: ['Chest', 'Global Stabilisers'],
         instructions: ['Feet or hands in TRX straps.', 'Perform push-up.']
-    },
-    {
-        id: 'tricep_dips',
-        name: 'Tricep Dips',
-        category: 'Push',
-        subcategory: 'Chest & Dips',
-        targetMuscles: ['Triceps', 'Chest'],
-        instructions: ['Support body on parallel bars.', 'Lower until elbows at 90 degrees.'],
-        images: ['/exercises/Tricep_Dips.webp']
     },
     // Vertical Push
     {
@@ -254,12 +271,12 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         instructions: ['Sit in machine.', 'Press handles overhead.'],
         images: ['/exercises/Shoulder_Press_Machine.webp']
     },
-    // Isolation
+    // Shoulders
     {
         id: 'dumbbell_flies',
         name: 'Dumbbell Flies',
         category: 'Push',
-        subcategory: 'Isolation',
+        subcategory: 'Shoulders',
         targetMuscles: ['Chest'],
         instructions: ['Lie on bench.', 'Open arms wide, then bring together.'],
         images: ['/exercises/Dumbbell_Flies.webp']
@@ -268,7 +285,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'lateral_raises',
         name: 'Lateral Raises',
         category: 'Push',
-        subcategory: 'Isolation',
+        subcategory: 'Shoulders',
         targetMuscles: ['Side Delts'],
         instructions: ['Raise arms to sides.'],
         images: ['/exercises/dumbbell_lateral_raise.webp']
@@ -291,23 +308,22 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         instructions: ['Push bar down using triceps.'],
         images: ['/exercises/tricep_pulldown.webp']
     },
-    { // Skullcrushers were in original, let's keep them here
-        id: 'skullcrusher',
-        name: 'Skullcrusher',
+    {
+        id: 'tricep_dips',
+        name: 'Tricep Dips',
         category: 'Push',
-        subcategory: 'Triceps',
-        targetMuscles: ['Triceps'],
-        instructions: ['Lower bar to forehead.', 'Extend arms.'],
-        images: ['/exercises/skullcrusher.webp']
+        subcategory: 'Chest & Dips',
+        targetMuscles: ['Triceps', 'Chest'],
+        instructions: ['Support body on parallel bars.', 'Lower until elbows at 90 degrees.'],
+        images: ['/exercises/Tricep_Dips.webp']
     },
-
     // --- LEGS ---
-    // Squat Pattern
+    // Squats
     {
         id: 'barbell_squat',
         name: 'Barbell Squat',
         category: 'Legs',
-        subcategory: 'Squat Pattern',
+        subcategory: 'Squats',
         targetMuscles: ['Quads', 'Glutes'],
         instructions: ['Squat with barbell on back.'],
         images: ['/exercises/barbell_squat.webp']
@@ -316,7 +332,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'leg_press',
         name: 'Leg Press',
         category: 'Legs',
-        subcategory: 'Squat Pattern',
+        subcategory: 'Squats',
         targetMuscles: ['Quads'],
         instructions: ['Press weight on machine.'],
         images: ['/exercises/leg_press.webp']
@@ -325,7 +341,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'pistol_squats',
         name: 'Pistol Squats',
         category: 'Legs',
-        subcategory: 'Squat Pattern',
+        subcategory: 'Squats',
         targetMuscles: ['Quads', 'Balance'],
         instructions: ['One-legged squat.'],
         images: ['/exercises/Pistol_Squats.webp']
@@ -334,19 +350,10 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'goblet_squat',
         name: 'Goblet Squat',
         category: 'Legs',
-        subcategory: 'Squat Pattern',
+        subcategory: 'Squats',
         targetMuscles: ['Quads'],
         instructions: ['Hold weight at chest.', 'Squat.'],
         images: ['/exercises/goblet_squat.webp']
-    },
-    {
-        id: 'leg_extension',
-        name: 'Leg Extension',
-        category: 'Legs',
-        subcategory: 'Squat Pattern', // Or Isolation? Plan grouped it here based on color presumably
-        targetMuscles: ['Quads'],
-        instructions: ['Extend legs against machine resistance.'],
-        images: ['/exercises/Leg_Extension.webp']
     },
     // Hinge Pattern
     {
@@ -368,10 +375,28 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         images: ['/exercises/Rack_Pulls.webp']
     },
     {
+        id: 'barbell_good_mornings',
+        name: 'BarbellGood Mornings',
+        category: 'Legs',
+        subcategory: 'Hinge Pattern',
+        targetMuscles: ['Back', 'Hamstrings'],
+        instructions: ['Deadlift from rack height.'],
+    },
+    // Isolation
+    {
+        id: 'leg_extension',
+        name: 'Leg Extension',
+        category: 'Legs',
+        subcategory: 'Isolation',
+        targetMuscles: ['Quads'],
+        instructions: ['Extend legs against machine resistance.'],
+        images: ['/exercises/Leg_Extension.webp']
+    },
+    {
         id: 'leg_curl',
         name: 'Leg Curl',
         category: 'Legs',
-        subcategory: 'Hinge Pattern',
+        subcategory: 'Isolation',
         targetMuscles: ['Hamstrings'],
         instructions: ['Curl legs against machine resistance.'],
         images: ['/exercises/Leg_Curl.webp']
@@ -380,7 +405,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'walking_lunge',
         name: 'Walking Lunge',
         category: 'Legs',
-        subcategory: 'Hinge Pattern',
+        subcategory: 'Isolation',
         targetMuscles: ['Quads', 'Glutes'],
         instructions: ['Step forward and lower hips.'],
         images: ['/exercises/walking_lunge.webp']
@@ -407,12 +432,12 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
     },
 
     // --- STABILISERS ---
-    // Wrist Extensors
+    // Wrists
     {
         id: 'reverse_wrist_curl',
         name: 'Reverse Wrist Curl',
         category: 'Stabilisers',
-        subcategory: 'Wrist Extensors',
+        subcategory: 'Wrists',
         targetMuscles: ['Forearm Extensors'],
         instructions: ['Curl wrist up with palm down.'],
         images: ['/exercises/reverse_wrist_curl.webp']
@@ -421,7 +446,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'radial_wrist_tilts',
         name: 'Radial Wrist Tilts',
         category: 'Stabilisers',
-        subcategory: 'Wrist Extensors',
+        subcategory: 'Wrists',
         targetMuscles: ['Forearms'],
         instructions: ['Tilt wrist thumb-side up.'],
         images: ['/exercises/Radial_Wrist_Tilts.webp']
@@ -430,10 +455,19 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'wrist_rotations',
         name: 'Wrist Rotations',
         category: 'Stabilisers',
-        subcategory: 'Wrist Extensors',
+        subcategory: 'Wrists',
         targetMuscles: ['Forearms'],
         instructions: ['Rotate wrists with weight.'],
         images: ['/exercises/Wrist_Rotations.webp']
+    },
+    {
+        id: 'wrist_curls',
+        name: 'Wrist Curls',
+        category: 'Stabilisers',
+        subcategory: 'Wrists',
+        targetMuscles: ['Forearm Flexors'],
+        instructions: ['Curl wrist up with palm up.'],
+        images: ['/exercises/Wrist_Curls.webp']
     },
     // Rear Delts
     {
@@ -532,12 +566,12 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         targetMuscles: ['Back'],
         instructions: ['Use TRX to perform I, Y, T raises.']
     },
-    // External Rotation
+    // Rotator Cuff
     {
         id: 'dumbbell_overhead_rotations',
         name: 'Dumbbell Overhead Rotations',
         category: 'Stabilisers',
-        subcategory: 'External Rotation',
+        subcategory: 'Rotator Cuff',
         targetMuscles: ['Rotator Cuff'],
         instructions: ['Press overhead.', 'Rotate shoulders.'],
         images: ['/exercises/Dumbbell_Overhead_Rotations.webp']
@@ -546,7 +580,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'external_side_lying_rotations',
         name: 'External Side Lying Rotations',
         category: 'Stabilisers',
-        subcategory: 'External Rotation',
+        subcategory: 'Rotator Cuff',
         targetMuscles: ['Rotator Cuff'],
         instructions: ['Lie on side.', 'Rotate arm up.'],
         images: ['/exercises/External_Side_Lying_Rotations.webp']
@@ -555,7 +589,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'prone_bench_rotations',
         name: 'Prone Bench Rotations',
         category: 'Stabilisers',
-        subcategory: 'External Rotation',
+        subcategory: 'Rotator Cuff',
         targetMuscles: ['Rotator Cuff'],
         instructions: ['Lie prone.', 'Rotate arms.'],
         images: ['/exercises/Prone_Bench_Rotations.webp']
@@ -564,17 +598,16 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'cable_external_rotations',
         name: 'Cable External Rotations',
         category: 'Stabilisers',
-        subcategory: 'External Rotation',
+        subcategory: 'Rotator Cuff',
         targetMuscles: ['Rotator Cuff'],
         instructions: ['Use cable.', 'Rotate arm away from body.'],
         images: ['/exercises/Cable_External_Rotations.webp']
     },
-    // Internal Rotation / Flexors
     {
         id: 'cable_internal_rotation',
         name: 'Cable Internal Rotation',
         category: 'Stabilisers',
-        subcategory: 'Internal Rotation/Flexors',
+        subcategory: 'Rotator Cuff',
         targetMuscles: ['Rotator Cuff'],
         instructions: ['Use cable.', 'Rotate arm across body.'],
         images: ['/exercises/Cable_Internal_Rotation.webp']
@@ -587,15 +620,6 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         targetMuscles: ['Rotator Cuff'],
         instructions: ['Lie on side.', 'Rotate arm inward.'],
         images: ['/exercises/Internal_Side_Lying_Rotations.webp']
-    },
-    {
-        id: 'wrist_curls',
-        name: 'Wrist Curls',
-        category: 'Stabilisers',
-        subcategory: 'Internal Rotation/Flexors',
-        targetMuscles: ['Forearm Flexors'],
-        instructions: ['Curl wrist up with palm up.'],
-        images: ['/exercises/Wrist_Curls.webp']
     },
 
     // --- CORE ---
@@ -652,12 +676,12 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         targetMuscles: ['Abs'],
         instructions: ['Full front lever raises.']
     },
-    // Flexion
+    // Crunches
     {
         id: 'crunches',
         name: 'Crunches',
         category: 'Core',
-        subcategory: 'Flexion',
+        subcategory: 'Crunches',
         targetMuscles: ['Upper Abs'],
         instructions: ['Crunch up off floor.'],
         images: ['/exercises/crunch.webp']
@@ -666,7 +690,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'lower_ab_crunches',
         name: 'Lower Ab Crunches',
         category: 'Core',
-        subcategory: 'Flexion',
+        subcategory: 'Crunches',
         targetMuscles: ['Lower Abs'],
         instructions: ['Reverse crunch movement.'],
         images: ['/exercises/Lower_Ab_Crunches.webp']
@@ -675,7 +699,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'weighted_crunches',
         name: 'Weighted Crunches',
         category: 'Core',
-        subcategory: 'Flexion',
+        subcategory: 'Crunches',
         targetMuscles: ['Abs'],
         instructions: ['Crunch with weight.'],
         images: ['/exercises/Weighted_Crunches.webp']
@@ -684,7 +708,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'dead_bug',
         name: 'Dead Bug',
         category: 'Core',
-        subcategory: 'Flexion',
+        subcategory: 'Crunches',
         targetMuscles: ['Core'],
         instructions: ['Opposite arm and leg extension lying on back.'],
         images: ['/exercises/Dead_Bug.webp']
@@ -693,7 +717,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'boat_pose',
         name: 'Boat Pose',
         category: 'Core',
-        subcategory: 'Flexion',
+        subcategory: 'Crunches',
         targetMuscles: ['Core'],
         instructions: ['Static V hold on floor.'],
         images: ['/exercises/Boat_Pose.webp']
@@ -702,7 +726,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'v_sits',
         name: 'V Sits',
         category: 'Core',
-        subcategory: 'Flexion',
+        subcategory: 'Crunches',
         targetMuscles: ['Abs'],
         instructions: ['Explosive sit up to V position.'],
         images: ['/exercises/V_Sits.webp']
@@ -828,38 +852,38 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
 
     // --- MOBILITY ---
     // Upper Body
-    { id: 'bicep_stretch', name: 'Bicep Stretch', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Biceps'], instructions: ['Stretch biceps.'] , images: ['/exercises/Bicep_Stretch.webp']},
-    { id: 'finger_stretches', name: 'Finger Stretches', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Fingers'], instructions: ['Stretch fingers.'] , images: ['/exercises/Finger_Stretches.webp']},
-    { id: 'pec_stretch', name: 'Pec Stretch', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Chest'], instructions: ['Stretch chest.'] , images: ['/exercises/Pec_Stretch.webp']},
-    { id: 'lat_stretch', name: 'Lat Stretch', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Lats'], instructions: ['Stretch lats.'] , images: ['/exercises/Lat_Stretch.webp']},
+    { id: 'bicep_stretch', name: 'Bicep Stretch', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Biceps'], instructions: ['Stretch biceps.'], images: ['/exercises/Bicep_Stretch.webp'] },
+    { id: 'finger_stretches', name: 'Finger Stretches', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Fingers'], instructions: ['Stretch fingers.'], images: ['/exercises/Finger_Stretches.webp'] },
+    { id: 'pec_stretch', name: 'Pec Stretch', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Chest'], instructions: ['Stretch chest.'], images: ['/exercises/Pec_Stretch.webp'] },
+    { id: 'lat_stretch', name: 'Lat Stretch', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Lats'], instructions: ['Stretch lats.'], images: ['/exercises/Lat_Stretch.webp'] },
     { id: 'wrist_stretches', name: 'Wrist Stretches', category: 'Mobility', subcategory: 'Upper Body', targetMuscles: ['Wrists'], instructions: ['Stretch wrists.'] },
     // Torso Chain
-    { id: 'pancake_fold', name: 'Pancake Fold', category: 'Mobility', subcategory: 'Torso Chain', targetMuscles: ['Hips', 'Back'], instructions: ['Seated straddle fold.'] , images: ['/exercises/Pancake_Fold.webp']},
-    { id: 'open_books', name: 'Open Books', category: 'Mobility', subcategory: 'Torso Chain', targetMuscles: ['Thoracic Spine'], instructions: ['Side lying thoracic rotation.'] , images: ['/exercises/Open_Books.webp']},
-    { id: 'good_mornings', name: 'Good Mornings', category: 'Mobility', subcategory: 'Torso Chain', targetMuscles: ['Hamstrings', 'Back'], instructions: ['Hinge with straight back.'] , images: ['/exercises/Good_Mornings.webp']},
+    { id: 'pancake_fold', name: 'Pancake Fold', category: 'Mobility', subcategory: 'Torso Chain', targetMuscles: ['Hips', 'Back'], instructions: ['Seated straddle fold.'], images: ['/exercises/Pancake_Fold.webp'] },
+    { id: 'open_books', name: 'Open Books', category: 'Mobility', subcategory: 'Torso Chain', targetMuscles: ['Thoracic Spine'], instructions: ['Side lying thoracic rotation.'], images: ['/exercises/Open_Books.webp'] },
+    { id: 'good_mornings', name: 'Good Mornings', category: 'Mobility', subcategory: 'Torso Chain', targetMuscles: ['Hamstrings', 'Back'], instructions: ['Hinge with straight back.'], images: ['/exercises/Good_Mornings.webp'] },
     // Lower Leg
-    { id: 'calf_stretch', name: 'Calf Stretch', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves'], instructions: ['Stretch calves.'] , images: ['/exercises/Calf_Stretch.webp']},
-    { id: 'donkey_calf_raise', name: 'Donkey Calf Raise', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves'], instructions: ['Calf raise bent over.'] , images: ['/exercises/Donkey_Calf_Raise.webp']},
-    { id: 'one_leg_calf_squats', name: '1 Leg Calf Squats', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves', 'Balance'], instructions: ['Squat on one leg, heel raised.'] , images: ['/exercises/1_Leg_Calf_Squats.webp']},
-    { id: 'wall_calf_stretch', name: 'Wall Calf Stretch', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves'], instructions: ['Stretch against wall.'] , images: ['/exercises/Wall_Calf_Stretch.webp']},
-    { id: 'fishermans', name: 'Fishermans', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Ankles'], instructions: ['Kneeling ankle stretch.'] , images: ['/exercises/Fishermans.webp']},
+    { id: 'calf_stretch', name: 'Calf Stretch', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves'], instructions: ['Stretch calves.'], images: ['/exercises/Calf_Stretch.webp'] },
+    { id: 'donkey_calf_raise', name: 'Donkey Calf Raise', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves'], instructions: ['Calf raise bent over.'], images: ['/exercises/Donkey_Calf_Raise.webp'] },
+    { id: 'one_leg_calf_squats', name: '1 Leg Calf Squats', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves', 'Balance'], instructions: ['Squat on one leg, heel raised.'], images: ['/exercises/1_Leg_Calf_Squats.webp'] },
+    { id: 'wall_calf_stretch', name: 'Wall Calf Stretch', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Calves'], instructions: ['Stretch against wall.'], images: ['/exercises/Wall_Calf_Stretch.webp'] },
+    { id: 'fishermans', name: 'Fishermans', category: 'Mobility', subcategory: 'Lower Leg', targetMuscles: ['Ankles'], instructions: ['Kneeling ankle stretch.'], images: ['/exercises/Fishermans.webp'] },
     // Hips/Lower Body
-    { id: 'barre_lift', name: 'Barre Lift', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Lift leg at barre.'] , images: ['/exercises/Barre_Lift.webp']},
-    { id: 'fire_hydrants', name: 'Fire Hydrants', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Glutes'], instructions: ['Quadruped hip abduction.'] , images: ['/exercises/Fire_Hydrants.webp']},
-    { id: 'supine_quad_stretch', name: 'Supine Quad Stretch', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Quads'], instructions: ['Lie back with bent knee.'] , images: ['/exercises/Supine_Quad_Stretch.webp']},
+    { id: 'barre_lift', name: 'Barre Lift', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Lift leg at barre.'], images: ['/exercises/Barre_Lift.webp'] },
+    { id: 'fire_hydrants', name: 'Fire Hydrants', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Glutes'], instructions: ['Quadruped hip abduction.'], images: ['/exercises/Fire_Hydrants.webp'] },
+    { id: 'supine_quad_stretch', name: 'Supine Quad Stretch', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Quads'], instructions: ['Lie back with bent knee.'], images: ['/exercises/Supine_Quad_Stretch.webp'] },
     { id: 'long_lunges', name: 'Long Lunges', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hip Flexors'], instructions: ['Deep lunge.'] },
-    { id: 'cossack_squats', name: 'Cossack Squats', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips', 'Adductors'], instructions: ['Side lunge.'] , images: ['/exercises/Cossack_Squats.webp']},
-    { id: 'front_splits', name: 'Front Splits', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hamstrings', 'Hip Flexors'], instructions: ['Split forward/back.'] , images: ['/exercises/Front_Splits.webp']},
-    { id: 'side_splits', name: 'Side Splits', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Adductors'], instructions: ['Straddle split.'] , images: ['/exercises/Side_Splits.webp']},
-    { id: 'front_swings', name: 'Front Swings', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Swing leg forward/back.'] , images: ['/exercises/Front_Swings.webp']},
-    { id: 'side_swings', name: 'Side Swings', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Swing leg side to side.'] , images: ['/exercises/Side_Swings.webp']},
-    { id: 'hamstring_stretch', name: 'Hamstring Stretch', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hamstrings'], instructions: ['Stretch hamstring.'] , images: ['/exercises/Hamstring_Stretch.webp']},
-    { id: 'butterfly', name: 'Butterfly', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Seated hip opener.'] , images: ['/exercises/Butterfly.webp']},
-    { id: 'horse_squat', name: 'Horse Squat', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips', 'Quads'], instructions: ['Wide stance squat.'] , images: ['/exercises/Horse_Squat.webp']},
+    { id: 'cossack_squats', name: 'Cossack Squats', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips', 'Adductors'], instructions: ['Side lunge.'], images: ['/exercises/Cossack_Squats.webp'] },
+    { id: 'front_splits', name: 'Front Splits', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hamstrings', 'Hip Flexors'], instructions: ['Split forward/back.'], images: ['/exercises/Front_Splits.webp'] },
+    { id: 'side_splits', name: 'Side Splits', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Adductors'], instructions: ['Straddle split.'], images: ['/exercises/Side_Splits.webp'] },
+    { id: 'front_swings', name: 'Front Swings', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Swing leg forward/back.'], images: ['/exercises/Front_Swings.webp'] },
+    { id: 'side_swings', name: 'Side Swings', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Swing leg side to side.'], images: ['/exercises/Side_Swings.webp'] },
+    { id: 'hamstring_stretch', name: 'Hamstring Stretch', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hamstrings'], instructions: ['Stretch hamstring.'], images: ['/exercises/Hamstring_Stretch.webp'] },
+    { id: 'butterfly', name: 'Butterfly', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Seated hip opener.'], images: ['/exercises/Butterfly.webp'] },
+    { id: 'horse_squat', name: 'Horse Squat', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips', 'Quads'], instructions: ['Wide stance squat.'], images: ['/exercises/Horse_Squat.webp'] },
     { id: 'supine_frog', name: 'Supine Frog', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Lie on back, knees wide.'] },
-    { id: 'prone_frog', name: 'Prone Frog', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Lie on front, knees wide.'] , images: ['/exercises/Prone_Frog.webp']},
-    { id: 'glute_stretch', name: 'Glute Stretch', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Glutes'], instructions: ['Stretch glutes.'] , images: ['/exercises/Glute_Stretch.webp']},
-    { id: 'childs_pose', name: 'Childs Pose', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Back', 'Hips'], instructions: ['Resting pose.'] , images: ['/exercises/Childs_Pose.webp']},
-    { id: 'pigeon_pose', name: 'Pigeon Pose', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Glutes', 'Hips'], instructions: ['Hip opener.'] , images: ['/exercises/Pigeon_Pose.webp']},
+    { id: 'prone_frog', name: 'Prone Frog', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Hips'], instructions: ['Lie on front, knees wide.'], images: ['/exercises/Prone_Frog.webp'] },
+    { id: 'glute_stretch', name: 'Glute Stretch', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Glutes'], instructions: ['Stretch glutes.'], images: ['/exercises/Glute_Stretch.webp'] },
+    { id: 'childs_pose', name: 'Childs Pose', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Back', 'Hips'], instructions: ['Resting pose.'], images: ['/exercises/Childs_Pose.webp'] },
+    { id: 'pigeon_pose', name: 'Pigeon Pose', category: 'Mobility', subcategory: 'Hips/Lower Body', targetMuscles: ['Glutes', 'Hips'], instructions: ['Hip opener.'], images: ['/exercises/Pigeon_Pose.webp'] },
 
 ];
