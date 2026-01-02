@@ -19,7 +19,8 @@ fs.readdir(directoryPath, (err, files) => {
     }
 
     files.forEach((file) => {
-        if (path.extname(file).toLowerCase() === '.png') {
+        const ext = path.extname(file).toLowerCase();
+        if (ext === '.png' || ext === '.jpg' || ext === '.jpeg') {
             const inputPath = path.join(directoryPath, file);
             // Replace spaces with underscores and convert to lowercase for the output filename
             const cleanName = path.parse(file).name.replace(/\s+/g, '_').toLowerCase();
