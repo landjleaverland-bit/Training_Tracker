@@ -27,21 +27,41 @@ const getSessionDate = (s: Session): Date => new Date(s.date);
 
 // --- 1. General Activity & Volume ---
 
-export function getClimbingVsRestStats(sessions: Session[]): ChartDataPoint[] {
+export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start: Date, end: Date }): ChartDataPoint[] {
     if (sessions.length === 0) return [];
 
-    const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    const firstDate = new Date(sorted[0].date);
-    const lastDate = new Date(); // Today
+    let firstDate: Date;
+    let lastDate: Date;
+
+    if (dateRange) {
+        firstDate = new Date(dateRange.start);
+        lastDate = new Date(dateRange.end);
+    } else {
+        const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        firstDate = new Date(sorted[0].date);
+        lastDate = new Date(); // Today
+    }
 
     // Calculate total days in range
     const msPerDay = 1000 * 60 * 60 * 24;
-    const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay) + 1;
+
+    // Ensure we count inclusive of both start and end, and handle time of day
+    firstDate.setHours(0, 0, 0, 0);
+    lastDate.setHours(23, 59, 59, 999);
+
+    const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay);
 
     // Count climbing days (unique dates where activity is climb)
+    // Filter sessions to ensure they are within range (though sessions passed in should ideally be filtered already, 
+    // strictly enforcing range helps if mixed data is passed)
     const climbingDays = new Set(
         sessions
-            .filter(isClimbing)
+            .filter(s => {
+                if (!isClimbing(s)) return false;
+                if (!dateRange) return true;
+                const d = new Date(s.date);
+                return d >= dateRange.start && d <= dateRange.end;
+            })
             .map(s => s.date.split('T')[0])
     ).size;
 
@@ -53,19 +73,35 @@ export function getClimbingVsRestStats(sessions: Session[]): ChartDataPoint[] {
     ];
 }
 
-export function getFingerboardingConsistency(sessions: Session[]): ChartDataPoint[] {
+export function getFingerboardingConsistency(sessions: Session[], dateRange?: { start: Date, end: Date }): ChartDataPoint[] {
     if (sessions.length === 0) return [];
 
-    const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    const firstDate = new Date(sorted[0].date);
-    const lastDate = new Date();
+    let firstDate: Date;
+    let lastDate: Date;
+
+    if (dateRange) {
+        firstDate = new Date(dateRange.start);
+        lastDate = new Date(dateRange.end);
+    } else {
+        const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        firstDate = new Date(sorted[0].date);
+        lastDate = new Date();
+    }
 
     const msPerDay = 1000 * 60 * 60 * 24;
-    const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay) + 1;
+    firstDate.setHours(0, 0, 0, 0);
+    lastDate.setHours(23, 59, 59, 999);
+
+    const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay);
 
     const fbDays = new Set(
         sessions
-            .filter(isFingerboard)
+            .filter(s => {
+                if (!isFingerboard(s)) return false;
+                if (!dateRange) return true;
+                const d = new Date(s.date);
+                return d >= dateRange.start && d <= dateRange.end;
+            })
             .map(s => s.date.split('T')[0])
     ).size;
 

@@ -292,8 +292,8 @@
                 <div class="notes-header">
                     <span class="label">Session Notes</span>
                     {#if !isEditingNotes}
-                        <button class="edit-notes-btn" onclick={startEditNotes} title="Edit Notes">
-                            ✏️
+                        <button class="icon-btn edit-notes-btn" onclick={startEditNotes} title="Edit Notes">
+                            ✎
                         </button>
                     {/if}
                 </div>
@@ -315,9 +315,9 @@
                     </div>
                 {:else}
                     {#if session.notes}
-                        <button type="button" class="notes-text" onclick={startEditNotes}>{session.notes}</button>
+                        <p class="notes-text">{session.notes}</p>
                     {:else}
-                         <button type="button" class="notes-placeholder" onclick={startEditNotes}>+ Add notes</button>
+                         <p class="notes-placeholder">No notes.</p>
                     {/if}
                 {/if}
             </div>
@@ -685,18 +685,25 @@
         margin-bottom: 0.3rem;
     }
 
-    .edit-notes-btn {
+    .icon-btn {
         background: none;
         border: none;
         cursor: pointer;
+        padding: 4px;
         opacity: 0.5;
-        font-size: 0.8rem;
-        padding: 0.2rem;
-        transition: opacity 0.2s;
+        transition: opacity 0.2s, background 0.2s;
+        font-size: 1rem;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
     }
-
-    .edit-notes-btn:hover {
+    
+    .icon-btn:hover {
         opacity: 1;
+        background: rgba(0, 0, 0, 0.05);
     }
 
     .notes-text {
@@ -713,12 +720,6 @@
         border-radius: 8px;
         margin: 0;
         white-space: pre-wrap;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .notes-text:hover {
-        background: rgba(74, 155, 155, 0.1);
     }
     
     .notes-placeholder {
@@ -729,16 +730,10 @@
         font-size: 0.9rem;
         color: var(--text-secondary);
         font-style: italic;
-        cursor: pointer;
         padding: 0.5rem;
         border: 1px dashed rgba(0,0,0,0.1);
         border-radius: 4px;
         margin: 0;
-    }
-    
-    .notes-placeholder:hover {
-        background: rgba(0,0,0,0.02);
-        border-color: rgba(0,0,0,0.2);
     }
 
     .notes-editor {

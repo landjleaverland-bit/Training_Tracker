@@ -91,51 +91,6 @@
         return sessions;
     });
 
-    // --- Derived Data for Views ---
-
-    // 1. General
-    let climbVsRest = $derived(getClimbingVsRestStats(filteredSessions));
-    let fbConsistency = $derived(getFingerboardingConsistency(filteredSessions));
-    let sessionTypes = $derived(getSessionTypeBreakdown(filteredSessions));
-
-    // 2. Training Systems
-    let trainingSystems = $derived(getTrainingSystemStats(filteredSessions));
-
-    // 3. Performance Grade
-    let indoorBoulderGrades = $derived(getGradeStats(filteredSessions, 'boulder', 'indoor'));
-    let outdoorBoulderGrades = $derived(getGradeStats(filteredSessions, 'boulder', 'outdoor'));
-    let indoorLeadGrades = $derived(getGradeStats(filteredSessions, 'lead', 'indoor'));
-    let outdoorLeadGrades = $derived(getGradeStats(filteredSessions, 'lead', 'outdoor'));
-
-    // 4. Venue
-    let indoorVenues = $derived(getIndoorLocationStats(filteredSessions));
-    let outdoorVenues = $derived(getOutdoorCragStats(filteredSessions));
-    let outdoorAreas = $derived(getOutdoorAreaStats(filteredSessions));
-
-    // 5. Periodization
-    let weeklyLoad = $derived(getWeeklyLoadStats(filteredSessions));
-
-    // 6. Finger Strength
-    let maxHangData = $derived(getMaxHangStats(filteredSessions));
-    let gripLoadData = $derived(getGripLoadStats(filteredSessions));
-    let recruitmentData = $derived(getRecruitmentStats(filteredSessions));
-    let maxPickupData = $derived(getMaxPickupStats(filteredSessions));
-
-    // 7. Load Tracking (15 Graphs)
-    // Helper to combine Raw + Average
-    const withAvg = (data: any[], name: string) => {
-        if (data.length === 0) return [];
-        return [...data, ...movingAverage(data, 4)]; // 4-period moving average
-    };
-
-    // Determine granularity for load tracking
-    let loadGranularity = $derived.by(() => {
-        if (['week', 'month', 'specific_week', 'specific_month'].includes(timeRange)) {
-            return 'day';
-        }
-        return 'week' as 'week' | 'day';
-    });
-
     // Determine date range for zero-filling
     let currentDateRange = $derived.by(() => {
         const now = new Date();
@@ -184,6 +139,54 @@
         
         return undefined; // All time
     });
+
+    // --- Derived Data for Views ---
+
+    // 1. General
+    // Pass currentDateRange to fix "Rest Days" calculation using today instead of range end
+    let climbVsRest = $derived(getClimbingVsRestStats(filteredSessions, currentDateRange));
+    let fbConsistency = $derived(getFingerboardingConsistency(filteredSessions, currentDateRange));
+    let sessionTypes = $derived(getSessionTypeBreakdown(filteredSessions));
+
+    // 2. Training Systems
+    let trainingSystems = $derived(getTrainingSystemStats(filteredSessions));
+
+    // 3. Performance Grade
+    let indoorBoulderGrades = $derived(getGradeStats(filteredSessions, 'boulder', 'indoor'));
+    let outdoorBoulderGrades = $derived(getGradeStats(filteredSessions, 'boulder', 'outdoor'));
+    let indoorLeadGrades = $derived(getGradeStats(filteredSessions, 'lead', 'indoor'));
+    let outdoorLeadGrades = $derived(getGradeStats(filteredSessions, 'lead', 'outdoor'));
+
+    // 4. Venue
+    let indoorVenues = $derived(getIndoorLocationStats(filteredSessions));
+    let outdoorVenues = $derived(getOutdoorCragStats(filteredSessions));
+    let outdoorAreas = $derived(getOutdoorAreaStats(filteredSessions));
+
+    // 5. Periodization
+    let weeklyLoad = $derived(getWeeklyLoadStats(filteredSessions));
+
+    // 6. Finger Strength
+    let maxHangData = $derived(getMaxHangStats(filteredSessions));
+    let gripLoadData = $derived(getGripLoadStats(filteredSessions));
+    let recruitmentData = $derived(getRecruitmentStats(filteredSessions));
+    let maxPickupData = $derived(getMaxPickupStats(filteredSessions));
+
+    // 7. Load Tracking (15 Graphs)
+    // Helper to combine Raw + Average
+    const withAvg = (data: any[], name: string) => {
+        if (data.length === 0) return [];
+        return [...data, ...movingAverage(data, 4)]; // 4-period moving average
+    };
+
+    // Determine granularity for load tracking
+    let loadGranularity = $derived.by(() => {
+        if (['week', 'month', 'specific_week', 'specific_month'].includes(timeRange)) {
+            return 'day';
+        }
+        return 'week' as 'week' | 'day';
+    });
+
+
 
     // 7.1 Activities (Count)
     let loadClimbing = $derived(withAvg(getLoadStats(filteredSessions, s => s.activityType.includes('climb'), s => 1, 'Climbing Sessions', loadGranularity, currentDateRange), 'Climbing Sessions'));
