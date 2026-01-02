@@ -16,7 +16,6 @@
     let venue = $state('');
     let customVenue = $state('');
     let type = $state('Bouldering');
-    let isSimulation = $state(false);
     
     // Load Metrics
     let fingerLoad = $state(4);
@@ -52,8 +51,8 @@
                 if (data.roundName) roundName = data.roundName;
                 if (data.customRoundName) customRoundName = data.customRoundName;
                 if (data.finalPosition) finalPosition = data.finalPosition;
+                if (data.finalPosition) finalPosition = data.finalPosition;
                 if (data.climbs) climbs = data.climbs;
-                if (typeof data.isSimulation === 'boolean') isSimulation = data.isSimulation;
              } catch (e) {
                  console.error('Failed to restore draft', e);
              }
@@ -67,13 +66,13 @@
             date, venue, customVenue, type,
             fingerLoad, shoulderLoad, forearmLoad,
             roundName, customRoundName, finalPosition,
-            climbs, isSimulation
+            climbs
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
 
     // Computed states
-    let isResultMode = $derived(!isSimulation && roundName === 'Result');
+    let isResultMode = $derived(roundName === 'Result');
     let showCustomVenue = $derived(venue === 'Other');
     let showCustomRound = $derived(roundName === 'Other');
     let actualRoundName = $derived(roundName === 'Other' ? customRoundName : roundName);
@@ -113,7 +112,7 @@
         
         try {
             const roundData: CompetitionRound = {
-                name: isSimulation ? 'Simulation' : actualRoundName,
+                name: actualRoundName,
                 position: isResultMode ? finalPosition : undefined,
                 climbs: isResultMode ? undefined : JSON.parse(JSON.stringify(climbs))
             };
@@ -123,7 +122,6 @@
                 venue: venue === 'Other' ? customVenue : venue,
                 customVenue: venue === 'Other' ? customVenue : undefined,
                 type: type as any,
-                isSimulation,
                 fingerLoad: isResultMode ? undefined : fingerLoad,
                 shoulderLoad: isResultMode ? undefined : shoulderLoad,
                 forearmLoad: isResultMode ? undefined : forearmLoad,
@@ -208,17 +206,11 @@
         </select>
     </div>
 
-    <div class="form-group mb-4 checkbox-group">
-        <label for="isSimulation" class="checkbox-label">
-            <input type="checkbox" id="isSimulation" bind:checked={isSimulation} />
-            Simulation (Practice/Mock comp)
-        </label>
-    </div>
+
 
     <!-- Round Configuration -->
     <div class="round-section">
-        {#if !isSimulation}
-            <div class="form-group">
+        <div class="form-group">
             <label for="round">Round</label>
             <select id="round" bind:value={roundName}>
                 {#each roundOptions as r}
@@ -228,8 +220,7 @@
             {#if showCustomRound}
                 <input type="text" bind:value={customRoundName} placeholder="Round name" class="mt-2" />
             {/if}
-            </div>
-        {/if}
+        </div>
 
         {#if isResultMode}
             <!-- RESULT MODE -->
@@ -456,20 +447,4 @@
 	.save-message.success { background: #d4edda; color: #155724; }
 	.save-message.error { background: #f8d7da; color: #721c24; }
 
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-    }
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer; 
-        font-weight: normal !important;
-        color: var(--text-primary) !important;
-    }
-    .checkbox-label input {
-        width: auto;
-        margin: 0;
-    }
 </style>

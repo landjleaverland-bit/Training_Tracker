@@ -286,7 +286,6 @@ export interface CompetitionSessionPayload {
     shoulderLoad?: number;
 
     forearmLoad?: number;
-    isSimulation?: boolean;
     rounds: Array<{
         name: string;
         position?: number | null;

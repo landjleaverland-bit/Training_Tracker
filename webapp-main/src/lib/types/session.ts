@@ -114,7 +114,6 @@ export interface CompetitionSession extends BaseSession {
     shoulderLoad?: number;
     forearmLoad?: number;
     rounds: CompetitionRound[];
-    isSimulation?: boolean;
 }
 
 // Gym session (Strong/Hevy style)
