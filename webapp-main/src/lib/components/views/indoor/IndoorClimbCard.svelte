@@ -104,6 +104,74 @@
 			return num > maxNum ? c.grade : max;
 		}, 'V0')
 	);
+
+    // Notes Editing
+    let isEditingNotes = $state(false);
+    let tempNotes = $state('');
+    let isSavingNotes = $state(false);
+
+    function startEditNotes() {
+        tempNotes = session.notes || '';
+        isEditingNotes = true;
+    }
+
+    function cancelEditNotes() {
+        isEditingNotes = false;
+        tempNotes = '';
+    }
+
+    async function saveNotes() {
+        if (isSavingNotes) return;
+        isSavingNotes = true;
+
+        const previousNotes = session.notes;
+        // Optimistic update
+        session.notes = tempNotes;
+        updateSession(session.id, { notes: tempNotes });
+        
+        if (isOnline()) {
+             const sessionPayload = {
+                date: session.date,
+                location: session.location,
+                customLocation: session.customLocation,
+                climbingType: session.climbingType,
+                trainingTypes: session.trainingTypes || [],
+                difficulty: session.difficulty,
+                categories: session.categories || [],
+                energySystems: session.energySystems || [],
+                wallAngles: session.wallAngles || [],
+                fingerLoad: session.fingerLoad,
+                shoulderLoad: session.shoulderLoad,
+                forearmLoad: session.forearmLoad,
+                openGrip: session.openGrip,
+                crimpGrip: session.crimpGrip,
+                pinchGrip: session.pinchGrip,
+                sloperGrip: session.sloperGrip,
+                jugGrip: session.jugGrip,
+                climbs: session.climbs,
+                notes: tempNotes // The updated notes
+             };
+
+             try {
+                const result = await updateIndoorSession(session.id, sessionPayload);
+                if (result.ok) {
+                    markAsSynced(session.id);
+                    session.syncStatus = 'synced';
+                } else {
+                    console.error('Failed to sync note update:', result.error);
+                    markAsSyncError(session.id);
+                    session.syncStatus = 'error';
+                }
+             } catch (e) {
+                 console.error('Exception syncing note update:', e);
+                 markAsSyncError(session.id);
+                 session.syncStatus = 'error';
+             }
+        }
+        
+        isEditingNotes = false;
+        isSavingNotes = false;
+    }
 </script>
 
 <div class="session-card" class:expanded={isExpanded}>
@@ -238,12 +306,40 @@
 
 			</div>
 
-            {#if session.notes}
-                <div class="notes-container">
+            <!-- Session Notes Section with Edit Mode -->
+            <div class="notes-container">
+                <div class="notes-header">
                     <span class="label">Session Notes</span>
-                    <p class="notes-text">{session.notes}</p>
+                    {#if !isEditingNotes}
+                        <button class="edit-notes-btn" onclick={startEditNotes} title="Edit Notes">
+                            ✏️
+                        </button>
+                    {/if}
                 </div>
-            {/if}
+
+                {#if isEditingNotes}
+                    <div class="edit-notes-area" transition:slide={{ duration: 150 }}>
+                        <textarea 
+                            bind:value={tempNotes} 
+                            placeholder="Add session notes..." 
+                            rows="3"
+                            class="notes-editor"
+                        ></textarea>
+                        <div class="edit-actions">
+                            <button class="cancel-btn" onclick={cancelEditNotes} disabled={isSavingNotes}>Cancel</button>
+                            <button class="save-btn" onclick={saveNotes} disabled={isSavingNotes}>
+                                {isSavingNotes ? 'Saving...' : 'Save'}
+                            </button>
+                        </div>
+                    </div>
+                {:else}
+                    {#if session.notes}
+                        <button type="button" class="notes-text" onclick={startEditNotes}>{session.notes}</button>
+                    {:else}
+                         <button type="button" class="notes-placeholder" onclick={startEditNotes}>+ Add notes</button>
+                    {/if}
+                {/if}
+            </div>
 
 			<!-- Load Metrics -->
 			<div class="metrics-container">
@@ -334,6 +430,14 @@
 			</div>
 		</div>
 	{/if}
+
+    <DeleteConfirmModal 
+        isOpen={showDeleteModal}
+        title="Delete Session"
+        message="Are you sure you want to delete this session? This action cannot be undone."
+        onConfirm={confirmDeleteSession}
+        onCancel={() => showDeleteModal = false}
+    />
 </div>
 <style>
 	.session-card {
@@ -591,10 +695,35 @@
         text-transform: uppercase;
         color: var(--text-secondary);
         letter-spacing: 0.05em;
+    }
+
+    .notes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 0.3rem;
     }
 
+    .edit-notes-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        opacity: 0.5;
+        font-size: 0.8rem;
+        padding: 0.2rem;
+        transition: opacity 0.2s;
+    }
+
+    .edit-notes-btn:hover {
+        opacity: 1;
+    }
+
     .notes-text {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border: none;
+        font-family: inherit;
         font-size: 0.95rem;
         color: var(--text-primary);
         line-height: 1.5;
@@ -603,6 +732,84 @@
         border-radius: 8px;
         margin: 0;
         white-space: pre-wrap;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .notes-text:hover {
+        background: rgba(74, 155, 155, 0.1);
+    }
+    
+    .notes-placeholder {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: none;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-style: italic;
+        cursor: pointer;
+        padding: 0.5rem;
+        border: 1px dashed rgba(0,0,0,0.1);
+        border-radius: 4px;
+        margin: 0;
+    }
+    
+    .notes-placeholder:hover {
+        background: rgba(0,0,0,0.02);
+        border-color: rgba(0,0,0,0.2);
+    }
+
+    .notes-editor {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid var(--teal-secondary);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.95rem;
+        resize: vertical;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 0.5rem;
+    }
+
+    .edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .cancel-btn {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .cancel-btn:hover {
+        color: var(--text-primary);
+    }
+
+    .save-btn {
+        background: var(--teal-secondary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .save-btn:hover:not(:disabled) {
+        background: var(--teal-primary);
+    }
+    
+    .save-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
 
 	@media (max-width: 480px) {

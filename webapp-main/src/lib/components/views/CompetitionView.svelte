@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { getCompetitionSessions, mergeSessions, deleteSession } from '$lib/services/cache';
+    import { getCompetitionSessions, mergeSessions, deleteSession, updateSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
     import { syncAllPending } from '$lib/services/sync';
-    import { getCompetitionSessions as fetchRemote } from '$lib/services/api';
+    import { getCompetitionSessions as fetchRemote, updateCompetitionSession, isOnline } from '$lib/services/api';
     import type { CompetitionSession } from '$lib/types/session';
     import { slide } from 'svelte/transition';
     import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
@@ -112,6 +112,87 @@
         }
         return lastRound.name;
     }
+
+    // Notes Editing
+    let editingNotes = $state<Set<string>>(new Set());
+    let tempNotes = $state<Map<string, string>>(new Map());
+    let savingNotes = $state<Set<string>>(new Set());
+
+    function startEditNotes(session: CompetitionSession) {
+        tempNotes.set(session.id, session.notes || '');
+        tempNotes = new Map(tempNotes); // trigger reaction
+        editingNotes.add(session.id);
+        editingNotes = new Set(editingNotes);
+    }
+
+    function cancelEditNotes(id: string) {
+        editingNotes.delete(id);
+        editingNotes = new Set(editingNotes);
+        tempNotes.delete(id);
+        tempNotes = new Map(tempNotes);
+    }
+    
+    function getTempNotes(id: string): string {
+        return tempNotes.get(id) || '';
+    }
+    
+    // Svelte 5 handling for map binding
+    function updateTempNotes(id: string, value: string) {
+        tempNotes.set(id, value);
+        tempNotes = new Map(tempNotes);
+    }
+
+    async function saveNotes(session: CompetitionSession) {
+        if (savingNotes.has(session.id)) return;
+        
+        const newNotes = tempNotes.get(session.id);
+        if (newNotes === undefined) return;
+
+        savingNotes.add(session.id);
+        savingNotes = new Set(savingNotes);
+        
+        // Optimistic update
+        updateSession(session.id, { notes: newNotes });
+        // Update local list object for immediate UI reflection (though getCompetitionSessions should handle this on reload, standard reactivity might need help)
+        const s = sessions.find(s => s.id === session.id);
+        if (s) s.notes = newNotes;
+
+        if (isOnline()) {
+             // Construct payload
+             const sessionPayload = {
+                date: session.date,
+                venue: session.venue,
+                customVenue: session.customVenue,
+                type: session.type,
+                fingerLoad: session.fingerLoad,
+                shoulderLoad: session.shoulderLoad,
+                forearmLoad: session.forearmLoad,
+                rounds: session.rounds,
+                notes: newNotes
+             };
+
+             try {
+                const result = await updateCompetitionSession(session.id, sessionPayload);
+                if (result.ok) {
+                    markAsSynced(session.id);
+                    if(s) s.syncStatus = 'synced';
+                } else {
+                    console.error('Failed to sync note update:', result.error);
+                    markAsSyncError(session.id);
+                    if(s) s.syncStatus = 'error';
+                }
+             } catch (e) {
+                 console.error('Exception syncing note update:', e);
+                 markAsSyncError(session.id);
+                 if(s) s.syncStatus = 'error';
+             }
+        }
+        
+        editingNotes.delete(session.id);
+        editingNotes = new Set(editingNotes);
+        savingNotes.delete(session.id);
+        savingNotes = new Set(savingNotes);
+    }
 </script>
 
 <div class="view-content">
@@ -173,12 +254,40 @@
 
                     {#if expandedDetails.has(session.id)}
                         <div class="card-body" transition:slide={{ duration: 150 }}>
-                            {#if session.notes}
-                                <div class="session-notes-container">
+                            <div class="session-notes-container">
+                                <div class="notes-header">
                                     <span class="note-label">Session Notes</span>
-                                    <p class="note-text">{session.notes}</p>
+                                    {#if !editingNotes.has(session.id)}
+                                        <button class="edit-notes-btn" onclick={() => startEditNotes(session)} title="Edit Notes">
+                                            ✏️
+                                        </button>
+                                    {/if}
                                 </div>
-                            {/if}
+                                
+                                {#if editingNotes.has(session.id)}
+                                    <div class="edit-notes-area" transition:slide={{ duration: 150 }}>
+                                        <textarea 
+                                            value={getTempNotes(session.id)}
+                                            oninput={(e) => updateTempNotes(session.id, e.currentTarget.value)}
+                                            placeholder="Add session notes..." 
+                                            rows="3"
+                                            class="notes-editor"
+                                        ></textarea>
+                                        <div class="edit-actions">
+                                            <button class="cancel-btn" onclick={() => cancelEditNotes(session.id)} disabled={savingNotes.has(session.id)}>Cancel</button>
+                                            <button class="save-btn" onclick={() => saveNotes(session)} disabled={savingNotes.has(session.id)}>
+                                                {savingNotes.has(session.id) ? 'Saving...' : 'Save'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                {:else}
+                                    {#if session.notes}
+                                        <button type="button" class="note-text" onclick={() => startEditNotes(session)}>{session.notes}</button>
+                                    {:else}
+                                         <button type="button" class="notes-placeholder" onclick={() => startEditNotes(session)}>+ Add notes</button>
+                                    {/if}
+                                {/if}
+                            </div>
 
                             {#if session.rounds}
                                 <div class="rounds-list">
@@ -469,11 +578,118 @@
         margin-bottom: 0.3rem;
     }
     
+    .notes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.3rem;
+    }
+
+    .edit-notes-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        opacity: 0.5;
+        font-size: 0.8rem;
+        padding: 0.2rem;
+        transition: opacity 0.2s;
+    }
+
+    .edit-notes-btn:hover {
+        opacity: 1;
+    }
+    
     .note-text {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        font-family: inherit;
         font-size: 0.9rem;
         color: var(--text-primary);
         white-space: pre-wrap;
         margin: 0;
         line-height: 1.4;
+        cursor: pointer;
+        padding: 0.2rem;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+    
+    .note-text:hover {
+        background: rgba(74, 155, 155, 0.05);
+    }
+    
+    .notes-placeholder {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: none;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-style: italic;
+        cursor: pointer;
+        padding: 0.5rem;
+        border: 1px dashed rgba(0,0,0,0.1);
+        border-radius: 4px;
+        margin: 0;
+    }
+    
+    .notes-placeholder:hover {
+        background: rgba(0,0,0,0.02);
+        border-color: rgba(0,0,0,0.2);
+    }
+
+    .notes-editor {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid var(--teal-secondary);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.95rem;
+        resize: vertical;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 0.5rem;
+    }
+
+    .edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .cancel-btn {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .cancel-btn:hover {
+        color: var(--text-primary);
+    }
+
+    .save-btn {
+        background: var(--teal-secondary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .save-btn:hover:not(:disabled) {
+        background: var(--teal-primary);
+    }
+    
+    .save-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
 </style>

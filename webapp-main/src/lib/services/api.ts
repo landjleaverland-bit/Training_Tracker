@@ -64,6 +64,7 @@ export interface IndoorSessionPayload {
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;
+    notes?: string;
     climbs: Array<{
         isSport: boolean;
         name: string;
@@ -150,6 +151,7 @@ export interface OutdoorSessionPayload {
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;
+    notes?: string;
     climbs: Array<{
         isSport: boolean;
         name: string;
@@ -286,6 +288,7 @@ export interface CompetitionSessionPayload {
     shoulderLoad?: number;
 
     forearmLoad?: number;
+    notes?: string;
     rounds: Array<{
         name: string;
         position?: number | null;
