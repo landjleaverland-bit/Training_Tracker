@@ -90,7 +90,8 @@
 		attemptType: string;
 		attemptsNum: number;
 		notes: string;
-		wall: string;
+		wall?: string;
+		techniqueFocus?: string;
 	}
 
 	// Form state
@@ -102,7 +103,6 @@
 	let difficulty = $state('None');
 	let categories = $state<string[]>(['None']);
 	let energySystems = $state<string[]>(['None']);
-	let techniqueFocuses = $state<string[]>(['None']);
 	let wallAngles = $state<string[]>(['None']);
 	// wallAngles removed
 	let fingerLoad = $state(3);
@@ -137,8 +137,6 @@
                 if (data.difficulty) difficulty = data.difficulty;
                 if (data.categories) categories = data.categories;
                 if (data.energySystems) energySystems = data.energySystems;
-                if (data.techniqueFocuses) techniqueFocuses = data.techniqueFocuses;
-                if (data.techniqueFocuses) techniqueFocuses = data.techniqueFocuses;
                 if (data.wallAngles) wallAngles = data.wallAngles;
                 
                 if (data.fingerLoad) fingerLoad = data.fingerLoad;
@@ -163,7 +161,7 @@
         if (!loaded) return;
         const draft = {
             date, location, isOtherLocation, climbingType, trainingTypes, difficulty,
-            categories, energySystems, techniqueFocuses,
+            categories, energySystems,
             fingerLoad, shoulderLoad, forearmLoad,
             openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
             climbs
@@ -266,7 +264,6 @@
 				difficulty,
 				categories, // Array
 				energySystems, // Array
-				techniqueFocuses, // Array
 				wallAngles, // Array
 				fingerLoad,
 				shoulderLoad,
@@ -330,7 +327,6 @@
 		difficulty = 'None';
 		categories = ['None'];
 		energySystems = ['None'];
-		techniqueFocuses = ['None'];
 		wallAngles = ['None'];
 		fingerLoad = 3;
 		shoulderLoad = 3;
@@ -488,15 +484,6 @@
                 />
 			</div>
 			<div class="training-item">
-				<label for="technique-focus">Technique Focus</label>
-				<MultiSelect 
-                    options={techniqueFocusOptions} 
-                    selected={techniqueFocuses} 
-                    placeholder="Select focus..." 
-                    onChange={(val) => techniqueFocuses = val} 
-                />
-			</div>
-			<div class="training-item">
 				<label for="wall-angle">Wall</label>
 				<MultiSelect 
                     options={sessionWallOptions} 
@@ -523,6 +510,7 @@
 						<th>Attempt</th>
 						<th>#</th>
 						<th>Wall Angle</th>
+						<th>Technique Focus</th>
 						<th>Notes</th>
 						<th></th>
 					</tr>
@@ -571,6 +559,13 @@
 							<td>
 								<select bind:value={climb.wall}>
 									{#each climbWallOptions.filter(w => w !== 'None') as option}
+										<option value={option}>{option}</option>
+									{/each}
+								</select>
+							</td>
+							<td>
+								<select bind:value={climb.techniqueFocus}>
+									{#each techniqueFocusOptions as option}
 										<option value={option}>{option}</option>
 									{/each}
 								</select>

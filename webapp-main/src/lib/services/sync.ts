@@ -183,7 +183,6 @@ async function syncIndoorClimbSession(session: IndoorClimbSession): Promise<{ ok
         difficulty: session.difficulty,
         categories: session.categories,
         energySystems: session.energySystems,
-        techniqueFocuses: session.techniqueFocuses,
         wallAngles: session.wallAngles,
 
         fingerLoad: session.fingerLoad,
@@ -208,8 +207,6 @@ async function updateIndoorClimbSession(session: IndoorClimbSession): Promise<{ 
         difficulty: session.difficulty,
         categories: session.categories,
         energySystems: session.energySystems,
-        techniqueFocuses: session.techniqueFocuses,
-
         wallAngles: session.wallAngles,
         fingerLoad: session.fingerLoad,
         shoulderLoad: session.shoulderLoad,
@@ -234,7 +231,7 @@ async function syncOutdoorSession(session: OutdoorClimbSession): Promise<{ ok: b
         difficulty: session.difficulty,
         categories: session.categories,
         energySystems: session.energySystems,
-        techniqueFocuses: session.techniqueFocuses,
+
         fingerLoad: session.fingerLoad,
         shoulderLoad: session.shoulderLoad,
         forearmLoad: session.forearmLoad,
@@ -255,7 +252,7 @@ async function updateOutdoorClimbSession(session: OutdoorClimbSession): Promise<
         difficulty: session.difficulty,
         categories: session.categories,
         energySystems: session.energySystems,
-        techniqueFocuses: session.techniqueFocuses,
+
         fingerLoad: session.fingerLoad,
         shoulderLoad: session.shoulderLoad,
         forearmLoad: session.forearmLoad,

@@ -11,6 +11,7 @@
 			attemptsNum: number;
 			notes: string;
             wall?: string;
+            techniqueFocus?: string;
 		};
 		onDelete: () => void;
         onUpdate: (updatedClimb: any) => void;
@@ -200,6 +201,9 @@
                     {#if climb.wall}
                         <span class="tag wall-tag">{climb.wall}</span>
                     {/if}
+                    {#if climb.techniqueFocus}
+                        <span class="tag technique-tag">{climb.techniqueFocus}</span>
+                    {/if}
                     <span class="tag attempt-text">{climb.attemptType}</span>
                 </div>
             </div>
@@ -225,6 +229,13 @@
         color: var(--teal-secondary);
         font-weight: 500;
         border: 1px solid rgba(74, 155, 155, 0.2);
+    }
+
+    .technique-tag {
+         background: rgba(255, 193, 7, 0.1);
+        color: #d39e00;
+        font-weight: 500;
+        border: 1px solid rgba(255, 193, 7, 0.2);
     }
 
 	.climb-header {

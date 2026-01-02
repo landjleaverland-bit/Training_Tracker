@@ -65,7 +65,6 @@
                 difficulty: session.difficulty,
                 categories: session.categories || [],
                 energySystems: session.energySystems || [],
-                techniqueFocuses: session.techniqueFocuses || [],
                 fingerLoad: session.fingerLoad,
                 shoulderLoad: session.shoulderLoad,
                 forearmLoad: session.forearmLoad,
@@ -201,20 +200,6 @@
 						<div class="value-chips">
                             {#if session.categories.length > 0 && !session.categories.includes('None')}
                                 {#each session.categories as item}
-                                    <span class="chip">{item}</span>
-                                {/each}
-                            {:else}
-                                <span class="text-none">None</span>
-                            {/if}
-                        </div>
-					</div>
-				{/if}
-				{#if session.techniqueFocuses?.length}
-					<div class="detail-item">
-						<span class="label">Focus</span>
-						<div class="value-chips">
-                            {#if session.techniqueFocuses.length > 0 && !session.techniqueFocuses.includes('None')}
-                                {#each session.techniqueFocuses as item}
                                     <span class="chip">{item}</span>
                                 {/each}
                             {:else}
