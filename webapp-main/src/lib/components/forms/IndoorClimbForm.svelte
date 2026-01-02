@@ -129,7 +129,6 @@
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                if (data.date) date = data.date;
                 if (data.location) location = data.location;
                 if (data.isOtherLocation) isOtherLocation = data.isOtherLocation;
                 if (data.climbingType) climbingType = data.climbingType;

@@ -101,7 +101,6 @@
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                if (data.date) date = data.date;
                 if (data.area) area = data.area;
                 if (data.crag) crag = data.crag;
                 if (data.sector) sector = data.sector;

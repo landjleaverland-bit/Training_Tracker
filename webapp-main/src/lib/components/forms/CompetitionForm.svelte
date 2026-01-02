@@ -41,7 +41,6 @@
         if (saved) {
              try {
                 const data = JSON.parse(saved);
-                if (data.date) date = data.date;
                 if (data.venue) venue = data.venue;
                 if (data.customVenue) customVenue = data.customVenue;
                 if (data.type) type = data.type;
