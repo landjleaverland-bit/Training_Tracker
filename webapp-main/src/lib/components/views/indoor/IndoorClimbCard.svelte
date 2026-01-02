@@ -65,6 +65,7 @@
                 categories: session.categories || [],
                 energySystems: session.energySystems || [],
                 techniqueFocuses: session.techniqueFocuses || [],
+                wallAngles: session.wallAngles || [],
 
                 fingerLoad: session.fingerLoad,
                 shoulderLoad: session.shoulderLoad,
@@ -227,6 +228,20 @@
 						<div class="value-chips">
                             {#if session.energySystems.length > 0 && !session.energySystems.includes('None')}
                                 {#each session.energySystems as item}
+                                    <span class="chip">{item}</span>
+                                {/each}
+                            {:else}
+                                <span class="text-none">None</span>
+                            {/if}
+                        </div>
+					</div>
+				{/if}
+				{#if session.wallAngles?.length}
+					<div class="detail-item">
+						<span class="label">Wall</span>
+						<div class="value-chips">
+                            {#if session.wallAngles.length > 0 && !session.wallAngles.includes('None')}
+                                {#each session.wallAngles as item}
                                     <span class="chip">{item}</span>
                                 {/each}
                             {:else}

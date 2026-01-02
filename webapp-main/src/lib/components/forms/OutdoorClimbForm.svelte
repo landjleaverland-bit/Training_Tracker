@@ -11,7 +11,9 @@
 	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Dogged', 'DNF'];
 
 	// Training classification options
-	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters'];
+    // Copied from IndoorClimbForm for consistency, though 'Roof' might be rare outdoors it's still possible.
+	const climbWallOptions = ['None', 'Overhang', 'Slab', 'Roof'];
+	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters', 'Comp Sim'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
 	const categoryOptions = ['None', 'Strength', 'Power', 'Strength Capacity', 'Power Capacity', 'Strength Endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique'];
 	const energySystemOptions = ['None', 'Aerobic Lactic Capacity', 'Aerobic Lactic Power', 'Anaerobic Alactic Capacity', 'Anaerobic Alactic Power', 'Anaerobic Power', 'Anaerobic Lactic Capacity'];
@@ -58,6 +60,7 @@
 		attemptType: string;
 		attemptsNum: number;
 		notes: string;
+        wall?: string;
 	}
 
 	// Form state
@@ -506,6 +509,7 @@
 						<th>Grade</th>
 						<th>Attempt</th>
 						<th>#</th>
+						<th>Wall Angle</th>
 						<th>Notes</th>
 						<th></th>
 					</tr>
@@ -550,6 +554,13 @@
 									min="1" 
 									disabled={climb.attemptType === 'Flash' || climb.attemptType === 'Onsight'}
 								/>
+							</td>
+                            <td>
+								<select bind:value={climb.wall}>
+									{#each climbWallOptions.filter(w => w !== 'None') as option}
+										<option value={option}>{option}</option>
+									{/each}
+								</select>
 							</td>
 							<td class="notes-cell" class:expanded={expandedNoteIndex === index}>
 								<textarea 

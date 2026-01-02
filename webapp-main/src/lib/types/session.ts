@@ -59,6 +59,7 @@ export interface OutdoorClimbSession extends BaseSession {
     categories?: string[];
     energySystems?: string[];
     techniqueFocuses?: string[];
+    wallAngles?: string[];
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;

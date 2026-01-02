@@ -49,7 +49,9 @@
 		'Toe Hook',
 		'Bicycle'
 	];
-	const wallAngleOptions = ['None', 'Overhang', 'Slab', 'Roof', 'Moon Board', 'Kilter Board', 'Beast', 'Circuit Board', 'Boulder wall', 'Lead wall', 'Comp wall', 'Auto belays'];
+    // Split options per user request
+	const climbWallOptions = ['None', 'Overhang', 'Slab', 'Roof'];
+    const sessionWallOptions = ['None', 'Moon Board', 'Kilter Board', 'Beast', 'Circuit Board', 'Boulder wall', 'Lead wall', 'Comp wall', 'Auto belays'];
 
 	// Valid grades (case-insensitive matching)
 	const validGrades = [
@@ -101,6 +103,7 @@
 	let categories = $state<string[]>(['None']);
 	let energySystems = $state<string[]>(['None']);
 	let techniqueFocuses = $state<string[]>(['None']);
+	let wallAngles = $state<string[]>(['None']);
 	// wallAngles removed
 	let fingerLoad = $state(3);
 	let shoulderLoad = $state(3);
@@ -135,7 +138,8 @@
                 if (data.categories) categories = data.categories;
                 if (data.energySystems) energySystems = data.energySystems;
                 if (data.techniqueFocuses) techniqueFocuses = data.techniqueFocuses;
-                // wallAngles removed
+                if (data.techniqueFocuses) techniqueFocuses = data.techniqueFocuses;
+                if (data.wallAngles) wallAngles = data.wallAngles;
                 
                 if (data.fingerLoad) fingerLoad = data.fingerLoad;
                 if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
@@ -263,7 +267,7 @@
 				categories, // Array
 				energySystems, // Array
 				techniqueFocuses, // Array
-				// wallAngles removed
+				wallAngles, // Array
 				fingerLoad,
 				shoulderLoad,
 				forearmLoad,
@@ -327,7 +331,7 @@
 		categories = ['None'];
 		energySystems = ['None'];
 		techniqueFocuses = ['None'];
-		// wallAngles removed
+		wallAngles = ['None'];
 		fingerLoad = 3;
 		shoulderLoad = 3;
 		forearmLoad = 3;
@@ -492,7 +496,15 @@
                     onChange={(val) => techniqueFocuses = val} 
                 />
 			</div>
-			<!-- Wall Angle removed -->
+			<div class="training-item">
+				<label for="wall-angle">Wall</label>
+				<MultiSelect 
+                    options={sessionWallOptions} 
+                    selected={wallAngles} 
+                    placeholder="Select walls..." 
+                    onChange={(val) => wallAngles = val} 
+                />
+			</div>
 		</div>
 	</div>
 
@@ -510,7 +522,7 @@
 						<th>Grade</th>
 						<th>Attempt</th>
 						<th>#</th>
-						<th>Wall</th>
+						<th>Wall Angle</th>
 						<th>Notes</th>
 						<th></th>
 					</tr>
@@ -558,7 +570,7 @@
 							</td>
 							<td>
 								<select bind:value={climb.wall}>
-									{#each wallAngleOptions.filter(w => w !== 'None') as option}
+									{#each climbWallOptions.filter(w => w !== 'None') as option}
 										<option value={option}>{option}</option>
 									{/each}
 								</select>

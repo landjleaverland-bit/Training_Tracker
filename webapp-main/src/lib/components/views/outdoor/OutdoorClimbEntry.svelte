@@ -10,6 +10,7 @@
 			attemptType: string;
 			attemptsNum: number;
 			notes: string;
+            wall?: string;
 		};
 		onDelete: () => void;
         onUpdate: (updatedClimb: any) => void;
@@ -196,6 +197,9 @@
                 
                 <div class="tags">
                     <span class="tag type">{climb.isSport ? 'Sport' : 'Boulder'}</span>
+                    {#if climb.wall}
+                        <span class="tag wall-tag">{climb.wall}</span>
+                    {/if}
                     <span class="tag attempt-text">{climb.attemptType}</span>
                 </div>
             </div>
@@ -214,6 +218,13 @@
     
     .climb-entry.editing {
         background: rgba(74, 155, 155, 0.05);
+    }
+    
+    .wall-tag {
+        background: rgba(74, 155, 155, 0.1);
+        color: var(--teal-secondary);
+        font-weight: 500;
+        border: 1px solid rgba(74, 155, 155, 0.2);
     }
 
 	.climb-header {
