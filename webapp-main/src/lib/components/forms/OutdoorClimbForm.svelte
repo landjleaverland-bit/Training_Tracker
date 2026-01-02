@@ -15,7 +15,7 @@
 	const climbWallOptions = ['None', 'Overhang', 'Vertical', 'Slab', 'Roof'];
 	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters', 'Comp Sim'];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
-	const categoryOptions = ['None', 'Strength', 'Power', 'Strength Capacity', 'Power Capacity', 'Strength Endurance', 'Power Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique'];
+	const categoryOptions = ['None', 'Strength', 'Power', 'Strength Capacity', 'Power Capacity', 'Strength Endurance', 'Power Endurance', 'Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique'];
 	const energySystemOptions = ['None', 'Aerobic Lactic Capacity', 'Aerobic Lactic Power', 'Anaerobic Alactic Capacity', 'Anaerobic Alactic Power', 'Anaerobic Power', 'Anaerobic Lactic Capacity'];
 	const techniqueFocusOptions = [
 		'None',
