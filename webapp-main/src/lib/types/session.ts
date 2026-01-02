@@ -35,6 +35,7 @@ export interface IndoorClimbSession extends BaseSession {
     categories?: string[];        // None, Technique, Strength, Strength-endurance, Power, Strength Capacity, Power Capacity
     energySystems?: string[];     // Aerobic capacity, Aerobic lactic power, etc.
     techniqueFocuses?: string[];  // None, Double-clutch, Standing on volumes, Trusting feet
+    wallAngles?: string[];
     // WallAngles removed - now per climb
     fingerLoad: number;           // 1-5
     shoulderLoad: number;         // 1-5

@@ -209,7 +209,7 @@ async function updateIndoorClimbSession(session: IndoorClimbSession): Promise<{ 
         categories: session.categories,
         energySystems: session.energySystems,
         techniqueFocuses: session.techniqueFocuses,
-        techniqueFocuses: session.techniqueFocuses,
+
         wallAngles: session.wallAngles,
         fingerLoad: session.fingerLoad,
         shoulderLoad: session.shoulderLoad,
