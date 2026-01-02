@@ -82,6 +82,7 @@
     let activeExerciseDetail: ExerciseDefinition | null = null;
     let exerciseToDeleteIndex: number | null = null;
     let showSuccess = false;
+    let autoStartTimer = true; // State for timer mode
 
     // Persistence
     let loaded = false;
@@ -174,6 +175,7 @@
     }
 
     function handleSetComplete() {
+        autoStartTimer = true;
         showRestTimer = true;
     }
 
@@ -230,6 +232,10 @@
                 </select>
             </label>
         </div>
+        <!-- Manual Timer Button -->
+        <button class="timer-btn" on:click={() => { autoStartTimer = false; showRestTimer = true; }}>
+            ⏱ Open Timer
+        </button>
     </div>
 
     <!-- Active Exercises -->
@@ -383,7 +389,7 @@
     {/if}
 
     <!-- Rest Timer -->
-    <RestTimer bind:visible={showRestTimer} />
+    <RestTimer bind:visible={showRestTimer} autoStart={autoStartTimer} />
 
     <!-- Delete Confirmation -->
     {#if exerciseToDeleteIndex !== null}
@@ -538,6 +544,27 @@
         background: #4ade80; /* Green color */
         color: #064e3b;
         transform: scale(0.98);
+    }
+
+    .timer-btn {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--teal-primary);
+        color: var(--teal-primary);
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+
+    .timer-btn:hover {
+        background: rgba(45, 212, 191, 0.1);
     }
 
     /* Modal Styles */
