@@ -11,6 +11,11 @@
 		'Flashpoint Bristol',
 		'Redpoint Bristol',
 		'TCH Bristol',
+		'TCA Mothership',
+		'TCA Church',
+		'TCA Arc',
+		'Bloc',
+		'270 Climbing',
 		'Other'
 	];
 
@@ -51,7 +56,7 @@
 	];
     // Split options per user request
 	const climbWallOptions = ['None', 'Overhang', 'Vertical', 'Slab', 'Roof'];
-    const sessionWallOptions = ['None', 'Moon Board', 'Kilter Board', 'Beast', 'Circuit Board', 'Boulder wall', 'Lead wall', 'Comp wall', 'Auto belays'];
+    const sessionWallOptions = ['None', 'Moon Board', 'Kilter Board', 'Tension Board', 'Beast', 'Circuit Board', 'Boulder wall', 'Lead wall', 'Comp wall', 'Auto belays'];
 
 	// Valid grades (case-insensitive matching)
 	const validGrades = [
@@ -60,9 +65,9 @@
 		'V0+', '4+',
 		'V1', '5',
 		'V2', '5+',
-		'V3', '6A',
-		'V4', '6B',
-		'V5', '6C',
+		'V3', '6A', '6A+',
+		'V4', '6B', '6B+',
+		'V5', '6C', '6C+',
 		'V6', '7A',
 		'V7', '7A+',
 		'V8', '7B', '7B+',
