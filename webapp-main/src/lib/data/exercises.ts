@@ -312,8 +312,8 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         id: 'tricep_dips',
         name: 'Tricep Dips',
         category: 'Push',
-        subcategory: 'Chest & Dips',
-        targetMuscles: ['Triceps', 'Chest'],
+        subcategory: 'Triceps',
+        targetMuscles: ['Triceps'],
         instructions: ['Support body on parallel bars.', 'Lower until elbows at 90 degrees.'],
         images: ['/exercises/Tricep_Dips.webp']
     },
