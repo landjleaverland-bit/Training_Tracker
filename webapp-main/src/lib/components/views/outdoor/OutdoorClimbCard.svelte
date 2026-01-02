@@ -224,6 +224,13 @@
 				{/if}
 			</div>
 
+            {#if session.notes}
+                <div class="notes-container">
+                    <span class="label">Session Notes</span>
+                    <p class="notes-text">{session.notes}</p>
+                </div>
+            {/if}
+
 			<!-- Load Metrics -->
 			<div class="metrics-container">
 				<div class="metric">
@@ -558,6 +565,31 @@
 		border-radius: 8px;
 		border: 1px solid rgba(0, 0, 0, 0.05);
 	}
+
+    .notes-container {
+        padding: 0 1.25rem;
+        margin-top: 0.5rem;
+    }
+
+    .notes-container .label {
+        display: block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        letter-spacing: 0.05em;
+        margin-bottom: 0.3rem;
+    }
+
+    .notes-text {
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        line-height: 1.5;
+        background: rgba(74, 155, 155, 0.05);
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin: 0;
+        white-space: pre-wrap;
+    }
 
 	@media (max-width: 480px) {
 		.metrics-container {

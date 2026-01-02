@@ -86,6 +86,8 @@
 	let climbs = $state<ClimbEntry[]>([
 		{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
 	]);
+    
+    let notes = $state('');
 
 	// Reactive crag list based on selected area
 	let availableCrags = $derived(area ? getCrags(area) : []);
@@ -122,6 +124,7 @@
                 if (data.jugGrip) jugGrip = data.jugGrip;
                 
                 if (data.climbs) climbs = data.climbs;
+                if (data.notes) notes = data.notes;
             } catch (e) {
                 console.error('Failed to restore draft', e);
             }
@@ -136,7 +139,7 @@
             categories, energySystems,
             fingerLoad, shoulderLoad, forearmLoad,
             openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
-            climbs
+            climbs, notes
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -251,7 +254,8 @@
 				pinchGrip,
 				sloperGrip,
 				jugGrip,
-				climbs: preparedClimbs
+				climbs: preparedClimbs,
+                notes
 			};
 
 			// Save to local cache first (offline-first)
@@ -315,6 +319,7 @@
 		sloperGrip = 3;
 		jugGrip = 3;
 		climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
+        notes = '';
 		saveStatus = 'idle';
 		saveMessage = '';
 	}
@@ -482,6 +487,17 @@
             <!-- Technique Focus Removed -->
 		</div>
 	</div>
+
+    <!-- Session Notes Section -->
+    <div class="form-group notes-section">
+        <label for="session-notes">Session Notes</label>
+        <textarea 
+            id="session-notes" 
+            bind:value={notes} 
+            placeholder="How did the session feel? Weather, conditions, mood..."
+            rows="3"
+        ></textarea>
+    </div>
 
 	<!-- Climbs Table Section -->
 	<div class="climbs-section">

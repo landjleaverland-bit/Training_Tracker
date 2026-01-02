@@ -46,6 +46,7 @@ export interface IndoorClimbSession extends BaseSession {
     sloperGrip: number;           // 1-5
     jugGrip: number;              // 1-5
     climbs: ClimbEntry[];
+    notes?: string;
 }
 
 // Outdoor climbing session
@@ -69,6 +70,7 @@ export interface OutdoorClimbSession extends BaseSession {
     sloperGrip: number;
     jugGrip: number;
     climbs: ClimbEntry[];
+    notes?: string;
 }
 
 // Fingerboarding session
@@ -115,6 +117,7 @@ export interface CompetitionSession extends BaseSession {
     shoulderLoad?: number;
     forearmLoad?: number;
     rounds: CompetitionRound[];
+    notes?: string;
 }
 
 // Gym session (Strong/Hevy style)

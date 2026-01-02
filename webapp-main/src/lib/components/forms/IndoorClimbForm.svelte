@@ -123,6 +123,7 @@
 		{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '', wall: 'Overhang' }
 	]);
     
+    let notes = $state('');
     let isOtherLocation = $state(false);
     
     const STORAGE_KEY = 'indoor_climb_draft';
@@ -154,6 +155,7 @@
                 if (data.jugGrip) jugGrip = data.jugGrip;
                 
                 if (data.climbs) climbs = data.climbs;
+                if (data.notes) notes = data.notes;
             } catch (e) {
                 console.error('Failed to restore draft', e);
             }
@@ -168,7 +170,7 @@
             categories, energySystems,
             fingerLoad, shoulderLoad, forearmLoad,
             openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
-            climbs
+            climbs, notes
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -277,7 +279,8 @@
 				pinchGrip,
 				sloperGrip,
 				jugGrip,
-				climbs: preparedClimbs
+				climbs: preparedClimbs,
+                notes
 			};
 
 			// Save to local cache first (offline-first)
@@ -341,6 +344,7 @@
 		sloperGrip = 3;
 		jugGrip = 3;
 		climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '', wall: 'Overhang' }];
+        notes = '';
 		saveStatus = 'idle';
 		saveMessage = '';
 	}
@@ -498,6 +502,17 @@
 			</div>
 		</div>
 	</div>
+
+    <!-- Session Notes Section -->
+    <div class="form-group notes-section">
+        <label for="session-notes">Session Notes</label>
+        <textarea 
+            id="session-notes" 
+            bind:value={notes} 
+            placeholder="How did the session feel? Energy levels, mood, etc."
+            rows="3"
+        ></textarea>
+    </div>
 
 	<!-- Climbs Table Section -->
 	<div class="climbs-section">
@@ -674,7 +689,7 @@
 	}
 
 	.form-group input,
-	.form-group select {
+    .form-group select {
 		width: 100%;
 		padding: 0.6rem 0.8rem;
 		border-radius: 8px;
@@ -685,6 +700,26 @@
 		transition: border-color 0.2s ease, box-shadow 0.2s ease;
 		box-sizing: border-box;
 	}
+
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: 2px solid rgba(74, 155, 155, 0.25);
+        background: white;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        font-family: inherit;
+        resize: vertical;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--teal-primary);
+        box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.12);
+    }
 
 	.form-group input:focus,
 	.form-group select:focus {

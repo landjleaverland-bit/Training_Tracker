@@ -31,6 +31,8 @@
     let climbs = $state<CompetitionClimbResult[]>([
         { name: '#1', status: 'Flash', attemptCount: 1, notes: '' }
     ]);
+    
+    let notes = $state('');
 
     const STORAGE_KEY = 'competition_session_draft';
 
@@ -50,8 +52,8 @@
                 if (data.roundName) roundName = data.roundName;
                 if (data.customRoundName) customRoundName = data.customRoundName;
                 if (data.finalPosition) finalPosition = data.finalPosition;
-                if (data.finalPosition) finalPosition = data.finalPosition;
                 if (data.climbs) climbs = data.climbs;
+                if (data.notes) notes = data.notes;
              } catch (e) {
                  console.error('Failed to restore draft', e);
              }
@@ -65,7 +67,7 @@
             date, venue, customVenue, type,
             fingerLoad, shoulderLoad, forearmLoad,
             roundName, customRoundName, finalPosition,
-            climbs
+            climbs, notes
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -124,7 +126,8 @@
                 fingerLoad: isResultMode ? undefined : fingerLoad,
                 shoulderLoad: isResultMode ? undefined : shoulderLoad,
                 forearmLoad: isResultMode ? undefined : forearmLoad,
-                rounds: [roundData] // Currently creating a new session per log, could append in future logic
+                rounds: [roundData], // Currently creating a new session per log, could append in future logic
+                notes
             };
 
             const localSession = createCompetitionSession(sessionData);
@@ -168,6 +171,7 @@
         customVenue = '';
         finalPosition = null;
         climbs = [{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }];
+        notes = '';
         saveStatus = 'idle';
         saveMessage = '';
     }
@@ -206,6 +210,17 @@
     </div>
 
 
+
+    <!-- Session Notes Section -->
+    <div class="form-group mb-4">
+        <label for="session-notes">Session Notes</label>
+        <textarea 
+            id="session-notes" 
+            bind:value={notes} 
+            placeholder="How did the comp go? Strategy, mindset, etc."
+            rows="3"
+        ></textarea>
+    </div>
 
     <!-- Round Configuration -->
     <div class="round-section">
@@ -445,5 +460,16 @@
 
 	.save-message.success { background: #d4edda; color: #155724; }
 	.save-message.error { background: #f8d7da; color: #721c24; }
+
+    textarea {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid rgba(74, 155, 155, 0.3);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        font-family: inherit;
+        resize: vertical;
+    }
 
 </style>

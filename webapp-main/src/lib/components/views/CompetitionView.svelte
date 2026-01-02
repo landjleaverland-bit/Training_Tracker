@@ -173,6 +173,13 @@
 
                     {#if expandedDetails.has(session.id)}
                         <div class="card-body" transition:slide={{ duration: 150 }}>
+                            {#if session.notes}
+                                <div class="session-notes-container">
+                                    <span class="note-label">Session Notes</span>
+                                    <p class="note-text">{session.notes}</p>
+                                </div>
+                            {/if}
+
                             {#if session.rounds}
                                 <div class="rounds-list">
                                     {#each session.rounds || [] as round}
@@ -443,5 +450,30 @@
         color: white;
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(74, 155, 155, 0.2);
+    }
+
+    .session-notes-container {
+        margin-bottom: 1rem;
+        padding: 0.8rem;
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 8px;
+    }
+
+    .note-label {
+        display: block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+    
+    .note-text {
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+        margin: 0;
+        line-height: 1.4;
     }
 </style>
