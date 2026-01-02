@@ -21,6 +21,7 @@ export interface ClimbEntry {
     attemptType: string;
     attemptsNum: number;
     notes: string;
+    wall?: string;
 }
 
 // Indoor climbing session
@@ -34,7 +35,7 @@ export interface IndoorClimbSession extends BaseSession {
     categories?: string[];        // None, Technique, Strength, Strength-endurance, Power, Strength Capacity, Power Capacity
     energySystems?: string[];     // Aerobic capacity, Aerobic lactic power, etc.
     techniqueFocuses?: string[];  // None, Double-clutch, Standing on volumes, Trusting feet
-    wallAngles?: string[];        // None, Overhang, Slab, Roof
+    // WallAngles removed - now per climb
     fingerLoad: number;           // 1-5
     shoulderLoad: number;         // 1-5
     forearmLoad: number;          // 1-5

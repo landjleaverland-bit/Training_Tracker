@@ -184,7 +184,7 @@ async function syncIndoorClimbSession(session: IndoorClimbSession): Promise<{ ok
         categories: session.categories,
         energySystems: session.energySystems,
         techniqueFocuses: session.techniqueFocuses,
-        wallAngles: session.wallAngles,
+
         fingerLoad: session.fingerLoad,
         shoulderLoad: session.shoulderLoad,
         forearmLoad: session.forearmLoad,
@@ -208,7 +208,7 @@ async function updateIndoorClimbSession(session: IndoorClimbSession): Promise<{ 
         categories: session.categories,
         energySystems: session.energySystems,
         techniqueFocuses: session.techniqueFocuses,
-        wallAngles: session.wallAngles,
+
         fingerLoad: session.fingerLoad,
         shoulderLoad: session.shoulderLoad,
         forearmLoad: session.forearmLoad,

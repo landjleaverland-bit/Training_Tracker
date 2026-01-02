@@ -10,6 +10,7 @@
 			attemptType: string;
 			attemptsNum: number;
 			notes: string;
+            wall?: string;
 		};
 		onDelete: () => void;
         onUpdate: (updatedClimb: any) => void;
@@ -169,6 +170,9 @@
                 {#if !isExpanded && climb.notes}
                     <span class="notes-preview"> - {climb.notes}</span>
                 {/if}
+                {#if climb.wall}
+                    <span class="wall-tag">{climb.wall}</span>
+                {/if}
             </div>
             <div class="climb-meta">
                 <span class="attempt-type" class:flash={climb.attemptType === 'Flash'}>
@@ -291,6 +295,17 @@
         font-weight: 600;
         text-transform: uppercase;
 		flex-shrink: 0;
+    }
+
+    .wall-tag {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        background: rgba(74, 155, 155, 0.1);
+        color: var(--teal-secondary);
+        font-weight: 600;
+        margin-left: 0.5rem;
+        flex-shrink: 0;
     }
 
 	.notes-preview {
