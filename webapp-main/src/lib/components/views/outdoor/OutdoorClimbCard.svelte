@@ -5,7 +5,7 @@
 	import type { OutdoorClimbSession } from '$lib/types/session';
 	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-    import { updateOutdoorSession, isOnline } from '$lib/services/api';
+	import { updateOutdoorSession, isOnline } from '$lib/services/api';
 	import { deleteSession, updateSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
 
 	interface Props {
@@ -38,56 +38,56 @@
 		updateSession(session.id, { climbs: newClimbs });
 		onDelete();
 	}
-    
-    function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
-        const newClimbs = [...session.climbs];
-        newClimbs[climbIndex] = updatedClimb;
-        saveUpdates(newClimbs);
-    }
 
-    async function saveUpdates(newClimbs: any[]) {
-        // Optimistic update locally
-        updateSession(session.id, { climbs: newClimbs });
-        
-        // Propagate changes to parent (updates the list view immediately)
-        session.climbs = newClimbs;
+	function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
+		const newClimbs = [...session.climbs];
+		newClimbs[climbIndex] = updatedClimb;
+		saveUpdates(newClimbs);
+	}
 
-        // Sync to server
-        if (isOnline()) {
-             // We need to send the FULL session structure
-             const sessionPayload = {
-                date: session.date,
-                area: session.area,
-                crag: session.crag,
-                sector: session.sector,
-                climbingType: session.climbingType,
-                trainingTypes: session.trainingTypes || [],
-                difficulty: session.difficulty,
-                categories: session.categories || [],
-                energySystems: session.energySystems || [],
-                fingerLoad: session.fingerLoad,
-                shoulderLoad: session.shoulderLoad,
-                forearmLoad: session.forearmLoad,
-                climbs: newClimbs
-             };
+	async function saveUpdates(newClimbs: any[]) {
+		// Optimistic update locally
+		updateSession(session.id, { climbs: newClimbs });
 
-             try {
-                const result = await updateOutdoorSession(session.id, sessionPayload);
-                if (result.ok) {
-                    markAsSynced(session.id);
-                    session.syncStatus = 'synced';
-                } else {
-                    console.error('Failed to sync update:', result.error);
-                    markAsSyncError(session.id);
-                    session.syncStatus = 'error';
-                }
-             } catch (e) {
-                 console.error('Exception syncing update:', e);
-                 markAsSyncError(session.id);
-                 session.syncStatus = 'error';
-             }
-        }
-    }
+		// Propagate changes to parent (updates the list view immediately)
+		session.climbs = newClimbs;
+
+		// Sync to server
+		if (isOnline()) {
+			// We need to send the FULL session structure
+			const sessionPayload = {
+				date: session.date,
+				area: session.area,
+				crag: session.crag,
+				sector: session.sector,
+				climbingType: session.climbingType,
+				trainingTypes: session.trainingTypes || [],
+				difficulty: session.difficulty,
+				categories: session.categories || [],
+				energySystems: session.energySystems || [],
+				fingerLoad: session.fingerLoad,
+				shoulderLoad: session.shoulderLoad,
+				forearmLoad: session.forearmLoad,
+				climbs: newClimbs
+			};
+
+			try {
+				const result = await updateOutdoorSession(session.id, sessionPayload);
+				if (result.ok) {
+					markAsSynced(session.id);
+					session.syncStatus = 'synced';
+				} else {
+					console.error('Failed to sync update:', result.error);
+					markAsSyncError(session.id);
+					session.syncStatus = 'error';
+				}
+			} catch (e) {
+				console.error('Exception syncing update:', e);
+				markAsSyncError(session.id);
+				session.syncStatus = 'error';
+			}
+		}
+	}
 
 	// Calculate stats
 	let climbCount = $derived(session.climbs?.length ?? 0);
@@ -100,96 +100,99 @@
 		}, 'V0/4a')
 	);
 
-    // Notes Editing
-    let isEditingNotes = $state(false);
-    let tempNotes = $state('');
-    let isSavingNotes = $state(false);
+	// Notes Editing
+	let isEditingNotes = $state(false);
+	let tempNotes = $state('');
+	let isSavingNotes = $state(false);
 
-    function startEditNotes() {
-        tempNotes = session.notes || '';
-        isEditingNotes = true;
-    }
+	function startEditNotes() {
+		tempNotes = session.notes || '';
+		isEditingNotes = true;
+	}
 
-    function cancelEditNotes() {
-        isEditingNotes = false;
-        tempNotes = '';
-    }
+	function cancelEditNotes() {
+		isEditingNotes = false;
+		tempNotes = '';
+	}
 
-    async function saveNotes() {
-        if (isSavingNotes) return;
-        isSavingNotes = true;
+	async function saveNotes() {
+		if (isSavingNotes) return;
+		isSavingNotes = true;
 
-        const previousNotes = session.notes;
-        // Optimistic update
-        session.notes = tempNotes;
-        updateSession(session.id, { notes: tempNotes });
-        
-        if (isOnline()) {
-             const sessionPayload = {
-                date: session.date,
-                area: session.area,
-                crag: session.crag,
-                sector: session.sector,
-                climbingType: session.climbingType,
-                trainingTypes: session.trainingTypes || [],
-                difficulty: session.difficulty,
-                categories: session.categories || [],
-                energySystems: session.energySystems || [],
-                fingerLoad: session.fingerLoad,
-                shoulderLoad: session.shoulderLoad,
-                forearmLoad: session.forearmLoad,
-                climbs: session.climbs,
-                notes: tempNotes // The updated notes
-             };
+		const previousNotes = session.notes;
+		// Optimistic update
+		session.notes = tempNotes;
+		updateSession(session.id, { notes: tempNotes });
 
-             try {
-                const result = await updateOutdoorSession(session.id, sessionPayload);
-                if (result.ok) {
-                    markAsSynced(session.id);
-                    session.syncStatus = 'synced';
-                } else {
-                    console.error('Failed to sync note update:', result.error);
-                    markAsSyncError(session.id);
-                    session.syncStatus = 'error';
-                }
-             } catch (e) {
-                 console.error('Exception syncing note update:', e);
-                 markAsSyncError(session.id);
-                 session.syncStatus = 'error';
-             }
-        }
-        
-        isEditingNotes = false;
-        isSavingNotes = false;
-    }
+		if (isOnline()) {
+			const sessionPayload = {
+				date: session.date,
+				area: session.area,
+				crag: session.crag,
+				sector: session.sector,
+				climbingType: session.climbingType,
+				trainingTypes: session.trainingTypes || [],
+				difficulty: session.difficulty,
+				categories: session.categories || [],
+				energySystems: session.energySystems || [],
+				fingerLoad: session.fingerLoad,
+				shoulderLoad: session.shoulderLoad,
+				forearmLoad: session.forearmLoad,
+				climbs: session.climbs,
+				notes: tempNotes // The updated notes
+			};
+
+			try {
+				const result = await updateOutdoorSession(session.id, sessionPayload);
+				if (result.ok) {
+					markAsSynced(session.id);
+					session.syncStatus = 'synced';
+				} else {
+					console.error('Failed to sync note update:', result.error);
+					markAsSyncError(session.id);
+					session.syncStatus = 'error';
+				}
+			} catch (e) {
+				console.error('Exception syncing note update:', e);
+				markAsSyncError(session.id);
+				session.syncStatus = 'error';
+			}
+		}
+
+		isEditingNotes = false;
+		isSavingNotes = false;
+	}
 </script>
 
 <div class="session-card" class:expanded={isExpanded}>
-	<div 
-		class="card-header" 
-		role="button" 
-		tabindex="0" 
-		onclick={toggleExpand} 
-		onkeydown={(e) => e.key === 'Enter' && toggleExpand()} 
+	<div
+		class="card-header"
+		role="button"
+		tabindex="0"
+		onclick={toggleExpand}
+		onkeydown={(e) => e.key === 'Enter' && toggleExpand()}
 		aria-expanded={isExpanded}
 	>
 		<div class="header-main">
 			<div class="date-badge">
 				<span class="day">{new Date(session.date).getDate()}</span>
-				<span class="month">{new Date(session.date).toLocaleDateString(undefined, { month: 'short' })}</span>
+				<span class="month"
+					>{new Date(session.date).toLocaleDateString(undefined, { month: 'short' })}</span
+				>
+                                <span class="year">{new Date(session.date).getFullYear()}</span>
 			</div>
-			
+
 			<div class="session-info">
 				<div class="session-text">
 					<h3 class="location">
-                        {session.area}
-                        {#if session.crag}
-                             - {session.crag}
-                        {/if}
-                    </h3>
-                    {#if session.sector}
-                        <div class="sector-meta">📍 {session.sector}</div>
-                    {/if}
+						{session.area}
+						{#if session.crag}
+							- {session.crag}
+						{/if}
+					</h3>
+					{#if session.sector}
+						<div class="sector-meta">📍 {session.sector}</div>
+					{/if}
 					<div class="session-meta">
 						<span class="type-tag">{session.climbingType}</span>
 						<span class="stat">{climbCount} climbs</span>
@@ -198,7 +201,7 @@
 						{/if}
 					</div>
 				</div>
-				
+
 				<!-- Load Summary -->
 				<div class="load-summary">
 					<div class="load-badge finger" title="Finger Load: {session.fingerLoad}">
@@ -222,11 +225,14 @@
 					<span class="status-icon error" title="Sync error">⚠️</span>
 				{/if}
 			</div>
-			
-			<button 
-				class="btn-icon delete-session" 
+
+			<button
+				class="btn-icon delete-session"
 				title="Delete Session"
-				onclick={(e) => { e.stopPropagation(); handleDeleteSession(); }}
+				onclick={(e) => {
+					e.stopPropagation();
+					handleDeleteSession();
+				}}
 			>
 				🗑️
 			</button>
@@ -242,14 +248,14 @@
 				<div class="detail-item">
 					<span class="label">Training Type</span>
 					<div class="value-chips">
-                        {#if session.trainingTypes && session.trainingTypes.length > 0 && !session.trainingTypes.includes('None')}
-                            {#each session.trainingTypes as item}
-                                <span class="chip">{item}</span>
-                            {/each}
-                        {:else}
-                            <span class="text-none">None</span>
-                        {/if}
-                    </div>
+						{#if session.trainingTypes && session.trainingTypes.length > 0 && !session.trainingTypes.includes('None')}
+							{#each session.trainingTypes as item}
+								<span class="chip">{item}</span>
+							{/each}
+						{:else}
+							<span class="text-none">None</span>
+						{/if}
+					</div>
 				</div>
 				{#if session.difficulty}
 					<div class="detail-item">
@@ -261,66 +267,66 @@
 					<div class="detail-item">
 						<span class="label">Category</span>
 						<div class="value-chips">
-                            {#if session.categories.length > 0 && !session.categories.includes('None')}
-                                {#each session.categories as item}
-                                    <span class="chip">{item}</span>
-                                {/each}
-                            {:else}
-                                <span class="text-none">None</span>
-                            {/if}
-                        </div>
+							{#if session.categories.length > 0 && !session.categories.includes('None')}
+								{#each session.categories as item}
+									<span class="chip">{item}</span>
+								{/each}
+							{:else}
+								<span class="text-none">None</span>
+							{/if}
+						</div>
 					</div>
 				{/if}
-                {#if session.energySystems?.length}
+				{#if session.energySystems?.length}
 					<div class="detail-item">
 						<span class="label">Energy System</span>
 						<div class="value-chips">
-                            {#if session.energySystems.length > 0 && !session.energySystems.includes('None')}
-                                {#each session.energySystems as item}
-                                    <span class="chip">{item}</span>
-                                {/each}
-                            {:else}
-                                <span class="text-none">None</span>
-                            {/if}
-                        </div>
+							{#if session.energySystems.length > 0 && !session.energySystems.includes('None')}
+								{#each session.energySystems as item}
+									<span class="chip">{item}</span>
+								{/each}
+							{:else}
+								<span class="text-none">None</span>
+							{/if}
+						</div>
 					</div>
 				{/if}
 			</div>
 
-            <!-- Session Notes Section with Edit Mode -->
-            <div class="notes-container">
-                <div class="notes-header">
-                    <span class="label">Session Notes</span>
-                    {#if !isEditingNotes}
-                        <button class="icon-btn edit-notes-btn" onclick={startEditNotes} title="Edit Notes">
-                            ✎
-                        </button>
-                    {/if}
-                </div>
+			<!-- Session Notes Section with Edit Mode -->
+			<div class="notes-container">
+				<div class="notes-header">
+					<span class="label">Session Notes</span>
+					{#if !isEditingNotes}
+						<button class="icon-btn edit-notes-btn" onclick={startEditNotes} title="Edit Notes">
+							✎
+						</button>
+					{/if}
+				</div>
 
-                {#if isEditingNotes}
-                    <div class="edit-notes-area" transition:slide={{ duration: 150 }}>
-                        <textarea 
-                            bind:value={tempNotes} 
-                            placeholder="Add session notes..." 
-                            rows="3"
-                            class="notes-editor"
-                        ></textarea>
-                        <div class="edit-actions">
-                            <button class="cancel-btn" onclick={cancelEditNotes} disabled={isSavingNotes}>Cancel</button>
-                            <button class="save-btn" onclick={saveNotes} disabled={isSavingNotes}>
-                                {isSavingNotes ? 'Saving...' : 'Save'}
-                            </button>
-                        </div>
-                    </div>
-                {:else}
-                    {#if session.notes}
-                        <p class="notes-text">{session.notes}</p>
-                    {:else}
-                         <p class="notes-placeholder">No notes.</p>
-                    {/if}
-                {/if}
-            </div>
+				{#if isEditingNotes}
+					<div class="edit-notes-area" transition:slide={{ duration: 150 }}>
+						<textarea
+							bind:value={tempNotes}
+							placeholder="Add session notes..."
+							rows="3"
+							class="notes-editor"
+						></textarea>
+						<div class="edit-actions">
+							<button class="cancel-btn" onclick={cancelEditNotes} disabled={isSavingNotes}
+								>Cancel</button
+							>
+							<button class="save-btn" onclick={saveNotes} disabled={isSavingNotes}>
+								{isSavingNotes ? 'Saving...' : 'Save'}
+							</button>
+						</div>
+					</div>
+				{:else if session.notes}
+					<p class="notes-text">{session.notes}</p>
+				{:else}
+					<p class="notes-placeholder">No notes.</p>
+				{/if}
+			</div>
 
 			<!-- Load Metrics -->
 			<div class="metrics-container">
@@ -345,51 +351,51 @@
 					</div>
 					<span class="score">{session.forearmLoad}/5</span>
 				</div>
-                {#if session.openGrip}
-				<div class="metric">
-					<span class="label">Open Grip</span>
-					<div class="bar-container">
-						<div class="bar-fill" style="width: {(session.openGrip / 5) * 100}%"></div>
+				{#if session.openGrip}
+					<div class="metric">
+						<span class="label">Open Grip</span>
+						<div class="bar-container">
+							<div class="bar-fill" style="width: {(session.openGrip / 5) * 100}%"></div>
+						</div>
+						<span class="score">{session.openGrip}/5</span>
 					</div>
-					<span class="score">{session.openGrip}/5</span>
-				</div>
-                {/if}
-                {#if session.crimpGrip}
-				<div class="metric">
-					<span class="label">Crimp Grip</span>
-					<div class="bar-container">
-						<div class="bar-fill" style="width: {(session.crimpGrip / 5) * 100}%"></div>
+				{/if}
+				{#if session.crimpGrip}
+					<div class="metric">
+						<span class="label">Crimp Grip</span>
+						<div class="bar-container">
+							<div class="bar-fill" style="width: {(session.crimpGrip / 5) * 100}%"></div>
+						</div>
+						<span class="score">{session.crimpGrip}/5</span>
 					</div>
-					<span class="score">{session.crimpGrip}/5</span>
-				</div>
-                {/if}
-                {#if session.pinchGrip}
-				<div class="metric">
-					<span class="label">Pinch Grip</span>
-					<div class="bar-container">
-						<div class="bar-fill" style="width: {(session.pinchGrip / 5) * 100}%"></div>
+				{/if}
+				{#if session.pinchGrip}
+					<div class="metric">
+						<span class="label">Pinch Grip</span>
+						<div class="bar-container">
+							<div class="bar-fill" style="width: {(session.pinchGrip / 5) * 100}%"></div>
+						</div>
+						<span class="score">{session.pinchGrip}/5</span>
 					</div>
-					<span class="score">{session.pinchGrip}/5</span>
-				</div>
-                {/if}
-                {#if session.sloperGrip}
-				<div class="metric">
-					<span class="label">Sloper Grip</span>
-					<div class="bar-container">
-						<div class="bar-fill" style="width: {(session.sloperGrip / 5) * 100}%"></div>
+				{/if}
+				{#if session.sloperGrip}
+					<div class="metric">
+						<span class="label">Sloper Grip</span>
+						<div class="bar-container">
+							<div class="bar-fill" style="width: {(session.sloperGrip / 5) * 100}%"></div>
+						</div>
+						<span class="score">{session.sloperGrip}/5</span>
 					</div>
-					<span class="score">{session.sloperGrip}/5</span>
-				</div>
-                {/if}
-                {#if session.jugGrip}
-				<div class="metric">
-					<span class="label">Jug Grip</span>
-					<div class="bar-container">
-						<div class="bar-fill" style="width: {(session.jugGrip / 5) * 100}%"></div>
+				{/if}
+				{#if session.jugGrip}
+					<div class="metric">
+						<span class="label">Jug Grip</span>
+						<div class="bar-container">
+							<div class="bar-fill" style="width: {(session.jugGrip / 5) * 100}%"></div>
+						</div>
+						<span class="score">{session.jugGrip}/5</span>
 					</div>
-					<span class="score">{session.jugGrip}/5</span>
-				</div>
-                {/if}
+				{/if}
 			</div>
 
 			<!-- Climbs List -->
@@ -397,11 +403,11 @@
 				<h4>Climbs</h4>
 				<div class="climbs-container">
 					{#each session.climbs || [] as climb, i}
-						<OutdoorClimbEntry 
-							{climb} 
+						<OutdoorClimbEntry
+							{climb}
 							onDelete={() => handleClimbDelete(i)}
-                            onUpdate={(updated) => handleClimbUpdate(i, updated)}
-                            showClimbType={session.climbingType === 'Mixed'}
+							onUpdate={(updated) => handleClimbUpdate(i, updated)}
+							showClimbType={session.climbingType === 'Mixed'}
 						/>
 					{/each}
 					{#if (session.climbs || []).length === 0}
@@ -412,14 +418,15 @@
 		</div>
 	{/if}
 
-    <DeleteConfirmModal 
-        isOpen={showDeleteModal}
-        title="Delete Session"
-        message="Are you sure you want to delete this session? This action cannot be undone."
-        onConfirm={confirmDeleteSession}
-        onCancel={() => showDeleteModal = false}
-    />
+	<DeleteConfirmModal
+		isOpen={showDeleteModal}
+		title="Delete Session"
+		message="Are you sure you want to delete this session? This action cannot be undone."
+		onConfirm={confirmDeleteSession}
+		onCancel={() => (showDeleteModal = false)}
+	/>
 </div>
+
 <style>
 	.session-card {
 		background: white;
@@ -428,8 +435,10 @@
 		border: 1px solid rgba(74, 155, 155, 0.15);
 		margin-bottom: 1rem;
 		overflow: hidden;
-		transition: box-shadow 0.2s ease, border-color 0.2s ease;
-		content-visibility: auto; 
+		transition:
+			box-shadow 0.2s ease,
+			border-color 0.2s ease;
+		content-visibility: auto;
 		contain-intrinsic-size: 100px; /* Approximate height */
 	}
 
@@ -502,6 +511,15 @@
 		font-weight: 600;
 	}
 
+	.date-badge .year {
+		font-size: 0.7rem;
+		color: var(--text-secondary);
+		opacity: 0.8;
+		font-weight: 500;
+		line-height: 1;
+		margin-top: 2px;
+	}
+
 	.session-info {
 		display: flex;
 		align-items: center;
@@ -546,9 +564,9 @@
 		display: flex;
 		align-items: center;
 	}
-	
+
 	.stat::before {
-		content: "•";
+		content: '•';
 		margin-right: 0.5rem;
 		opacity: 0.5;
 	}
@@ -571,9 +589,15 @@
 		color: white;
 	}
 
-	.load-badge.finger { background: #E57373; }
-	.load-badge.shoulder { background: #64B5F6; }
-	.load-badge.forearm { background: #81C784; }
+	.load-badge.finger {
+		background: #e57373;
+	}
+	.load-badge.shoulder {
+		background: #64b5f6;
+	}
+	.load-badge.forearm {
+		background: #81c784;
+	}
 
 	.header-status {
 		display: flex;
@@ -630,29 +654,29 @@
 		font-size: 0.95rem;
 	}
 
-    .value-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.35rem;
-        margin-top: 0.1rem;
-    }
+	.value-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		margin-top: 0.1rem;
+	}
 
-    .chip {
-        background: rgba(74, 155, 155, 0.1);
-        color: var(--teal-secondary);
-        padding: 0.2rem 0.5rem;
-        border-radius: 6px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        line-height: 1.2;
-    }
+	.chip {
+		background: rgba(74, 155, 155, 0.1);
+		color: var(--teal-secondary);
+		padding: 0.2rem 0.5rem;
+		border-radius: 6px;
+		font-size: 0.8rem;
+		font-weight: 500;
+		line-height: 1.2;
+	}
 
-    .text-none {
-        color: var(--text-secondary);
-        font-style: italic;
-        font-size: 0.9rem;
-        opacity: 0.7;
-    }
+	.text-none {
+		color: var(--text-secondary);
+		font-style: italic;
+		font-size: 0.9rem;
+		opacity: 0.7;
+	}
 
 	.metrics-container {
 		display: flex;
@@ -665,128 +689,130 @@
 		border: 1px solid rgba(0, 0, 0, 0.05);
 	}
 
-    .notes-container {
-        padding: 0 1.25rem;
-        margin-top: 0.5rem;
-    }
+	.notes-container {
+		padding: 0 1.25rem;
+		margin-top: 0.5rem;
+	}
 
-    .notes-container .label {
-        display: block;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        color: var(--text-secondary);
-        letter-spacing: 0.05em;
-    }
+	.notes-container .label {
+		display: block;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		color: var(--text-secondary);
+		letter-spacing: 0.05em;
+	}
 
-    .notes-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.3rem;
-    }
+	.notes-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.3rem;
+	}
 
-    .icon-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        opacity: 0.5;
-        transition: opacity 0.2s, background 0.2s;
-        font-size: 1rem;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-    }
-    
-    .icon-btn:hover {
-        opacity: 1;
-        background: rgba(0, 0, 0, 0.05);
-    }
+	.icon-btn {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		opacity: 0.5;
+		transition:
+			opacity 0.2s,
+			background 0.2s;
+		font-size: 1rem;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+	}
 
-    .notes-text {
-        display: block;
-        width: 100%;
-        text-align: left;
-        border: none;
-        font-family: inherit;
-        font-size: 0.95rem;
-        color: var(--text-primary);
-        line-height: 1.5;
-        background: rgba(74, 155, 155, 0.05);
-        padding: 0.75rem;
-        border-radius: 8px;
-        margin: 0;
-        white-space: pre-wrap;
-    }
-    
-    .notes-placeholder {
-        display: block;
-        width: 100%;
-        text-align: left;
-        background: none;
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        font-style: italic;
-        padding: 0.5rem;
-        border: 1px dashed rgba(0,0,0,0.1);
-        border-radius: 4px;
-        margin: 0;
-    }
+	.icon-btn:hover {
+		opacity: 1;
+		background: rgba(0, 0, 0, 0.05);
+	}
 
-    .notes-editor {
-        width: 100%;
-        padding: 0.6rem;
-        border: 1px solid var(--teal-secondary);
-        border-radius: 8px;
-        font-family: inherit;
-        font-size: 0.95rem;
-        resize: vertical;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        margin-bottom: 0.5rem;
-    }
+	.notes-text {
+		display: block;
+		width: 100%;
+		text-align: left;
+		border: none;
+		font-family: inherit;
+		font-size: 0.95rem;
+		color: var(--text-primary);
+		line-height: 1.5;
+		background: rgba(74, 155, 155, 0.05);
+		padding: 0.75rem;
+		border-radius: 8px;
+		margin: 0;
+		white-space: pre-wrap;
+	}
 
-    .edit-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-    }
+	.notes-placeholder {
+		display: block;
+		width: 100%;
+		text-align: left;
+		background: none;
+		font-size: 0.9rem;
+		color: var(--text-secondary);
+		font-style: italic;
+		padding: 0.5rem;
+		border: 1px dashed rgba(0, 0, 0, 0.1);
+		border-radius: 4px;
+		margin: 0;
+	}
 
-    .cancel-btn {
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        cursor: pointer;
-        padding: 0.4rem 0.8rem;
-    }
+	.notes-editor {
+		width: 100%;
+		padding: 0.6rem;
+		border: 1px solid var(--teal-secondary);
+		border-radius: 8px;
+		font-family: inherit;
+		font-size: 0.95rem;
+		resize: vertical;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+		margin-bottom: 0.5rem;
+	}
 
-    .cancel-btn:hover {
-        color: var(--text-primary);
-    }
+	.edit-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 0.5rem;
+	}
 
-    .save-btn {
-        background: var(--teal-secondary);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 0.4rem 1rem;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+	.cancel-btn {
+		background: none;
+		border: none;
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+		cursor: pointer;
+		padding: 0.4rem 0.8rem;
+	}
 
-    .save-btn:hover:not(:disabled) {
-        background: var(--teal-primary);
-    }
-    
-    .save-btn:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
+	.cancel-btn:hover {
+		color: var(--text-primary);
+	}
+
+	.save-btn {
+		background: var(--teal-secondary);
+		color: white;
+		border: none;
+		border-radius: 6px;
+		padding: 0.4rem 1rem;
+		font-size: 0.9rem;
+		font-weight: 600;
+		cursor: pointer;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.save-btn:hover:not(:disabled) {
+		background: var(--teal-primary);
+	}
+
+	.save-btn:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
 
 	@media (max-width: 480px) {
 		.metrics-container {
