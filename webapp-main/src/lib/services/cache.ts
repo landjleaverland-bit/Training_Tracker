@@ -556,6 +556,16 @@ export function clearCache(): void {
     localStorage.removeItem(CACHE_KEY);
     localStorage.removeItem(PENDING_DELETES_KEY);
 
+    // Clear sync timestamps to force full re-fetch
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(LAST_SYNC_KEY_PREFIX)) {
+            keysToRemove.push(key);
+        }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+
     // Force reload to reset application state
     window.location.reload();
 }
