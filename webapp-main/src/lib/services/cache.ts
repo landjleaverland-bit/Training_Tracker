@@ -145,6 +145,38 @@ export function deleteSession(id: string): boolean {
 }
 
 /**
+ * Delete multiple sessions from the cache
+ * Batch operation for performance
+ */
+export function deleteSessions(ids: string[]): number {
+    const sessions = getAllSessions();
+    const idsSet = new Set(ids);
+    let deletedCount = 0;
+
+    // Identify sessions to delete that need sync handling
+    const sessionsToDelete = sessions.filter(s => idsSet.has(s.id));
+
+    // Handle sync status for each
+    sessionsToDelete.forEach(s => {
+        if (s.syncStatus === 'synced' || s.syncStatus === 'error') {
+            addPendingDelete(s.id);
+        }
+    });
+
+    // Valid IDs that were actually found
+    const foundIds = new Set(sessionsToDelete.map(s => s.id));
+    deletedCount = sessionsToDelete.length;
+
+    if (deletedCount > 0) {
+        // Filter out deleted sessions
+        const filtered = sessions.filter(s => !idsSet.has(s.id));
+        saveAllSessions(filtered);
+    }
+
+    return deletedCount;
+}
+
+/**
  * Get sessions that need to be synced (pending or error)
  */
 export function getPendingSessions(): Session[] {

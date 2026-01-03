@@ -6,8 +6,9 @@
 	import GymSessionView from '$lib/components/views/GymSessionView.svelte';
 	import FingerboardingView from '$lib/components/views/FingerboardingView.svelte';
 	import CompetitionView from '$lib/components/views/CompetitionView.svelte';
-	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-	import { clearCache } from '$lib/services/cache';
+	import DeleteDataModal from '$lib/components/common/DeleteDataModal.svelte';
+	import { getAllSessions, deleteSessions } from '$lib/services/cache';
+	import type { Session } from '$lib/types/session';
 
 	const activityTypes = [
 		{ value: 'indoor_climb', label: 'Indoor Climb', icon: '🧗' },
@@ -19,7 +20,8 @@
 
 	let selectedActivity = $state('');
 	let isSettingsOpen = $state(false);
-	let isClearCacheConfirmOpen = $state(false);
+	let isDeleteDataModalOpen = $state(false);
+	let allSessions = $state<Session[]>([]);
 
 	function openSettings() {
 		isSettingsOpen = true;
@@ -30,15 +32,41 @@
 	}
 
 	function handleClearCacheClick() {
-		// Close settings first? Or keep it open behind? 
-		// Let's close settings and open confirm
+		allSessions = getAllSessions();
 		isSettingsOpen = false;
-		isClearCacheConfirmOpen = true;
+		isDeleteDataModalOpen = true;
 	}
 
-	function confirmClearCache() {
-		clearCache();
-		// Page reloads, so no need to clean up state
+	function handleDeleteData(criteria: { activityType: string, timeRange: string }) {
+		const { activityType, timeRange } = criteria;
+		const now = new Date();
+		
+		const idsToDelete: string[] = [];
+
+		allSessions.forEach(session => {
+			if (activityType !== 'all' && session.activityType !== activityType) return;
+
+			if (timeRange !== 'all_time') {
+				const sessionDate = new Date(session.date);
+				const diffTime = now.getTime() - sessionDate.getTime();
+				const diffDays = diffTime / (1000 * 3600 * 24);
+
+				switch (timeRange) {
+					case '24_hours': if (diffDays > 1) return; break;
+					case '7_days': if (diffDays > 7) return; break;
+					case '30_days': if (diffDays > 30) return; break;
+					case '1_year': if (diffDays > 365) return; break;
+				}
+			}
+
+			idsToDelete.push(session.id);
+		});
+
+		isDeleteDataModalOpen = false;
+		if (idsToDelete.length > 0) {
+			deleteSessions(idsToDelete);
+			window.location.reload();
+		}
 	}
 </script>
 
@@ -68,23 +96,21 @@
 				<div class="setting-item">
 					<div class="setting-info">
 						<span class="setting-label">Local Data</span>
-						<span class="setting-desc">Clear all cached data on this device</span>
+						<span class="setting-desc">Remove specific sessions from this device</span>
 					</div>
 					<button class="btn-clear-cache" onclick={handleClearCacheClick}>
-						Clear Cache
+						Delete Data
 					</button>
 				</div>
 			</div>
 		</div>
 	{/if}
 
-	<DeleteConfirmModal 
-		isOpen={isClearCacheConfirmOpen}
-		title="Clear all local data?"
-		message="Are you sure you want to clear all locally cached data? This will remove all sessions stored on this device. Data already synced to the cloud will be preserved."
-		confirmKeyword="clear"
-		onConfirm={confirmClearCache}
-		onCancel={() => isClearCacheConfirmOpen = false}
+	<DeleteDataModal
+		isOpen={isDeleteDataModalOpen}
+		sessions={allSessions}
+		onClose={() => isDeleteDataModalOpen = false}
+		onDelete={handleDeleteData}
 	/>
 	
 	<div class="content-card">
