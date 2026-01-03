@@ -116,8 +116,9 @@ export async function updateIndoorSession(
 /**
  * Get all indoor sessions from the server
  */
-export async function getIndoorSessions(): Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }> {
-    return apiRequest<RemoteIndoorSession[]>('/indoor_sessions', { method: 'GET' });
+export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }> {
+    const query = since ? `?since=${encodeURIComponent(since)}` : '';
+    return apiRequest<RemoteIndoorSession[]>(`/indoor_sessions${query}`, { method: 'GET' });
 }
 
 /**
@@ -202,8 +203,9 @@ export async function updateOutdoorSession(
 /**
  * Get all outdoor sessions from the server
  */
-export async function getOutdoorSessions(): Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }> {
-    return apiRequest<RemoteOutdoorSession[]>('/outdoor_sessions', { method: 'GET' });
+export async function getOutdoorSessions(since?: string): Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }> {
+    const query = since ? `?since=${encodeURIComponent(since)}` : '';
+    return apiRequest<RemoteOutdoorSession[]>(`/outdoor_sessions${query}`, { method: 'GET' });
 }
 
 /**
@@ -265,8 +267,9 @@ export async function updateFingerboardSession(
     });
 }
 
-export async function getFingerboardSessions(): Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }> {
-    return apiRequest<RemoteFingerboardSession[]>('/fingerboard_sessions', { method: 'GET' });
+export async function getFingerboardSessions(since?: string): Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }> {
+    const query = since ? `?since=${encodeURIComponent(since)}` : '';
+    return apiRequest<RemoteFingerboardSession[]>(`/fingerboard_sessions${query}`, { method: 'GET' });
 }
 
 /**
@@ -334,8 +337,9 @@ export async function updateCompetitionSession(
     });
 }
 
-export async function getCompetitionSessions(): Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }> {
-    return apiRequest<RemoteCompetitionSession[]>('/competition_sessions', { method: 'GET' });
+export async function getCompetitionSessions(since?: string): Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }> {
+    const query = since ? `?since=${encodeURIComponent(since)}` : '';
+    return apiRequest<RemoteCompetitionSession[]>(`/competition_sessions${query}`, { method: 'GET' });
 }
 
 /**
@@ -400,8 +404,9 @@ export async function updateGymSession(
 }
 
 // Get
-export async function getGymSessions(): Promise<{ ok: boolean; data?: RemoteGymSession[]; error?: string }> {
-    return apiRequest<RemoteGymSession[]>('/gym_sessions', { method: 'GET' });
+export async function getGymSessions(since?: string): Promise<{ ok: boolean; data?: RemoteGymSession[]; error?: string }> {
+    const query = since ? `?since=${encodeURIComponent(since)}` : '';
+    return apiRequest<RemoteGymSession[]>(`/gym_sessions${query}`, { method: 'GET' });
 }
 
 // Delete

@@ -355,14 +355,60 @@ export function createGymSession(data: {
  * 
  * @param remoteSessions List of sessions fetched from the backend
  */
+/**
+ * Last Sync Time Helpers
+ */
+const LAST_SYNC_KEY_PREFIX = 'training_tracker_last_sync_';
+
+export function getLastSyncTime(activityType: string): string | null {
+    if (typeof localStorage === 'undefined') return null;
+    return localStorage.getItem(`${LAST_SYNC_KEY_PREFIX}${activityType}`);
+}
+
+export function setLastSyncTime(activityType: string, timestamp: string): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem(`${LAST_SYNC_KEY_PREFIX}${activityType}`, timestamp);
+}
+
+/**
+ * Merge remote sessions into local cache
+ * 
+ * STRATEGY: "Local-First, Server-Augmented"
+ * 1. We fetch all sessions from the server (since last sync).
+ * 2. We iterate through them and check if they exist locally by ID.
+ * 3. Match Logic:
+ *    - NOT FOUND: Add as new synced session.
+ *    - FOUND: Check timestamps.
+ *      - If Remote is NEWER than Local: Overwrite local with remote (Server Wins).
+ *      - If Local is NEWER than Remote: Keep local (Local Wins - pending sync will push it later).
+ *      - If timestamps undefined: Assume remote is newer if it matches ID.
+ * 
+ * @param remoteSessions List of sessions fetched from the backend
+ */
 export function mergeSessions(remoteSessions: Session[]): void {
     const localSessions = getAllSessions();
-    const localIds = new Set(localSessions.map(s => s.id));
+    const localMap = new Map(localSessions.map(s => [s.id, s]));
     let hasChanges = false;
 
     for (const remote of remoteSessions) {
-        if (localIds.has(remote.id)) {
-            // Exact ID match. Local wins. Skip.
+        const local = localMap.get(remote.id);
+
+        if (local) {
+            // Update Logic:
+            // If remote is newer, update local.
+            // Note: We compare updatedAt timestamps.
+            const remoteTime = remote.updatedAt ? new Date(remote.updatedAt).getTime() : 0;
+            const localTime = local.updatedAt ? new Date(local.updatedAt).getTime() : 0;
+
+            if (remoteTime > localTime) {
+                // Remote is newer, update local
+                Object.assign(local, {
+                    ...remote,
+                    syncStatus: 'synced',
+                    syncedAt: now()
+                });
+                hasChanges = true;
+            }
             continue;
         }
 
@@ -381,8 +427,8 @@ export function mergeSessions(remoteSessions: Session[]): void {
             duplicate.syncStatus = 'synced'; // It is now synced
             duplicate.syncedAt = now();
 
-            // Mark new ID as known to prevent re-adding
-            localIds.add(remote.id);
+            // Update map to prevent duplicates if list has copies
+            localMap.set(remote.id, duplicate);
             hasChanges = true;
             continue;
         }

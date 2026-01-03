@@ -5,7 +5,7 @@
 	import IndoorClimbFilters, { type FilterParams } from './indoor/IndoorClimbFilters.svelte';
 	import IndoorClimbCard from './indoor/IndoorClimbCard.svelte';
 	import IconLegend from '$lib/components/common/IconLegend.svelte';
-	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
+	import { getSessionsByType, mergeSessions, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
 	import { getIndoorSessions, type RemoteIndoorSession } from '$lib/services/api';
 	import { syncAllPending } from '$lib/services/sync';
 	import type { IndoorClimbSession } from '$lib/types/session';
@@ -52,10 +52,13 @@
 			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
 			// This ensures our local queue is empty before we pull down new data.
 			await syncAllPending();
-			const result = await getIndoorSessions();
+            
+            const lastSync = getLastSyncTime('indoor_climb');
+			const result = await getIndoorSessions(lastSync || undefined);
 			
 			if (result.ok && result.data) {
 				mergeRemoteData(result.data);
+                setLastSyncTime('indoor_climb', new Date().toISOString());
 			} else {
 				fetchError = result.error || 'Failed to fetch data';
 			}

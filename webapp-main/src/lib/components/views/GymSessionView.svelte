@@ -4,7 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import GymSessionFilters, { type FilterParams } from './gym/GymSessionFilters.svelte';
 	import GymSessionCard from './gym/GymSessionCard.svelte';
-	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
+	import { getSessionsByType, mergeSessions, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
 	import { getGymSessions, type RemoteGymSession } from '$lib/services/api';
 	import { syncAllPending } from '$lib/services/sync';
 	import type { GymSession } from '$lib/types/session';
@@ -47,10 +47,13 @@
 
 		try {
 			await syncAllPending();
-			const result = await getGymSessions();
+            
+            const lastSync = getLastSyncTime('gym_session');
+			const result = await getGymSessions(lastSync || undefined);
 			
 			if (result.ok && result.data) {
 				mergeRemoteData(result.data);
+                setLastSyncTime('gym_session', new Date().toISOString());
 			} else {
 				fetchError = result.error || 'Failed to fetch data';
 			}

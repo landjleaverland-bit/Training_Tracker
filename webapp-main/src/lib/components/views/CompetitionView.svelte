@@ -5,7 +5,9 @@
 		deleteSession,
 		updateSession,
 		markAsSynced,
-		markAsSyncError
+		markAsSyncError,
+        getLastSyncTime,
+        setLastSyncTime
 	} from '$lib/services/cache';
 	import { syncAllPending } from '$lib/services/sync';
 	import {
@@ -60,8 +62,12 @@
 			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
 			// This ensures our local queue is empty before we pull down new data.
 			await syncAllPending();
-			const result = await fetchRemote();
+            
+            const lastSync = getLastSyncTime('competition');
+			const result = await fetchRemote(lastSync || undefined);
 			if (result.ok && result.data) {
+                // Save sync time
+                setLastSyncTime('competition', new Date().toISOString());
 				// Format remote sessions
 				const formattedRemoteSessions = result.data.map((r) => ({
 					...r,

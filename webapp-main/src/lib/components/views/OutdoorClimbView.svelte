@@ -5,7 +5,7 @@
 	import OutdoorClimbFilters, { type FilterParams } from './outdoor/OutdoorClimbFilters.svelte';
 	import OutdoorClimbCard from './outdoor/OutdoorClimbCard.svelte';
 	import IconLegend from '$lib/components/common/IconLegend.svelte';
-	import { getSessionsByType, mergeSessions } from '$lib/services/cache';
+	import { getSessionsByType, mergeSessions, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
 	import { getOutdoorSessions, type RemoteOutdoorSession } from '$lib/services/api';
 	import { syncAllPending } from '$lib/services/sync';
 	import type { OutdoorClimbSession } from '$lib/types/session';
@@ -53,10 +53,13 @@
 			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
 			// This ensures our local queue is empty before we pull down new data.
 			await syncAllPending();
-			const result = await getOutdoorSessions();
+            
+            const lastSync = getLastSyncTime('outdoor_climb');
+			const result = await getOutdoorSessions(lastSync || undefined);
 			
 			if (result.ok && result.data) {
 				mergeRemoteData(result.data);
+                setLastSyncTime('outdoor_climb', new Date().toISOString());
 			} else {
 				fetchError = result.error || 'Failed to fetch data';
 			}

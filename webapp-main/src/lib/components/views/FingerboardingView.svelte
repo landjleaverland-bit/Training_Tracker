@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getFingerboardSessions, mergeSessions, deleteSession } from '$lib/services/cache';
+	import { getFingerboardSessions, mergeSessions, deleteSession, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
 	import { syncAllPending } from '$lib/services/sync';
 	import { getFingerboardSessions as fetchRemote } from '$lib/services/api';
 	import type { FingerboardSession } from '$lib/types/session';
@@ -56,8 +56,12 @@
 			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
 			// This ensures our local queue is empty before we pull down new data.
 			await syncAllPending();
-			const result = await fetchRemote();
+
+            const lastSync = getLastSyncTime('fingerboarding');
+			const result = await fetchRemote(lastSync || undefined);
 			if (result.ok && result.data) {
+                // Save new sync time
+                setLastSyncTime('fingerboarding', new Date().toISOString());
 				// Determine what's new (simple logic: ID check)
 				const formattedRemoteSessions = result.data.map((r) => ({
 					...r,
