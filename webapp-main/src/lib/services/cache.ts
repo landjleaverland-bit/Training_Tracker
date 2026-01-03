@@ -177,6 +177,25 @@ export function deleteSessions(ids: string[]): number {
 }
 
 /**
+ * Evict sessions from local cache ONLY.
+ * Does NOT queue a remote delete.
+ * Used for "Maintenace" or "Free up space" features.
+ */
+export function evictSessions(ids: string[]): number {
+    const sessions = getAllSessions();
+    const idsSet = new Set(ids);
+
+    // Filter out evicted sessions
+    const filtered = sessions.filter(s => !idsSet.has(s.id));
+
+    if (sessions.length !== filtered.length) {
+        saveAllSessions(filtered);
+    }
+
+    return sessions.length - filtered.length;
+}
+
+/**
  * Get sessions that need to be synced (pending or error)
  */
 export function getPendingSessions(): Session[] {

@@ -7,7 +7,7 @@
 	import FingerboardingView from '$lib/components/views/FingerboardingView.svelte';
 	import CompetitionView from '$lib/components/views/CompetitionView.svelte';
 	import DeleteDataModal from '$lib/components/common/DeleteDataModal.svelte';
-	import { getAllSessions, deleteSessions } from '$lib/services/cache';
+	import { getAllSessions, evictSessions } from '$lib/services/cache';
 	import type { Session } from '$lib/types/session';
 
 	const activityTypes = [
@@ -64,7 +64,8 @@
 
 		isDeleteDataModalOpen = false;
 		if (idsToDelete.length > 0) {
-			deleteSessions(idsToDelete);
+            // SAFETY FIX: Use evictSessions (local only) instead of deleteSessions (syncs delete).
+			evictSessions(idsToDelete);
 			window.location.reload();
 		}
 	}
