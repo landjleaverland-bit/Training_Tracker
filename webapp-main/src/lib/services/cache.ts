@@ -185,11 +185,24 @@ export function evictSessions(ids: string[]): number {
     const sessions = getAllSessions();
     const idsSet = new Set(ids);
 
+    // Identify which sessions (and types) are being removed
+    const sessionsToRemove = sessions.filter(s => idsSet.has(s.id));
+
     // Filter out evicted sessions
     const filtered = sessions.filter(s => !idsSet.has(s.id));
 
     if (sessions.length !== filtered.length) {
         saveAllSessions(filtered);
+
+        // CRITICAL FIX: Reset lastSyncTime for affected activity types.
+        // This forces the Incremental Sync to re-fetch this data from the server next time,
+        // preventing the "Data gone forever" appearance after local eviction.
+        if (typeof localStorage !== 'undefined') {
+            const affectedTypes = new Set(sessionsToRemove.map(s => s.activityType));
+            affectedTypes.forEach(type => {
+                localStorage.removeItem(`${LAST_SYNC_KEY_PREFIX}${type}`);
+            });
+        }
     }
 
     return sessions.length - filtered.length;
