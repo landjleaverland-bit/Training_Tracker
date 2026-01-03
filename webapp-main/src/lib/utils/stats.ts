@@ -18,7 +18,7 @@ export interface TimeSeriesPoint {
 // --- Helpers ---
 
 const isClimbing = (s: Session): boolean =>
-    s.activityType === 'indoor_climb' || s.activityType === 'outdoor_climb';
+    s.activityType === 'indoor_climb' || s.activityType === 'outdoor_climb' || s.activityType === 'competition';
 
 const isFingerboard = (s: Session): boolean =>
     s.activityType === 'fingerboarding';
@@ -60,7 +60,7 @@ export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start:
                 if (!isClimbing(s)) return false;
                 if (!dateRange) return true;
                 const d = new Date(s.date);
-                return d >= dateRange.start && d <= dateRange.end;
+                return d >= firstDate && d <= lastDate;
             })
             .map(s => s.date.split('T')[0])
     ).size;
@@ -100,7 +100,7 @@ export function getFingerboardingConsistency(sessions: Session[], dateRange?: { 
                 if (!isFingerboard(s)) return false;
                 if (!dateRange) return true;
                 const d = new Date(s.date);
-                return d >= dateRange.start && d <= dateRange.end;
+                return d >= firstDate && d <= lastDate;
             })
             .map(s => s.date.split('T')[0])
     ).size;
