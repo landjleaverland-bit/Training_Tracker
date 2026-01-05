@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { base } from '$app/paths';
+	import { logout } from '$lib/services/auth';
 
 	const tabs = [
 		{ name: 'Log Data', path: '/log', icon: '📝' },
@@ -11,6 +12,10 @@
 	function isActive(tabPath: string): boolean {
 		const currentPath = page.url.pathname.replace(base, '') || '/';
 		return currentPath === tabPath || currentPath.startsWith(tabPath + '/');
+	}
+
+	async function handleLogout() {
+		await logout();
 	}
 </script>
 
@@ -25,6 +30,11 @@
 			<span class="tab-label">{tab.name}</span>
 		</a>
 	{/each}
+	
+	<button class="tab logout-btn" onclick={handleLogout} aria-label="Sign Out">
+		<span class="tab-icon">🚪</span>
+		<span class="tab-label">Sign Out</span>
+	</button>
 </nav>
 
 <style>
@@ -58,6 +68,18 @@
 	.tab:hover {
 		background: rgba(244, 196, 48, 0.15);
 		color: #2E8B8B;
+	}
+
+	button.tab {
+		border: none;
+		cursor: pointer;
+		font-family: inherit;
+		font-size: 0.95rem; /* Ensure font size match */
+	}
+
+	.logout-btn:hover {
+		background: rgba(217, 83, 79, 0.1);
+		color: #d9534f;
 	}
 
 	.tab.active {

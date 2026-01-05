@@ -33,6 +33,9 @@ if (typeof window !== 'undefined') {
 export async function loginWithGoogle(): Promise<{ ok: boolean; error?: string }> {
     try {
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
         await signInWithPopup(auth, provider);
         return { ok: true };
     } catch (e) {
