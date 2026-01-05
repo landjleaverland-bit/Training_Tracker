@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { createFingerboardSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
-    import { createFingerboardSession as syncToServer, isOnline } from '$lib/services/api';
+	import { createFingerboardSession, isOnline } from '$lib/services/api';
     import type { FingerboardExercise, ExerciseSet } from '$lib/types/session';
 
     const exerciseOptions = ['Max hangs', 'Recruitment pulls', 'Max pick-ups'];
@@ -93,28 +92,15 @@
                 exercises: JSON.parse(JSON.stringify(exercises)) // Deep copy
             };
 
-            const localSession = createFingerboardSession(sessionData);
+            const result = await createFingerboardSession(sessionData);
 
-            if (isOnline()) {
-                const result = await syncToServer(sessionData);
-                if (result.ok) {
-                    // Update local ID to match server ID to prevent duplicates
-                    updateSessionId(localSession.id, result.id!);
-                    // Mark formatted/updated session as synced
-                    markAsSynced(result.id!);
-                    saveStatus = 'success';
-                    saveMessage = 'Session saved and synced!';
-                    localStorage.removeItem(STORAGE_KEY);
-                } else {
-                    markAsSyncError(localSession.id);
-                    saveStatus = 'success';
-                    saveMessage = 'Saved locally. Sync failed: ' + (result.error || 'Unknown error');
-                    localStorage.removeItem(STORAGE_KEY);
-                }
-            } else {
+            if (result.ok) {
                 saveStatus = 'success';
-                saveMessage = 'Saved locally. Will sync when online.';
+                saveMessage = 'Session saved!';
                 localStorage.removeItem(STORAGE_KEY);
+            } else {
+                saveStatus = 'error';
+                saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
             }
 
             window.dispatchEvent(new CustomEvent('session-saved'));

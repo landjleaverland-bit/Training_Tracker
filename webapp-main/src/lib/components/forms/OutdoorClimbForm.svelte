@@ -1,8 +1,7 @@
 <script lang="ts">
 	// Outdoor Climb form for logging outdoor climbing sessions
 	import { onMount } from 'svelte';
-	import { createOutdoorClimbSession, markAsSynced, markAsSyncError, updateSessionId } from '$lib/services/cache';
-	import { createOutdoorSession as syncToServer, isOnline } from '$lib/services/api';
+	import { createOutdoorSession, isOnline } from '$lib/services/api';
 	import { getAreas, getCrags } from '$lib/data/outdoor_locations';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
 	
@@ -258,31 +257,16 @@
                 notes
 			};
 
-			// Save to local cache first (offline-first)
-			// @ts-ignore
-			const localSession = createOutdoorClimbSession(sessionData);
+			// Save to server
+			const result = await createOutdoorSession(sessionData);
 
-			// Try to sync to server if online
-			if (isOnline()) {
-				const result = await syncToServer(sessionData);
-				if (result.ok) {
-					// Update local ID to match server ID to prevent duplicates
-					updateSessionId(localSession.id, result.id!);
-					// Mark formatted/updated session as synced
-					markAsSynced(result.id!);
-					saveStatus = 'success';
-					saveMessage = 'Session saved and synced!';
-                    localStorage.removeItem(STORAGE_KEY);
-				} else {
-					markAsSyncError(localSession.id);
-					saveStatus = 'success';
-					saveMessage = 'Saved locally. Sync failed: ' + (result.error || 'Unknown error');
-                    localStorage.removeItem(STORAGE_KEY);
-				}
-			} else {
+			if (result.ok) {
 				saveStatus = 'success';
-				saveMessage = 'Saved locally. Will sync when online.';
-                localStorage.removeItem(STORAGE_KEY);
+				saveMessage = 'Session saved!';
+				localStorage.removeItem(STORAGE_KEY);
+			} else {
+				saveStatus = 'error';
+				saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
 			}
 
 			// Dispatch custom event to notify parent of session save

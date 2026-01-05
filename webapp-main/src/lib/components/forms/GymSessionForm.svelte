@@ -3,7 +3,7 @@
     import { createEventDispatcher } from 'svelte';
     import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
     import { EXERCISE_LIBRARY, type ExerciseDefinition } from '$lib/data/exercises';
-    import { createGymSession, getGymSessions } from '$lib/services/cache';
+    import { createGymSession, getGymSessions } from '$lib/services/api';
     
     // Components
     import ExerciseCard from './gym/ExerciseCard.svelte';
@@ -26,8 +26,20 @@
     let previousSession: GymSession | null = null;
     let allSessions: GymSession[] = [];
     
+    // Load history for benchmarks
+    onMount(async () => {
+        const result = await getGymSessions();
+        if (result.ok && result.data) {
+            // @ts-ignore - map to local type
+            allSessions = result.data.map(s => ({
+                ...s,
+                activityType: 'gym_session' as const,
+                syncStatus: 'synced' as const
+            }));
+        }
+    });
+
     $: {
-        allSessions = getGymSessions();
         const blockSessions = allSessions.filter(s => 
             (s.trainingBlock || 'Strength') === trainingBlock &&
             s.date < startTime
@@ -179,24 +191,29 @@
         showRestTimer = true;
     }
 
-    function saveSession() {
+    async function saveSession() {
         if (exercises.length === 0) return;
 
-        createGymSession({
+        const result = await createGymSession({
             date: startTime,
-            name: sessionName || 'Gym Workout', // Default name logic could be better (e.g. "Legs")
+            name: sessionName || 'Gym Workout',
             bodyweight,
             trainingBlock,
             exercises
         });
 
-        showSuccess = true;
-        localStorage.removeItem(STORAGE_KEY); // Clear draft
-        
-        setTimeout(() => {
-            showSuccess = false;
-            dispatch('save');
-        }, 1500);
+        if (result.ok) {
+            showSuccess = true;
+            localStorage.removeItem(STORAGE_KEY);
+            
+            setTimeout(() => {
+                showSuccess = false;
+                dispatch('save');
+            }, 1500);
+        } else {
+            console.error('Failed to save gym session', result.error);
+            // Optionally show error state
+        }
     }
 
     function closeKeypad() {

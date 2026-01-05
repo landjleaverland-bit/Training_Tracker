@@ -5,8 +5,7 @@
 	import type { OutdoorClimbSession } from '$lib/types/session';
 	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-	import { updateOutdoorSession, isOnline } from '$lib/services/api';
-	import { deleteSession, updateSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+	import { updateOutdoorSession, deleteOutdoorSession, isOnline } from '$lib/services/api';
 
 	interface Props {
 		session: OutdoorClimbSession;
@@ -26,16 +25,26 @@
 		showDeleteModal = true;
 	}
 
-	function confirmDeleteSession() {
-		deleteSession(session.id);
-		showDeleteModal = false;
-		onDelete();
+	async function confirmDeleteSession() {
+		try {
+            const result = await deleteOutdoorSession(session.id);
+            if (result.ok) {
+                showDeleteModal = false;
+                onDelete(); // Triggers reload in parent
+            } else {
+                console.error('Failed to delete session:', result.error);
+                alert('Failed to delete session: ' + result.error);
+            }
+        } catch (e) {
+            console.error('Exception deleting session:', e);
+            alert('Error deleting session');
+        }
 	}
 
 	function handleClimbDelete(climbIndex: number) {
 		const newClimbs = [...session.climbs];
 		newClimbs.splice(climbIndex, 1);
-		updateSession(session.id, { climbs: newClimbs });
+        saveUpdates(newClimbs);
 		onDelete();
 	}
 
@@ -46,47 +55,37 @@
 	}
 
 	async function saveUpdates(newClimbs: any[]) {
-		// Optimistic update locally
-		updateSession(session.id, { climbs: newClimbs });
-
-		// Propagate changes to parent (updates the list view immediately)
+		// Update local state immediately for UI responsiveness
 		session.climbs = newClimbs;
 
-		// Sync to server
-		if (isOnline()) {
-			// We need to send the FULL session structure
-			const sessionPayload = {
-				date: session.date,
-				area: session.area,
-				crag: session.crag,
-				sector: session.sector,
-				climbingType: session.climbingType,
-				trainingTypes: session.trainingTypes || [],
-				difficulty: session.difficulty,
-				categories: session.categories || [],
-				energySystems: session.energySystems || [],
-				fingerLoad: session.fingerLoad,
-				shoulderLoad: session.shoulderLoad,
-				forearmLoad: session.forearmLoad,
-				climbs: newClimbs
-			};
+        // Propagate updates to server
+        // We need to send the FULL session structure
+        const sessionPayload = {
+            date: session.date,
+            area: session.area,
+            crag: session.crag,
+            sector: session.sector,
+            climbingType: session.climbingType,
+            trainingTypes: session.trainingTypes || [],
+            difficulty: session.difficulty,
+            categories: session.categories || [],
+            energySystems: session.energySystems || [],
+            fingerLoad: session.fingerLoad,
+            shoulderLoad: session.shoulderLoad,
+            forearmLoad: session.forearmLoad,
+            climbs: newClimbs,
+            notes: session.notes
+        };
 
-			try {
-				const result = await updateOutdoorSession(session.id, sessionPayload);
-				if (result.ok) {
-					markAsSynced(session.id);
-					session.syncStatus = 'synced';
-				} else {
-					console.error('Failed to sync update:', result.error);
-					markAsSyncError(session.id);
-					session.syncStatus = 'error';
-				}
-			} catch (e) {
-				console.error('Exception syncing update:', e);
-				markAsSyncError(session.id);
-				session.syncStatus = 'error';
-			}
-		}
+        try {
+            const result = await updateOutdoorSession(session.id, sessionPayload);
+            if (!result.ok) {
+                console.error('Failed to sync update:', result.error);
+                // Optionally revert UI or show error toast
+            }
+        } catch (e) {
+            console.error('Exception syncing update:', e);
+        }
 	}
 
 	// Calculate stats
@@ -119,46 +118,35 @@
 		if (isSavingNotes) return;
 		isSavingNotes = true;
 
-		const previousNotes = session.notes;
 		// Optimistic update
 		session.notes = tempNotes;
-		updateSession(session.id, { notes: tempNotes });
 
-		if (isOnline()) {
-			const sessionPayload = {
-				date: session.date,
-				area: session.area,
-				crag: session.crag,
-				sector: session.sector,
-				climbingType: session.climbingType,
-				trainingTypes: session.trainingTypes || [],
-				difficulty: session.difficulty,
-				categories: session.categories || [],
-				energySystems: session.energySystems || [],
-				fingerLoad: session.fingerLoad,
-				shoulderLoad: session.shoulderLoad,
-				forearmLoad: session.forearmLoad,
-				climbs: session.climbs,
-				notes: tempNotes // The updated notes
-			};
+        const sessionPayload = {
+            date: session.date,
+            area: session.area,
+            crag: session.crag,
+            sector: session.sector,
+            climbingType: session.climbingType,
+            trainingTypes: session.trainingTypes || [],
+            difficulty: session.difficulty,
+            categories: session.categories || [],
+            energySystems: session.energySystems || [],
+            fingerLoad: session.fingerLoad,
+            shoulderLoad: session.shoulderLoad,
+            forearmLoad: session.forearmLoad,
+            climbs: session.climbs,
+            notes: tempNotes // The updated notes
+        };
 
-			try {
-				const result = await updateOutdoorSession(session.id, sessionPayload);
-				if (result.ok) {
-					markAsSynced(session.id);
-					session.syncStatus = 'synced';
-				} else {
-					console.error('Failed to sync note update:', result.error);
-					markAsSyncError(session.id);
-					session.syncStatus = 'error';
-				}
-			} catch (e) {
-				console.error('Exception syncing note update:', e);
-				markAsSyncError(session.id);
-				session.syncStatus = 'error';
-			}
-		}
-
+        try {
+            const result = await updateOutdoorSession(session.id, sessionPayload);
+            if (!result.ok) {
+                console.error('Failed to sync note update:', result.error);
+            }
+        } catch (e) {
+            console.error('Exception syncing note update:', e);
+        }
+        
 		isEditingNotes = false;
 		isSavingNotes = false;
 	}

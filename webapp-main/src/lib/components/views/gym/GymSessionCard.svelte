@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { EXERCISE_LIBRARY } from '$lib/data/exercises';
 	import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
-	import { deleteSession } from '$lib/services/cache';
+	import { deleteGymSession } from '$lib/services/api';
 	import { slide } from 'svelte/transition';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 
@@ -23,10 +23,20 @@
 		showDeleteModal = true;
 	}
 
-	function confirmDeleteSession() {
-		deleteSession(session.id);
-		showDeleteModal = false;
-		onDelete();
+	async function confirmDeleteSession() {
+        try {
+            const result = await deleteGymSession(session.id);
+            if (result.ok) {
+                showDeleteModal = false;
+                onDelete();
+            } else {
+                console.error('Failed to delete session:', result.error);
+                alert('Failed to delete session');
+            }
+        } catch (e) {
+            console.error('Exception deleting session:', e);
+			alert('Error deleting session');
+        }
 	}
 
 	function getExerciseDef(name: string) {

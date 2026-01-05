@@ -4,9 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import GymSessionFilters, { type FilterParams } from './gym/GymSessionFilters.svelte';
 	import GymSessionCard from './gym/GymSessionCard.svelte';
-	import { getSessionsByType, mergeSessions, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
-	import { getGymSessions, type RemoteGymSession } from '$lib/services/api';
-	import { syncAllPending } from '$lib/services/sync';
+	import { getGymSessions } from '$lib/services/api';
 	import type { GymSession } from '$lib/types/session';
     import { downloadCSV } from '$lib/utils/export';
 
@@ -29,31 +27,27 @@
 	let visibleCount = $state(20);
 	const ITEMS_PER_PAGE = 20;
 
-	// Load initial local data
+	// Load initial data
+	// Load initial data
 	onMount(() => {
-		loadLocalData();
+		handleFetchData();
 	});
-
-	function loadLocalData() {
-		const localData = getSessionsByType('gym_session') as GymSession[];
-		// Sort by date desc
-		sessions = localData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		applyFilters();
-	}
 
 	async function handleFetchData() {
 		isLoading = true;
 		fetchError = '';
 
 		try {
-			await syncAllPending();
-            
-            const lastSync = getLastSyncTime('gym_session');
-			const result = await getGymSessions(lastSync || undefined);
+			const result = await getGymSessions();
 			
 			if (result.ok && result.data) {
-				mergeRemoteData(result.data);
-                setLastSyncTime('gym_session', new Date().toISOString());
+				sessions = result.data.map(remote => ({
+                    ...remote,
+                    activityType: 'gym_session'
+                })) as GymSession[];
+
+		        sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+				applyFilters();
 			} else {
 				fetchError = result.error || 'Failed to fetch data';
 			}
@@ -62,23 +56,6 @@
 		} finally {
 			isLoading = false;
 		}
-	}
-
-	function mergeRemoteData(remoteData: RemoteGymSession[]) {
-		const formattedRemoteSessions: GymSession[] = remoteData.map(remote => ({
-			...remote,
-			activityType: 'gym_session',
-			syncStatus: 'synced',
-			syncedAt: new Date().toISOString(),
-			createdAt: remote.createdAt || new Date().toISOString(),
-			updatedAt: remote.updatedAt || new Date().toISOString()
-		}));
-
-		mergeSessions(formattedRemoteSessions);
-
-		const localData = getSessionsByType('gym_session') as GymSession[];
-		sessions = localData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		applyFilters();
 	}
 
 	function handleFilterChange(params: FilterParams) {
@@ -139,7 +116,7 @@
 
 	<div class="sessions-list">
 		{#each filteredSessions.slice(0, visibleCount) as session (session.id)}
-			<GymSessionCard {session} onDelete={loadLocalData} />
+			<GymSessionCard {session} onDelete={handleFetchData} />
 		{/each}
 		
 		{#if filteredSessions.length === 0}

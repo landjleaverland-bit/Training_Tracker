@@ -80,6 +80,8 @@ export interface IndoorSessionPayload {
 
 export interface RemoteIndoorSession extends IndoorSessionPayload {
     id: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function createIndoorSession(session: IndoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -112,9 +114,8 @@ export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; 
     try {
         let q = query(collection(db, 'Indoor_Climbs'), orderBy('date', 'desc'));
 
-        // Note: 'since' filtering logic might need refined index if combining with other filters.
-        // For now, client-side filtering might be safer if dataset is small, or just simple date filtering.
-        // Existing app used URL params. Here we'll just fetch all or limit if needed.
+        // Client-side filtering optimization: 
+        // If dataset becomes large, rely on 'since' timestamp to fetch only deltas.
         if (since) {
             q = query(collection(db, 'Indoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
@@ -167,6 +168,8 @@ export interface OutdoorSessionPayload {
 
 export interface RemoteOutdoorSession extends OutdoorSessionPayload {
     id: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function createOutdoorSession(session: OutdoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -240,8 +243,8 @@ export interface FingerboardSessionPayload {
 
 export interface RemoteFingerboardSession extends FingerboardSessionPayload {
     id: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function createFingerboardSession(session: FingerboardSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -320,8 +323,8 @@ export interface CompetitionSessionPayload {
 
 export interface RemoteCompetitionSession extends CompetitionSessionPayload {
     id: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function createCompetitionSession(session: CompetitionSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -381,6 +384,7 @@ export interface GymSessionPayload {
     date: string;
     name: string;
     bodyweight?: number;
+    trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
     exercises: Array<{
         id: string;
         name: string;
@@ -399,22 +403,12 @@ export interface GymSessionPayload {
 
 export interface RemoteGymSession extends GymSessionPayload {
     id: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function createGymSession(session: GymSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
-        // Checking for collection name consistency - earlier docs said "gym_sessions" in some places and "Gym_Sessions" or "GymSessions" in others?
-        // Let's assume 'Gym_Sessions' or similar if sticking to convention.
-        // Wait, codebase_search #6 says "functions... routing for indoor/outdoor/fingerboard/competition" but didn't explicitly list Gym_Sessions collection in the overview snippet.
-        // However, `function.go` usually likely has it.
-        // Let's use 'Gym_Sessions' to be safe or matches typically PascalCase in this DB.
-        // ACTUALLY, checking the `handlers.go` reference in Step 6: "collections: `Indoor_Climbs`, `Outdoor_Climbs`, `Fingerboarding`, `Competitions`".
-        // It DOES NOT mention Gym Sessions collection name.
-        // I will guess 'Gym_Sessions' but I should probably have checked. 
-        // Logic: Indoor_Climbs (Pascal + Underscore), Fingerboarding (Pascal).
-        // Let's stick with 'Gym_Sessions'.
         const docRef = await addDoc(collection(db, 'Gym_Sessions'), {
             ...session,
             createdAt: Timestamp.now(),

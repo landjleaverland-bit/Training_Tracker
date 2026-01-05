@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+    import { base } from '$app/paths';
 
 	let needRefresh = $state(false);
 	let offlineReady = $state(false);
@@ -27,9 +28,20 @@
 
 	onMount(() => {
 		if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
-			// Register the SW
-			navigator.serviceWorker.register('/Training_Tracker/service-worker.js', {
-				scope: '/Training_Tracker/'
+            // In DEVELOPMENT, unregister any existing service workers to avoid conflicts/errors
+            if (import.meta.env.DEV) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    for (const registration of registrations) {
+                        registration.unregister();
+                        console.log('Unregistered Service Worker in Dev mode');
+                    }
+                });
+                return; // Stop here
+            }
+
+			// Register the SW (Production only)
+			navigator.serviceWorker.register(`${base}/service-worker.js`, {
+				scope: `${base}/`
 			}).then(reg => {
 				registration = reg;
 

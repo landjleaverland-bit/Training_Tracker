@@ -1,6 +1,12 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { getAllSessions } from '$lib/services/cache';
+    import { 
+        getIndoorSessions, 
+        getOutdoorSessions, 
+        getGymSessions, 
+        getFingerboardSessions, 
+        getCompetitionSessions 
+    } from '$lib/services/api';
     import type { Session } from '$lib/types/session';
     import { 
         getClimbingVsRestStats, 
@@ -37,8 +43,28 @@
     let timeRange = $state<'week' | 'month' | 'year' | 'specific_week' | 'specific_month' | 'specific_year' | 'all'>('all');
     let selectedDateValue = $state('');
 
-    onMount(() => {
-        sessions = getAllSessions();
+    onMount(async () => {
+        const [indoor, outdoor, gym, finger, comp] = await Promise.all([
+            getIndoorSessions(),
+            getOutdoorSessions(),
+            getGymSessions(),
+            getFingerboardSessions(),
+            getCompetitionSessions()
+        ]);
+
+        const all = [
+            ...(indoor.data || []),
+            ...(outdoor.data || []),
+            ...(gym.data || []),
+            ...(finger.data || []),
+            ...(comp.data || [])
+        ];
+        
+        // Sort by date desc
+        all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        
+        // Cast to Session[] if needed, assuming remote types satisfy Session union
+        sessions = all as Session[];
     });
 
     // Available years for dropdown

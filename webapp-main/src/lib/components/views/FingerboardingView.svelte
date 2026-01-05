@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { getFingerboardSessions, mergeSessions, deleteSession, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
-	import { syncAllPending } from '$lib/services/sync';
-	import { getFingerboardSessions as fetchRemote } from '$lib/services/api';
+	import { getFingerboardSessions, deleteFingerboardSession } from '$lib/services/api';
 	import type { FingerboardSession } from '$lib/types/session';
 	import { slide } from 'svelte/transition';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
@@ -32,58 +30,41 @@
 		showDeleteModal = true;
 	}
 
-	function confirmDeleteSession() {
+	async function confirmDeleteSession() {
 		if (selectedSessionId) {
-			deleteSession(selectedSessionId);
-			selectedSessionId = null;
-			showDeleteModal = false;
-			// Reload local data
-			sessions = getFingerboardSessions().sort(
-				(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-			);
+            try {
+                const result = await deleteFingerboardSession(selectedSessionId);
+                if (result.ok) {
+                    selectedSessionId = null;
+                    showDeleteModal = false;
+                    // Reload data
+                    loadSessions();
+                } else {
+                    console.error('Failed to delete session:', result.error);
+                    alert('Failed to delete session');
+                }
+            } catch (e) {
+                console.error('Exception deleting session:', e);
+            }
 		}
 	}
 
 	async function loadSessions() {
 		loading = true;
-		// Load local first
-		sessions = getFingerboardSessions().sort(
-			(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-		);
-
-		// Then try remote sync
 		try {
-			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
-			// This ensures our local queue is empty before we pull down new data.
-			await syncAllPending();
-
-            const lastSync = getLastSyncTime('fingerboarding');
-			const result = await fetchRemote(lastSync || undefined);
+			const result = await getFingerboardSessions();
 			if (result.ok && result.data) {
-                // Save new sync time
-                setLastSyncTime('fingerboarding', new Date().toISOString());
-				// Determine what's new (simple logic: ID check)
-				const formattedRemoteSessions = result.data.map((r) => ({
+				// Format remote sessions
+				sessions = result.data.map((r) => ({
 					...r,
 					activityType: 'fingerboarding' as const,
-
-					// Use date if created/updated At are missing or correct case
-					createdAt: r.createdAt || new Date().toISOString(),
-					updatedAt: r.updatedAt || new Date().toISOString(),
-					syncStatus: 'synced' as const
-				}));
-
-				// Persist
-				mergeSessions(formattedRemoteSessions);
-
-				// Update local state display
-				// Reload local state to reflect merge & ID updates
-				sessions = getFingerboardSessions().sort(
+                    syncStatus: 'synced' as const
+				})).sort(
 					(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 				);
 			}
 		} catch (e) {
-			console.error('Failed to sync', e);
+			console.error('Failed to fetch sessions', e);
 		} finally {
 			loading = false;
 		}

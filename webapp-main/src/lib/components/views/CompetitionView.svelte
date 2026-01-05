@@ -1,19 +1,9 @@
 <script lang="ts">
 	import {
-		getCompetitionSessions,
-		mergeSessions,
-		deleteSession,
-		updateSession,
-		markAsSynced,
-		markAsSyncError,
-        getLastSyncTime,
-        setLastSyncTime
-	} from '$lib/services/cache';
-	import { syncAllPending } from '$lib/services/sync';
-	import {
-		getCompetitionSessions as fetchRemote,
+        getCompetitionSessions,
+        deleteCompetitionSession,
 		updateCompetitionSession,
-		isOnline
+        isOnline
 	} from '$lib/services/api';
 	import type { CompetitionSession } from '$lib/types/session';
 	import { slide } from 'svelte/transition';
@@ -36,15 +26,21 @@
 		showDeleteModal = true;
 	}
 
-	function confirmDeleteSession() {
+	async function confirmDeleteSession() {
 		if (selectedSessionId) {
-			deleteSession(selectedSessionId);
-			selectedSessionId = null;
-			showDeleteModal = false;
-			// Reload local data
-			sessions = getCompetitionSessions().sort(
-				(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-			);
+            try {
+                const result = await deleteCompetitionSession(selectedSessionId);
+                if (result.ok) {
+                    selectedSessionId = null;
+                    showDeleteModal = false;
+                    loadSessions();
+                } else {
+                     console.error('Failed to delete session:', result.error);
+                     alert('Failed to delete session');
+                }
+            } catch (e) {
+                 console.error('Exception deleting session:', e);
+            }
 		}
 	}
 
@@ -52,26 +48,14 @@
 		loading = true;
 		visibleCount = ITEMS_PER_PAGE;
 
-		// Load local first
-		sessions = getCompetitionSessions().sort(
-			(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-		);
-
-		// Then try remote sync
 		try {
-			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
-			// This ensures our local queue is empty before we pull down new data.
-			await syncAllPending();
-            
-            const lastSync = getLastSyncTime('competition');
-			const result = await fetchRemote(lastSync || undefined);
+			const result = await getCompetitionSessions();
 			if (result.ok && result.data) {
-                // Save sync time
-                setLastSyncTime('competition', new Date().toISOString());
 				// Format remote sessions
-				const formattedRemoteSessions = result.data.map((r) => ({
+				sessions = result.data.map((r) => ({
 					...r,
 					activityType: 'competition' as const,
+                    syncStatus: 'synced' as const,
 					type: r.type as 'Bouldering' | 'Lead' | 'Speed',
 					rounds: r.rounds.map((round) => ({
 						...round,
@@ -80,24 +64,12 @@
 							status: c.status as 'Flash' | 'Top' | 'Zone' | 'Attempt'
 						}))
 					})),
-					// Fallback fields
-					createdAt: r.createdAt || new Date().toISOString(),
-					updatedAt: r.updatedAt || new Date().toISOString(),
-
-					syncStatus: 'synced' as const
-				}));
-
-				// Persist
-				mergeSessions(formattedRemoteSessions);
-
-				// Update local state by reloading from cache (source of truth)
-				// This ensures we catch any ID swaps performed by mergeSessions
-				sessions = getCompetitionSessions().sort(
+				})).sort(
 					(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 				);
 			}
 		} catch (e) {
-			console.error('Failed to sync', e);
+			console.error('Failed to fetch sessions', e);
 		} finally {
 			loading = false;
 		}
@@ -171,41 +143,30 @@
 		savingNotes = new Set(savingNotes);
 
 		// Optimistic update
-		updateSession(session.id, { notes: newNotes });
-		// Update local list object for immediate UI reflection (though getCompetitionSessions should handle this on reload, standard reactivity might need help)
 		const s = sessions.find((s) => s.id === session.id);
 		if (s) s.notes = newNotes;
 
-		if (isOnline()) {
-			// Construct payload
-			const sessionPayload = {
-				date: session.date,
-				venue: session.venue,
-				customVenue: session.customVenue,
-				type: session.type,
-				fingerLoad: session.fingerLoad,
-				shoulderLoad: session.shoulderLoad,
-				forearmLoad: session.forearmLoad,
-				rounds: session.rounds,
-				notes: newNotes
-			};
+        // Construct payload
+        const sessionPayload = {
+            date: session.date,
+            venue: session.venue,
+            customVenue: session.customVenue,
+            type: session.type,
+            fingerLoad: session.fingerLoad,
+            shoulderLoad: session.shoulderLoad,
+            forearmLoad: session.forearmLoad,
+            rounds: session.rounds,
+            notes: newNotes
+        };
 
-			try {
-				const result = await updateCompetitionSession(session.id, sessionPayload);
-				if (result.ok) {
-					markAsSynced(session.id);
-					if (s) s.syncStatus = 'synced';
-				} else {
-					console.error('Failed to sync note update:', result.error);
-					markAsSyncError(session.id);
-					if (s) s.syncStatus = 'error';
-				}
-			} catch (e) {
-				console.error('Exception syncing note update:', e);
-				markAsSyncError(session.id);
-				if (s) s.syncStatus = 'error';
-			}
-		}
+        try {
+            const result = await updateCompetitionSession(session.id, sessionPayload);
+            if (!result.ok) {
+                console.error('Failed to sync note update:', result.error);
+            }
+        } catch (e) {
+            console.error('Exception syncing note update:', e);
+        }
 
 		editingNotes.delete(session.id);
 		editingNotes = new Set(editingNotes);

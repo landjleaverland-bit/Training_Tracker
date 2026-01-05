@@ -10,5 +10,5 @@ if (!firebaseConfig || !firebaseConfig.apiKey) {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-export const db = getFirestore(app);
+export const db = getFirestore(app, 'climbing-tracker-db');
 export const auth = getAuth(app);

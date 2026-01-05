@@ -5,9 +5,7 @@
 	import OutdoorClimbFilters, { type FilterParams } from './outdoor/OutdoorClimbFilters.svelte';
 	import OutdoorClimbCard from './outdoor/OutdoorClimbCard.svelte';
 	import IconLegend from '$lib/components/common/IconLegend.svelte';
-	import { getSessionsByType, mergeSessions, getLastSyncTime, setLastSyncTime } from '$lib/services/cache';
-	import { getOutdoorSessions, type RemoteOutdoorSession } from '$lib/services/api';
-	import { syncAllPending } from '$lib/services/sync';
+	import { getOutdoorSessions } from '$lib/services/api';
 	import type { OutdoorClimbSession } from '$lib/types/session';
     import { downloadCSV } from '$lib/utils/export';
 
@@ -33,33 +31,26 @@
 	let visibleCount = $state(20);
 	const ITEMS_PER_PAGE = 20;
 
-	// Load initial local data
+	// Load initial data
 	onMount(() => {
-		loadLocalData();
+		handleFetchData();
 	});
-
-	function loadLocalData() {
-		const localData = getSessionsByType('outdoor_climb') as OutdoorClimbSession[];
-		// Sort by date desc
-		sessions = localData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		applyFilters();
-	}
 
 	async function handleFetchData() {
 		isLoading = true;
 		fetchError = '';
 
 		try {
-			// Sync ALL pending local changes (deletes, creates, updates) to the server first.
-			// This ensures our local queue is empty before we pull down new data.
-			await syncAllPending();
-            
-            const lastSync = getLastSyncTime('outdoor_climb');
-			const result = await getOutdoorSessions(lastSync || undefined);
+			const result = await getOutdoorSessions();
 			
 			if (result.ok && result.data) {
-				mergeRemoteData(result.data);
-                setLastSyncTime('outdoor_climb', new Date().toISOString());
+				sessions = result.data.map(remote => ({
+                    ...remote,
+                    activityType: 'outdoor_climb'
+                })) as OutdoorClimbSession[];
+
+		        sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+				applyFilters();
 			} else {
 				fetchError = result.error || 'Failed to fetch data';
 			}
@@ -68,31 +59,6 @@
 		} finally {
 			isLoading = false;
 		}
-	}
-
-	function mergeRemoteData(remoteData: RemoteOutdoorSession[]) {
-		// Convert remote sessions to OutdoorClimbSession format
-		const formattedRemoteSessions: OutdoorClimbSession[] = remoteData.map(remote => ({
-			...remote,
-			activityType: 'outdoor_climb',
-			createdAt: new Date().toISOString(), // Fallback
-			updatedAt: new Date().toISOString(), // Fallback
-			syncStatus: 'synced', // It came from remote, so it's synced
-			syncedAt: new Date().toISOString(),
-            openGrip: 0,
-            crimpGrip: 0,
-            pinchGrip: 0,
-            sloperGrip: 0,
-            jugGrip: 0
-		}));
-
-		// Persist to local storage
-		mergeSessions(formattedRemoteSessions);
-
-		// Reload from cache (source of truth)
-		const localData = getSessionsByType('outdoor_climb') as OutdoorClimbSession[];
-		sessions = localData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		applyFilters();
 	}
 
 	function handleFilterChange(params: FilterParams) {
@@ -210,7 +176,7 @@
 
 	<div class="sessions-list">
 		{#each filteredSessions.slice(0, visibleCount) as session (session.id)}
-			<OutdoorClimbCard {session} onDelete={loadLocalData} />
+			<OutdoorClimbCard {session} onDelete={handleFetchData} />
 		{/each}
 		
 		{#if filteredSessions.length === 0}

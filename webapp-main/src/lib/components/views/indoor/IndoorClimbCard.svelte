@@ -5,8 +5,7 @@
 	import type { IndoorClimbSession } from '$lib/types/session';
 	import IndoorClimbEntry from './IndoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-	import { updateIndoorSession, isOnline } from '$lib/services/api';
-	import { deleteSession, updateSession, markAsSynced, markAsSyncError } from '$lib/services/cache';
+	import { updateIndoorSession, deleteIndoorSession, isOnline } from '$lib/services/api';
 
 	interface Props {
 		session: IndoorClimbSession;
@@ -26,16 +25,26 @@
 		showDeleteModal = true;
 	}
 
-	function confirmDeleteSession() {
-		deleteSession(session.id);
-		showDeleteModal = false;
-		onDelete();
+	async function confirmDeleteSession() {
+		try {
+            const result = await deleteIndoorSession(session.id);
+            if (result.ok) {
+                showDeleteModal = false;
+                onDelete();
+            } else {
+                console.error('Failed to delete session:', result.error);
+                alert('Failed to delete session: ' + result.error);
+            }
+        } catch (e) {
+            console.error('Exception deleting session:', e);
+            alert('Error deleting session');
+        }
 	}
 
 	function handleClimbDelete(climbIndex: number) {
 		const newClimbs = [...session.climbs];
 		newClimbs.splice(climbIndex, 1);
-		updateSession(session.id, { climbs: newClimbs });
+        saveUpdates(newClimbs);
 		onDelete();
 	}
 
@@ -46,53 +55,40 @@
 	}
 
 	async function saveUpdates(newClimbs: any[]) {
-		// Optimistic update locally
-		updateSession(session.id, { climbs: newClimbs });
-
-		// Propagate changes to parent (updates the list view immediately)
+		// Update local state immediately
 		session.climbs = newClimbs;
 
-		// Sync to server
-		if (isOnline()) {
-			// We need to send the FULL session structure required by the API
-			const sessionPayload = {
-				date: session.date,
-				location: session.location,
-				customLocation: session.customLocation,
-				climbingType: session.climbingType,
-				trainingTypes: session.trainingTypes || [],
-				difficulty: session.difficulty,
-				categories: session.categories || [],
-				energySystems: session.energySystems || [],
-				wallAngles: session.wallAngles || [],
+        // Propagate to server
+        const sessionPayload = {
+            date: session.date,
+            location: session.location,
+            customLocation: session.customLocation,
+            climbingType: session.climbingType,
+            trainingTypes: session.trainingTypes || [],
+            difficulty: session.difficulty,
+            categories: session.categories || [],
+            energySystems: session.energySystems || [],
+            wallAngles: session.wallAngles || [],
 
-				fingerLoad: session.fingerLoad,
-				shoulderLoad: session.shoulderLoad,
-				forearmLoad: session.forearmLoad,
-				openGrip: session.openGrip,
-				crimpGrip: session.crimpGrip,
-				pinchGrip: session.pinchGrip,
-				sloperGrip: session.sloperGrip,
-				jugGrip: session.jugGrip,
-				climbs: newClimbs
-			};
+            fingerLoad: session.fingerLoad,
+            shoulderLoad: session.shoulderLoad,
+            forearmLoad: session.forearmLoad,
+            openGrip: session.openGrip,
+            crimpGrip: session.crimpGrip,
+            pinchGrip: session.pinchGrip,
+            sloperGrip: session.sloperGrip,
+            jugGrip: session.jugGrip,
+            climbs: newClimbs
+        };
 
-			try {
-				const result = await updateIndoorSession(session.id, sessionPayload);
-				if (result.ok) {
-					markAsSynced(session.id);
-					session.syncStatus = 'synced';
-				} else {
-					console.error('Failed to sync update:', result.error);
-					markAsSyncError(session.id);
-					session.syncStatus = 'error';
-				}
-			} catch (e) {
-				console.error('Exception syncing update:', e);
-				markAsSyncError(session.id);
-				session.syncStatus = 'error';
-			}
-		}
+        try {
+            const result = await updateIndoorSession(session.id, sessionPayload);
+            if (!result.ok) {
+                console.error('Failed to sync update:', result.error);
+            }
+        } catch (e) {
+            console.error('Exception syncing update:', e);
+        }
 	}
 
 	// Calculate stats
@@ -124,50 +120,39 @@
 		if (isSavingNotes) return;
 		isSavingNotes = true;
 
-		const previousNotes = session.notes;
 		// Optimistic update
 		session.notes = tempNotes;
-		updateSession(session.id, { notes: tempNotes });
 
-		if (isOnline()) {
-			const sessionPayload = {
-				date: session.date,
-				location: session.location,
-				customLocation: session.customLocation,
-				climbingType: session.climbingType,
-				trainingTypes: session.trainingTypes || [],
-				difficulty: session.difficulty,
-				categories: session.categories || [],
-				energySystems: session.energySystems || [],
-				wallAngles: session.wallAngles || [],
-				fingerLoad: session.fingerLoad,
-				shoulderLoad: session.shoulderLoad,
-				forearmLoad: session.forearmLoad,
-				openGrip: session.openGrip,
-				crimpGrip: session.crimpGrip,
-				pinchGrip: session.pinchGrip,
-				sloperGrip: session.sloperGrip,
-				jugGrip: session.jugGrip,
-				climbs: session.climbs,
-				notes: tempNotes // The updated notes
-			};
+        const sessionPayload = {
+            date: session.date,
+            location: session.location,
+            customLocation: session.customLocation,
+            climbingType: session.climbingType,
+            trainingTypes: session.trainingTypes || [],
+            difficulty: session.difficulty,
+            categories: session.categories || [],
+            energySystems: session.energySystems || [],
+            wallAngles: session.wallAngles || [],
+            fingerLoad: session.fingerLoad,
+            shoulderLoad: session.shoulderLoad,
+            forearmLoad: session.forearmLoad,
+            openGrip: session.openGrip,
+            crimpGrip: session.crimpGrip,
+            pinchGrip: session.pinchGrip,
+            sloperGrip: session.sloperGrip,
+            jugGrip: session.jugGrip,
+            climbs: session.climbs,
+            notes: tempNotes // The updated notes
+        };
 
-			try {
-				const result = await updateIndoorSession(session.id, sessionPayload);
-				if (result.ok) {
-					markAsSynced(session.id);
-					session.syncStatus = 'synced';
-				} else {
-					console.error('Failed to sync note update:', result.error);
-					markAsSyncError(session.id);
-					session.syncStatus = 'error';
-				}
-			} catch (e) {
-				console.error('Exception syncing note update:', e);
-				markAsSyncError(session.id);
-				session.syncStatus = 'error';
-			}
-		}
+        try {
+            const result = await updateIndoorSession(session.id, sessionPayload);
+            if (!result.ok) {
+                console.error('Failed to sync note update:', result.error);
+            }
+        } catch (e) {
+            console.error('Exception syncing note update:', e);
+        }
 
 		isEditingNotes = false;
 		isSavingNotes = false;
