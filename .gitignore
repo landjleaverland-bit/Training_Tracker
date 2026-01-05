@@ -26,3 +26,4 @@ npm-debug.log*
 
 # Lock files (optional - uncomment if you want to ignore)
 # package-lock.json
+webapp-main/src/lib/services/firebaseConfig.ts

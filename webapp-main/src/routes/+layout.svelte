@@ -3,7 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import TabBar from '$lib/components/TabBar.svelte';
 	import Login from '$lib/components/Login.svelte';
-	import { isAuthenticated } from '$lib/services/auth';
+	import { isAuthenticated, isAuthLoading } from '$lib/services/auth';
 	import ReloadPrompt from '$lib/components/common/ReloadPrompt.svelte';
 	import { onMount } from 'svelte';
 
@@ -11,21 +11,30 @@
 
 	// Auth state
 	let isLoggedIn = $state(false);
-	let isChecking = $state(true);
-
-	onMount(() => {
-		isLoggedIn = isAuthenticated();
-		isChecking = false;
-	});
+    let isLoading = $state(true);
+	
+    // Subscribe to auth stores
+    $effect(() => {
+        const unsubscribeAuth = isAuthenticated.subscribe(value => {
+            isLoggedIn = value;
+        });
+        const unsubscribeLoading = isAuthLoading.subscribe(value => {
+            isLoading = value;
+        });
+        return () => {
+            unsubscribeAuth();
+            unsubscribeLoading();
+        };
+    });
 
 	function handleLoginSuccess() {
-		isLoggedIn = true;
+		// No manual state update needed, store handles it
 	}
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-{#if isChecking}
+{#if isLoading}
 	<!-- Loading state while checking auth -->
 	<div class="loading-container">
 		<p>Loading...</p>

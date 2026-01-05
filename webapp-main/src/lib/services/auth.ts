@@ -1,63 +1,62 @@
 /**
- * Authentication service
- * Uses client-side hash comparison for login
- * Stores plain password in localStorage for API calls
+ * Authentication service using Firebase Auth
+ * Replaces the old "shared secret" hash system
  */
 
-const AUTH_KEY = 'training_tracker_auth';
+import { auth } from './firebase';
+import {
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut as firebaseSignOut,
+    onAuthStateChanged,
+    type User
+} from 'firebase/auth';
+import { writable } from 'svelte/store';
 
-// Expected password hash (SHA-256)
-// Generate with: ./scripts/generate-password-hash.sh
-const EXPECTED_PASSWORD_HASH = 'c2fb788c7deedbeaa296e424d4c2921b871a4f6cb4cf393c1c1105653ab399b4';
+// Svelte store for user state
+export const user = writable<User | null>(null);
+export const isAuthenticated = writable<boolean>(false);
+export const isAuthLoading = writable<boolean>(true);
 
-/**
- * Hash a password using SHA-256
- */
-async function hashPassword(password: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+// Initialize auth state listener
+if (typeof window !== 'undefined') {
+    onAuthStateChanged(auth, (u) => {
+        user.set(u);
+        isAuthenticated.set(!!u);
+        isAuthLoading.set(false);
+    });
 }
 
 /**
- * Verify password by comparing hashes
- * Returns true if password is correct
+ * Sign in with Google
  */
-export async function verifyPassword(password: string): Promise<boolean> {
-    const inputHash = await hashPassword(password);
-    return inputHash === EXPECTED_PASSWORD_HASH;
+export async function loginWithGoogle(): Promise<{ ok: boolean; error?: string }> {
+    try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        return { ok: true };
+    } catch (e) {
+        return {
+            ok: false,
+            error: e instanceof Error ? e.message : 'Unknown auth error'
+        };
+    }
 }
 
 /**
- * Store password after successful login
+ * Sign out
  */
-export function login(password: string): void {
-    if (typeof localStorage === 'undefined') return;
-    localStorage.setItem(AUTH_KEY, password);
+export async function logout(): Promise<void> {
+    try {
+        await firebaseSignOut(auth);
+    } catch (e) {
+        console.error('Logout error:', e);
+    }
 }
 
 /**
- * Check if user is authenticated (has stored password)
+ * Helper to get current user ID (for security rules if needed)
  */
-export function isAuthenticated(): boolean {
-    if (typeof localStorage === 'undefined') return false;
-    return localStorage.getItem(AUTH_KEY) !== null;
-}
-
-/**
- * Get stored password for API requests
- */
-export function getApiKey(): string | null {
-    if (typeof localStorage === 'undefined') return null;
-    return localStorage.getItem(AUTH_KEY);
-}
-
-/**
- * Clear stored password (logout)
- */
-export function logout(): void {
-    if (typeof localStorage === 'undefined') return;
-    localStorage.removeItem(AUTH_KEY);
+export function getCurrentUserId(): string | null {
+    return auth.currentUser?.uid || null;
 }
