@@ -62,6 +62,18 @@
 						});
 					}
 				});
+
+                // Check for updates periodically (every hour)
+                setInterval(() => {
+                    reg.update();
+                }, 60 * 60 * 1000);
+
+                // Check for updates when the app returns to foreground
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        reg.update();
+                    }
+                });
 			});
 
 			// Listen for the controlling service worker changing
