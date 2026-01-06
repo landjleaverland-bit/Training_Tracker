@@ -214,14 +214,14 @@ export interface OutdoorSessionPayload {
     categories?: string[];
     energySystems?: string[];
     techniqueFocuses?: string[];
-    fingerLoad: number;
-    shoulderLoad: number;
-    forearmLoad: number;
-    openGrip: number;
-    crimpGrip: number;
-    pinchGrip: number;
-    sloperGrip: number;
-    jugGrip: number;
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    openGrip?: number;
+    crimpGrip?: number;
+    pinchGrip?: number;
+    sloperGrip?: number;
+    jugGrip?: number;
     notes?: string;
     climbs: Array<{
         isSport: boolean;
@@ -616,3 +616,5 @@ export async function deleteGymSession(id: string): Promise<{ ok: boolean; error
 export function isOnline(): boolean {
     return typeof navigator !== 'undefined' ? navigator.onLine : true;
 }
+
+

@@ -277,14 +277,18 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', loc
     });
 
     return Object.entries(grades)
-        .map(([label, stats]) => ({
-            label,
-            value: stats.total,
-            flashCount: stats.flash,
-            redpointCount: stats.redpoint,
-            doggedCount: stats.dogged,
-            dnfCount: stats.dnf
-        }))
+        .map(([label, stats]) => {
+            // Convert label to lowercase for French grades (e.g. 7A+ -> 7a+)
+            const displayLabel = /^\d+[A-C][+]?$/.test(label) ? label.toLowerCase() : label;
+            return {
+                label: displayLabel,
+                value: stats.total,
+                flashCount: stats.flash,
+                redpointCount: stats.redpoint,
+                doggedCount: stats.dogged,
+                dnfCount: stats.dnf
+            };
+        })
         .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
 }
 

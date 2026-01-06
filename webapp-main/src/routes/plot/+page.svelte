@@ -34,7 +34,7 @@
 
     // Colors: Flash(Blue), Redpoint(Green), Dogged(Orange), DNF(Red)
     const gradeStackKeys = ['flashCount', 'redpointCount', 'doggedCount', 'dnfCount'];
-    const gradeStackColors = ['#3B82F6', '#22C55E', '#F97316', '#EF4444'];
+    const gradeStackColors = ['#22C55E', '#3B82F6', '#F97316', '#EF4444'];
     const gradeStackLabels = ['Flash/Onsight', 'Redpoint', 'Dogged', 'DNF'];
 
 
