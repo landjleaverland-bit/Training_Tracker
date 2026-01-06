@@ -22,6 +22,7 @@
     let bodyweight: number | undefined;
     let exercises: GymExercise[] = [];
     let startTime = new Date().toISOString().split('T')[0];
+    let time = new Date().toTimeString().split(' ')[0].slice(0, 5);
     let trainingBlock: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance' = 'Strength';
     let previousSession: GymSession | null = null;
     let allSessions: GymSession[] = [];
@@ -106,6 +107,7 @@
                 if (data.sessionName) sessionName = data.sessionName;
                 if (data.bodyweight) bodyweight = data.bodyweight;
                 if (data.startTime) startTime = data.startTime;
+                if (data.time) time = data.time;
                 if (data.trainingBlock) trainingBlock = data.trainingBlock;
                 if (data.exercises) exercises = data.exercises;
             } catch (e) {
@@ -121,6 +123,7 @@
                 sessionName,
                 bodyweight,
                 startTime,
+                time,
                 trainingBlock,
                 exercises
             };
@@ -196,6 +199,7 @@
 
         const result = await createGymSession({
             date: startTime,
+            time,
             name: sessionName || 'Gym Workout',
             bodyweight,
             trainingBlock,
@@ -233,7 +237,10 @@
         <div class="meta-row">
             <label>
                 Date
-                <input type="date" bind:value={startTime} />
+                <div class="date-time-row">
+                    <input type="date" bind:value={startTime} />
+                    <input type="time" bind:value={time} />
+                </div>
             </label>
             <label>
                 Bodyweight (kg)
@@ -459,6 +466,20 @@
     .meta-row {
         display: flex;
         gap: 1rem;
+    }
+
+    .date-time-row {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .date-time-row input[type="date"] {
+        flex: 2;
+    }
+    
+    .date-time-row input[type="time"] {
+        flex: 1;
+        min-width: 0;
     }
 
     @media (max-width: 640px) {

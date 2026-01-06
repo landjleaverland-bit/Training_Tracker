@@ -100,6 +100,7 @@
 
 	// Form state
 	let date = $state(new Date().toISOString().split('T')[0]);
+	let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
 	let location = $state('');
 	// customLocation removed in favor of inline entry
 	let climbingType = $state('');
@@ -135,6 +136,7 @@
             try {
                 const data = JSON.parse(saved);
                 if (data.location) location = data.location;
+                if (data.time) time = data.time;
                 if (data.isOtherLocation) isOtherLocation = data.isOtherLocation;
                 if (data.climbingType) climbingType = data.climbingType;
                 if (data.trainingTypes) trainingTypes = data.trainingTypes;
@@ -165,7 +167,7 @@
     $effect(() => {
         if (!loaded) return;
         const draft = {
-            date, location, isOtherLocation, climbingType, trainingTypes, difficulty,
+            date, time, location, isOtherLocation, climbingType, trainingTypes, difficulty,
             categories, energySystems,
             fingerLoad, shoulderLoad, forearmLoad,
             openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
@@ -262,6 +264,7 @@
 
 			const sessionData = {
 				date,
+				time,
 				location, // Location now holds the final value (custom or selected)
 				customLocation: isOtherLocation ? location : undefined,
 				climbingType,
@@ -312,6 +315,7 @@
 	// Reset form to initial state
 	function resetForm() {
 		date = new Date().toISOString().split('T')[0];
+		time = new Date().toTimeString().split(' ')[0].slice(0, 5);
 		location = '';
         isOtherLocation = false;
 		climbingType = '';
@@ -342,7 +346,10 @@
 	<div class="form-row">
 		<div class="form-group">
 			<label for="date">Date</label>
-			<input type="date" id="date" bind:value={date} />
+			<div class="date-time-row">
+				<input type="date" id="date" bind:value={date} />
+				<input type="time" id="time" bind:value={time} />
+			</div>
 		</div>
 		
 		<div class="form-group">
@@ -652,6 +659,12 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 		margin-bottom: 1rem;
+	}
+
+	.date-time-row {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 0.5rem;
 	}
 
 	@media (max-width: 640px) {

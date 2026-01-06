@@ -12,6 +12,7 @@
     const resultStatuses = ['Flash', 'Top', 'Zone', 'Attempt'];
 
     let date = $state(new Date().toISOString().split('T')[0]);
+    let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
     let venue = $state('');
     let customVenue = $state('');
     let type = $state('Bouldering');
@@ -43,6 +44,7 @@
              try {
                 const data = JSON.parse(saved);
                 if (data.venue) venue = data.venue;
+                if (data.time) time = data.time;
                 if (data.customVenue) customVenue = data.customVenue;
                 if (data.type) type = data.type;
                 if (data.fingerLoad) fingerLoad = data.fingerLoad;
@@ -63,7 +65,7 @@
     $effect(() => {
         if (!loaded) return;
         const draft = {
-            date, venue, customVenue, type,
+            date, time, venue, customVenue, type,
             fingerLoad, shoulderLoad, forearmLoad,
             roundName, customRoundName, finalPosition,
             climbs, notes
@@ -119,6 +121,7 @@
 
             const sessionData = {
                 date,
+                time,
                 venue: venue === 'Other' ? customVenue : venue,
                 customVenue: venue === 'Other' ? customVenue : undefined,
                 type: type as any,
@@ -153,6 +156,7 @@
 
     function resetForm() {
         date = new Date().toISOString().split('T')[0];
+        time = new Date().toTimeString().split(' ')[0].slice(0, 5);
         venue = '';
         customVenue = '';
         finalPosition = null;
@@ -170,7 +174,10 @@
     <div class="form-grid">
         <div class="form-group">
             <label for="date">Date</label>
-            <input type="date" id="date" bind:value={date} />
+            <div class="date-time-row">
+                <input type="date" id="date" bind:value={date} />
+                <input type="time" id="time" bind:value={time} />
+            </div>
         </div>
         <div class="form-group">
             <label for="venue">Venue</label>
@@ -341,6 +348,12 @@
         font-size: 0.95rem;
         width: 100%;
         box-sizing: border-box;
+    }
+
+    .date-time-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 0.5rem;
     }
 
     .mt-2 { margin-top: 0.5rem; }

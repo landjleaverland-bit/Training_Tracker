@@ -3,6 +3,7 @@ import { getCurrentUserId } from './auth';
 import {
     collection,
     addDoc,
+    setDoc,
     updateDoc,
     deleteDoc,
     doc,
@@ -82,6 +83,7 @@ function sanitizePayload<T>(payload: T): T {
 
 export interface IndoorSessionPayload {
     date: string;
+    time: string;
     location: string;
     customLocation?: string;
     climbingType: string;
@@ -116,12 +118,16 @@ export async function createIndoorSession(session: IndoorSessionPayload): Promis
         const uid = getCurrentUserId();
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
-        const docRef = await addDoc(getUserCollectionRef('Indoor_Climbs'), {
+        const id = generateSessionId(session.date, session.time, session.customLocation || session.location);
+        const docRef = getUserDocRef('Indoor_Climbs', id);
+
+        await setDoc(docRef, {
             ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
-        });
-        return { ok: true, id: docRef.id };
+        }, { merge: true });
+
+        return { ok: true, id };
     } catch (e) {
         return handleFirestoreError(e);
     }
@@ -182,6 +188,7 @@ export async function deleteIndoorSession(id: string): Promise<{ ok: boolean; er
 
 export interface OutdoorSessionPayload {
     date: string;
+    time: string;
     area: string;
     crag: string;
     sector?: string;
@@ -216,12 +223,16 @@ export async function createOutdoorSession(session: OutdoorSessionPayload): Prom
         const uid = getCurrentUserId();
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
-        const docRef = await addDoc(getUserCollectionRef('Outdoor_Climbs'), {
+        const id = generateSessionId(session.date, session.time, `${session.area}_${session.crag}`);
+        const docRef = getUserDocRef('Outdoor_Climbs', id);
+
+        await setDoc(docRef, {
             ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
-        });
-        return { ok: true, id: docRef.id };
+        }, { merge: true });
+
+        return { ok: true, id };
     } catch (e) {
         return handleFirestoreError(e);
     }
@@ -278,6 +289,7 @@ export async function deleteOutdoorSession(id: string): Promise<{ ok: boolean; e
 
 export interface FingerboardSessionPayload {
     date: string;
+    time: string;
     location: string;
     exercises: Array<{
         id: string;
@@ -303,12 +315,16 @@ export async function createFingerboardSession(session: FingerboardSessionPayloa
         const uid = getCurrentUserId();
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
-        const docRef = await addDoc(getUserCollectionRef('Fingerboarding'), {
+        const id = generateSessionId(session.date, session.time, 'Fingerboarding');
+        const docRef = getUserDocRef('Fingerboarding', id);
+
+        await setDoc(docRef, {
             ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
-        });
-        return { ok: true, id: docRef.id };
+        }, { merge: true });
+
+        return { ok: true, id };
     } catch (e) {
         return handleFirestoreError(e);
     }
@@ -365,6 +381,7 @@ export async function deleteFingerboardSession(id: string): Promise<{ ok: boolea
 
 export interface CompetitionSessionPayload {
     date: string;
+    time: string;
     venue: string;
     customVenue?: string;
     type: string;
@@ -395,12 +412,16 @@ export async function createCompetitionSession(session: CompetitionSessionPayloa
         const uid = getCurrentUserId();
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
-        const docRef = await addDoc(getUserCollectionRef('Competitions'), {
+        const id = generateSessionId(session.date, session.time, session.customVenue || session.venue);
+        const docRef = getUserDocRef('Competitions', id);
+
+        await setDoc(docRef, {
             ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
-        });
-        return { ok: true, id: docRef.id };
+        }, { merge: true });
+
+        return { ok: true, id };
     } catch (e) {
         return handleFirestoreError(e);
     }
@@ -457,6 +478,7 @@ export async function deleteCompetitionSession(id: string): Promise<{ ok: boolea
 
 export interface GymSessionPayload {
     date: string;
+    time: string;
     name: string;
     bodyweight?: number;
     trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
@@ -487,12 +509,16 @@ export async function createGymSession(session: GymSessionPayload): Promise<{ ok
         const uid = getCurrentUserId();
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
-        const docRef = await addDoc(getUserCollectionRef('Gym_Sessions'), {
+        const id = generateSessionId(session.date, session.time, session.name);
+        const docRef = getUserDocRef('Gym_Sessions', id);
+
+        await setDoc(docRef, {
             ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
-        });
-        return { ok: true, id: docRef.id };
+        }, { merge: true });
+
+        return { ok: true, id };
     } catch (e) {
         return handleFirestoreError(e);
     }

@@ -65,6 +65,7 @@
 
 	// Form state
 	let date = $state(new Date().toISOString().split('T')[0]);
+	let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
 	let area = $state('');
 	let crag = $state('');
 	let sector = $state('');
@@ -102,6 +103,7 @@
         if (saved) {
             try {
                 const data = JSON.parse(saved);
+                if (data.time) time = data.time;
                 if (data.area) area = data.area;
                 if (data.crag) crag = data.crag;
                 if (data.sector) sector = data.sector;
@@ -134,7 +136,7 @@
     $effect(() => {
         if (!loaded) return;
         const draft = {
-            date, area, crag, sector, isOtherCrag, climbingType, trainingTypes, difficulty,
+            date, time, area, crag, sector, isOtherCrag, climbingType, trainingTypes, difficulty,
             categories, energySystems,
             fingerLoad, shoulderLoad, forearmLoad,
             openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
@@ -237,6 +239,7 @@
 
 			const sessionData = {
 				date,
+				time,
 				area,
 				crag,
 				sector: sector || undefined,
@@ -286,6 +289,7 @@
 	// Reset form to initial state
 	function resetForm() {
 		date = new Date().toISOString().split('T')[0];
+		time = new Date().toTimeString().split(' ')[0].slice(0, 5);
 		area = '';
 		crag = '';
 		sector = '';
@@ -316,7 +320,10 @@
 	<div class="form-row">
 		<div class="form-group">
 			<label for="date">Date</label>
-			<input type="date" id="date" bind:value={date} />
+			<div class="date-time-row">
+				<input type="date" id="date" bind:value={date} />
+				<input type="time" id="time" bind:value={time} />
+			</div>
 		</div>
 		
 		<div class="form-group">
@@ -636,6 +643,12 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 		margin-bottom: 1rem;
+	}
+
+	.date-time-row {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 0.5rem;
 	}
 
 	@media (max-width: 640px) {

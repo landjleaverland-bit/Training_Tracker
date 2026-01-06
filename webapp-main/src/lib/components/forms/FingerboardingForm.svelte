@@ -7,6 +7,7 @@
     const gripOptions = ['Full-crimp', 'Half-crimp', 'Three finger drag', 'Pinch', 'Open hand', 'Sloper'];
 
     let date = $state(new Date().toISOString().split('T')[0]);
+    let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
     let exercises = $state<FingerboardExercise[]>([]);
 	
 	// Add initial exercise card
@@ -34,6 +35,7 @@
         if (saved) {
             try {
                 const data = JSON.parse(saved);
+                if (data.time) time = data.time;
                 if (data.exercises && Array.isArray(data.exercises)) {
                     exercises = data.exercises;
                 }
@@ -54,6 +56,7 @@
         if (!loaded) return;
         const draft = {
             date,
+            time,
             exercises
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
@@ -88,6 +91,7 @@
         try {
             const sessionData = {
                 date,
+                time,
                 location: 'N/A', // Fingerboarding usually doesn't need location or defaults to generic
                 exercises: JSON.parse(JSON.stringify(exercises)) // Deep copy
             };
@@ -116,6 +120,7 @@
 
     function resetForm() {
         date = new Date().toISOString().split('T')[0];
+        time = new Date().toTimeString().split(' ')[0].slice(0, 5);
         exercises = [];
         addExercise();
         saveStatus = 'idle';
@@ -131,7 +136,10 @@
 
 	<div class="form-group date-group">
 		<label for="date">Date</label>
-		<input type="date" id="date" bind:value={date} />
+		<div class="date-time-row">
+			<input type="date" id="date" bind:value={date} />
+			<input type="time" id="time" bind:value={time} />
+		</div>
 	</div>
 
 	<div class="cards-container">
@@ -414,10 +422,17 @@
 		background: white;
 	}
 	
-	input[type="date"] {
+	.date-time-row {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 0.5rem;
+	}
+	
+	input[type="date"], input[type="time"] {
 		padding: 0.5rem;
 		border-radius: 6px;
 		border: 1px solid #ccc;
 		width: 100%;
+		background: white;
 	}
 </style>
