@@ -102,6 +102,11 @@ export interface IndoorSessionPayload {
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;
+    openGrip: number;
+    crimpGrip: number;
+    pinchGrip: number;
+    sloperGrip: number;
+    jugGrip: number;
     notes?: string;
     climbs: Array<{
         isSport: boolean;
@@ -117,6 +122,7 @@ export interface RemoteIndoorSession extends IndoorSessionPayload {
     id: string;
     createdAt: string;
     updatedAt: string;
+    activityType: 'indoor_climb';
 }
 
 export async function createIndoorSession(session: IndoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -129,6 +135,7 @@ export async function createIndoorSession(session: IndoorSessionPayload): Promis
 
         await setDoc(docRef, {
             ...sanitizePayload(session),
+            activityType: 'indoor_climb',
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         }, { merge: true });
@@ -169,7 +176,10 @@ export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; 
         }
 
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(d => formattedDoc<RemoteIndoorSession>(d));
+        const data = querySnapshot.docs.map(d => ({
+            ...formattedDoc<RemoteIndoorSession>(d),
+            activityType: 'indoor_climb' as const
+        }));
         return { ok: true, data };
     } catch (e) {
         return handleFirestoreError(e);
@@ -207,6 +217,11 @@ export interface OutdoorSessionPayload {
     fingerLoad: number;
     shoulderLoad: number;
     forearmLoad: number;
+    openGrip: number;
+    crimpGrip: number;
+    pinchGrip: number;
+    sloperGrip: number;
+    jugGrip: number;
     notes?: string;
     climbs: Array<{
         isSport: boolean;
@@ -222,6 +237,7 @@ export interface RemoteOutdoorSession extends OutdoorSessionPayload {
     id: string;
     createdAt: string;
     updatedAt: string;
+    activityType: 'outdoor_climb';
 }
 
 export async function createOutdoorSession(session: OutdoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -234,6 +250,7 @@ export async function createOutdoorSession(session: OutdoorSessionPayload): Prom
 
         await setDoc(docRef, {
             ...sanitizePayload(session),
+            activityType: 'outdoor_climb',
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         }, { merge: true });
@@ -270,7 +287,10 @@ export async function getOutdoorSessions(since?: string): Promise<{ ok: boolean;
             q = query(getUserCollectionRef('Outdoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(d => formattedDoc<RemoteOutdoorSession>(d));
+        const data = querySnapshot.docs.map(d => ({
+            ...formattedDoc<RemoteOutdoorSession>(d),
+            activityType: 'outdoor_climb' as const
+        }));
         return { ok: true, data };
     } catch (e) {
         return handleFirestoreError(e);
@@ -314,6 +334,7 @@ export interface RemoteFingerboardSession extends FingerboardSessionPayload {
     id: string;
     createdAt: string;
     updatedAt: string;
+    activityType: 'fingerboarding';
 }
 
 export async function createFingerboardSession(session: FingerboardSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -326,6 +347,7 @@ export async function createFingerboardSession(session: FingerboardSessionPayloa
 
         await setDoc(docRef, {
             ...sanitizePayload(session),
+            activityType: 'fingerboarding',
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         }, { merge: true });
@@ -362,7 +384,10 @@ export async function getFingerboardSessions(since?: string): Promise<{ ok: bool
             q = query(getUserCollectionRef('Fingerboarding'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(d => formattedDoc<RemoteFingerboardSession>(d));
+        const data = querySnapshot.docs.map(d => ({
+            ...formattedDoc<RemoteFingerboardSession>(d),
+            activityType: 'fingerboarding' as const
+        }));
         return { ok: true, data };
     } catch (e) {
         return handleFirestoreError(e);
@@ -411,6 +436,7 @@ export interface RemoteCompetitionSession extends CompetitionSessionPayload {
     id: string;
     createdAt: string;
     updatedAt: string;
+    activityType: 'competition';
 }
 
 export async function createCompetitionSession(session: CompetitionSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -423,6 +449,7 @@ export async function createCompetitionSession(session: CompetitionSessionPayloa
 
         await setDoc(docRef, {
             ...sanitizePayload(session),
+            activityType: 'competition',
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         }, { merge: true });
@@ -459,7 +486,10 @@ export async function getCompetitionSessions(since?: string): Promise<{ ok: bool
             q = query(getUserCollectionRef('Competitions'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(d => formattedDoc<RemoteCompetitionSession>(d));
+        const data = querySnapshot.docs.map(d => ({
+            ...formattedDoc<RemoteCompetitionSession>(d),
+            activityType: 'competition' as const
+        }));
         return { ok: true, data };
     } catch (e) {
         return handleFirestoreError(e);
@@ -508,6 +538,7 @@ export interface RemoteGymSession extends GymSessionPayload {
     id: string;
     createdAt: string;
     updatedAt: string;
+    activityType: 'gym_session';
 }
 
 export async function createGymSession(session: GymSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
@@ -520,6 +551,7 @@ export async function createGymSession(session: GymSessionPayload): Promise<{ ok
 
         await setDoc(docRef, {
             ...sanitizePayload(session),
+            activityType: 'gym_session',
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         }, { merge: true });
@@ -556,7 +588,10 @@ export async function getGymSessions(since?: string): Promise<{ ok: boolean; dat
             q = query(getUserCollectionRef('Gym_Sessions'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(d => formattedDoc<RemoteGymSession>(d));
+        const data = querySnapshot.docs.map(d => ({
+            ...formattedDoc<RemoteGymSession>(d),
+            activityType: 'gym_session' as const
+        }));
         return { ok: true, data };
     } catch (e) {
         return handleFirestoreError(e);
