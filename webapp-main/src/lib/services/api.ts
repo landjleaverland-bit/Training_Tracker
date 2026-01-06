@@ -68,6 +68,14 @@ function getUserDocRef(collectionName: string, id: string) {
     return doc(db, 'users', uid, collectionName, id);
 }
 
+/**
+ * Helper to remove undefined fields from payload (Firestore rejects undefined)
+ */
+function sanitizePayload<T>(payload: T): T {
+    // efficient way to remove undefined values
+    return JSON.parse(JSON.stringify(payload));
+}
+
 // ------------------------------------------------------------------
 // Indoor Sessions
 // ------------------------------------------------------------------
@@ -109,7 +117,7 @@ export async function createIndoorSession(session: IndoorSessionPayload): Promis
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
         const docRef = await addDoc(getUserCollectionRef('Indoor_Climbs'), {
-            ...session,
+            ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         });
@@ -126,7 +134,7 @@ export async function updateIndoorSession(id: string, session: IndoorSessionPayl
 
         const docRef = getUserDocRef('Indoor_Climbs', id);
         await updateDoc(docRef, {
-            ...session,
+            ...sanitizePayload(session),
             updatedAt: Timestamp.now()
         });
         return { ok: true };
@@ -209,7 +217,7 @@ export async function createOutdoorSession(session: OutdoorSessionPayload): Prom
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
         const docRef = await addDoc(getUserCollectionRef('Outdoor_Climbs'), {
-            ...session,
+            ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         });
@@ -226,7 +234,7 @@ export async function updateOutdoorSession(id: string, session: OutdoorSessionPa
 
         const docRef = getUserDocRef('Outdoor_Climbs', id);
         await updateDoc(docRef, {
-            ...session,
+            ...sanitizePayload(session),
             updatedAt: Timestamp.now()
         });
         return { ok: true };
@@ -296,7 +304,7 @@ export async function createFingerboardSession(session: FingerboardSessionPayloa
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
         const docRef = await addDoc(getUserCollectionRef('Fingerboarding'), {
-            ...session,
+            ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         });
@@ -313,7 +321,7 @@ export async function updateFingerboardSession(id: string, session: FingerboardS
 
         const docRef = getUserDocRef('Fingerboarding', id);
         await updateDoc(docRef, {
-            ...session,
+            ...sanitizePayload(session),
             updatedAt: Timestamp.now()
         });
         return { ok: true };
@@ -388,7 +396,7 @@ export async function createCompetitionSession(session: CompetitionSessionPayloa
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
         const docRef = await addDoc(getUserCollectionRef('Competitions'), {
-            ...session,
+            ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         });
@@ -405,7 +413,7 @@ export async function updateCompetitionSession(id: string, session: CompetitionS
 
         const docRef = getUserDocRef('Competitions', id);
         await updateDoc(docRef, {
-            ...session,
+            ...sanitizePayload(session),
             updatedAt: Timestamp.now()
         });
         return { ok: true };
@@ -480,7 +488,7 @@ export async function createGymSession(session: GymSessionPayload): Promise<{ ok
         if (!uid) return { ok: false, error: 'User not authenticated' };
 
         const docRef = await addDoc(getUserCollectionRef('Gym_Sessions'), {
-            ...session,
+            ...sanitizePayload(session),
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
         });
@@ -497,7 +505,7 @@ export async function updateGymSession(id: string, session: GymSessionPayload): 
 
         const docRef = getUserDocRef('Gym_Sessions', id);
         await updateDoc(docRef, {
-            ...session,
+            ...sanitizePayload(session),
             updatedAt: Timestamp.now()
         });
         return { ok: true };
