@@ -18,17 +18,25 @@ export interface TimeSeriesPoint {
 // --- Helpers ---
 
 const isClimbing = (s: Session): boolean =>
-    s.activityType === 'indoor_climb' || s.activityType === 'outdoor_climb' || s.activityType === 'competition';
+    (s.activityType === 'indoor_climb' || s.activityType === 'outdoor_climb' || s.activityType === 'competition') && isValidDate(s.date);
 
 const isFingerboard = (s: Session): boolean =>
-    s.activityType === 'fingerboarding';
+    s.activityType === 'fingerboarding' && isValidDate(s.date);
+
+const isValidDate = (dateStr: string): boolean => {
+    if (!dateStr) return false;
+    const d = new Date(dateStr);
+    return d instanceof Date && !isNaN(d.getTime());
+};
 
 const getSessionDate = (s: Session): Date => new Date(s.date);
 
 // --- 1. General Activity & Volume ---
 
 export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start: Date, end: Date }): ChartDataPoint[] {
-    if (sessions.length === 0) return [];
+    // Filter for valid dates first
+    const validSessions = sessions.filter(s => isValidDate(s.date));
+    if (validSessions.length === 0) return [];
 
     let firstDate: Date;
     let lastDate: Date;
@@ -37,7 +45,7 @@ export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start:
         firstDate = new Date(dateRange.start);
         lastDate = new Date(dateRange.end);
     } else {
-        const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        const sorted = [...validSessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         firstDate = new Date(sorted[0].date);
         lastDate = new Date(); // Today
     }
@@ -74,7 +82,9 @@ export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start:
 }
 
 export function getFingerboardingConsistency(sessions: Session[], dateRange?: { start: Date, end: Date }): ChartDataPoint[] {
-    if (sessions.length === 0) return [];
+    // Filter for valid dates first
+    const validSessions = sessions.filter(s => isValidDate(s.date));
+    if (validSessions.length === 0) return [];
 
     let firstDate: Date;
     let lastDate: Date;
@@ -83,7 +93,7 @@ export function getFingerboardingConsistency(sessions: Session[], dateRange?: { 
         firstDate = new Date(dateRange.start);
         lastDate = new Date(dateRange.end);
     } else {
-        const sorted = [...sessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        const sorted = [...validSessions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         firstDate = new Date(sorted[0].date);
         lastDate = new Date();
     }

@@ -44,27 +44,41 @@
     let selectedDateValue = $state('');
 
     onMount(async () => {
-        const [indoor, outdoor, gym, finger, comp] = await Promise.all([
-            getIndoorSessions(),
-            getOutdoorSessions(),
-            getGymSessions(),
-            getFingerboardSessions(),
-            getCompetitionSessions()
-        ]);
+        try {
+            console.log('Fetching plot data...');
+            const [indoor, outdoor, gym, finger, comp] = await Promise.all([
+                getIndoorSessions(),
+                getOutdoorSessions(),
+                getGymSessions(),
+                getFingerboardSessions(),
+                getCompetitionSessions()
+            ]);
 
-        const all = [
-            ...(indoor.data || []),
-            ...(outdoor.data || []),
-            ...(gym.data || []),
-            ...(finger.data || []),
-            ...(comp.data || [])
-        ];
-        
-        // Sort by date desc
-        all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        
-        // Cast to Session[] if needed, assuming remote types satisfy Session union
-        sessions = all as Session[];
+            console.log('Results:', { indoor, outdoor, gym, finger, comp });
+
+            const all = [
+                ...(indoor.data || []),
+                ...(outdoor.data || []),
+                ...(gym.data || []),
+                ...(finger.data || []),
+                ...(comp.data || [])
+            ];
+            
+            // Filter invalid dates at source
+            const validSessions = all.filter(s => {
+                if (!s.date) return false;
+                const d = new Date(s.date);
+                return d instanceof Date && !isNaN(d.getTime());
+            }) as Session[];
+
+            // Sort by date desc
+            validSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            
+            sessions = validSessions;
+            console.log('Sessions loaded:', sessions.length);
+        } catch (e) {
+            console.error('Error fetching plot data:', e);
+        }
     });
 
     // Available years for dropdown
