@@ -125,6 +125,8 @@ export function getSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
     const counts: Record<string, number> = {};
 
     sessions.forEach(s => {
+        if (!s.activityType) return;
+
         let typeLabel = formatActivityType(s.activityType);
 
         // Refine climbing types
@@ -140,6 +142,7 @@ export function getSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
 }
 
 function formatActivityType(type: string): string {
+    if (!type) return 'Unknown';
     return type.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
