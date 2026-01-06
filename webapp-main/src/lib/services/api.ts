@@ -1,4 +1,5 @@
 import { db } from './firebase';
+import { getCurrentUserId } from './auth';
 import {
     collection,
     addDoc,
@@ -49,6 +50,24 @@ function formattedDoc<T>(docSnap: DocumentData): T {
     } as T;
 }
 
+/**
+ * Helper to get user-specific collection
+ */
+function getUserCollectionRef(collectionName: string) {
+    const uid = getCurrentUserId();
+    if (!uid) throw new Error('User not authenticated');
+    return collection(db, 'users', uid, collectionName);
+}
+
+/**
+ * Helper to get user-specific document
+ */
+function getUserDocRef(collectionName: string, id: string) {
+    const uid = getCurrentUserId();
+    if (!uid) throw new Error('User not authenticated');
+    return doc(db, 'users', uid, collectionName, id);
+}
+
 // ------------------------------------------------------------------
 // Indoor Sessions
 // ------------------------------------------------------------------
@@ -86,7 +105,10 @@ export interface RemoteIndoorSession extends IndoorSessionPayload {
 
 export async function createIndoorSession(session: IndoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
-        const docRef = await addDoc(collection(db, 'Indoor_Climbs'), {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = await addDoc(getUserCollectionRef('Indoor_Climbs'), {
             ...session,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
@@ -99,7 +121,10 @@ export async function createIndoorSession(session: IndoorSessionPayload): Promis
 
 export async function updateIndoorSession(id: string, session: IndoorSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
-        const docRef = doc(db, 'Indoor_Climbs', id);
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Indoor_Climbs', id);
         await updateDoc(docRef, {
             ...session,
             updatedAt: Timestamp.now()
@@ -112,12 +137,15 @@ export async function updateIndoorSession(id: string, session: IndoorSessionPayl
 
 export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }> {
     try {
-        let q = query(collection(db, 'Indoor_Climbs'), orderBy('date', 'desc'));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        let q = query(getUserCollectionRef('Indoor_Climbs'), orderBy('date', 'desc'));
 
         // Client-side filtering optimization: 
         // If dataset becomes large, rely on 'since' timestamp to fetch only deltas.
         if (since) {
-            q = query(collection(db, 'Indoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
+            q = query(getUserCollectionRef('Indoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
 
         const querySnapshot = await getDocs(q);
@@ -130,7 +158,10 @@ export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; 
 
 export async function deleteIndoorSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
-        await deleteDoc(doc(db, 'Indoor_Climbs', id));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        await deleteDoc(getUserDocRef('Indoor_Climbs', id));
         return { ok: true };
     } catch (e) {
         return handleFirestoreError(e);
@@ -174,7 +205,10 @@ export interface RemoteOutdoorSession extends OutdoorSessionPayload {
 
 export async function createOutdoorSession(session: OutdoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
-        const docRef = await addDoc(collection(db, 'Outdoor_Climbs'), {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = await addDoc(getUserCollectionRef('Outdoor_Climbs'), {
             ...session,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
@@ -187,7 +221,10 @@ export async function createOutdoorSession(session: OutdoorSessionPayload): Prom
 
 export async function updateOutdoorSession(id: string, session: OutdoorSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
-        const docRef = doc(db, 'Outdoor_Climbs', id);
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Outdoor_Climbs', id);
         await updateDoc(docRef, {
             ...session,
             updatedAt: Timestamp.now()
@@ -200,9 +237,12 @@ export async function updateOutdoorSession(id: string, session: OutdoorSessionPa
 
 export async function getOutdoorSessions(since?: string): Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }> {
     try {
-        let q = query(collection(db, 'Outdoor_Climbs'), orderBy('date', 'desc'));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        let q = query(getUserCollectionRef('Outdoor_Climbs'), orderBy('date', 'desc'));
         if (since) {
-            q = query(collection(db, 'Outdoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
+            q = query(getUserCollectionRef('Outdoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
         const data = querySnapshot.docs.map(d => formattedDoc<RemoteOutdoorSession>(d));
@@ -214,7 +254,10 @@ export async function getOutdoorSessions(since?: string): Promise<{ ok: boolean;
 
 export async function deleteOutdoorSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
-        await deleteDoc(doc(db, 'Outdoor_Climbs', id));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        await deleteDoc(getUserDocRef('Outdoor_Climbs', id));
         return { ok: true };
     } catch (e) {
         return handleFirestoreError(e);
@@ -249,7 +292,10 @@ export interface RemoteFingerboardSession extends FingerboardSessionPayload {
 
 export async function createFingerboardSession(session: FingerboardSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
-        const docRef = await addDoc(collection(db, 'Fingerboarding'), {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = await addDoc(getUserCollectionRef('Fingerboarding'), {
             ...session,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
@@ -262,7 +308,10 @@ export async function createFingerboardSession(session: FingerboardSessionPayloa
 
 export async function updateFingerboardSession(id: string, session: FingerboardSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
-        const docRef = doc(db, 'Fingerboarding', id);
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Fingerboarding', id);
         await updateDoc(docRef, {
             ...session,
             updatedAt: Timestamp.now()
@@ -275,9 +324,12 @@ export async function updateFingerboardSession(id: string, session: FingerboardS
 
 export async function getFingerboardSessions(since?: string): Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }> {
     try {
-        let q = query(collection(db, 'Fingerboarding'), orderBy('date', 'desc'));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        let q = query(getUserCollectionRef('Fingerboarding'), orderBy('date', 'desc'));
         if (since) {
-            q = query(collection(db, 'Fingerboarding'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
+            q = query(getUserCollectionRef('Fingerboarding'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
         const data = querySnapshot.docs.map(d => formattedDoc<RemoteFingerboardSession>(d));
@@ -289,7 +341,10 @@ export async function getFingerboardSessions(since?: string): Promise<{ ok: bool
 
 export async function deleteFingerboardSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
-        await deleteDoc(doc(db, 'Fingerboarding', id));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        await deleteDoc(getUserDocRef('Fingerboarding', id));
         return { ok: true };
     } catch (e) {
         return handleFirestoreError(e);
@@ -329,7 +384,10 @@ export interface RemoteCompetitionSession extends CompetitionSessionPayload {
 
 export async function createCompetitionSession(session: CompetitionSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
-        const docRef = await addDoc(collection(db, 'Competitions'), {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = await addDoc(getUserCollectionRef('Competitions'), {
             ...session,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
@@ -342,7 +400,10 @@ export async function createCompetitionSession(session: CompetitionSessionPayloa
 
 export async function updateCompetitionSession(id: string, session: CompetitionSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
-        const docRef = doc(db, 'Competitions', id);
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Competitions', id);
         await updateDoc(docRef, {
             ...session,
             updatedAt: Timestamp.now()
@@ -355,9 +416,12 @@ export async function updateCompetitionSession(id: string, session: CompetitionS
 
 export async function getCompetitionSessions(since?: string): Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }> {
     try {
-        let q = query(collection(db, 'Competitions'), orderBy('date', 'desc'));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        let q = query(getUserCollectionRef('Competitions'), orderBy('date', 'desc'));
         if (since) {
-            q = query(collection(db, 'Competitions'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
+            q = query(getUserCollectionRef('Competitions'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
         const data = querySnapshot.docs.map(d => formattedDoc<RemoteCompetitionSession>(d));
@@ -369,7 +433,10 @@ export async function getCompetitionSessions(since?: string): Promise<{ ok: bool
 
 export async function deleteCompetitionSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
-        await deleteDoc(doc(db, 'Competitions', id));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        await deleteDoc(getUserDocRef('Competitions', id));
         return { ok: true };
     } catch (e) {
         return handleFirestoreError(e);
@@ -409,7 +476,10 @@ export interface RemoteGymSession extends GymSessionPayload {
 
 export async function createGymSession(session: GymSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
-        const docRef = await addDoc(collection(db, 'Gym_Sessions'), {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = await addDoc(getUserCollectionRef('Gym_Sessions'), {
             ...session,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
@@ -422,7 +492,10 @@ export async function createGymSession(session: GymSessionPayload): Promise<{ ok
 
 export async function updateGymSession(id: string, session: GymSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
-        const docRef = doc(db, 'Gym_Sessions', id);
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Gym_Sessions', id);
         await updateDoc(docRef, {
             ...session,
             updatedAt: Timestamp.now()
@@ -435,9 +508,12 @@ export async function updateGymSession(id: string, session: GymSessionPayload): 
 
 export async function getGymSessions(since?: string): Promise<{ ok: boolean; data?: RemoteGymSession[]; error?: string }> {
     try {
-        let q = query(collection(db, 'Gym_Sessions'), orderBy('date', 'desc'));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        let q = query(getUserCollectionRef('Gym_Sessions'), orderBy('date', 'desc'));
         if (since) {
-            q = query(collection(db, 'Gym_Sessions'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
+            q = query(getUserCollectionRef('Gym_Sessions'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
         }
         const querySnapshot = await getDocs(q);
         const data = querySnapshot.docs.map(d => formattedDoc<RemoteGymSession>(d));
@@ -449,7 +525,10 @@ export async function getGymSessions(since?: string): Promise<{ ok: boolean; dat
 
 export async function deleteGymSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
-        await deleteDoc(doc(db, 'Gym_Sessions', id));
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        await deleteDoc(getUserDocRef('Gym_Sessions', id));
         return { ok: true };
     } catch (e) {
         return handleFirestoreError(e);
