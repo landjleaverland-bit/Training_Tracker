@@ -505,7 +505,7 @@ export function getLoadStats(
         const key = format(date);
 
         // Then extract the metric (e.g. 1 for count, or s.fingerLoad for specific load)
-        const val = metricFn(s);
+        const val = Number(metricFn(s)) || 0;
 
         groups[key] = (groups[key] || 0) + val;
     });
