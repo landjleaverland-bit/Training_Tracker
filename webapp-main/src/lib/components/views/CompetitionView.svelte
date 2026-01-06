@@ -149,6 +149,7 @@
         // Construct payload
         const sessionPayload = {
             date: session.date,
+            time: session.time || '12:00', // Default for legacy data
             venue: session.venue,
             customVenue: session.customVenue,
             type: session.type,

@@ -77,6 +77,15 @@ function sanitizePayload<T>(payload: T): T {
     return JSON.parse(JSON.stringify(payload));
 }
 
+/**
+ * Helper to generate deterministic session ID
+ * Format: YYYY-MM-DD_HH-mm_Identifier
+ */
+function generateSessionId(date: string, time: string, identifier: string): string {
+    const cleanIdentifier = identifier.replace(/[^a-zA-Z0-9]/g, '_');
+    return `${date}_${time.replace(':', '-')}_${cleanIdentifier}`;
+}
+
 // ------------------------------------------------------------------
 // Indoor Sessions
 // ------------------------------------------------------------------

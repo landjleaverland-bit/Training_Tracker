@@ -7,6 +7,7 @@ export interface BaseSession {
     id: string;                    // Unique ID (UUID)
     activityType: string;          // indoor_climb, outdoor_climb, etc.
     date: string;                  // ISO date string (YYYY-MM-DD)
+    time?: string;                 // Time string (HH:mm) - Optional for legacy
     createdAt: string;             // ISO timestamp
     updatedAt: string;             // ISO timestamp
     syncStatus: 'pending' | 'synced' | 'error';  // Sync state

@@ -61,6 +61,7 @@
         // Propagate to server
         const sessionPayload = {
             date: session.date,
+            time: session.time || '12:00', // Default if missing on old data
             location: session.location,
             customLocation: session.customLocation,
             climbingType: session.climbingType,
@@ -125,6 +126,7 @@
 
         const sessionPayload = {
             date: session.date,
+            time: session.time || '12:00',
             location: session.location,
             customLocation: session.customLocation,
             climbingType: session.climbingType,

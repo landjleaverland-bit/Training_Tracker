@@ -62,6 +62,7 @@
         // We need to send the FULL session structure
         const sessionPayload = {
             date: session.date,
+            time: session.time || '12:00',
             area: session.area,
             crag: session.crag,
             sector: session.sector,
@@ -123,6 +124,7 @@
 
         const sessionPayload = {
             date: session.date,
+            time: session.time || '12:00',
             area: session.area,
             crag: session.crag,
             sector: session.sector,
