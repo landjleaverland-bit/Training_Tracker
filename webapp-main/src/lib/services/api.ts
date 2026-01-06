@@ -2,7 +2,6 @@ import { db } from './firebase';
 import { getCurrentUserId } from './auth';
 import {
     collection,
-    addDoc,
     setDoc,
     updateDoc,
     deleteDoc,
@@ -12,9 +11,7 @@ import {
     where,
     orderBy,
     Timestamp,
-    type DocumentData,
-    enableNetwork,
-    disableNetwork
+    type DocumentData
 } from 'firebase/firestore';
 
 /**

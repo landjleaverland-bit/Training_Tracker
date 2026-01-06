@@ -167,6 +167,7 @@
 									day: 'numeric',
 									year: 'numeric'
 								})}
+								<span class="time-tag">{session.time || '12:00'}</span>
 							</span>
 							<span class="meta">
 								{#if session.location && session.location !== 'N/A' && session.location !== 'Home'}
@@ -394,6 +395,20 @@
 		font-weight: 600;
 		color: var(--teal-primary);
 		font-size: 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.time-tag {
+		font-size: 0.8rem;
+		color: var(--text-secondary);
+		font-weight: 500;
+		background: rgba(0,0,0,0.03);
+		padding: 0.1rem 0.4rem;
+		border-radius: 4px;
+		font-family: 'Geist Mono', monospace;
 	}
 
 	.meta {

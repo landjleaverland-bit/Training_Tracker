@@ -211,14 +211,17 @@
 						<div class="header-main">
 							<div class="left-col">
 								<span class="venue">{session.customVenue || session.venue}</span>
-								<span class="date"
-									>{new Date(session.date).toLocaleDateString(undefined, {
-										weekday: 'short',
-										day: 'numeric',
-										month: 'short',
-										year: 'numeric'
-									})}</span
-								>
+								<div class="datetime-row">
+									<span class="date"
+										>{new Date(session.date).toLocaleDateString(undefined, {
+											weekday: 'short',
+											day: 'numeric',
+											month: 'short',
+											year: 'numeric'
+										})}</span
+									>
+									<span class="time-tag">@ {session.time || '12:00'}</span>
+								</div>
 							</div>
 							<div class="right-col">
 								<div class="badges">
@@ -530,6 +533,18 @@
 	.date {
 		font-size: 0.8rem;
 		color: #aaa;
+	}
+
+	.datetime-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.time-tag {
+		font-size: 0.8rem;
+		color: #aaa;
+		font-family: 'Geist Mono', monospace;
 	}
 
 	.right-col {

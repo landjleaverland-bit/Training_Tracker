@@ -182,13 +182,16 @@
 			<div class="session-info">
 				<div class="session-text">
 					<h3 class="location">{session.location}</h3>
-					<div class="session-meta">
-						<span class="type-tag">{session.climbingType}</span>
-						<span class="stat">{climbCount} climbs</span>
-						{#if climbCount > 0}
-							<span class="stat">Max: {maxGrade}</span>
-						{/if}
-					</div>
+						<div class="meta-row">
+							<span class="time-tag">🕒 {session.time || '12:00'}</span>
+							<span class="type-tag">{session.climbingType}</span>
+						</div>
+						<div class="meta-row lowercase">
+							<span class="stat">{climbCount} climbs</span>
+							{#if climbCount > 0}
+								<span class="stat">Max: {maxGrade}</span>
+							{/if}
+						</div>
 				</div>
 
 				<!-- Load Summary (Right aligned, wraps on mobile if needed) -->
@@ -548,12 +551,27 @@
 		color: var(--text-primary);
 	}
 
-	.session-meta {
+
+
+	.meta-row {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
-		font-size: 0.85rem;
-		color: var(--text-secondary);
+	}
+
+	.meta-row.lowercase {
+		font-size: 0.8rem;
+		opacity: 0.9;
+	}
+
+	.time-tag {
+		font-family: 'Geist Mono', monospace;
+		font-weight: 500;
+		color: var(--teal-secondary);
+		background: rgba(74, 155, 155, 0.08);
+		padding: 0.1rem 0.4rem;
+		border-radius: 4px;
+		font-size: 0.75rem;
 	}
 
 	.type-tag {

@@ -102,6 +102,7 @@
 				<div class="session-text">
 					<h3 class="name">{session.name}</h3>
 					<div class="session-meta">
+						<span class="time-tag">🕒 {session.time || '12:00'}</span>
 						<span class="stat">{exerciseCount} Exercises</span>
 						<span class="stat">{totalSets} Sets</span>
 						<span class="stat">~{Math.round(totalVolume).toLocaleString()}kg Vol</span>
@@ -300,9 +301,21 @@
 		letter-spacing: -0.01em;
 	}
 
+	.time-tag {
+		font-family: 'Geist Mono', monospace;
+		font-weight: 500;
+		color: var(--teal-secondary);
+		background: rgba(74, 155, 155, 0.08);
+		padding: 0.1rem 0.4rem;
+		border-radius: 4px;
+		font-size: 0.75rem;
+		margin-right: 0.5rem;
+	}
+
 	.session-meta {
 		display: flex;
 		align-items: center;
+		flex-wrap: wrap;
 		gap: 0.75rem;
 		font-size: 0.85rem;
 		color: var(--text-secondary);
