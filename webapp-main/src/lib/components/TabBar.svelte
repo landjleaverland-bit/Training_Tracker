@@ -110,7 +110,7 @@
 			z-index: 50;
 			border-bottom: none;
 			border-top: 1px solid rgba(74, 155, 155, 0.2);
-			padding: 0.5rem;
+			padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom)) 0.5rem;
 			gap: 0.25rem;
 		}
 

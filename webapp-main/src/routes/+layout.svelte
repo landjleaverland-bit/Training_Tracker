@@ -94,6 +94,7 @@
 
 		main {
 			padding: 0.5rem;
+			padding-bottom: 7rem; /* Ensure content is not hidden behind fixed TabBar */
 		}
 	}
 </style>
