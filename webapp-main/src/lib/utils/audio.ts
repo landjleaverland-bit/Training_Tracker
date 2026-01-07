@@ -1,0 +1,128 @@
+/**
+ * Audio and Haptic feedback utility for the Rest Timer.
+ * Handles "polite" audio playback by attempting to duck other audio if possible,
+ * and manages vibration patterns.
+ */
+
+export class audioManager {
+    private static audioContext: AudioContext | null = null;
+    private static gainNode: GainNode | null = null;
+    private static isInitialized = false;
+
+    // Initialize AudioContext on first user interaction
+    static init() {
+        if (this.isInitialized) return;
+
+        try {
+            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+            if (AudioContextClass) {
+                this.audioContext = new AudioContext();
+                this.gainNode = this.audioContext.createGain();
+                this.gainNode.connect(this.audioContext.destination);
+                this.isInitialized = true;
+            }
+        } catch (e) {
+            console.warn('AudioContext not supported', e);
+        }
+    }
+
+    /**
+     * Plays a pleasant chime sound.
+     * Uses a synthesized sound to avoid external asset dependencies and ensure snappy loading.
+     */
+    static async playChime() {
+        if (!this.isInitialized) this.init();
+        if (!this.audioContext || !this.gainNode) return;
+
+        // Resume context if suspended (browser autoplay policy)
+        if (this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+        }
+
+        const now = this.audioContext.currentTime;
+
+        // Simple nice chime: Sine wave with decay
+        // Primary tone
+        const osc1 = this.audioContext.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(880, now); // A5
+        osc1.frequency.exponentialRampToValueAtTime(0.01, now + 1.5);
+
+        const gain1 = this.audioContext.createGain();
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+        osc1.connect(gain1);
+        gain1.connect(this.gainNode);
+
+        osc1.start(now);
+        osc1.stop(now + 1.5);
+
+        // Harmonic
+        const osc2 = this.audioContext.createOscillator();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(1760, now); // A6
+        osc2.frequency.exponentialRampToValueAtTime(0.01, now + 1.0);
+
+        const gain2 = this.audioContext.createGain();
+        gain2.gain.setValueAtTime(0.1, now);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+
+        osc2.connect(gain2);
+        gain2.connect(this.gainNode);
+
+        osc2.start(now);
+        osc2.stop(now + 1.0);
+    }
+
+    /**
+     * Triggers device vibration.
+     * @param pattern Vibrate pattern (ms)
+     */
+    static vibrate(pattern: number | number[] = 200) {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(pattern);
+        }
+    }
+
+    /**
+     * Plays the completion alert (Sound + Haptics)
+     */
+    static async playCompletionAlert() {
+        // Haptics: Double pulse
+        this.vibrate([500, 100, 500]);
+
+        // Audio
+        await this.playChime();
+    }
+
+    /**
+     * Plays a subtle tick/warning sound (e.g., for 3-2-1 countdown)
+     */
+    static async playTick() {
+        if (!this.isInitialized) this.init();
+        if (!this.audioContext || !this.gainNode) return;
+
+        if (this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+        }
+
+        const now = this.audioContext.currentTime;
+        const osc = this.audioContext.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+
+        const gain = this.audioContext.createGain();
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+        osc.connect(gain);
+        gain.connect(this.gainNode);
+
+        osc.start(now);
+        osc.stop(now + 0.1);
+
+        // Light haptic
+        this.vibrate(50);
+    }
+}

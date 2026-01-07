@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
 	import { createFingerboardSession, isOnline } from '$lib/services/api';
     import type { FingerboardExercise, ExerciseSet } from '$lib/types/session';
+    import RestTimer from './gym/RestTimer.svelte';
 
     const exerciseOptions = ['Max hangs', 'Recruitment pulls', 'Max pick-ups'];
     const gripOptions = ['Full-crimp', 'Half-crimp', 'Three finger drag', 'Pinch', 'Open hand', 'Sloper'];
@@ -11,6 +12,17 @@
     let exercises = $state<FingerboardExercise[]>([]);
 	
 	// Add initial exercise card
+	// Add initial exercise card
+    let showRestTimer = $state(false);
+    let activeTimerExerciseId = $state<string | null>(null);
+    let timerDefaultSets = $state(3);
+
+    function startRest(exercise: FingerboardExercise) {
+        activeTimerExerciseId = exercise.id;
+        timerDefaultSets = exercise.sets;
+        showRestTimer = true;
+    }
+
 	function addExercise() {
 		exercises = [
 			...exercises, 
@@ -178,6 +190,7 @@
 						</div>
 					{/each}
 					<button class="add-set-btn" onclick={() => addSet(i)}>+ Add Set</button>
+                    <button class="rest-btn" onclick={() => startRest(exercise)} title="Interval Timer">⏱ Timer</button>
 				</div>
 
 				<div class="card-footer">
@@ -215,6 +228,12 @@
 			{/if}
 		</button>
 	</div>
+
+    <RestTimer 
+        bind:visible={showRestTimer} 
+        defaultSets={timerDefaultSets} 
+        associatedExerciseId={activeTimerExerciseId}
+    />
 </div>
 
 <style>
@@ -350,6 +369,25 @@
 		cursor: pointer;
 		margin-top: 0.2rem;
 	}
+
+    .rest-btn {
+        align-self: flex-start;
+        background: rgba(45, 212, 191, 0.1);
+        color: var(--teal-primary);
+        border: 1px solid var(--teal-primary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        margin-top: 0.2rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .rest-btn:hover {
+        background: var(--teal-primary);
+        color: white;
+    }
 
 	.card-footer {
 		display: grid;

@@ -95,7 +95,9 @@
     let activeExerciseDetail: ExerciseDefinition | null = null;
     let exerciseToDeleteIndex: number | null = null;
     let showSuccess = false;
-    let autoStartTimer = true; // State for timer mode
+    let activeTimerExerciseId: string | null = null;
+    let timerDefaultSets = 3;
+    let lastCompletedExerciseId: string | null = null;
 
     // Persistence
     let loaded = false;
@@ -189,9 +191,16 @@
         exercises = [...exercises]; // Reactivity
     }
 
-    function handleSetComplete() {
-        autoStartTimer = true;
+    function handleExerciseTimer(event: CustomEvent) {
+        const exercise = event.detail;
+        activeTimerExerciseId = exercise.id;
+        // Count total sets for this exercise as default
+        timerDefaultSets = exercise.sets.length;
         showRestTimer = true;
+    }
+
+    function handleSetComplete() {
+        // No longer auto-starting timer globally
     }
 
     async function saveSession() {
@@ -256,10 +265,6 @@
                 </select>
             </label>
         </div>
-        <!-- Manual Timer Button -->
-        <button class="timer-btn" on:click={() => { autoStartTimer = false; showRestTimer = true; }}>
-            ⏱ Open Timer
-        </button>
     </div>
 
     <!-- Active Exercises -->
@@ -270,6 +275,7 @@
                 benchmarks={getBenchmarks(exercise.name)}
                 on:focus={(e) => handleSetFocus(e, i, exercises[i].sets.indexOf(e.detail.set))}
                 on:complete={handleSetComplete}
+                on:timer={handleExerciseTimer}
                 on:delete={() => {
                     exerciseToDeleteIndex = i;
                 }}
@@ -413,7 +419,11 @@
     {/if}
 
     <!-- Rest Timer -->
-    <RestTimer bind:visible={showRestTimer} autoStart={autoStartTimer} />
+    <RestTimer 
+        bind:visible={showRestTimer} 
+        defaultSets={timerDefaultSets} 
+        associatedExerciseId={activeTimerExerciseId}
+    />
 
     <!-- Delete Confirmation -->
     {#if exerciseToDeleteIndex !== null}
@@ -582,27 +592,6 @@
         background: #4ade80; /* Green color */
         color: #064e3b;
         transform: scale(0.98);
-    }
-
-    .timer-btn {
-        margin-top: 1rem;
-        width: 100%;
-        padding: 0.75rem;
-        background: var(--bg-tertiary);
-        border: 1px solid var(--teal-primary);
-        color: var(--teal-primary);
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        transition: all 0.2s;
-    }
-
-    .timer-btn:hover {
-        background: rgba(45, 212, 191, 0.1);
     }
 
     /* Modal Styles */

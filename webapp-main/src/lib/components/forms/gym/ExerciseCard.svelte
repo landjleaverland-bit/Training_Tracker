@@ -38,6 +38,10 @@
             </button> 
             <div>
                 <h4>{exercise.name}</h4>
+                <!-- Timer Button -->
+                <button class="icon-btn timer-btn" on:click={() => dispatch('timer', exercise)} aria-label="Open Timer" title="Interval Timer">
+                    ⏱
+                </button>
                 <!-- Benchmarks Display -->
                 <div class="benchmarks">
                     {#each DIFFICULTIES as color}
@@ -262,5 +266,19 @@
     .diff-circle:hover {
         transform: scale(1.1);
         background: rgba(var(--circle-color), 0.1);
+    }
+
+    .timer-btn {
+        margin-left: 0.5rem;
+        background: rgba(45, 212, 191, 0.1);
+        color: var(--teal-primary);
+        border-radius: 6px;
+        padding: 0 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .timer-btn:hover {
+        background: var(--teal-primary);
+        color: white;
     }
 </style>

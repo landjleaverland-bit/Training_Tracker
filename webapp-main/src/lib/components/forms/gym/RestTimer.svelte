@@ -1,372 +1,590 @@
 <script lang="ts">
-    import { onMount, onDestroy } from 'svelte';
-    import { fly, fade, scale } from 'svelte/transition';
+    import { onMount } from 'svelte';
+    import { fade, fly, scale } from 'svelte/transition';
+    import { cubicOut } from 'svelte/easing';
+    import { audioManager } from '$lib/utils/audio';
 
-    export let duration: number = 90; // Default 90 seconds
-    export let autoStart: boolean = true; // If true, starts immediately (old behavior)
-    export let visible = true;
-    export let onComplete: () => void = () => {};
+    // -- Props --
+    let { 
+        visible = $bindable(false), 
+        defaultSets = 3,
+        associatedExerciseId = null,
+        onComplete = () => {},
+        onClose = () => {}
+    } = $props<{
+        visible?: boolean;
+        defaultSets?: number;
+        associatedExerciseId?: string | null;
+        onComplete?: () => void;
+        onClose?: () => void;
+    }>();
 
-    // State
-    let mode: 'SETUP' | 'RUNNING' = 'SETUP';
-    let remaining = duration;
-    let selectedDuration = duration;
-    let interval: any;
-    let isPaused = false;
+    // -- State --
+    type TimerPhase = 'SETUP' | 'WORK' | 'REST' | 'FINISHED';
+    type RunningState = 'RUNNING' | 'PAUSED';
 
-    // Presets in seconds
-    const PRESETS = [30, 60, 90, 120, 180];
+    let phase = $state<TimerPhase>('SETUP');
+    let runningState = $state<RunningState>('PAUSED');
+    
+    // Config
+    let workDuration = $state(0); // 0 means manual/open-ended, but user requested "set time"
+    // Actually user said "allow user to set the time for each set... and rest time".
+    // So distinct Work and Rest durations.
+    // Defaulting Work to 30s and Rest to 60s for now, adjustable.
+    let configWork = $state(30); 
+    let configRest = $state(60); 
+    let configSets = $state(3);
 
-    // Initialize based on autoStart
-    $: if (visible) {
-        if (autoStart) {
-            startTimer(duration);
-        } else {
-            mode = 'SETUP';
-            selectedDuration = duration;
-            remaining = duration;
-        }
-    }
+    // Active State
+    let currentSet = $state(1);
+    let remaining = $state(30); 
+    let endTimestamp = $state<number | null>(null);
+    let pausedTimeRemaining = $state<number | null>(null);
+    
+    // Derived for UI
+    let progress = $state(0);
+    
+    // Preferences Storage
+    const STORAGE_KEY = 'interval_timer_prefs';
 
-    function startTimer(seconds: number) {
-        clearInterval(interval);
-        selectedDuration = seconds; // Remember this preference?
-        remaining = seconds;
-        mode = 'RUNNING';
-        isPaused = false;
-        
-        interval = setInterval(() => {
-            if (!isPaused) {
-                remaining--;
-                if (remaining <= 0) {
-                    clearInterval(interval);
-                    playAlarm();
-                    onComplete();
-                }
+    // -- Lifecycle --
+    let timerInterval: any = null;
+
+    $effect(() => {
+        if (visible) {
+            audioManager.init();
+            if (phase === 'SETUP') {
+                // Load prefs only if we are in setup
+                loadPreference();
+                // Override sets with prop if provided (as it changes per exercise/session)
+                // Use a local variable to break reactivity connection if that's the issue, or just trust it.
+                // The lint says "This reference only captures the initial value of defaultSets".
+                // Since defaultSets is a prop, we should access it directly. 
+                if (defaultSets > 0) configSets = defaultSets;
             }
-        }, 1000);
-    }
-
-    function togglePause() {
-        isPaused = !isPaused;
-    }
-
-    function addTime(seconds: number) {
-        remaining += seconds;
-    }
-
-    function subtractTime(seconds: number) {
-        if (remaining > seconds) remaining -= seconds;
-    }
-
-    function reset() {
-        clearInterval(interval);
-        mode = 'SETUP';
-        remaining = selectedDuration;
-    }
-
-    function close() {
-        visible = false;
-        clearInterval(interval);
-        // We don't call onComplete here as that might trigger "next set" logic which we don't always want on close
-    }
-
-    function playAlarm() {
-        // Haptic feedback if available
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200]);
         }
-        
-        // Simple beep (if we wanted to add Audio later)
-        // const audio = new Audio('/alarm.mp3'); 
-        // audio.play().catch(e => console.log('Audio play failed', e));
-    }
-
-    onDestroy(() => {
-        clearInterval(interval);
     });
 
-    $: minutes = Math.floor(remaining / 60);
-    $: seconds = remaining % 60;
+    onMount(() => {
+        restoreState();
+        timerInterval = setInterval(tick, 100);
+        return () => clearInterval(timerInterval);
+    });
+
+    // -- Core Logic --
+
+    function loadPreference() {
+        if (!associatedExerciseId) return;
+        try {
+            const prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const p = prefs[associatedExerciseId] || prefs['default'];
+            if (p) {
+                configWork = p.work || 30;
+                configRest = p.rest || 60;
+                // Sets usually come from the current session plan (defaultSets prop), so we might not want to overwrite them from history unless we want "last used sets for this exercise"
+                // The user said "automatically retrieve the number of sets from the exercise leaf", so we favor defaultSets.
+            }
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+
+    function savePreference() {
+        try {
+            const prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const p = { work: configWork, rest: configRest };
+            if (associatedExerciseId) prefs[associatedExerciseId] = p;
+            prefs['default'] = p;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+        } catch (e) { console.error(e); }
+    }
+
+    // Resilience
+    function saveState() {
+        if (phase === 'SETUP') return;
+        const snapshot = {
+            phase, runningState, remaining, endTimestamp, 
+            configWork, configRest, configSets, currentSet,
+            associatedExerciseId, pausedTimeRemaining, timestamp: Date.now()
+        };
+        localStorage.setItem('active_interval_timer', JSON.stringify(snapshot));
+    }
+
+    function restoreState() {
+        try {
+            const saved = localStorage.getItem('active_interval_timer');
+            if (saved) {
+                const s = JSON.parse(saved);
+                if (Date.now() - s.timestamp < 3600000) { // 1 hr expiry
+                    phase = s.phase;
+                    runningState = s.runningState;
+                    remaining = s.remaining;
+                    endTimestamp = s.endTimestamp;
+                    configWork = s.configWork;
+                    configRest = s.configRest;
+                    configSets = s.configSets;
+                    currentSet = s.currentSet;
+                    associatedExerciseId = s.associatedExerciseId;
+                    pausedTimeRemaining = s.pausedTimeRemaining;
+                    
+                    if (phase !== 'SETUP' && phase !== 'FINISHED') {
+                        visible = true;
+                    }
+                }
+            }
+        } catch (e) {}
+    }
+
+    function clearState() {
+        localStorage.removeItem('active_interval_timer');
+    }
+
+    // Control
+    function startSession() {
+        savePreference();
+        phase = 'WORK';
+        currentSet = 1;
+        startPhase(configWork);
+    }
+
+    function startPhase(duration: number) {
+        runningState = 'RUNNING';
+        remaining = duration;
+        endTimestamp = Date.now() + (duration * 1000);
+        saveState();
+        audioManager.playChime(); // Beep on start
+    }
+
+    function pause() {
+        runningState = 'PAUSED';
+        pausedTimeRemaining = remaining;
+        endTimestamp = null;
+        saveState();
+    }
+
+    function resume() {
+        if (pausedTimeRemaining) {
+            runningState = 'RUNNING';
+            endTimestamp = Date.now() + (pausedTimeRemaining * 1000);
+            saveState();
+        }
+    }
+
+    function skip() {
+        handlePhaseComplete();
+    }
+
+    function stop() {
+        phase = 'SETUP';
+        runningState = 'PAUSED';
+        clearState();
+    }
+
+    function handlePhaseComplete() {
+        // Work -> Rest (unless last set)
+        // Rest -> Work (next set)
+        
+        audioManager.playCompletionAlert();
+        
+        if (phase === 'WORK') {
+            if (currentSet >= configSets) {
+                // All done
+                phase = 'FINISHED';
+                runningState = 'PAUSED';
+                endTimestamp = null;
+                onComplete();
+                clearState();
+            } else {
+                phase = 'REST';
+                startPhase(configRest);
+            }
+        } else if (phase === 'REST') {
+            currentSet++;
+            phase = 'WORK';
+            startPhase(configWork);
+        }
+    }
+
+    function tick() {
+        if (!visible || phase === 'SETUP' || phase === 'FINISHED' || runningState === 'PAUSED') return;
+        
+        if (endTimestamp) {
+            const now = Date.now();
+            const diff = endTimestamp - now;
+            remaining = Math.ceil(diff / 1000);
+
+            if (remaining <= 0) {
+                remaining = 0;
+                handlePhaseComplete();
+            }
+        }
+    }
+
+    // UI Formatting
+    function formatTime(s: number) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function closeTimer() {
+        if (phase === 'SETUP' || phase === 'FINISHED') {
+            stop();
+            visible = false;
+        } else {
+            // Minimize behavior? For now just hide but keep state (resilience handles reload)
+            // But if we want to stop:
+            visible = false;
+        }
+        if (onClose) onClose();
+    }
+
 </script>
 
 {#if visible}
     <div 
-        class="timer-overlay" 
-        transition:fade={{ duration: 200 }} 
-        on:click|self={close}
+        class="overlay" 
+        transition:fade={{ duration: 250 }}
         role="button"
         tabindex="0"
-        on:keydown={(e) => { if (e.key === 'Escape') close(); }}
-        aria-label="Close timer"
+        onclick={(e) => { if(e.target === e.currentTarget) closeTimer(); }}
+        onkeydown={(e) => { if(e.key === 'Escape') closeTimer(); }}
     >
-        <div class="rest-timer" transition:scale={{ start: 0.9, duration: 200 }}>
-            
+        <div 
+            class="timer-card" 
+            class:work={phase === 'WORK'}
+            class:rest={phase === 'REST'}
+            transition:scale={{ start: 0.96, duration: 300, easing: cubicOut }}
+        >
+            <!-- Header -->
             <div class="header">
-                <span class="title">Rest Timer</span>
-                <button class="close-btn" on:click={close}>✕</button>
-            </div>
-
-            <!-- Timer Display -->
-            <div class="display-container">
-                <div class="time-display" class:paused={isPaused && mode === 'RUNNING'}>
-                    {mode === 'SETUP' ? Math.floor(selectedDuration / 60) : minutes}:{mode === 'SETUP' ? (selectedDuration % 60).toString().padStart(2, '0') : seconds.toString().padStart(2, '0')}
-                </div>
-                <div class="status-label">
-                    {#if mode === 'SETUP'}
-                        Set Duration
-                    {:else if isPaused}
-                        Paused
+                <span class="title">
+                    {#if phase === 'SETUP'}
+                        Timer Setup
+                    {:else if phase === 'FINISHED'}
+                        Complete
                     {:else}
-                        Resting...
+                        Set {currentSet} / {configSets}
                     {/if}
-                </div>
+                </span>
+                <button class="close-btn" onclick={closeTimer}>✕</button>
             </div>
 
-            {#if mode === 'SETUP'}
-                <!-- Setup Controls -->
-                <div class="presets-grid">
-                    {#each PRESETS as preset}
-                        <button 
-                            class="preset-btn" 
-                            class:active={selectedDuration === preset}
-                            on:click={() => selectedDuration = preset}
-                        >
-                            {preset >= 60 ? `${preset/60}m` : `${preset}s`}
+            <!-- Content -->
+            <div class="content">
+                {#if phase === 'SETUP'}
+                    <div class="setup-form">
+                        <div class="input-group">
+                            <label for="work-duration">Work</label>
+                            <div class="time-adjuster">
+                                <button onclick={() => configWork = Math.max(5, configWork - 5)}>−</button>
+                                <span class="val">{formatTime(configWork)}</span>
+                                <button onclick={() => configWork += 5}>+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="rest-duration">Rest</label>
+                            <div class="time-adjuster">
+                                <button onclick={() => configRest = Math.max(5, configRest - 5)}>−</button>
+                                <span class="val">{formatTime(configRest)}</span>
+                                <button onclick={() => configRest += 5}>+</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="num-sets">Sets</label>
+                            <div class="time-adjuster">
+                                <button onclick={() => configSets = Math.max(1, configSets - 1)}>−</button>
+                                <span class="val">{configSets}</span>
+                                <button onclick={() => configSets += 1}>+</button>
+                            </div>
+                        </div>
+                        
+                        <button class="start-btn" onclick={startSession}>
+                            ▶ Start Interval
                         </button>
-                    {/each}
-                </div>
+                    </div>
 
-                <div class="manual-adjust">
-                    <button class="adjust-btn" on:click={() => selectedDuration = Math.max(10, selectedDuration - 10)}>-</button>
-                    <span class="adjust-label">10s</span>
-                    <button class="adjust-btn" on:click={() => selectedDuration += 10}>+</button>
-                </div>
+                {:else if phase === 'FINISHED'}
+                     <div class="finished-state">
+                        <div class="check-icon">✓</div>
+                        <h3>Nicely Done!</h3>
+                        <button class="reset-btn" onclick={() => phase = 'SETUP'}>Back to Setup</button>
+                     </div>
+                {:else}
+                    <!-- Running Timer -->
+                    <div class="timer-circle">
+                         <svg viewBox="0 0 100 100" class="ring">
+                            <circle class="track" cx="50" cy="50" r="45" />
+                            <circle 
+                                class="progress" 
+                                cx="50" cy="50" r="45"
+                                stroke-dasharray="283"
+                                stroke-dashoffset={283 * (1 - (remaining / (phase === 'WORK' ? configWork : configRest)))}
+                            />
+                         </svg>
+                         <div class="timer-val">
+                             <div class="phase-label">{phase}</div>
+                             <div class="digits">{formatTime(remaining)}</div>
+                         </div>
+                    </div>
 
-                <button class="action-btn start" on:click={() => startTimer(selectedDuration)}>
-                    Start Timer
-                </button>
-            {:else}
-                <!-- Running Controls -->
-                <div class="quick-adjust">
-                    <button class="adjust-btn" on:click={() => subtractTime(10)}>-10</button>
-                    <button class="adjust-btn" on:click={() => addTime(10)}>+10</button>
-                </div>
-
-                <div class="running-controls">
-                    <button class="action-btn secondary" on:click={reset}>Stop</button>
-                    <button class="action-btn primary" on:click={togglePause}>
-                        {isPaused ? 'Resume' : 'Pause'}
-                    </button>
-                </div>
-            {/if}
+                    <div class="controls">
+                         {#if runningState === 'RUNNING'}
+                            <button class="ctl-btn pause" onclick={pause}>⏸</button>
+                         {:else}
+                            <button class="ctl-btn play" onclick={resume}>▶</button>
+                         {/if}
+                         <button class="ctl-btn skip" onclick={skip}>⏭</button>
+                         <button class="ctl-btn stop" onclick={stop} style="font-size: 1rem; padding: 1rem;">Stop</button>
+                    </div>
+                {/if}
+            </div>
         </div>
     </div>
 {/if}
 
 <style>
-    .timer-overlay {
+    .overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-        z-index: 1000;
+        backdrop-filter: blur(5px);
+        z-index: 2000;
         display: flex;
-        align-items: flex-end; /* Bottom sheet on mobile */
+        align-items: center;
         justify-content: center;
-        padding-bottom: 2rem;
+        padding: 1rem;
     }
 
-    @media (min-width: 640px) {
-        .timer-overlay {
-            align-items: center; /* Center on desktop */
-            padding-bottom: 0;
-        }
-    }
-
-    .rest-timer {
+    .timer-card {
+        background: white;
         width: 100%;
         max-width: 360px;
-        background: #1e1e1e; /* Dark theme default */
-        background: var(--bg-secondary, #1e1e1e);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
         border-radius: 24px;
-        padding: 1.5rem;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
-        margin: 0 1rem;
+        transition: border 0.3s;
+        border: 4px solid transparent;
     }
 
+    .timer-card.work { border-color: #4ade80; }
+    .timer-card.rest { border-color: #2dd4bf; }
+
     .header {
+        padding: 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-bottom: 1px solid #f0f0f0;
+        background: #fcfcfc;
     }
 
     .title {
-        font-weight: 600;
-        color: var(--text-secondary, #ccc);
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #333;
     }
 
     .close-btn {
         background: none;
         border: none;
-        color: var(--text-secondary, #ccc);
-        font-size: 1.25rem;
+        font-size: 1.2rem;
+        color: #999;
         cursor: pointer;
-        padding: 0.25rem;
-        line-height: 1;
     }
 
-    .display-container {
-        text-align: center;
-        padding: 0.5rem 0;
+    .content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .time-display {
-        font-size: 4.5rem;
-        font-weight: 700;
-        font-variant-numeric: tabular-nums;
-        line-height: 1;
-        color: var(--teal-primary, #2dd4bf);
-        text-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
+    /* Setup Styles */
+    .setup-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
     }
 
-    .time-display.paused {
-        opacity: 0.5;
-    }
-
-    .status-label {
-        margin-top: 0.5rem;
-        color: var(--text-secondary, #888);
-        font-size: 0.9rem;
-    }
-
-    /* Setup Mode Styles */
-    .presets-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
+    .input-group {
+        display: flex;
+        flex-direction: column;
         gap: 0.5rem;
     }
 
-    .preset-btn {
-        background: var(--bg-tertiary, #2a2a2a);
-        border: 1px solid var(--border-primary, #444);
-        color: var(--text-primary, white);
-        padding: 0.75rem 0;
-        border-radius: 12px;
+    .input-group label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #666;
         font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 0.9rem;
     }
 
-    .preset-btn:hover {
-        background: var(--bg-primary, #333);
-        border-color: var(--teal-primary, #2dd4bf);
-    }
-
-    .preset-btn.active {
-        background: var(--teal-primary, #2dd4bf);
-        color: black;
-        border-color: var(--teal-primary, #2dd4bf);
-        box-shadow: 0 0 15px rgba(45, 212, 191, 0.3);
-    }
-
-    .manual-adjust {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1.5rem;
-        background: var(--bg-tertiary, #2a2a2a);
-        padding: 0.5rem;
-        border-radius: 16px;
-    }
-
-    .adjust-label {
-        color: var(--text-secondary, #ccc);
-        font-family: monospace;
-    }
-
-    /* Running Mode Styles */
-    .quick-adjust {
-        display: flex;
-        gap: 1rem;
-    }
-
-    .quick-adjust .adjust-btn {
-        flex: 1;
-        background: var(--bg-tertiary, #2a2a2a);
-        border: 1px solid var(--border-primary, #444);
-        color: var(--text-primary, white);
-    }
-
-    .running-controls {
-        display: flex;
-        gap: 1rem;
-    }
-
-    /* Common Button Styles */
-    .adjust-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: none;
-        background: var(--bg-primary, #333);
-        color: var(--text-primary, white);
-        font-size: 1.25rem;
-        cursor: pointer;
+    .time-adjuster {
         display: flex;
         align-items: center;
-        justify-content: center;
-    }
-    
-    .quick-adjust .adjust-btn {
+        justify-content: space-between;
+        background: #f4f5f7;
+        padding: 0.25rem;
         border-radius: 12px;
-        height: auto;
-        padding: 0.75rem;
-        font-size: 1rem;
     }
 
-    .action-btn {
+    .time-adjuster button {
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: white;
+        border-radius: 10px;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        cursor: pointer;
+    }
+
+    .time-adjuster button:active {
+        transform: scale(0.95);
+    }
+
+    .time-adjuster .val {
+        font-family: 'Inter', monospace;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .start-btn {
+        margin-top: 1rem;
         width: 100%;
         padding: 1rem;
-        border-radius: 16px;
+        background: #333;
+        color: white;
         border: none;
+        border-radius: 16px;
         font-weight: 700;
         font-size: 1.1rem;
         cursor: pointer;
-        transition: transform 0.1s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .action-btn:active {
-        transform: scale(0.98);
+    /* Running Styles */
+    .timer-circle {
+        position: relative;
+        width: 240px;
+        height: 240px;
+        margin-bottom: 2rem;
     }
 
-    .action-btn.start {
-        background: var(--teal-primary, #2dd4bf);
-        color: black;
-        box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+    .ring {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
     }
 
-    .action-btn.primary {
-        background: var(--teal-primary, #2dd4bf);
-        color: black;
-        flex: 2;
+    .track {
+        fill: none;
+        stroke: #f0f0f0;
+        stroke-width: 6;
     }
 
-    .action-btn.secondary {
-        background: var(--bg-tertiary, #2a2a2a);
-        color: var(--text-secondary, #ccc);
-        flex: 1;
+    .progress {
+        fill: none;
+        stroke: #333;
+        stroke-width: 6;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.1s linear;
+    }
+
+    .work .progress { stroke: #4ade80; }
+    .rest .progress { stroke: #2dd4bf; }
+
+    .timer-val {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .phase-label {
+        font-size: 1.25rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.25rem;
+        opacity: 0.5;
+    }
+
+    .digits {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ctl-btn {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: none;
+        background: #f4f5f7;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        transition: all 0.2s;
+    }
+    
+    .ctl-btn.play {
+         background: #333;
+         color: white;
+         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .ctl-btn:active {
+        transform: scale(0.95);
+    }
+
+    .finished-state {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .check-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #4ade80;
+        color: white;
+        font-size: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+
+    .reset-btn {
+        margin-top: 2rem;
+        padding: 0.75rem 1.5rem;
+        background: #f4f5f7;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
     }
 </style>
