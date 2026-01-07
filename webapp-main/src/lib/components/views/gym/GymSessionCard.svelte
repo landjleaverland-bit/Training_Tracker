@@ -1,22 +1,79 @@
 <script lang="ts">
 	import { EXERCISE_LIBRARY } from '$lib/data/exercises';
 	import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
-	import { deleteGymSession } from '$lib/services/api';
+	import { deleteGymSession, updateGymSession } from '$lib/services/api';
 	import { slide } from 'svelte/transition';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 
 	interface Props {
 		session: GymSession;
 		onDelete: () => void;
+		onUpdate: () => void;
 	}
 
-	let { session, onDelete }: Props = $props();
+	let { session, onDelete, onUpdate }: Props = $props();
 
 	let isExpanded = $state(false);
 	let showDeleteModal = $state(false);
+	
+	// Edit name state
+	let isEditingName = $state(false);
+	let editedName = $state(''); // Initialized in startEditingName
+	let isSavingName = $state(false);
 
 	function toggleExpand() {
-		isExpanded = !isExpanded;
+		if (!isEditingName) {
+			isExpanded = !isExpanded;
+		}
+	}
+
+	function startEditingName(e: Event) {
+		e.stopPropagation();
+		editedName = session.name;
+		isEditingName = true;
+	}
+
+	function cancelEditingName(e: Event) {
+		e.stopPropagation();
+		isEditingName = false;
+	}
+
+	async function handleSaveName(e: Event) {
+		e.stopPropagation();
+		if (!editedName.trim() || isSavingName) return;
+
+		isSavingName = true;
+		try {
+			const updatedSession = { ...session, name: editedName.trim() };
+			// Remove ID and other remote fields to match payload type if strictly required, 
+			// but api helper sanitizePayload should handle it.
+			// Ideally we construct a proper payload.
+			// Based on api.ts, updateGymSession takes GymSessionPayload.
+			
+			const payload = {
+				date: session.date,
+				time: session.time || '',
+				name: editedName.trim(),
+				bodyweight: session.bodyweight,
+				trainingBlock: session.trainingBlock,
+				exercises: session.exercises
+			};
+
+			const result = await updateGymSession(session.id, payload);
+			
+			if (result.ok) {
+				isEditingName = false;
+				onUpdate();
+			} else {
+				console.error('Failed to update session name:', result.error);
+				alert('Failed to update session name');
+			}
+		} catch (error) {
+			console.error('Error updating session name:', error);
+			alert('Error updating session name');
+		} finally {
+			isSavingName = false;
+		}
 	}
 
 	function handleDeleteSession() {
@@ -41,6 +98,21 @@
 
 	function getExerciseDef(name: string) {
 		return EXERCISE_LIBRARY.find((e) => e.name === name);
+	}
+
+	function getTrainingBlockStyle(block: string | undefined): { bg: string; color: string; border: string } {
+		switch (block) {
+			case 'Strength':
+				return { bg: 'rgba(99, 102, 241, 0.1)', color: '#4338ca', border: 'rgba(99, 102, 241, 0.2)' }; // Indigo
+			case 'Power':
+				return { bg: 'rgba(239, 68, 68, 0.1)', color: '#b91c1c', border: 'rgba(239, 68, 68, 0.2)' }; // Red
+			case 'Power Endurance':
+				return { bg: 'rgba(245, 158, 11, 0.1)', color: '#b45309', border: 'rgba(245, 158, 11, 0.2)' }; // Amber
+			case 'Muscular Endurance':
+				return { bg: 'rgba(16, 185, 129, 0.1)', color: '#047857', border: 'rgba(16, 185, 129, 0.2)' }; // Emerald
+			default:
+				return { bg: 'rgba(107, 114, 128, 0.1)', color: '#374151', border: 'rgba(107, 114, 128, 0.2)' }; // Gray
+		}
 	}
 
 	// Stats
@@ -100,9 +172,64 @@
 
 			<div class="session-info">
 				<div class="session-text">
-					<h3 class="name">{session.name}</h3>
+					{#if isEditingName}
+						<!-- svelte-ignore a11y_click_events_have_key_events -->
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<div class="edit-name-container" onclick={(e) => e.stopPropagation()}>
+							<input 
+								type="text" 
+								bind:value={editedName}
+								class="name-input"
+								placeholder="Session Name"
+								onclick={(e) => e.stopPropagation()}
+								onkeydown={(e) => e.key === 'Enter' && handleSaveName(e)}
+							/>
+							<div class="edit-actions">
+								<button 
+									class="btn-icon save-name" 
+									onclick={handleSaveName}
+									disabled={isSavingName}
+									title="Save"
+								>
+									{#if isSavingName}
+										⏳
+									{:else}
+										✅
+									{/if}
+								</button>
+								<button 
+									class="btn-icon cancel-edit" 
+									onclick={cancelEditingName}
+									disabled={isSavingName}
+									title="Cancel"
+								>
+									❌
+								</button>
+							</div>
+						</div>
+					{:else}
+						<div class="name-display">
+							<h3 class="name">{session.name}</h3>
+							<button 
+								class="btn-icon edit-name-btn" 
+								onclick={startEditingName}
+								title="Edit Name"
+							>
+								✏️
+							</button>
+						</div>
+					{/if}
 					<div class="session-meta">
 						<span class="time-tag">🕒 {session.time || '12:00'}</span>
+						{#if session.trainingBlock}
+							{@const style = getTrainingBlockStyle(session.trainingBlock)}
+							<span 
+								class="block-tag"
+								style="--bg-color: {style.bg}; --text-color: {style.color}; --border-color: {style.border};"
+							>
+								{session.trainingBlock}
+							</span>
+						{/if}
 						<span class="stat">{exerciseCount} Exercises</span>
 						<span class="stat">{totalSets} Sets</span>
 						<span class="stat">~{Math.round(totalVolume).toLocaleString()}kg Vol</span>
@@ -293,12 +420,69 @@
 		gap: 0.25rem;
 	}
 
+	.name-display {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
 	.name {
 		margin: 0;
 		font-size: 1.1rem;
 		font-weight: 700;
 		color: var(--text-primary);
 		letter-spacing: -0.01em;
+	}
+
+	.edit-name-btn {
+		opacity: 0;
+		transition: opacity 0.2s;
+		font-size: 0.9rem;
+		padding: 0.2rem;
+	}
+
+	.card-header:hover .edit-name-btn {
+		opacity: 0.5;
+	}
+
+	.card-header:hover .edit-name-btn:hover {
+		opacity: 1;
+		background: rgba(0,0,0,0.05);
+	}
+
+	.edit-name-container {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.name-input {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		padding: 0.2rem 0.5rem;
+		border: 1px solid var(--teal-secondary);
+		border-radius: 4px;
+		width: 200px;
+		font-family: inherit;
+	}
+
+	.name-input:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(74, 155, 155, 0.2);
+	}
+
+	.edit-actions {
+		display: flex;
+		gap: 0.2rem;
+	}
+
+	.save-name {
+		color: #10b981;
+	}
+
+	.cancel-edit {
+		color: #ef4444;
 	}
 
 	.time-tag {
@@ -310,6 +494,19 @@
 		border-radius: 4px;
 		font-size: 0.75rem;
 		margin-right: 0.5rem;
+	}
+
+	.block-tag {
+		font-family: 'Geist Mono', monospace;
+		font-weight: 600;
+		font-size: 0.75rem;
+		padding: 0.1rem 0.5rem;
+		border-radius: 4px;
+		background-color: var(--bg-color);
+		color: var(--text-color);
+		border: 1px solid var(--border-color);
+		margin-right: 0.5rem;
+		letter-spacing: -0.01em;
 	}
 
 	.session-meta {
