@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getFingerboardSessions, deleteFingerboardSession } from '$lib/services/api';
+	import { getFingerboardSessions, deleteFingerboardSession, updateFingerboardSession } from '$lib/services/api';
 	import type { FingerboardSession } from '$lib/types/session';
 	import { slide } from 'svelte/transition';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
@@ -24,6 +24,66 @@
 	// Delete state
 	let showDeleteModal = $state(false);
 	let selectedSessionId = $state<string | null>(null);
+
+    // Edit state
+    let editingState = $state<{ sessionId: string; exerciseId: string } | null>(null);
+    let editedNotes = $state('');
+    let isSavingNotes = $state(false);
+
+    function startEditing(sessionId: string, exerciseId: string, currentNotes: string) {
+        editingState = { sessionId, exerciseId };
+        editedNotes = currentNotes;
+    }
+
+    function cancelEditing() {
+        editingState = null;
+        editedNotes = '';
+    }
+
+    async function handleSaveExNotes() {
+        if (!editingState || isSavingNotes) return;
+
+        const { sessionId, exerciseId } = editingState;
+        const session = sessions.find(s => s.id === sessionId);
+        if (!session) return;
+
+        isSavingNotes = true;
+        try {
+            // Clone exercises to avoid mutation before save (though we will mutate generic sessions array after)
+            const updatedExercises = session.exercises.map(ex => {
+                if (ex.id === exerciseId) {
+                    return { ...ex, notes: editedNotes.trim() };
+                }
+                return ex;
+            });
+
+            const payload = {
+                date: session.date,
+                time: session.time || '',
+                location: session.location,
+                exercises: updatedExercises
+            };
+
+            const result = await updateFingerboardSession(sessionId, payload);
+
+            if (result.ok) {
+                // Update local state
+                const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+                if (sessionIndex !== -1) {
+                    sessions[sessionIndex] = { ...sessions[sessionIndex], exercises: updatedExercises };
+                }
+                cancelEditing();
+            } else {
+                console.error('Failed to update notes:', result.error);
+                alert('Failed to update notes');
+            }
+        } catch (e) {
+            console.error('Error saving notes:', e);
+            alert('Error saving notes');
+        } finally {
+            isSavingNotes = false;
+        }
+    }
 
 	function handleDeleteSession(id: string) {
 		selectedSessionId = id;
@@ -204,8 +264,19 @@
 								{#each session.exercises || [] as exercise}
 									<div class="exercise-item">
 										<div class="ex-header">
-											<span class="ex-name">{exercise.name}</span>
-											<span class="ex-grip">{exercise.gripType}</span>
+											<div class="ex-title-group">
+												<span class="ex-name">{exercise.name}</span>
+												<span class="ex-grip">{exercise.gripType}</span>
+											</div>
+											{#if !(editingState?.sessionId === session.id && editingState?.exerciseId === exercise.id)}
+												<button 
+													class="btn-icon edit-btn"
+													title="Edit notes"
+													onclick={() => startEditing(session.id, exercise.id, exercise.notes)}
+												>
+													✏️
+												</button>
+											{/if}
 										</div>
 										<div class="ex-sets">
 											{#each exercise.details as set, i}
@@ -216,7 +287,33 @@
 												</span>
 											{/each}
 										</div>
-										{#if exercise.notes}
+										
+										{#if editingState?.sessionId === session.id && editingState?.exerciseId === exercise.id}
+											<div class="edit-notes-container">
+												<textarea 
+													bind:value={editedNotes}
+													class="notes-input"
+													placeholder="Add notes..."
+													rows="2"
+												></textarea>
+												<div class="edit-actions">
+													<button 
+														class="action-btn save" 
+														onclick={handleSaveExNotes}
+														disabled={isSavingNotes}
+													>
+														{isSavingNotes ? 'Saving...' : 'Save'}
+													</button>
+													<button 
+														class="action-btn cancel" 
+														onclick={cancelEditing}
+														disabled={isSavingNotes}
+													>
+														Cancel
+													</button>
+												</div>
+											</div>
+										{:else if exercise.notes}
 											<div class="ex-notes">"{exercise.notes}"</div>
 										{/if}
 									</div>
@@ -463,7 +560,15 @@
 	.ex-header {
 		display: flex;
 		justify-content: space-between;
+		align-items: flex-start;
 		margin-bottom: 0.4rem;
+	}
+
+	.ex-title-group {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
 	}
 
 	.ex-name {
@@ -478,6 +583,78 @@
 		background: #f0f0f0;
 		padding: 0.1rem 0.5rem;
 		border-radius: 4px;
+	}
+
+	.edit-btn {
+		opacity: 0;
+		transition: opacity 0.2s;
+		font-size: 0.8rem;
+		padding: 0.2rem;
+	}
+
+	.exercise-item:hover .edit-btn {
+		opacity: 0.5;
+	}
+
+	.exercise-item:hover .edit-btn:hover {
+		opacity: 1;
+		background: rgba(0,0,0,0.05);
+	}
+
+	.edit-notes-container {
+		margin-top: 0.8rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.notes-input {
+		width: 100%;
+		padding: 0.5rem;
+		border: 1px solid var(--teal-secondary);
+		border-radius: 6px;
+		font-size: 0.9rem;
+		font-family: inherit;
+		resize: vertical;
+	}
+	
+	.notes-input:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px rgba(74, 155, 155, 0.2);
+	}
+
+	.edit-actions {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: flex-end;
+	}
+
+	.action-btn {
+		border: none;
+		border-radius: 4px;
+		padding: 0.3rem 0.8rem;
+		font-size: 0.8rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+
+	.action-btn.save {
+		background: var(--teal-secondary);
+		color: white;
+	}
+
+	.action-btn.save:hover {
+		background: var(--teal-primary);
+	}
+
+	.action-btn.cancel {
+		background: #eee;
+		color: #666;
+	}
+
+	.action-btn.cancel:hover {
+		background: #ddd;
 	}
 
 	.ex-sets {
