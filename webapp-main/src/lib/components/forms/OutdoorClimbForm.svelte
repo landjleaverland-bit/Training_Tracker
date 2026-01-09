@@ -1,9 +1,10 @@
 <script lang="ts">
 	// Outdoor Climb form for logging outdoor climbing sessions
 	import { onMount } from 'svelte';
-	import { createOutdoorSession, isOnline } from '$lib/services/api';
+	import { createOutdoorSession, updateOutdoorSession, isOnline } from '$lib/services/api';
 	import { getAreas, getCrags } from '$lib/data/outdoor_locations';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
+    import type { OutdoorClimbSession } from '$lib/types/session'; // Added type
 	
 	const areas = getAreas();
 	const climbingTypes = ['Boulder', 'Sport', 'Trad'];
@@ -49,6 +50,16 @@
 		'V13', '8B', 'V14', '8B+', 'V15', '8C', 'V16', '8C+', 'V17', '9A'
 	];
 	const validGradesLower = validGrades.map(g => g.toLowerCase());
+
+    // Props
+    interface Props {
+        initialData?: OutdoorClimbSession | null;
+        onCancel?: () => void;
+        onSaved?: () => void;
+    }
+    
+    let { initialData = null, onCancel, onSaved }: Props = $props();
+    let isEditing = $derived(!!initialData);
 
 	let expandedNoteIndex = $state<number | null>(null);
 
@@ -99,42 +110,78 @@
     let loaded = $state(false);
 
     onMount(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.time) time = data.time;
-                if (data.area) area = data.area;
-                if (data.crag) crag = data.crag;
-                if (data.sector) sector = data.sector;
-                if (data.isOtherCrag) isOtherCrag = data.isOtherCrag;
-                if (data.climbingType) climbingType = data.climbingType;
-                if (data.trainingTypes) trainingTypes = data.trainingTypes;
-                if (data.difficulty) difficulty = data.difficulty;
-                if (data.categories) categories = data.categories;
-                if (data.energySystems) energySystems = data.energySystems;
-                
-                if (data.fingerLoad) fingerLoad = data.fingerLoad;
-                if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
-                if (data.forearmLoad) forearmLoad = data.forearmLoad;
-                
-                if (data.openGrip) openGrip = data.openGrip;
-                if (data.crimpGrip) crimpGrip = data.crimpGrip;
-                if (data.pinchGrip) pinchGrip = data.pinchGrip;
-                if (data.sloperGrip) sloperGrip = data.sloperGrip;
-                if (data.jugGrip) jugGrip = data.jugGrip;
-                
-                if (data.climbs) climbs = data.climbs;
-                if (data.notes) notes = data.notes;
-            } catch (e) {
-                console.error('Failed to restore draft', e);
+        if (initialData) {
+            // Populate form from initialData
+            date = initialData.date;
+            time = initialData.time || '12:00';
+            area = initialData.area;
+            crag = initialData.crag;
+            const standardCrags = getCrags(area);
+            if (crag && !standardCrags.includes(crag)) {
+                isOtherCrag = true;
             }
+
+            sector = initialData.sector || '';
+            climbingType = initialData.climbingType;
+            trainingTypes = initialData.trainingTypes || ['None'];
+            difficulty = initialData.difficulty || 'Moderate';
+            categories = initialData.categories || ['None'];
+            energySystems = initialData.energySystems || ['None'];
+            
+            fingerLoad = initialData.fingerLoad;
+            shoulderLoad = initialData.shoulderLoad;
+            forearmLoad = initialData.forearmLoad;
+            
+            openGrip = initialData.openGrip || 3;
+            crimpGrip = initialData.crimpGrip || 3;
+            pinchGrip = initialData.pinchGrip || 3;
+            sloperGrip = initialData.sloperGrip || 3;
+            jugGrip = initialData.jugGrip || 3;
+            
+            climbs = initialData.climbs || [];
+            notes = initialData.notes || '';
+            loaded = true;
+        } else {
+            // Load draft
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    // ... (rest of draft loading logic) ...
+                    if (data.date) date = data.date;
+                    if (data.time) time = data.time;
+                    if (data.area) area = data.area;
+                    if (data.crag) crag = data.crag;
+                    if (data.sector) sector = data.sector;
+                    if (data.isOtherCrag) isOtherCrag = data.isOtherCrag;
+                    if (data.climbingType) climbingType = data.climbingType;
+                    if (data.trainingTypes) trainingTypes = data.trainingTypes;
+                    if (data.difficulty) difficulty = data.difficulty;
+                    if (data.categories) categories = data.categories;
+                    if (data.energySystems) energySystems = data.energySystems;
+                    
+                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
+                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
+                    
+                    if (data.openGrip) openGrip = data.openGrip;
+                    if (data.crimpGrip) crimpGrip = data.crimpGrip;
+                    if (data.pinchGrip) pinchGrip = data.pinchGrip;
+                    if (data.sloperGrip) sloperGrip = data.sloperGrip;
+                    if (data.jugGrip) jugGrip = data.jugGrip;
+                    
+                    if (data.climbs) climbs = data.climbs;
+                    if (data.notes) notes = data.notes;
+                } catch (e) {
+                    console.error('Failed to restore draft', e);
+                }
+            }
+            loaded = true;
         }
-        loaded = true;
     });
 
     $effect(() => {
-        if (!loaded) return;
+        if (!loaded || isEditing) return; // Don't save drafts when editing
         const draft = {
             date, time, area, crag, sector, isOtherCrag, climbingType, trainingTypes, difficulty,
             categories, energySystems,
@@ -261,24 +308,37 @@
 			};
 
 			// Save to server
-			const result = await createOutdoorSession(sessionData);
+            let result;
+            if (isEditing && initialData) {
+                result = await updateOutdoorSession(initialData.id, sessionData);
+            } else {
+                result = await createOutdoorSession(sessionData);
+            }
 
 			if (result.ok) {
 				saveStatus = 'success';
 				saveMessage = 'Session saved!';
-				localStorage.removeItem(STORAGE_KEY);
+                if (!isEditing) {
+				    localStorage.removeItem(STORAGE_KEY);
+                }
+                
+                if (onSaved) {
+                    onSaved();
+                } else {
+                    // Dispatch custom event to notify parent of session save (legacy)
+                    window.dispatchEvent(new CustomEvent('session-saved'));
+                    
+                    // Reset form after short delay if not editing
+                    if (!isEditing) {
+                        setTimeout(() => {
+                            resetForm();
+                        }, 2000);
+                    }
+                }
 			} else {
 				saveStatus = 'error';
 				saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
 			}
-
-			// Dispatch custom event to notify parent of session save
-			window.dispatchEvent(new CustomEvent('session-saved'));
-			
-			// Reset form after short delay
-			setTimeout(() => {
-				resetForm();
-			}, 2000);
 		} catch (e) {
 			saveStatus = 'error';
 			saveMessage = 'Failed to save session';
@@ -314,7 +374,12 @@
 </script>
 
 <div class="form-content">
-	<h3>⛰️ Outdoor Climb</h3>
+	<div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0;">{isEditing ? 'Edit Outdoor Climb' : '⛰️ Outdoor Climb'}</h3>
+        {#if isEditing && onCancel}
+            <button class="cancel-btn" onclick={onCancel}>✕</button>
+        {/if}
+    </div>
 	
 	<!-- Basic Info Section -->
 	<div class="form-row">
@@ -619,6 +684,22 @@
 		from { opacity: 0; transform: translateY(4px); }
 		to { opacity: 1; transform: translateY(0); }
 	}
+
+    .cancel-btn {
+        background: none;
+        border: none;
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        line-height: 1;
+    }
+    
+    .cancel-btn:hover {
+        color: var(--text-primary);
+        background: rgba(0,0,0,0.05);
+        border-radius: 50%;
+    }
 
 	.form-content h3 {
 		margin: 0 0 1.5rem 0;

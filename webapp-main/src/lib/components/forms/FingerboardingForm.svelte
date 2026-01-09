@@ -1,8 +1,20 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-	import { createFingerboardSession, isOnline } from '$lib/services/api';
-    import type { FingerboardExercise, ExerciseSet } from '$lib/types/session';
+    import { onMount, createEventDispatcher } from 'svelte';
+	import { createFingerboardSession, updateFingerboardSession, isOnline } from '$lib/services/api';
+    import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
     import RestTimer from './gym/RestTimer.svelte';
+    
+    const dispatch = createEventDispatcher();
+
+    // Props
+    interface Props {
+        initialData?: FingerboardSession | null;
+        onCancel?: () => void;
+        onSaved?: () => void;
+    }
+    
+    let { initialData = null, onCancel, onSaved }: Props = $props();
+    let isEditing = $derived(!!initialData);
 
     const exerciseOptions = ['Max hangs', 'Recruitment pulls', 'Max pick-ups'];
     const gripOptions = ['Full-crimp', 'Half-crimp', 'Three finger drag', 'Pinch', 'Open hand', 'Sloper'];
@@ -11,7 +23,6 @@
     let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
     let exercises = $state<FingerboardExercise[]>([]);
 	
-	// Add initial exercise card
 	// Add initial exercise card
     let showRestTimer = $state(false);
     let activeTimerExerciseId = $state<string | null>(null);
@@ -43,29 +54,36 @@
 
     // Initialize with one exercise if empty, or load from storage
     onMount(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.time) time = data.time;
-                if (data.exercises && Array.isArray(data.exercises)) {
-                    exercises = data.exercises;
+        if (initialData) {
+            date = initialData.date;
+            time = initialData.time || '12:00';
+            exercises = initialData.exercises;
+            loaded = true;
+        } else {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.time) time = data.time;
+                    if (data.exercises && Array.isArray(data.exercises)) {
+                        exercises = data.exercises;
+                    }
+                } catch (e) {
+                    console.error('Failed to restore draft', e);
                 }
-            } catch (e) {
-                console.error('Failed to restore draft', e);
             }
+            
+            // Ensure at least one exercise exists if storage was empty or invalid
+            if (exercises.length === 0) {
+                addExercise();
+            }
+            loaded = true;
         }
-        
-        // Ensure at least one exercise exists if storage was empty or invalid
-        if (exercises.length === 0) {
-            addExercise();
-        }
-        loaded = true;
     });
 
     // Save to storage whenever state changes
     $effect(() => {
-        if (!loaded) return;
+        if (!loaded || isEditing) return;
         const draft = {
             date,
             time,
@@ -107,22 +125,31 @@
                 location: 'N/A', // Fingerboarding usually doesn't need location or defaults to generic
                 exercises: JSON.parse(JSON.stringify(exercises)) // Deep copy
             };
-
-            const result = await createFingerboardSession(sessionData);
+            
+            let result;
+            if (isEditing && initialData) {
+                result = await updateFingerboardSession(initialData.id, sessionData);
+            } else {
+                result = await createFingerboardSession(sessionData);
+            }
 
             if (result.ok) {
                 saveStatus = 'success';
                 saveMessage = 'Session saved!';
-                localStorage.removeItem(STORAGE_KEY);
+                if (!isEditing) localStorage.removeItem(STORAGE_KEY);
+                
+                if (onSaved) {
+                    onSaved();
+                } else {
+                    window.dispatchEvent(new CustomEvent('session-saved'));
+                    setTimeout(() => {
+                        resetForm();
+                    }, 2000);
+                }
             } else {
                 saveStatus = 'error';
                 saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
             }
-
-            window.dispatchEvent(new CustomEvent('session-saved'));
-            setTimeout(() => {
-                resetForm();
-            }, 2000);
         } catch (e) {
             saveStatus = 'error';
             saveMessage = 'Failed to save session';
@@ -142,7 +169,17 @@
 
 <div class="form-content">
 	<div class="header-row">
-		<h3>🤏 Fingerboarding</h3>
+        <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
+             <h3>{isEditing ? 'Edit Fingerboarding' : '🤏 Fingerboarding'}</h3>
+             {#if isEditing && onCancel}
+                <button 
+                    onclick={onCancel}
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; margin-right: 1rem;"
+                >
+                    &times;
+                </button>
+             {/if}
+        </div>
 		<button class="add-row-btn" onclick={addExercise}>+ Add Exercise</button>
 	</div>
 

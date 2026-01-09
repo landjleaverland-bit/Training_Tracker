@@ -1,11 +1,13 @@
 <script lang="ts">
 	// Outdoor Climb Session Card
 	import { slide } from 'svelte/transition';
+    import { invalidateAll } from '$app/navigation'; // Reload data on update
 
 	import type { OutdoorClimbSession } from '$lib/types/session';
 	import OutdoorClimbEntry from './OutdoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-	import { updateOutdoorSession, deleteOutdoorSession, isOnline } from '$lib/services/api';
+    import EditSessionModal from '$lib/components/common/EditSessionModal.svelte';
+	import { deleteOutdoorSession } from '$lib/services/api';
 
 	interface Props {
 		session: OutdoorClimbSession;
@@ -16,6 +18,7 @@
 
 	let isExpanded = $state(false);
 	let showDeleteModal = $state(false);
+    let showEditModal = $state(false);
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
@@ -24,6 +27,19 @@
 	function handleDeleteSession() {
 		showDeleteModal = true;
 	}
+    
+    function handleEditSession() {
+        showEditModal = true;
+    }
+    
+    function closeEditModal() {
+        showEditModal = false;
+    }
+    
+    async function handleSessionSaved() {
+        showEditModal = false;
+        await invalidateAll();
+    }
 
 	async function confirmDeleteSession() {
 		try {
@@ -42,51 +58,11 @@
 	}
 
 	function handleClimbDelete(climbIndex: number) {
-		const newClimbs = [...session.climbs];
-		newClimbs.splice(climbIndex, 1);
-        saveUpdates(newClimbs);
-		onDelete();
+		// Read only
 	}
 
 	function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
-		const newClimbs = [...session.climbs];
-		newClimbs[climbIndex] = updatedClimb;
-		saveUpdates(newClimbs);
-	}
-
-	async function saveUpdates(newClimbs: any[]) {
-		// Update local state immediately for UI responsiveness
-		session.climbs = newClimbs;
-
-        // Propagate updates to server
-        // We need to send the FULL session structure
-        const sessionPayload = {
-            date: session.date,
-            time: session.time || '12:00',
-            area: session.area,
-            crag: session.crag,
-            sector: session.sector,
-            climbingType: session.climbingType,
-            trainingTypes: session.trainingTypes || [],
-            difficulty: session.difficulty,
-            categories: session.categories || [],
-            energySystems: session.energySystems || [],
-            fingerLoad: session.fingerLoad,
-            shoulderLoad: session.shoulderLoad,
-            forearmLoad: session.forearmLoad,
-            climbs: newClimbs,
-            notes: session.notes
-        };
-
-        try {
-            const result = await updateOutdoorSession(session.id, sessionPayload);
-            if (!result.ok) {
-                console.error('Failed to sync update:', result.error);
-                // Optionally revert UI or show error toast
-            }
-        } catch (e) {
-            console.error('Exception syncing update:', e);
-        }
+		// Read only
 	}
 
 	// Calculate stats
@@ -97,61 +73,8 @@
 			const num = parseInt(c.grade.replace(/\D/g, '')) || 0;
 			const maxNum = parseInt(max.replace(/\D/g, '')) || 0;
 			return num > maxNum ? c.grade : max;
-		}, 'V0/4a')
+		}, 'V0')
 	);
-
-	// Notes Editing
-	let isEditingNotes = $state(false);
-	let tempNotes = $state('');
-	let isSavingNotes = $state(false);
-
-	function startEditNotes() {
-		tempNotes = session.notes || '';
-		isEditingNotes = true;
-	}
-
-	function cancelEditNotes() {
-		isEditingNotes = false;
-		tempNotes = '';
-	}
-
-	async function saveNotes() {
-		if (isSavingNotes) return;
-		isSavingNotes = true;
-
-		// Optimistic update
-		session.notes = tempNotes;
-
-        const sessionPayload = {
-            date: session.date,
-            time: session.time || '12:00',
-            area: session.area,
-            crag: session.crag,
-            sector: session.sector,
-            climbingType: session.climbingType,
-            trainingTypes: session.trainingTypes || [],
-            difficulty: session.difficulty,
-            categories: session.categories || [],
-            energySystems: session.energySystems || [],
-            fingerLoad: session.fingerLoad,
-            shoulderLoad: session.shoulderLoad,
-            forearmLoad: session.forearmLoad,
-            climbs: session.climbs,
-            notes: tempNotes // The updated notes
-        };
-
-        try {
-            const result = await updateOutdoorSession(session.id, sessionPayload);
-            if (!result.ok) {
-                console.error('Failed to sync note update:', result.error);
-            }
-        } catch (e) {
-            console.error('Exception syncing note update:', e);
-        }
-        
-		isEditingNotes = false;
-		isSavingNotes = false;
-	}
 </script>
 
 <div class="session-card" class:expanded={isExpanded}>
@@ -219,6 +142,17 @@
 				{/if}
 			</div>
 
+			<!-- Actions -->
+            <button 
+                class="btn-icon edit-session" 
+                title="Edit Session"
+                onclick={(e) => {
+                    e.stopPropagation();
+                    handleEditSession();
+                }}
+            >
+                ✏️
+            </button>
 			<button
 				class="btn-icon delete-session"
 				title="Delete Session"
@@ -286,35 +220,13 @@
 				{/if}
 			</div>
 
-			<!-- Session Notes Section with Edit Mode -->
+			<!-- Session Notes Section -->
 			<div class="notes-container">
 				<div class="notes-header">
 					<span class="label">Session Notes</span>
-					{#if !isEditingNotes}
-						<button class="icon-btn edit-notes-btn" onclick={startEditNotes} title="Edit Notes">
-							✎
-						</button>
-					{/if}
 				</div>
 
-				{#if isEditingNotes}
-					<div class="edit-notes-area" transition:slide={{ duration: 150 }}>
-						<textarea
-							bind:value={tempNotes}
-							placeholder="Add session notes..."
-							rows="3"
-							class="notes-editor"
-						></textarea>
-						<div class="edit-actions">
-							<button class="cancel-btn" onclick={cancelEditNotes} disabled={isSavingNotes}
-								>Cancel</button
-							>
-							<button class="save-btn" onclick={saveNotes} disabled={isSavingNotes}>
-								{isSavingNotes ? 'Saving...' : 'Save'}
-							</button>
-						</div>
-					</div>
-				{:else if session.notes}
+				{#if session.notes}
 					<p class="notes-text">{session.notes}</p>
 				{:else}
 					<p class="notes-placeholder">No notes.</p>
@@ -418,6 +330,14 @@
 		onConfirm={confirmDeleteSession}
 		onCancel={() => (showDeleteModal = false)}
 	/>
+
+    <EditSessionModal 
+        isOpen={showEditModal} 
+        activityType="outdoor_climb" 
+        initialData={session} 
+        onClose={closeEditModal} 
+        onSaved={handleSessionSaved} 
+    />
 </div>
 
 <style>
@@ -715,110 +635,7 @@
 		margin-bottom: 0.3rem;
 	}
 
-	.icon-btn {
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 4px;
-		opacity: 0.5;
-		transition:
-			opacity 0.2s,
-			background 0.2s;
-		font-size: 1rem;
-		border-radius: 4px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 28px;
-		height: 28px;
-	}
 
-	.icon-btn:hover {
-		opacity: 1;
-		background: rgba(0, 0, 0, 0.05);
-	}
-
-	.notes-text {
-		display: block;
-		width: 100%;
-		text-align: left;
-		border: none;
-		font-family: inherit;
-		font-size: 0.95rem;
-		color: var(--text-primary);
-		line-height: 1.5;
-		background: rgba(74, 155, 155, 0.05);
-		padding: 0.75rem;
-		border-radius: 8px;
-		margin: 0;
-		white-space: pre-wrap;
-	}
-
-	.notes-placeholder {
-		display: block;
-		width: 100%;
-		text-align: left;
-		background: none;
-		font-size: 0.9rem;
-		color: var(--text-secondary);
-		font-style: italic;
-		padding: 0.5rem;
-		border: 1px dashed rgba(0, 0, 0, 0.1);
-		border-radius: 4px;
-		margin: 0;
-	}
-
-	.notes-editor {
-		width: 100%;
-		padding: 0.6rem;
-		border: 1px solid var(--teal-secondary);
-		border-radius: 8px;
-		font-family: inherit;
-		font-size: 0.95rem;
-		resize: vertical;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-		margin-bottom: 0.5rem;
-	}
-
-	.edit-actions {
-		display: flex;
-		justify-content: flex-end;
-		gap: 0.5rem;
-	}
-
-	.cancel-btn {
-		background: none;
-		border: none;
-		color: var(--text-secondary);
-		font-size: 0.9rem;
-		cursor: pointer;
-		padding: 0.4rem 0.8rem;
-	}
-
-	.cancel-btn:hover {
-		color: var(--text-primary);
-	}
-
-	.save-btn {
-		background: var(--teal-secondary);
-		color: white;
-		border: none;
-		border-radius: 6px;
-		padding: 0.4rem 1rem;
-		font-size: 0.9rem;
-		font-weight: 600;
-		cursor: pointer;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	}
-
-	.save-btn:hover:not(:disabled) {
-		background: var(--teal-primary);
-	}
-
-	.save-btn:disabled {
-		opacity: 0.7;
-		cursor: not-allowed;
-	}
 
 	@media (max-width: 480px) {
 		.metrics-container {

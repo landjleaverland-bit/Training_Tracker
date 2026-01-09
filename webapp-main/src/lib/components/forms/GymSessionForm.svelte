@@ -3,7 +3,7 @@
     import { createEventDispatcher } from 'svelte';
     import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
     import { EXERCISE_LIBRARY, type ExerciseDefinition } from '$lib/data/exercises';
-    import { createGymSession, getGymSessions } from '$lib/services/api';
+    import { createGymSession, updateGymSession, getGymSessions } from '$lib/services/api';
     
     // Components
     import ExerciseCard from './gym/ExerciseCard.svelte';
@@ -17,18 +17,55 @@
     const dispatch = createEventDispatcher();
     const STORAGE_KEY = 'gym_session_draft';
 
+    // Props
+    interface Props {
+        initialData?: GymSession | null;
+        onCancel?: () => void;
+        onSaved?: () => void;
+    }
+    
+    let { initialData = null, onCancel, onSaved }: Props = $props();
+    let isEditing = $derived(!!initialData);
+
     // State
-    let sessionName = '';
-    let bodyweight: number | undefined;
-    let exercises: GymExercise[] = [];
-    let startTime = new Date().toISOString().split('T')[0];
-    let time = new Date().toTimeString().split(' ')[0].slice(0, 5);
-    let trainingBlock: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance' = 'Strength';
-    let previousSession: GymSession | null = null;
-    let allSessions: GymSession[] = [];
+    let sessionName = $state('');
+    let bodyweight = $state<number | undefined>(undefined);
+    let exercises = $state<GymExercise[]>([]);
+    let startTime = $state(new Date().toISOString().split('T')[0]);
+    let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
+    let trainingBlock = $state<'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance'>('Strength');
+    let previousSession = $state<GymSession | null>(null);
+    let allSessions = $state<GymSession[]>([]);
     
     // Load history for benchmarks
     onMount(async () => {
+        if (initialData) {
+            // Populate form from initialData
+            sessionName = initialData.name;
+            bodyweight = initialData.bodyweight;
+            exercises = initialData.exercises;
+            startTime = initialData.date;
+            time = initialData.time || '12:00';
+            trainingBlock = initialData.trainingBlock || 'Strength';
+            loaded = true;
+        } else {
+             const saved = localStorage.getItem(STORAGE_KEY);
+             if (saved) {
+                 try {
+                     const data = JSON.parse(saved);
+                     if (data.sessionName) sessionName = data.sessionName;
+                     if (data.bodyweight) bodyweight = data.bodyweight;
+                     if (data.startTime) startTime = data.startTime;
+                     if (data.time) time = data.time;
+                     if (data.trainingBlock) trainingBlock = data.trainingBlock;
+                     if (data.exercises) exercises = data.exercises;
+                 } catch (e) {
+                     console.error('Failed to restore draft', e);
+                 }
+             }
+             loaded = true;
+        }
+
         const result = await getGymSessions();
         if (result.ok && result.data) {
             // @ts-ignore - map to local type
@@ -40,14 +77,14 @@
         }
     });
 
-    $: {
+    $effect(() => {
         const blockSessions = allSessions.filter(s => 
             (s.trainingBlock || 'Strength') === trainingBlock &&
             s.date < startTime
         );
         blockSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         previousSession = blockSessions.length > 0 ? blockSessions[0] : null;
-    }
+    });
 
     function getBenchmarks(exerciseName: string) {
         const result: Record<string, { weight: number, reps: number } | null> = {
@@ -84,43 +121,26 @@
     }
     
     // UI State
-    let showExercisePicker = false;
-    let searchQuery = '';
-    let selectedCategory = '';
-    let selectedSubcategory = ''; // New state
-    let activeKeypadField: { exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' } | null = null;
-    let showPlateCalc = false;
-    let plateCalcWeight = 0;
-    let showRestTimer = false;
-    let activeExerciseDetail: ExerciseDefinition | null = null;
-    let exerciseToDeleteIndex: number | null = null;
-    let showSuccess = false;
-    let activeTimerExerciseId: string | null = null;
-    let timerDefaultSets = 3;
-    let lastCompletedExerciseId: string | null = null;
+    let showExercisePicker = $state(false);
+    let searchQuery = $state('');
+    let selectedCategory = $state('');
+    let selectedSubcategory = $state(''); // New state
+    let activeKeypadField = $state<{ exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' } | null>(null);
+    let showPlateCalc = $state(false);
+    let plateCalcWeight = $state(0);
+    let showRestTimer = $state(false);
+    let activeExerciseDetail = $state<ExerciseDefinition | null>(null);
+    let exerciseToDeleteIndex = $state<number | null>(null);
+    let showSuccess = $state(false);
+    let activeTimerExerciseId = $state<string | null>(null);
+    let timerDefaultSets = $state(3);
+    let lastCompletedExerciseId = $state<string | null>(null);
 
     // Persistence
-    let loaded = false;
-    onMount(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.sessionName) sessionName = data.sessionName;
-                if (data.bodyweight) bodyweight = data.bodyweight;
-                if (data.startTime) startTime = data.startTime;
-                if (data.time) time = data.time;
-                if (data.trainingBlock) trainingBlock = data.trainingBlock;
-                if (data.exercises) exercises = data.exercises;
-            } catch (e) {
-                console.error('Failed to restore draft', e);
-            }
-        }
-        loaded = true;
-    });
-
-    $: {
-        if (loaded && typeof localStorage !== 'undefined') {
+    let loaded = $state(false);
+    
+    $effect(() => {
+        if (loaded && !isEditing && typeof localStorage !== 'undefined') {
              const draft = {
                 sessionName,
                 bodyweight,
@@ -131,10 +151,10 @@
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
         }
-    }
+    });
 
     // Filtered exercises for picker
-    $: filteredExercises = EXERCISE_LIBRARY.filter(e => {
+    let filteredExercises = $derived(EXERCISE_LIBRARY.filter(e => {
         // Search overrides filters
         if (searchQuery) {
             return e.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -145,14 +165,14 @@
         const matchesCategory = selectedCategory ? e.category === selectedCategory : true;
         const matchesSubcategory = selectedSubcategory ? e.subcategory === selectedSubcategory : true;
         return matchesCategory && matchesSubcategory;
-    });
+    }));
 
     const categories = Array.from(new Set(EXERCISE_LIBRARY.map(e => e.category))).sort();
     
     // Reactive subcategories based on selected category
-    $: availableSubcategories = selectedCategory 
+    let availableSubcategories = $derived(selectedCategory 
         ? Array.from(new Set(EXERCISE_LIBRARY.filter(e => e.category === selectedCategory).map(e => e.subcategory))).sort()
-        : [];
+        : []);
 
     // Reset subcategory when category changes
     function handleCategoryChange() {
@@ -205,24 +225,33 @@
 
     async function saveSession() {
         if (exercises.length === 0) return;
-
-        const result = await createGymSession({
+        
+        const sessionPayload = {
             date: startTime,
             time,
             name: sessionName || 'Gym Workout',
             bodyweight,
             trainingBlock,
             exercises
-        });
+        };
+
+        const result = isEditing && initialData
+            ? await updateGymSession(initialData.id, sessionPayload)
+            : await createGymSession(sessionPayload);
 
         if (result.ok) {
             showSuccess = true;
-            localStorage.removeItem(STORAGE_KEY);
+            if (!isEditing) localStorage.removeItem(STORAGE_KEY);
             
-            setTimeout(() => {
-                showSuccess = false;
-                dispatch('save');
-            }, 1500);
+            if (onSaved) {
+                // If managed by parent (modal)
+                onSaved();
+            } else {            
+                setTimeout(() => {
+                    showSuccess = false;
+                    dispatch('save');
+                }, 1500);
+            }
         } else {
             console.error('Failed to save gym session', result.error);
             // Optionally show error state
@@ -237,6 +266,20 @@
 <div class="gym-session-form">
     <!-- Header Input -->
     <div class="session-meta">
+        <div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+             <h2 style="margin: 0; font-size: 1.25rem; color: var(--teal-primary);">
+                {isEditing ? 'Make Changes to Gym Session' : 'New Gym Session'}
+             </h2>
+             {#if isEditing && onCancel}
+                <button 
+                    onclick={onCancel}
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;"
+                >
+                    &times;
+                </button>
+             {/if}
+        </div>
+        
         <input 
             type="text" 
             class="session-name" 
@@ -291,7 +334,7 @@
     </div>
 
     <!-- Add Exercise Button -->
-    <button class="add-exercise-btn" on:click={() => showExercisePicker = true}>
+    <button class="add-exercise-btn" onclick={() => showExercisePicker = true}>
         + Add Exercise
     </button>
 
@@ -300,7 +343,7 @@
         <button 
             class="save-btn" 
             class:success={showSuccess}
-            on:click={saveSession}
+            onclick={saveSession}
             disabled={showSuccess}
         >
             {#if showSuccess}
@@ -317,8 +360,8 @@
             class="modal-overlay" 
             role="button"
             tabindex="0"
-            on:click={() => showExercisePicker = false} 
-            on:keydown={(e) => e.key === 'Escape' && (showExercisePicker = false)}
+            onclick={() => showExercisePicker = false} 
+            onkeydown={(e) => e.key === 'Escape' && (showExercisePicker = false)}
             transition:fade
             aria-label="Close modal"
         >
@@ -326,8 +369,8 @@
                 class="picker-modal" 
                 role="dialog"
                 aria-modal="true"
-                on:click|stopPropagation 
-                on:keydown|stopPropagation
+                onclick={(e) => e.stopPropagation()} 
+                onkeydown={(e) => e.stopPropagation()}
                 tabindex="-1"
                 transition:fly={{ y: 100, duration: 300 }}
             >
@@ -348,7 +391,7 @@
                         <div class="filter-row">
                             <select 
                                 bind:value={selectedCategory} 
-                                on:change={handleCategoryChange}
+                                onchange={handleCategoryChange}
                                 class="category-select"
                             >
                                 <option value="">Select Category...</option>
@@ -374,7 +417,7 @@
                 <div class="picker-content">
                     <div class="exercise-list-simple">
                         {#each filteredExercises as def}
-                            <button class="exercise-item-simple" on:click={() => addExercise(def)}>
+                            <button class="exercise-item-simple" onclick={() => addExercise(def)}>
                                 <span class="name">{def.name}</span>
                                 {#if searchQuery}
                                     <span class="details">{def.category} - {def.subcategory}</span>
@@ -408,7 +451,7 @@
                 <span>
                     Editing {exercises[activeKeypadField.exerciseIndex].name} - Set {activeKeypadField.setIndex + 1}
                 </span>
-                <button on:click={closeKeypad}>Done</button>
+                <button onclick={closeKeypad}>Done</button>
             </div>
             <Keypad 
                 value={exercises[activeKeypadField.exerciseIndex].sets[activeKeypadField.setIndex][activeKeypadField.field]}

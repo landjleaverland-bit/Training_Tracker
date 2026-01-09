@@ -1,7 +1,7 @@
 <script lang="ts">
 	// Indoor Climb form for logging climbing sessions
-	import { onMount } from 'svelte';
-	import { createIndoorSession, isOnline } from '$lib/services/api';
+	import { onMount, tick } from 'svelte';
+	import { createIndoorSession, updateIndoorSession, isOnline } from '$lib/services/api';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
 	const locations = [
 		'Rockstar Unit 3',
@@ -98,6 +98,15 @@
 		techniqueFocus?: string;
 	}
 
+    interface Props {
+        initialData?: any;
+        onCancel?: () => void;
+        onSaved?: () => void;
+    }
+
+    let { initialData, onCancel, onSaved }: Props = $props();
+    let isEditing = $derived(!!initialData);
+
 	// Form state
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
@@ -131,41 +140,85 @@
     let loaded = $state(false);
 
     onMount(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.location) location = data.location;
-                if (data.time) time = data.time;
-                if (data.isOtherLocation) isOtherLocation = data.isOtherLocation;
-                if (data.climbingType) climbingType = data.climbingType;
-                if (data.trainingTypes) trainingTypes = data.trainingTypes;
-                if (data.difficulty) difficulty = data.difficulty;
-                if (data.categories) categories = data.categories;
-                if (data.energySystems) energySystems = data.energySystems;
-                if (data.wallAngles) wallAngles = data.wallAngles;
-                
-                if (data.fingerLoad) fingerLoad = data.fingerLoad;
-                if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
-                if (data.forearmLoad) forearmLoad = data.forearmLoad;
-                
-                if (data.openGrip) openGrip = data.openGrip;
-                if (data.crimpGrip) crimpGrip = data.crimpGrip;
-                if (data.pinchGrip) pinchGrip = data.pinchGrip;
-                if (data.sloperGrip) sloperGrip = data.sloperGrip;
-                if (data.jugGrip) jugGrip = data.jugGrip;
-                
-                if (data.climbs) climbs = data.climbs;
-                if (data.notes) notes = data.notes;
-            } catch (e) {
-                console.error('Failed to restore draft', e);
+        if (initialData) {
+            // Populate form with initial data
+            date = initialData.date;
+            time = initialData.time || '12:00';
+            
+            // Handle location
+            if (locations.includes(initialData.location)) {
+                location = initialData.location;
+                isOtherLocation = false;
+            } else if (initialData.customLocation) {
+                 location = initialData.customLocation;
+                 isOtherLocation = true;
+            } else {
+                 location = initialData.location; // Fallback
+                 isOtherLocation = true; // Assume custom if not in list
+            }
+            
+            climbingType = initialData.climbingType;
+            trainingTypes = initialData.trainingTypes || ['None'];
+            difficulty = initialData.difficulty || 'None';
+            categories = initialData.categories || ['None'];
+            energySystems = initialData.energySystems || ['None'];
+            wallAngles = initialData.wallAngles || ['None'];
+            
+            fingerLoad = initialData.fingerLoad || 3;
+            shoulderLoad = initialData.shoulderLoad || 3;
+            forearmLoad = initialData.forearmLoad || 3;
+            
+            openGrip = initialData.openGrip || 3;
+            crimpGrip = initialData.crimpGrip || 3;
+            pinchGrip = initialData.pinchGrip || 3;
+            sloperGrip = initialData.sloperGrip || 3;
+            jugGrip = initialData.jugGrip || 3;
+            
+            if (initialData.climbs && initialData.climbs.length > 0) {
+                climbs = JSON.parse(JSON.stringify(initialData.climbs)); // Deep copy
+            } else {
+                 climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '', wall: 'Overhang' }];
+            }
+            
+            notes = initialData.notes || '';
+        } else {
+            // Only load draft if NOT editing
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.location) location = data.location;
+                    if (data.time) time = data.time;
+                    if (data.isOtherLocation) isOtherLocation = data.isOtherLocation;
+                    if (data.climbingType) climbingType = data.climbingType;
+                    if (data.trainingTypes) trainingTypes = data.trainingTypes;
+                    if (data.difficulty) difficulty = data.difficulty;
+                    if (data.categories) categories = data.categories;
+                    if (data.energySystems) energySystems = data.energySystems;
+                    if (data.wallAngles) wallAngles = data.wallAngles;
+                    
+                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
+                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
+                    
+                    if (data.openGrip) openGrip = data.openGrip;
+                    if (data.crimpGrip) crimpGrip = data.crimpGrip;
+                    if (data.pinchGrip) pinchGrip = data.pinchGrip;
+                    if (data.sloperGrip) sloperGrip = data.sloperGrip;
+                    if (data.jugGrip) jugGrip = data.jugGrip;
+                    
+                    if (data.climbs) climbs = data.climbs;
+                    if (data.notes) notes = data.notes;
+                } catch (e) {
+                    console.error('Failed to restore draft', e);
+                }
             }
         }
         loaded = true;
     });
 
     $effect(() => {
-        if (!loaded) return;
+        if (!loaded || isEditing) return; // Don't save drafts when editing
         const draft = {
             date, time, location, isOtherLocation, climbingType, trainingTypes, difficulty,
             categories, energySystems,
@@ -214,7 +267,7 @@
 	// Only show Sport? column when Mixed is selected
 	let showSportColumn = $derived(climbingType === 'Mixed');
 
-	// Get isSport value based on climbing type
+	// Get isSport value based on climbingType
 	function getIsSport(climb: ClimbEntry): boolean {
 		if (climbingType === 'Sport') return true;
 		if (climbingType === 'Bouldering') return false;
@@ -285,26 +338,41 @@
                 notes
 			};
 
-			// Save to local cache first (offline-first)
-			// Save to server
-			const result = await createIndoorSession(sessionData);
+            let result;
+            if (isEditing) {
+                result = await updateIndoorSession(initialData.id, sessionData);
+            } else {
+                result = await createIndoorSession(sessionData);
+            }
 
 			if (result.ok) {
 				saveStatus = 'success';
-				saveMessage = 'Session saved!';
-				localStorage.removeItem(STORAGE_KEY); // Clear draft
+				saveMessage = isEditing ? 'Session updated!' : 'Session saved!';
+                
+                if (!isEditing) {
+				    localStorage.removeItem(STORAGE_KEY); // Clear draft
+                }
+                
+                if (onSaved) {
+                    setTimeout(() => {
+                        onSaved();
+                    }, 500); // Small delay to show success message
+                }
+                
 			} else {
 				saveStatus = 'error';
 				saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
 			}
 
-			// Dispatch custom event to notify parent of session save
-			window.dispatchEvent(new CustomEvent('session-saved'));
-			
-			// Reset form after short delay
-			setTimeout(() => {
-				resetForm();
-			}, 2000);
+            if (!isEditing) {
+			    // Dispatch custom event to notify parent of session save (for log page refreshes)
+			    window.dispatchEvent(new CustomEvent('session-saved'));
+			    
+			    // Reset form after short delay
+			    setTimeout(() => {
+				    resetForm();
+			    }, 2000);
+            }
 		} catch (e) {
 			saveStatus = 'error';
 			saveMessage = 'Failed to save session';
@@ -340,7 +408,9 @@
 </script>
 
 <div class="form-content">
-	<h3>🧗 Indoor Climb</h3>
+    {#if !isEditing}
+	    <h3>🧗 Indoor Climb</h3>
+    {/if}
 	
 	<!-- Basic Info Section -->
 	<div class="form-row">
@@ -609,20 +679,34 @@
 				{saveMessage}
 			</div>
 		{/if}
-		<button 
-			type="button" 
-			class="submit-btn" 
-			onclick={saveSession}
-			disabled={saveStatus === 'saving'}
-		>
-			{#if saveStatus === 'saving'}
-				Saving...
-			{:else if saveStatus === 'success'}
-				✓ Saved!
-			{:else}
-				Save Session
-			{/if}
-		</button>
+        
+        <div class="action-buttons">
+            {#if isEditing}
+                 <button 
+                     type="button" 
+                     class="cancel-btn-large" 
+                     onclick={onCancel}
+                     disabled={saveStatus === 'saving'}
+                 >
+                     Cancel
+                 </button>
+            {/if}
+            
+            <button 
+                type="button" 
+                class="submit-btn" 
+                onclick={saveSession}
+                disabled={saveStatus === 'saving'}
+            >
+                {#if saveStatus === 'saving'}
+                    {isEditing ? 'Updating...' : 'Saving...'}
+                {:else if saveStatus === 'success'}
+                    ✓ {isEditing ? 'Updated!' : 'Saved!'}
+                {:else}
+                    {isEditing ? 'Update Session' : 'Save Session'}
+                {/if}
+            </button>
+        </div>
 	</div>
 </div>
 
@@ -802,326 +886,252 @@
 
 	.training-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		gap: 1rem;
-	}
-
-	@media (max-width: 768px) {
-		.training-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
-	@media (max-width: 480px) {
-		.training-grid {
-			grid-template-columns: 1fr;
-		}
 	}
 
 	.training-item {
 		display: flex;
 		flex-direction: column;
-		gap: 0.35rem;
+		gap: 0.4rem;
 	}
-
+	
 	.training-item label {
-		font-weight: 500;
-		color: var(--text-primary);
 		font-size: 0.85rem;
+		font-weight: 500;
+		color: var(--text-secondary);
 	}
 
-	.training-item select {
-		width: 100%;
-		padding: 0.5rem 0.6rem;
-		border-radius: 8px;
-		border: 1.5px solid rgba(74, 155, 155, 0.3);
-		background: white;
-		font-size: 0.9rem;
-		color: var(--text-primary);
-		transition: border-color 0.2s ease, box-shadow 0.2s ease;
-		cursor: pointer;
-	}
-
-	.training-item select:focus {
-		outline: none;
-		border-color: var(--teal-primary);
-		box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.12);
-	}
-
-	/* Climbs Table Section */
-	.climbs-section {
+	/* Notes Section */
+	.notes-section {
 		margin-top: 1.5rem;
+	}
+
+	/* Climbs Table */
+	.climbs-section {
+		margin-top: 2rem;
 	}
 
 	.table-container {
 		overflow-x: auto;
-		border-radius: 10px;
-		border: 1px solid rgba(74, 155, 155, 0.2);
+		border-radius: 8px;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		margin-bottom: 1rem;
 	}
-
+	
 	.climbs-table {
 		width: 100%;
 		border-collapse: collapse;
 		font-size: 0.9rem;
+		min-width: 800px; /* Ensure scroll on small screens */
 	}
 
 	.climbs-table th {
-		background: rgba(74, 155, 155, 0.1);
-		padding: 0.75rem 0.5rem;
 		text-align: left;
+		padding: 0.75rem 0.5rem;
+		background: rgba(74, 155, 155, 0.05);
+		color: var(--text-secondary);
 		font-weight: 600;
-		color: var(--teal-secondary);
-		white-space: nowrap;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
 	.climbs-table td {
 		padding: 0.5rem;
-		border-top: 1px solid rgba(74, 155, 155, 0.1);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		vertical-align: top;
 	}
 
-	.climbs-table td.center {
-		text-align: center;
+	.climbs-table tr:last-child td {
+		border-bottom: none;
 	}
 
-	.climbs-table input[type="text"] {
+	.climbs-table input[type="text"],
+	.climbs-table input[type="number"],
+	.climbs-table select,
+	.climbs-table textarea {
 		width: 100%;
-		min-width: 100px;
-		padding: 0.4rem 0.6rem;
-		border-radius: 6px;
-		border: 1px solid rgba(74, 155, 155, 0.25);
-		font-size: 0.9rem;
-	}
-
-	.climbs-table input[type="number"] {
-		width: 60px;
 		padding: 0.4rem;
-		text-align: center;
-		border-radius: 6px;
-		border: 1px solid rgba(74, 155, 155, 0.25);
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 4px;
 		font-size: 0.9rem;
-	}
-
-	.climbs-table input[type="number"]:disabled {
-		background: rgba(0, 0, 0, 0.05);
-		color: var(--text-secondary);
-	}
-
-	.climbs-table select {
-		padding: 0.4rem 0.5rem;
-		border-radius: 6px;
-		border: 1px solid rgba(74, 155, 155, 0.25);
-		font-size: 0.9rem;
-		min-width: 80px;
-	}
-
-	.climbs-table input[type="checkbox"] {
-		width: 18px;
-		height: 18px;
-		cursor: pointer;
-		accent-color: var(--teal-primary);
+		background: white;
 	}
 
 	.climbs-table input:focus,
 	.climbs-table select:focus,
 	.climbs-table textarea:focus {
 		outline: none;
-		border-color: var(--teal-primary);
-	}
-
-	/* Invalid grade styling */
-	.grade-input.invalid {
-		border-color: #d9534f !important;
-		background: rgba(217, 83, 79, 0.05);
-	}
-
-	.grade-error {
-		display: block;
-		font-size: 0.7rem;
-		color: #d9534f;
-		margin-top: 2px;
+		border-color: var(--teal-secondary);
+		box-shadow: 0 0 0 2px rgba(74, 155, 155, 0.1);
 	}
 
 	.grade-input {
 		width: 60px !important;
-		min-width: 60px !important;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+	
+	.grade-input.invalid {
+		border-color: #ffcccc;
+		background: #fffafa;
+	}
+	
+	.grade-error {
+		display: block;
+		font-size: 0.7rem;
+		color: #e57373;
+		margin-top: 2px;
+	}
+
+	.center {
 		text-align: center;
 	}
 
-	/* Notes cell with expandable textarea */
 	.notes-cell {
-		min-width: 80px;
-		transition: min-width 0.2s ease;
+		width: 250px;
 	}
-
-	.notes-cell.expanded {
-		min-width: 200px;
+	
+	.notes-cell textarea {
+		height: 34px;
+		transition: height 0.2s;
+		resize: none;
 	}
-
-	@media (max-width: 640px) {
-		.notes-cell.expanded {
-			position: absolute;
-			left: 1rem;
-			right: 1rem;
-			z-index: 10;
-			background: white;
-			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-			border-radius: 8px;
-			padding: 0.5rem;
-			min-width: unset;
-		}
-
-		.notes-cell.expanded textarea {
-			min-height: 100px;
-		}
-	}
-
-	.climbs-table textarea {
-		width: 100%;
-		min-width: 60px;
-		min-height: 32px;
-		padding: 0.4rem 0.6rem;
-		border-radius: 6px;
-		border: 1px solid rgba(74, 155, 155, 0.25);
-		font-size: 0.85rem;
-		font-family: inherit;
-		resize: vertical;
-		transition: min-height 0.2s ease;
-	}
-
+	
 	.notes-cell.expanded textarea {
-		min-height: 60px;
+		height: 100px;
+	}
+	
+	.add-btn {
+		width: 100%;
+		padding: 0.8rem;
+		background: white; /* ghostly */
+		border: 2px dashed rgba(74, 155, 155, 0.3);
+		color: var(--teal-secondary);
+		border-radius: 8px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+	
+	.add-btn:hover {
+		background: rgba(74, 155, 155, 0.05);
+		border-color: var(--teal-secondary);
 	}
 
 	.remove-btn {
 		background: none;
 		border: none;
-		color: #d9534f;
-		font-size: 1rem;
+		color: #ccc;
+		font-size: 1.2rem;
 		cursor: pointer;
-		padding: 0.25rem 0.5rem;
-		border-radius: 4px;
-		transition: background 0.2s ease;
+		padding: 0.2rem 0.5rem;
+		line-height: 1;
 	}
-
+	
 	.remove-btn:hover {
-		background: rgba(217, 83, 79, 0.1);
+		color: #e57373;
 	}
 
-	.add-btn {
-		margin-top: 0.75rem;
-		padding: 0.6rem 1.25rem;
-		background: transparent;
-		border: 2px dashed rgba(74, 155, 155, 0.4);
-		color: var(--teal-primary);
-		border-radius: 8px;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.add-btn:hover {
-		border-color: var(--teal-primary);
-		background: rgba(74, 155, 155, 0.05);
-	}
-
-	/* Submit Section */
 	.submit-section {
 		margin-top: 2rem;
 		padding-top: 1.5rem;
-		border-top: 1px solid rgba(74, 155, 155, 0.15);
+		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
 	}
 
-
-    /* Input with Action (Manual Entry) */
-    .input-with-action {
+    .action-buttons {
         display: flex;
-        align-items: center;
+        gap: 1rem;
         width: 100%;
-        position: relative;
-    }
-
-    .input-with-action input {
-        flex: 1;
-    }
-
-    .input-with-action input.flat-left {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-right: none;
-    }
-
-    .action-btn {
-        padding: 0.6rem 1rem;
-        background: #f8f9fa;
-        border: 1.5px solid rgba(74, 155, 155, 0.3);
-        color: #666;
-        cursor: pointer;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
         justify-content: center;
-        height: 100%;
-        /* Ensure height matches input */
-        min-height: 42px; 
-    }
-    
-    .action-btn:hover {
-        background: #eee;
-        color: #333;
-        border-color: rgba(74, 155, 155, 0.5);
-    }
-
-    .action-btn.flat-right {
-        border-top-right-radius: 8px;
-        border-bottom-right-radius: 8px;
-        border-left: 1.5px solid rgba(74, 155, 155, 0.3);
     }
 
 	.submit-btn {
-		width: 100%;
-		padding: 0.9rem 1.5rem;
-		background: linear-gradient(135deg, var(--gold-primary) 0%, var(--teal-primary) 100%);
+		background: var(--teal-secondary);
 		color: white;
 		border: none;
-		border-radius: 10px;
-		font-size: 1rem;
+		padding: 1rem 3rem;
+		border-radius: 30px;
+		font-size: 1.1rem;
 		font-weight: 600;
 		cursor: pointer;
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		transition: all 0.2s;
+		box-shadow: 0 4px 10px rgba(74, 155, 155, 0.25);
+        flex: 1;
+        max-width: 300px;
 	}
 
-	.submit-btn:hover {
-		transform: translateY(-1px);
-		box-shadow: 0 4px 15px rgba(244, 196, 48, 0.3);
+	.submit-btn:hover:not(:disabled) {
+		background: var(--teal-primary);
+		transform: translateY(-2px);
+		box-shadow: 0 6px 15px rgba(74, 155, 155, 0.3);
 	}
-
-	.submit-btn:active {
-		transform: translateY(0);
-	}
-
+	
 	.submit-btn:disabled {
 		opacity: 0.7;
 		cursor: not-allowed;
-		transform: none;
 	}
+    
+    .cancel-btn-large {
+        background: white;
+        color: #777;
+        border: 2px solid #ddd;
+        padding: 1rem 3rem;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex: 1;
+        max-width: 300px;
+    }
+    
+    .cancel-btn-large:hover {
+        background: #f5f5f5;
+        border-color: #ccc;
+        color: #555;
+    }
 
 	.save-message {
-		padding: 0.75rem 1rem;
+		padding: 0.8rem 1.5rem;
 		border-radius: 8px;
-		margin-bottom: 1rem;
-		font-size: 0.9rem;
-		text-align: center;
+		font-weight: 500;
+		animation: slideIn 0.3s;
 	}
 
 	.save-message.success {
-		background: rgba(74, 155, 155, 0.15);
-		color: var(--teal-secondary);
-		border: 1px solid rgba(74, 155, 155, 0.3);
+		background: #d4edda;
+		color: #155724;
 	}
 
 	.save-message.error {
-		background: rgba(217, 83, 79, 0.1);
-		color: #c9302c;
-		border: 1px solid rgba(217, 83, 79, 0.3);
+		background: #f8d7da;
+		color: #721c24;
+	}
+
+	/* Manual Location Input */
+	.input-with-action {
+		display: flex;
+	}
+
+	.flat-left {
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+		border-right: none !important;
+	}
+
+	.flat-right {
+		border-top-left-radius: 0 !important;
+		border-bottom-left-radius: 0 !important;
+		background: var(--teal-secondary) !important;
+		color: white !important;
+		padding: 0.5rem 1rem !important;
+		border: none;
+		cursor: pointer;
 	}
 </style>

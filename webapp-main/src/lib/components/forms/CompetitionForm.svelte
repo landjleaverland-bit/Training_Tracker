@@ -1,7 +1,19 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-	import { createCompetitionSession, isOnline } from '$lib/services/api';
-    import type { CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
+    import { onMount, createEventDispatcher } from 'svelte';
+	import { createCompetitionSession, updateCompetitionSession, isOnline } from '$lib/services/api';
+    import type { CompetitionSession, CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
+
+    const dispatch = createEventDispatcher();
+
+    // Props
+    interface Props {
+        initialData?: CompetitionSession | null;
+        onCancel?: () => void;
+        onSaved?: () => void;
+    }
+
+    let { initialData = null, onCancel, onSaved }: Props = $props();
+    let isEditing = $derived(!!initialData);
 
     const venues = [
         'Flashpoint Bristol', 'Rockstar Techno', 'Rockstar Unit 3', 'Rockstar Unit 5',
@@ -39,31 +51,69 @@
     let loaded = $state(false);
 
     onMount(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-             try {
-                const data = JSON.parse(saved);
-                if (data.venue) venue = data.venue;
-                if (data.time) time = data.time;
-                if (data.customVenue) customVenue = data.customVenue;
-                if (data.type) type = data.type;
-                if (data.fingerLoad) fingerLoad = data.fingerLoad;
-                if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
-                if (data.forearmLoad) forearmLoad = data.forearmLoad;
-                if (data.roundName) roundName = data.roundName;
-                if (data.customRoundName) customRoundName = data.customRoundName;
-                if (data.finalPosition) finalPosition = data.finalPosition;
-                if (data.climbs) climbs = data.climbs;
-                if (data.notes) notes = data.notes;
-             } catch (e) {
-                 console.error('Failed to restore draft', e);
-             }
+        if (initialData) {
+            date = initialData.date;
+            time = initialData.time || '12:00';
+            type = initialData.type || 'Bouldering';
+            notes = initialData.notes || '';
+            
+            // Populate venue
+            if (venues.includes(initialData.venue)) {
+                venue = initialData.venue;
+            } else {
+                venue = 'Other';
+                customVenue = initialData.venue;
+            }
+
+            // Populate Loads
+            fingerLoad = initialData.fingerLoad ?? 4;
+            shoulderLoad = initialData.shoulderLoad ?? 4;
+            forearmLoad = initialData.forearmLoad ?? 4;
+
+            // Populate Rounds (Take first round for editing simplicity, multi-round editing might need comprehensive UI)
+            if (initialData.rounds && initialData.rounds.length > 0) {
+                const r = initialData.rounds[0];
+                if (roundOptions.includes(r.name)) {
+                    roundName = r.name;
+                } else {
+                    roundName = 'Other';
+                    customRoundName = r.name;
+                }
+                
+                finalPosition = r.position ?? null;
+                
+                if (r.climbs && r.climbs.length > 0) {
+                    climbs = r.climbs;
+                }
+            }
+            loaded = true;
+        } else {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                 try {
+                    const data = JSON.parse(saved);
+                    if (data.venue) venue = data.venue;
+                    if (data.time) time = data.time;
+                    if (data.customVenue) customVenue = data.customVenue;
+                    if (data.type) type = data.type;
+                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
+                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
+                    if (data.roundName) roundName = data.roundName;
+                    if (data.customRoundName) customRoundName = data.customRoundName;
+                    if (data.finalPosition) finalPosition = data.finalPosition;
+                    if (data.climbs) climbs = data.climbs;
+                    if (data.notes) notes = data.notes;
+                 } catch (e) {
+                     console.error('Failed to restore draft', e);
+                 }
+            }
+            loaded = true;
         }
-        loaded = true;
     });
 
     $effect(() => {
-        if (!loaded) return;
+        if (!loaded || isEditing) return;
         const draft = {
             date, time, venue, customVenue, type,
             fingerLoad, shoulderLoad, forearmLoad,
@@ -131,22 +181,31 @@
                 rounds: [roundData], // Currently creating a new session per log, could append in future logic
                 notes
             };
-
-            const result = await createCompetitionSession(sessionData);
+            
+            let result;
+            if (isEditing && initialData) {
+                result = await updateCompetitionSession(initialData.id, sessionData);
+            } else {
+                result = await createCompetitionSession(sessionData);
+            }
 
             if (result.ok) {
                 saveStatus = 'success';
                 saveMessage = 'Competition saved!';
-                localStorage.removeItem(STORAGE_KEY);
+                if (!isEditing) localStorage.removeItem(STORAGE_KEY);
+                
+                if (onSaved) {
+                    onSaved();
+                } else {
+                    window.dispatchEvent(new CustomEvent('session-saved'));
+                    setTimeout(() => {
+                        resetForm();
+                    }, 2000);
+                }
             } else {
                 saveStatus = 'error';
                 saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
             }
-
-            window.dispatchEvent(new CustomEvent('session-saved'));
-            setTimeout(() => {
-                resetForm();
-            }, 2000);
         } catch (e) {
             saveStatus = 'error';
             saveMessage = 'Failed to save session';
@@ -168,7 +227,19 @@
 </script>
 
 <div class="form-content">
-    <h3>🏆 Competition</h3>
+    <div style="flex: 1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+         <h3 style="margin: 0; color: var(--teal-secondary);">
+            {isEditing ? 'Edit Competition' : '🏆 Competition'}
+         </h3>
+         {#if isEditing && onCancel}
+            <button 
+                onclick={onCancel}
+                style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;"
+            >
+                &times;
+            </button>
+         {/if}
+    </div>
 
     <!-- General Info -->
     <div class="form-grid">

@@ -116,7 +116,7 @@
 
 	<div class="sessions-list">
 		{#each filteredSessions.slice(0, visibleCount) as session (session.id)}
-			<GymSessionCard {session} onDelete={handleFetchData} onUpdate={handleFetchData} />
+			<GymSessionCard {session} onDelete={handleFetchData} />
 		{/each}
 		
 		{#if filteredSessions.length === 0}
