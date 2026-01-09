@@ -98,6 +98,26 @@
         text-align: center;
     }
 
+    @media (max-width: 640px) {
+        .modal {
+            top: auto;
+            bottom: 0;
+            left: 0;
+            transform: none;
+            width: 100%;
+            max-width: 100%;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+
     h3 {
         margin: 0 0 0.5rem 0;
         color: var(--text-primary);

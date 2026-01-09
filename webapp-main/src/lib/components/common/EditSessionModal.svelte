@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, scale } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import IndoorClimbForm from '$lib/components/forms/IndoorClimbForm.svelte';
 	import OutdoorClimbForm from '$lib/components/forms/OutdoorClimbForm.svelte';
 	import GymSessionForm from '$lib/components/forms/GymSessionForm.svelte';
@@ -16,25 +16,41 @@
 
 	let { isOpen, activityType, initialData, onClose, onSaved }: Props = $props();
 
-	function handleKeydown(e: KeyboardEvent) {
+	function handleDialogKeydown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
+            // Native dialog handles escape, but we explicitly sync logic
+            e.preventDefault();
 			onClose();
 		}
 	}
+
+    function dialogAction(node: HTMLDialogElement) {
+        node.showModal();
+        return {
+            destroy() {
+                if (node.open) node.close();
+            }
+        }
+    }
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
-
 {#if isOpen}
-	<div class="modal-backdrop" transition:fade={{ duration: 200 }} onclick={onClose} role="button" tabindex="0" onkeydown={handleKeydown}>
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
+	<dialog 
+        class="edit-dialog" 
+        use:dialogAction
+        onclose={onClose}
+        onclick={(e) => {
+            // Close if clicking the backdrop area (which is the dialog element itself in this setup)
+            // But since we are full screen, this is less relevant, but good practice if we add padding later
+            if (e.target === e.currentTarget) onClose();
+        }}
+    >
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="modal-content"
-			transition:scale={{ duration: 200, start: 0.95 }}
+			class="dialog-content"
+			transition:fly={{ duration: 250, y: 50, opacity: 0 }}
 			onclick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            tabindex="0"
-            onkeydown={() => {}}
 		>
 			<div class="modal-header">
 				<h2>Edit Session</h2>
@@ -55,35 +71,43 @@
 				{/if}
 			</div>
 		</div>
-	</div>
+	</dialog>
 {/if}
 
 <style>
-	.modal-backdrop {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.5);
-		backdrop-filter: blur(2px);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 1000;
-		padding: 1rem;
+	.edit-dialog {
+        /* Dialog Setup: Reset defaults and force full screen transparent container */
+		width: 100vw;
+		height: 100vh;
+		max-width: 100vw;
+		max-height: 100vh;
+        margin: 0;
+        padding: 0;
+		background: transparent;
+        border: none;
+        outline: none;
+        
+        /* Positioning */
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
 	}
 
-	.modal-content {
+    .edit-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.5); /* Just in case, though content covers it */
+        backdrop-filter: blur(2px);
+    }
+
+	.dialog-content {
 		background: white;
-		border-radius: 16px;
 		width: 100%;
-		max-width: 800px;
-		max-height: 90vh;
+		height: 100%; /* Full screen */
 		display: flex;
 		flex-direction: column;
-		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+		box-shadow: none;
         overflow: hidden;
+        border-radius: 0;
 	}
 
 	.modal-header {
@@ -127,7 +151,7 @@
 
 	.modal-body {
 		flex: 1;
-        min-height: 0; /* Critical for scrolling in flex container */
+        min-height: 0;
 		overflow-y: auto;
 		padding: 1.5rem;
         padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
@@ -135,24 +159,13 @@
 	}
     
     @media (max-width: 640px) {
-        .modal-backdrop {
-            padding: 0;
-            align-items: flex-end;
-        }
-
-        .modal-content {
-            height: 100%; /* Full screen on mobile */
-            max-height: 100%;
-            border-radius: 0;
-        }
-
         .modal-header {
             padding: 1rem;
         }
 
         .modal-body {
             padding: 1rem;
-            padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Safe area for iOS home bar */
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
         }
     }
 </style>
