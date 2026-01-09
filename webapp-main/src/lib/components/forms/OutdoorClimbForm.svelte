@@ -374,12 +374,12 @@
 </script>
 
 <div class="form-content">
-	<div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 style="margin: 0;">{isEditing ? 'Edit Outdoor Climb' : '⛰️ Outdoor Climb'}</h3>
-        {#if isEditing && onCancel}
-            <button class="cancel-btn" onclick={onCancel}>✕</button>
-        {/if}
-    </div>
+	<!-- Header Row -->
+    {#if !isEditing}
+        <div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0;">⛰️ Outdoor Climb</h3>
+        </div>
+    {/if}
 	
 	<!-- Basic Info Section -->
 	<div class="form-row">
@@ -685,21 +685,7 @@
 		to { opacity: 1; transform: translateY(0); }
 	}
 
-    .cancel-btn {
-        background: none;
-        border: none;
-        font-size: 1.25rem;
-        color: var(--text-secondary);
-        cursor: pointer;
-        padding: 0.5rem;
-        line-height: 1;
-    }
-    
-    .cancel-btn:hover {
-        color: var(--text-primary);
-        background: rgba(0,0,0,0.05);
-        border-radius: 50%;
-    }
+
 
 	.form-content h3 {
 		margin: 0 0 1.5rem 0;

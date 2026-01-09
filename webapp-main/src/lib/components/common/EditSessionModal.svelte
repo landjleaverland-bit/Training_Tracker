@@ -94,6 +94,7 @@
 		align-items: center;
         background: #fff;
         z-index: 10;
+        flex-shrink: 0;
 	}
 
 	.modal-header h2 {
@@ -126,14 +127,32 @@
 
 	.modal-body {
 		flex: 1;
+        min-height: 0; /* Critical for scrolling in flex container */
 		overflow-y: auto;
 		padding: 1.5rem;
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
         overscroll-behavior: contain;
 	}
     
     @media (max-width: 640px) {
+        .modal-backdrop {
+            padding: 0;
+            align-items: flex-end;
+        }
+
+        .modal-content {
+            height: 100%; /* Full screen on mobile */
+            max-height: 100%;
+            border-radius: 0;
+        }
+
+        .modal-header {
+            padding: 1rem;
+        }
+
         .modal-body {
             padding: 1rem;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Safe area for iOS home bar */
         }
     }
 </style>

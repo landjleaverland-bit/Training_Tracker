@@ -266,19 +266,13 @@
 <div class="gym-session-form">
     <!-- Header Input -->
     <div class="session-meta">
-        <div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-             <h2 style="margin: 0; font-size: 1.25rem; color: var(--teal-primary);">
-                {isEditing ? 'Make Changes to Gym Session' : 'New Gym Session'}
-             </h2>
-             {#if isEditing && onCancel}
-                <button 
-                    onclick={onCancel}
-                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;"
-                >
-                    &times;
-                </button>
-             {/if}
-        </div>
+        {#if !isEditing}
+            <div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                 <h2 style="margin: 0; font-size: 1.25rem; color: var(--teal-primary);">
+                    New Gym Session
+                 </h2>
+            </div>
+        {/if}
         
         <input 
             type="text" 

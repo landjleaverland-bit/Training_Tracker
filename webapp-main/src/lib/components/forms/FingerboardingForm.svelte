@@ -170,15 +170,9 @@
 <div class="form-content">
 	<div class="header-row">
         <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
-             <h3>{isEditing ? 'Edit Fingerboarding' : '🤏 Fingerboarding'}</h3>
-             {#if isEditing && onCancel}
-                <button 
-                    onclick={onCancel}
-                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; margin-right: 1rem;"
-                >
-                    &times;
-                </button>
-             {/if}
+            {#if !isEditing}
+                 <h3>🤏 Fingerboarding</h3>
+            {/if}
         </div>
 		<button class="add-row-btn" onclick={addExercise}>+ Add Exercise</button>
 	</div>

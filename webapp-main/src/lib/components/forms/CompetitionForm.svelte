@@ -228,17 +228,11 @@
 
 <div class="form-content">
     <div style="flex: 1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-         <h3 style="margin: 0; color: var(--teal-secondary);">
-            {isEditing ? 'Edit Competition' : '🏆 Competition'}
-         </h3>
-         {#if isEditing && onCancel}
-            <button 
-                onclick={onCancel}
-                style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;"
-            >
-                &times;
-            </button>
-         {/if}
+        {#if !isEditing}
+             <h3 style="margin: 0; color: var(--teal-secondary);">
+                🏆 Competition
+             </h3>
+        {/if}
     </div>
 
     <!-- General Info -->

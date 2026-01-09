@@ -408,9 +408,7 @@
 </script>
 
 <div class="form-content">
-    {#if !isEditing}
-	    <h3>🧗 Indoor Climb</h3>
-    {/if}
+
 	
 	<!-- Basic Info Section -->
 	<div class="form-row">
@@ -720,11 +718,7 @@
 		to { opacity: 1; transform: translateY(0); }
 	}
 
-	.form-content h3 {
-		margin: 0 0 1.5rem 0;
-		color: var(--teal-secondary);
-		font-size: 1.25rem;
-	}
+
 
 	.form-content h4 {
 		margin: 0 0 0.75rem 0;
