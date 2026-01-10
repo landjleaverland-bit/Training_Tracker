@@ -250,6 +250,65 @@
     let loadJug = $derived(withAvg(getLoadStats(filteredSessions, s => !!(s as any).jugGrip, s => (s as any).jugGrip || 0, 'Jugs', loadGranularity, currentDateRange), 'Jugs'));
 
 
+    // 8. Gym Exercises
+    let selectedGymExercise = $state('');
+    
+    // Get all unique gym exercise names from ALL sessions (to populate dropdown)
+    let gymExerciseNames = $derived.by(() => {
+        const gymSessions = sessions.filter(s => s.activityType === 'gym_session') as any[];
+        const names = new Set<string>();
+        gymSessions.forEach(s => {
+            if (s.exercises) {
+                s.exercises.forEach((e: any) => names.add(e.name));
+            }
+        });
+        return Array.from(names).sort();
+    });
+
+    // Default selection
+    $effect(() => {
+        if (!selectedGymExercise && gymExerciseNames.length > 0) {
+            selectedGymExercise = gymExerciseNames[0];
+        }
+    });
+
+    // Get data for selected exercise
+    let gymExerciseData = $derived.by(() => {
+        if (!selectedGymExercise) return [];
+        
+        const data: { date: Date, value: number, series: string }[] = [];
+        
+        filteredSessions.forEach(s => {
+            if (s.activityType !== 'gym_session') return;
+            const gs = s as any;
+            if (!gs.exercises) return;
+            
+            const ex = gs.exercises.find((e: any) => e.name === selectedGymExercise);
+            if (ex && ex.sets && ex.sets.length > 0) {
+                // Calculate One Rep Max (estimated) or just Max Weight
+                // Let's use Max Weight for now as it's more direct
+                let maxWeight = 0;
+                ex.sets.forEach((set: any) => {
+                    if (set.weight > maxWeight) maxWeight = set.weight;
+                });
+                
+                if (maxWeight > 0) {
+                     data.push({
+                        date: new Date(s.date),
+                        value: maxWeight,
+                        series: 'Max Weight (kg)'
+                    });
+                }
+            }
+        });
+        
+        // Sort by date
+        data.sort((a, b) => a.date.getTime() - b.date.getTime());
+        
+        return withAvg(data, 'Max Weight (kg)');
+    });
+
+
     // View Options
     const views = [
         { id: 'general', label: 'General Activity & Volume' },
@@ -258,6 +317,7 @@
         { id: 'venues', label: 'Venue & Location Analysis' },
         { id: 'periodization', label: 'Periodization & Planning' },
         { id: 'strength', label: 'Finger Strength Metrics' },
+        { id: 'gym_exercises', label: 'Gym Exercises' },
         { id: 'load', label: 'Load Tracking' },
     ];
 
@@ -555,77 +615,42 @@
                         {/if}
                     </div>
                  </div>
-            {:else if selectedView === 'load'}
-                <div class="chart-grid">
-                    <!-- 7.1 Activities -->
-                    <div class="chart-card full-width">
-                        <h3>Climbing Sessions</h3>
-                        {#if loadClimbing.length > 0}<LineChart data={loadClimbing} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Fingerboarding Sessions</h3>
-                        {#if loadFingerboard.length > 0}<LineChart data={loadFingerboard} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Indoor Bouldering</h3>
-                        {#if loadIndoorBoulder.length > 0}<LineChart data={loadIndoorBoulder} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Outdoor Bouldering</h3>
-                        {#if loadOutdoorBoulder.length > 0}<LineChart data={loadOutdoorBoulder} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Indoor Leading</h3>
-                        {#if loadIndoorLead.length > 0}<LineChart data={loadIndoorLead} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Outdoor Leading</h3>
-                        {#if loadOutdoorLead.length > 0}<LineChart data={loadOutdoorLead} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Competitions</h3>
-                        {#if loadComps.length > 0}<LineChart data={loadComps} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
+            <!-- 8. Gym Exercises -->
+            {:else if selectedView === 'gym_exercises'}
+                 <div class="chart-card full-width">
+                    <h3>Gym Exercise Progress</h3>
+                    {#if gymExerciseNames.length > 0}
+                        <div class="controls-card" style="margin-bottom: 1rem; background: var(--bg-tertiary);">
+                             <label for="gym-exercise-select">Select Exercise:</label>
+                             <div class="select-wrapper">
+                                <select id="gym-exercise-select" bind:value={selectedGymExercise}>
+                                    {#each gymExerciseNames as name}
+                                        <option value={name}>{name}</option>
+                                    {/each}
+                                </select>
+                                <div class="select-arrow">▼</div>
+                             </div>
+                        </div>
 
-                    <!-- 7.2 Body Parts -->
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Shoulders</h3>
-                        {#if loadShoulders.length > 0}<LineChart data={loadShoulders} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Forearms</h3>
-                        {#if loadForearms.length > 0}<LineChart data={loadForearms} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Fingers</h3>
-                        {#if loadFingers.length > 0}<LineChart data={loadFingers} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-
-                    <!-- 7.3 Grips -->
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Open Grips</h3>
-                        {#if loadOpen.length > 0}<LineChart data={loadOpen} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Crimps</h3>
-                        {#if loadCrimp.length > 0}<LineChart data={loadCrimp} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Pinches</h3>
-                        {#if loadPinch.length > 0}<LineChart data={loadPinch} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Slopers</h3>
-                        {#if loadSloper.length > 0}<LineChart data={loadSloper} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Load Tracking - Jugs</h3>
-                        {#if loadJug.length > 0}<LineChart data={loadJug} xAccessor={d => d.date} yAccessor={d => d.value} zAccessor={d => d.series} />{:else}<p class="no-data">No data.</p>{/if}
-                    </div>
-                </div>
+                        {#if gymExerciseData.length > 0}
+                            <LineChart 
+                                data={gymExerciseData} 
+                                xAccessor={d => d.date} 
+                                yAccessor={d => d.value}
+                                zAccessor={d => d.series}
+                                color="#22C55E"
+                            />
+                        {:else}
+                             <p class="no-data">No data for this exercise in the selected time range.</p>
+                        {/if}
+                    {:else}
+                        <p class="no-data">No gym exercises recorded yet.</p>
+                    {/if}
+                 </div>
             {/if}
-
         {/if}
+
+
     </div>
 </div>
 
@@ -764,5 +789,23 @@
         .content-card {
             padding: 1rem;
         }
+    }
+
+
+    .date-picker {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        background: white;
+        color: var(--text-primary);
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+    
+    .date-picker:focus {
+        outline: none;
+        border-color: var(--teal-primary);
     }
 </style>

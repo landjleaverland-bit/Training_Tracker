@@ -514,16 +514,7 @@
 		</div>
 	</div>
 
-    <!-- Session Notes Section -->
-    <div class="form-group notes-section">
-        <label for="session-notes">Session Notes</label>
-        <textarea 
-            id="session-notes" 
-            bind:value={notes} 
-            placeholder="How did the session feel? Energy levels, mood, etc."
-            rows="3"
-        ></textarea>
-    </div>
+
 
 	<!-- Climbs Table Section -->
 	<div class="climbs-section">
@@ -672,6 +663,8 @@
 		</div>
 	</div>
 
+
+
 	<!-- Submit Button -->
 	<div class="submit-section">
 		{#if saveMessage}
@@ -779,25 +772,8 @@
 		box-sizing: border-box;
 	}
 
-    .form-group textarea {
-        width: 100%;
-        padding: 0.8rem;
-        border-radius: 8px;
-        border: 2px solid rgba(74, 155, 155, 0.25);
-        background: white;
-        font-size: 0.95rem;
-        color: var(--text-primary);
-        font-family: inherit;
-        resize: vertical;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        box-sizing: border-box;
-    }
 
-    .form-group textarea:focus {
-        outline: none;
-        border-color: var(--teal-primary);
-        box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.12);
-    }
+
 
 	.form-group input:focus,
 	.form-group select:focus {
@@ -898,10 +874,7 @@
 		color: var(--text-secondary);
 	}
 
-	/* Notes Section */
-	.notes-section {
-		margin-top: 1.5rem;
-	}
+
 
 	/* Climbs Table */
 	.climbs-section {

@@ -101,6 +101,7 @@ export interface FingerboardSession extends BaseSession {
     pinchGrip?: number;
     sloperGrip?: number;
     jugGrip?: number;
+    notes?: string;
 }
 
 // Competition session
@@ -154,6 +155,7 @@ export interface GymSession extends BaseSession {
     exercises: GymExercise[];
     bodyweight?: number; // Optional bodyweight at time of session
     trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
+    notes?: string;
 }
 
 // Union of all session types

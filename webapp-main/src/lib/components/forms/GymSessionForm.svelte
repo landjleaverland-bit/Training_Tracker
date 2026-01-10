@@ -7,7 +7,7 @@
     
     // Components
     import ExerciseCard from './gym/ExerciseCard.svelte';
-    import Keypad from './gym/Keypad.svelte';
+
     import RestTimer from './gym/RestTimer.svelte';
     import PlateCalculator from './gym/PlateCalculator.svelte';
     import ExerciseDetailModal from './gym/ExerciseDetailModal.svelte';
@@ -37,6 +37,8 @@
     let previousSession = $state<GymSession | null>(null);
     let allSessions = $state<GymSession[]>([]);
     
+    let notes = $state('');
+
     // Load history for benchmarks
     onMount(async () => {
         if (initialData) {
@@ -47,6 +49,7 @@
             startTime = initialData.date;
             time = initialData.time || '12:00';
             trainingBlock = initialData.trainingBlock || 'Strength';
+            notes = initialData.notes || '';
             loaded = true;
         } else {
              const saved = localStorage.getItem(STORAGE_KEY);
@@ -59,6 +62,7 @@
                      if (data.time) time = data.time;
                      if (data.trainingBlock) trainingBlock = data.trainingBlock;
                      if (data.exercises) exercises = data.exercises;
+                     if (data.notes) notes = data.notes;
                  } catch (e) {
                      console.error('Failed to restore draft', e);
                  }
@@ -125,7 +129,6 @@
     let searchQuery = $state('');
     let selectedCategory = $state('');
     let selectedSubcategory = $state(''); // New state
-    let activeKeypadField = $state<{ exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' } | null>(null);
     let showPlateCalc = $state(false);
     let plateCalcWeight = $state(0);
     let showRestTimer = $state(false);
@@ -147,7 +150,8 @@
                 startTime,
                 time,
                 trainingBlock,
-                exercises
+                exercises,
+                notes
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
         }
@@ -194,22 +198,7 @@
         selectedSubcategory = '';
     }
 
-    function handleSetFocus(event: CustomEvent, exerciseIndex: number, setIndex: number) {
-        activeKeypadField = {
-            exerciseIndex,
-            setIndex,
-            field: event.detail.field
-        };
-        // Scroll keypad into view if on mobile?
-    }
 
-    function handleKeypadChange(event: CustomEvent) {
-        if (!activeKeypadField) return;
-        const { exerciseIndex, setIndex, field } = activeKeypadField;
-        
-        exercises[exerciseIndex].sets[setIndex][field] = event.detail;
-        exercises = [...exercises]; // Reactivity
-    }
 
     function handleExerciseTimer(event: CustomEvent) {
         const exercise = event.detail;
@@ -232,7 +221,8 @@
             name: sessionName || 'Gym Workout',
             bodyweight,
             trainingBlock,
-            exercises
+            exercises,
+            notes
         };
 
         const result = isEditing && initialData
@@ -258,9 +248,7 @@
         }
     }
 
-    function closeKeypad() {
-        activeKeypadField = null;
-    }
+
 </script>
 
 <div class="gym-session-form">
@@ -310,7 +298,6 @@
             <ExerciseCard 
                 {exercise} 
                 benchmarks={getBenchmarks(exercise.name)}
-                on:focus={(e) => handleSetFocus(e, i, exercises[i].sets.indexOf(e.detail.set))}
                 on:complete={handleSetComplete}
                 on:timer={handleExerciseTimer}
                 on:delete={() => {
@@ -331,6 +318,18 @@
     <button class="add-exercise-btn" onclick={() => showExercisePicker = true}>
         + Add Exercise
     </button>
+
+    <!-- Session Notes Section -->
+    <div class="session-notes-container">
+        <label for="session-notes">Session Notes</label>
+        <textarea 
+            id="session-notes" 
+            bind:value={notes} 
+            class="session-notes-area"
+            placeholder="How did the workout feel? Energy, sleep, stress..."
+            rows="3"
+        ></textarea>
+    </div>
 
     <!-- Save Button -->
     {#if exercises.length > 0}
@@ -438,22 +437,7 @@
         />
     {/if}
 
-    <!-- Keypad Overlay -->
-    {#if activeKeypadField}
-        <div class="keypad-overlay" transition:fly={{ y: 200, duration: 300 }}>
-            <div class="keypad-header">
-                <span>
-                    Editing {exercises[activeKeypadField.exerciseIndex].name} - Set {activeKeypadField.setIndex + 1}
-                </span>
-                <button onclick={closeKeypad}>Done</button>
-            </div>
-            <Keypad 
-                value={exercises[activeKeypadField.exerciseIndex].sets[activeKeypadField.setIndex][activeKeypadField.field]}
-                label={activeKeypadField.field === 'weight' ? 'Weight (kg)' : 'Reps'}
-                on:change={handleKeypadChange}
-            />
-        </div>
-    {/if}
+
 
     <!-- Rest Timer -->
     <RestTimer 
@@ -718,44 +702,38 @@
         margin-top: 1rem;
     }
 
-    /* Keypad Overlay */
-    .keypad-overlay {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: var(--bg-secondary);
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        z-index: 900;
-        padding-bottom: 2rem; /* Save area */
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+
+    
+    .session-notes-container {
+        margin-bottom: 2rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        max-height: 90vh;
-        overflow-y: auto;
+        gap: 0.5rem;
     }
-
-    .keypad-header {
-        display: flex;
-        justify-content: space-between;
-        padding: 1rem;
-        border-bottom: 1px solid var(--border-primary);
-        align-items: center;
+    
+    .session-notes-container label {
         color: var(--text-secondary);
         font-size: 0.9rem;
-        width: 100%;
-        max-width: 300px; /* Match Keypad max-width */
+        font-weight: 500;
+        margin-left: 0.2rem;
     }
-
-    .keypad-header button {
-        background: var(--teal-primary);
-        border: none;
-        padding: 0.4rem 1rem;
-        border-radius: 6px;
-        color: black;
-        font-weight: bold;
-        cursor: pointer;
+    
+    .session-notes-area {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-primary);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 1rem;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    
+    .session-notes-area:focus {
+        outline: none;
+        border-color: var(--teal-primary);
+        box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
     }
 </style>

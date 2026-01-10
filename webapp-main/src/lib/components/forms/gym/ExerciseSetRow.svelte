@@ -15,9 +15,7 @@
         }
     }
 
-    function handleFocus(field: 'weight' | 'reps') {
-        dispatch('focus', { field, value: set[field], set });
-    }
+
 </script>
 
 <div class="set-row" class:completed={set.completed}>
@@ -29,7 +27,6 @@
             type="number" 
             bind:value={set.weight} 
             placeholder="-" 
-            on:focus={() => handleFocus('weight')}
         />
     </div>
     <div class="col reps">
@@ -37,7 +34,6 @@
             type="number" 
             bind:value={set.reps} 
             placeholder="-" 
-            on:focus={() => handleFocus('reps')}
         />
     </div>
     <div class="col check">

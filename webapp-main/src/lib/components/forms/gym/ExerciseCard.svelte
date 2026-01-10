@@ -71,7 +71,6 @@
                 setNumber={i + 1} 
                 bind:set={set} 
                 on:complete 
-                on:focus 
                 on:change 
              />
         {/each}

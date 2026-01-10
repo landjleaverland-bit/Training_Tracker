@@ -31,6 +31,8 @@
     let pinchGrip = $state(3);
     let sloperGrip = $state(3);
     let jugGrip = $state(3);
+    
+    let notes = $state('');
 	
 	// Add initial exercise card
     let showRestTimer = $state(false);
@@ -78,6 +80,8 @@
             sloperGrip = initialData.sloperGrip || 3;
             jugGrip = initialData.jugGrip || 3;
             
+            notes = initialData.notes || '';
+            
             loaded = true;
         } else {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -98,6 +102,8 @@
                     if (data.pinchGrip) pinchGrip = data.pinchGrip;
                     if (data.sloperGrip) sloperGrip = data.sloperGrip;
                     if (data.jugGrip) jugGrip = data.jugGrip;
+                    
+                    if (data.notes) notes = data.notes;
                 } catch (e) {
                     console.error('Failed to restore draft', e);
                 }
@@ -119,7 +125,8 @@
             time,
             exercises,
             fingerLoad, shoulderLoad, forearmLoad,
-            openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip
+            openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
+            notes
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -163,7 +170,8 @@
                 crimpGrip,
                 pinchGrip,
                 sloperGrip,
-                jugGrip
+                jugGrip,
+                notes
             };
             
             let result;
@@ -210,6 +218,7 @@
         pinchGrip = 3;
         sloperGrip = 3;
         jugGrip = 3;
+        notes = '';
         saveStatus = 'idle';
         saveMessage = '';
     }
@@ -336,6 +345,17 @@
 			</div>
 		</div>
 	</div>
+
+    <div class="form-group notes-section">
+        <label for="session-notes">Session Notes</label>
+        <textarea 
+            id="session-notes" 
+            bind:value={notes} 
+            placeholder="How did the session feel? Energy levels, mood, etc."
+            rows="3"
+            class="session-notes-area"
+        ></textarea>
+    </div>
 
 	<div class="submit-section">
 		{#if saveMessage}
@@ -663,4 +683,20 @@
 		font-size: 0.75rem;
 		color: var(--text-secondary);
 	}
+    
+    .session-notes-area {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: 2px solid rgba(74, 155, 155, 0.25);
+        background: white;
+        font-size: 0.95rem;
+        font-family: inherit;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    
+    .form-group.notes-section {
+        margin: 1.5rem 0;
+    }
 </style>

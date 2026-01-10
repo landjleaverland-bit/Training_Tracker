@@ -495,16 +495,7 @@
 		</div>
 	</div>
 
-    <!-- Session Notes Section -->
-    <div class="form-group notes-section">
-        <label for="session-notes">Session Notes</label>
-        <textarea 
-            id="session-notes" 
-            bind:value={notes} 
-            placeholder="How did the session feel? Weather, conditions, mood..."
-            rows="3"
-        ></textarea>
-    </div>
+
 
 	<!-- Climbs Table Section -->
 	<div class="climbs-section">
@@ -652,6 +643,17 @@
 			</div>
 		</div>
 	</div>
+
+    <!-- Session Notes Section -->
+    <div class="form-group notes-section">
+        <label for="session-notes">Session Notes</label>
+        <textarea 
+            id="session-notes" 
+            bind:value={notes} 
+            placeholder="How did the session feel? Weather, conditions, mood..."
+            rows="3"
+        ></textarea>
+    </div>
 
 	<!-- Submit Button -->
 	<div class="submit-section">
