@@ -93,6 +93,14 @@ export interface FingerboardSession extends BaseSession {
     activityType: 'fingerboarding';
     location: string;
     exercises: FingerboardExercise[];
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    openGrip?: number;
+    crimpGrip?: number;
+    pinchGrip?: number;
+    sloperGrip?: number;
+    jugGrip?: number;
 }
 
 // Competition session

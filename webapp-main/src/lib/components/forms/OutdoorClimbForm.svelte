@@ -450,56 +450,7 @@
 		</select>
 	</div>
 
-	<!-- Load Metrics Section -->
-	<div class="load-section">
-		<h4>Load Metrics</h4>
-		<div class="load-metrics">
-			<div class="load-item">
-				<label for="finger-load">Finger</label>
-				<input type="number" id="finger-load" bind:value={fingerLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="shoulder-load">Shoulder</label>
-				<input type="number" id="shoulder-load" bind:value={shoulderLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="forearm-load">Forearm</label>
-				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-		</div>
 
-		<h4 class="mt-4">Grip Metrics</h4>
-		<div class="load-metrics">
-			<div class="load-item">
-				<label for="open-grip">Open</label>
-				<input type="number" id="open-grip" bind:value={openGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="crimp-grip">Crimp</label>
-				<input type="number" id="crimp-grip" bind:value={crimpGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="pinch-grip">Pinch</label>
-				<input type="number" id="pinch-grip" bind:value={pinchGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="sloper-grip">Sloper</label>
-				<input type="number" id="sloper-grip" bind:value={sloperGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="jug-grip">Jug</label>
-				<input type="number" id="jug-grip" bind:value={jugGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-		</div>
-	</div>
 
 	<!-- Training Details Section -->
 	<div class="training-section">
@@ -649,6 +600,57 @@
 			</table>
 		</div>
 		<button type="button" class="add-btn" onclick={addClimb}>+ Add Climb</button>
+	</div>
+
+	<!-- Load Metrics Section -->
+	<div class="load-section">
+		<h4>Load Metrics</h4>
+		<div class="load-metrics">
+			<div class="load-item">
+				<label for="finger-load">Finger</label>
+				<input type="number" id="finger-load" bind:value={fingerLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="shoulder-load">Shoulder</label>
+				<input type="number" id="shoulder-load" bind:value={shoulderLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="forearm-load">Forearm</label>
+				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+		</div>
+
+		<h4 class="mt-4">Grip Metrics</h4>
+		<div class="load-metrics">
+			<div class="load-item">
+				<label for="open-grip">Open</label>
+				<input type="number" id="open-grip" bind:value={openGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="crimp-grip">Crimp</label>
+				<input type="number" id="crimp-grip" bind:value={crimpGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="pinch-grip">Pinch</label>
+				<input type="number" id="pinch-grip" bind:value={pinchGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="sloper-grip">Sloper</label>
+				<input type="number" id="sloper-grip" bind:value={sloperGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="jug-grip">Jug</label>
+				<input type="number" id="jug-grip" bind:value={jugGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+		</div>
 	</div>
 
 	<!-- Submit Button -->

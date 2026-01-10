@@ -23,6 +23,15 @@
     let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
     let exercises = $state<FingerboardExercise[]>([]);
 	
+    let fingerLoad = $state(3);
+    let shoulderLoad = $state(3);
+    let forearmLoad = $state(3);
+    let openGrip = $state(3);
+    let crimpGrip = $state(3);
+    let pinchGrip = $state(3);
+    let sloperGrip = $state(3);
+    let jugGrip = $state(3);
+	
 	// Add initial exercise card
     let showRestTimer = $state(false);
     let activeTimerExerciseId = $state<string | null>(null);
@@ -58,6 +67,17 @@
             date = initialData.date;
             time = initialData.time || '12:00';
             exercises = initialData.exercises;
+            
+            fingerLoad = initialData.fingerLoad || 3;
+            shoulderLoad = initialData.shoulderLoad || 3;
+            forearmLoad = initialData.forearmLoad || 3;
+            
+            openGrip = initialData.openGrip || 3;
+            crimpGrip = initialData.crimpGrip || 3;
+            pinchGrip = initialData.pinchGrip || 3;
+            sloperGrip = initialData.sloperGrip || 3;
+            jugGrip = initialData.jugGrip || 3;
+            
             loaded = true;
         } else {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -66,8 +86,18 @@
                     const data = JSON.parse(saved);
                     if (data.time) time = data.time;
                     if (data.exercises && Array.isArray(data.exercises)) {
-                        exercises = data.exercises;
+                         exercises = data.exercises;
                     }
+                    
+                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
+                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
+                    
+                    if (data.openGrip) openGrip = data.openGrip;
+                    if (data.crimpGrip) crimpGrip = data.crimpGrip;
+                    if (data.pinchGrip) pinchGrip = data.pinchGrip;
+                    if (data.sloperGrip) sloperGrip = data.sloperGrip;
+                    if (data.jugGrip) jugGrip = data.jugGrip;
                 } catch (e) {
                     console.error('Failed to restore draft', e);
                 }
@@ -87,7 +117,9 @@
         const draft = {
             date,
             time,
-            exercises
+            exercises,
+            fingerLoad, shoulderLoad, forearmLoad,
+            openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -123,7 +155,15 @@
                 date,
                 time,
                 location: 'N/A', // Fingerboarding usually doesn't need location or defaults to generic
-                exercises: JSON.parse(JSON.stringify(exercises)) // Deep copy
+                exercises: JSON.parse(JSON.stringify(exercises)), // Deep copy
+                fingerLoad,
+                shoulderLoad,
+                forearmLoad,
+                openGrip,
+                crimpGrip,
+                pinchGrip,
+                sloperGrip,
+                jugGrip
             };
             
             let result;
@@ -162,6 +202,14 @@
         time = new Date().toTimeString().split(' ')[0].slice(0, 5);
         exercises = [];
         addExercise();
+        fingerLoad = 3;
+        shoulderLoad = 3;
+        forearmLoad = 3;
+        openGrip = 3;
+        crimpGrip = 3;
+        pinchGrip = 3;
+        sloperGrip = 3;
+        jugGrip = 3;
         saveStatus = 'idle';
         saveMessage = '';
     }
@@ -236,6 +284,57 @@
 				</div>
 			</div>
 		{/each}
+	</div>
+
+	<!-- Load Metrics Section -->
+	<div class="load-section">
+		<h4>Load Metrics</h4>
+		<div class="load-metrics">
+			<div class="load-item">
+				<label for="finger-load">Finger</label>
+				<input type="number" id="finger-load" bind:value={fingerLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="shoulder-load">Shoulder</label>
+				<input type="number" id="shoulder-load" bind:value={shoulderLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="forearm-load">Forearm</label>
+				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+		</div>
+		
+		<h4 class="mt-4">Grip Metrics</h4>
+		<div class="load-metrics">
+			<div class="load-item">
+				<label for="open-grip">Open</label>
+				<input type="number" id="open-grip" bind:value={openGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="crimp-grip">Crimp</label>
+				<input type="number" id="crimp-grip" bind:value={crimpGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="pinch-grip">Pinch</label>
+				<input type="number" id="pinch-grip" bind:value={pinchGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="sloper-grip">Sloper</label>
+				<input type="number" id="sloper-grip" bind:value={sloperGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+			<div class="load-item">
+				<label for="jug-grip">Jug</label>
+				<input type="number" id="jug-grip" bind:value={jugGrip} min="1" max="5" />
+				<span class="load-scale">/ 5</span>
+			</div>
+		</div>
 	</div>
 
 	<div class="submit-section">
@@ -503,5 +602,65 @@
 		border: 1px solid #ccc;
 		width: 100%;
 		background: white;
+	}
+
+	.mt-4 {
+		margin-top: 1.5rem !important;
+	}
+
+	/* Load Metrics Section */
+	.load-section {
+		background: linear-gradient(135deg, rgba(244, 196, 48, 0.08) 0%, rgba(74, 155, 155, 0.08) 100%);
+		border-radius: 12px;
+		padding: 1.25rem;
+		margin: 1.5rem 0;
+		border: 1px solid rgba(74, 155, 155, 0.15);
+	}
+
+	@media (max-width: 640px) {
+		.load-section {
+			padding: 0.8rem;
+			margin: 1rem 0;
+		}
+	}
+	
+	.load-section h4 {
+		margin: 0 0 0.75rem 0;
+		color: var(--text-primary);
+		font-size: 1rem;
+		font-weight: 600;
+	}
+
+	.load-metrics {
+		display: flex;
+		gap: 1.5rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.load-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.load-item label {
+		font-weight: 500;
+		color: var(--text-primary);
+		font-size: 0.85rem;
+	}
+    
+    .load-item input {
+		width: 60px;
+		padding: 0.4rem;
+		border: 1px solid rgba(74, 155, 155, 0.3);
+		border-radius: 6px;
+		text-align: center;
+	}
+
+	.load-scale {
+		font-size: 0.75rem;
+		color: var(--text-secondary);
 	}
 </style>

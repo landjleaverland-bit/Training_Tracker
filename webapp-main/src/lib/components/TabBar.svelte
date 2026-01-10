@@ -102,6 +102,10 @@
 
 	/* Mobile: bottom fixed tabs */
 	@media (max-width: 640px) {
+		.logout-btn {
+			display: none;
+		}
+
 		.tab-bar {
 			position: fixed;
 			bottom: 0;

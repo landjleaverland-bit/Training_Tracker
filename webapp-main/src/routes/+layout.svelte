@@ -3,7 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import TabBar from '$lib/components/TabBar.svelte';
 	import Login from '$lib/components/Login.svelte';
-	import { isAuthenticated, isAuthLoading } from '$lib/services/auth';
+	import { isAuthenticated, isAuthLoading, logout } from '$lib/services/auth';
 	import ReloadPrompt from '$lib/components/common/ReloadPrompt.svelte';
 	import { onMount } from 'svelte';
 
@@ -30,6 +30,10 @@
 	function handleLoginSuccess() {
 		// No manual state update needed, store handles it
 	}
+
+    async function handleLogout() {
+        await logout();
+    }
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -47,6 +51,7 @@
 	<div class="app-container">
 		<header>
 			<TabBar />
+            <button class="mobile-logout" onclick={handleLogout} aria-label="Sign Out">🚪</button>
 		</header>
 		<main>
 			{@render children()}
@@ -78,6 +83,10 @@
 		z-index: 40;
 	}
 
+    .mobile-logout {
+        display: none;
+    }
+
 	main {
 		flex: 1;
 		padding: 1.5rem;
@@ -91,6 +100,30 @@
 		header {
 			position: static;
 		}
+
+        .mobile-logout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 60;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(74, 155, 155, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .mobile-logout:active {
+            transform: scale(0.95);
+        }
 
 		main {
 			padding: 0.5rem;

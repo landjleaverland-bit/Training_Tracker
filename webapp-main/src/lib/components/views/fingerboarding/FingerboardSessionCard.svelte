@@ -83,6 +83,20 @@
                 {/if}
                 {session.exercises.length} Exercises · {getTotalSets(session)} Sets
             </span>
+            <!-- Load Summary -->
+            {#if session.fingerLoad}
+                <div class="load-summary">
+                    <div class="load-badge finger" title="Finger Load: {session.fingerLoad}">
+                        {session.fingerLoad}
+                    </div>
+                    <div class="load-badge shoulder" title="Shoulder Load: {session.shoulderLoad}">
+                        {session.shoulderLoad || '-'}
+                    </div>
+                    <div class="load-badge forearm" title="Forearm Load: {session.forearmLoad}">
+                        {session.forearmLoad || '-'}
+                    </div>
+                </div>
+            {/if}
         </div>
         <div class="header-status">
             <span
@@ -118,6 +132,78 @@
 
     {#if isExpanded}
         <div class="card-body" transition:slide={{ duration: 150 }}>
+            <!-- Load Metrics -->
+            {#if session.fingerLoad}
+                <div class="metrics-container">
+                    <div class="metric">
+                        <span class="label">Finger Load</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: {((session.fingerLoad || 0) / 5) * 100}%"></div>
+                        </div>
+                        <span class="score">{session.fingerLoad}/5</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Shoulder Load</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: {((session.shoulderLoad || 0) / 5) * 100}%"></div>
+                        </div>
+                        <span class="score">{session.shoulderLoad || 0}/5</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Forearm Load</span>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: {((session.forearmLoad || 0) / 5) * 100}%"></div>
+                        </div>
+                        <span class="score">{session.forearmLoad || 0}/5</span>
+                    </div>
+                    {#if session.openGrip}
+                        <div class="metric">
+                            <span class="label">Open Grip</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {(session.openGrip / 5) * 100}%"></div>
+                            </div>
+                            <span class="score">{session.openGrip}/5</span>
+                        </div>
+                    {/if}
+                    {#if session.crimpGrip}
+                        <div class="metric">
+                            <span class="label">Crimp Grip</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {(session.crimpGrip / 5) * 100}%"></div>
+                            </div>
+                            <span class="score">{session.crimpGrip}/5</span>
+                        </div>
+                    {/if}
+                    {#if session.pinchGrip}
+                        <div class="metric">
+                            <span class="label">Pinch Grip</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {(session.pinchGrip / 5) * 100}%"></div>
+                            </div>
+                            <span class="score">{session.pinchGrip}/5</span>
+                        </div>
+                    {/if}
+                    {#if session.sloperGrip}
+                        <div class="metric">
+                            <span class="label">Sloper Grip</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {(session.sloperGrip / 5) * 100}%"></div>
+                            </div>
+                            <span class="score">{session.sloperGrip}/5</span>
+                        </div>
+                    {/if}
+                    {#if session.jugGrip}
+                        <div class="metric">
+                            <span class="label">Jug Grip</span>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {(session.jugGrip / 5) * 100}%"></div>
+                            </div>
+                            <span class="score">{session.jugGrip}/5</span>
+                        </div>
+                    {/if}
+                </div>
+            {/if}
+
             <div class="exercises-list">
                 {#each session.exercises || [] as exercise}
                     <div class="exercise-item">
@@ -335,4 +421,78 @@
         padding-top: 0.5rem;
         border-top: 1px solid #f9f9f9;
     }
+
+	.load-summary {
+		display: flex;
+		gap: 0.4rem;
+        margin-top: 0.25rem;
+	}
+
+	.load-badge {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.65rem;
+		font-weight: 700;
+		color: white;
+	}
+
+	.load-badge.finger { background: #E57373; }
+	.load-badge.shoulder { background: #64B5F6; }
+	.load-badge.forearm { background: #81C784; }
+
+	.metrics-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		padding: 1rem;
+		margin-bottom: 1rem;
+		background: white;
+		border-radius: 8px;
+		border: 1px solid rgba(0, 0, 0, 0.05);
+	}
+
+	@media (max-width: 480px) {
+		.metrics-container {
+			padding: 0.8rem;
+			gap: 1rem;
+		}
+	}
+
+	.metric {
+		flex: 1;
+		min-width: 100px;
+	}
+
+	.metric .label {
+		display: block;
+		font-size: 0.75rem;
+		margin-bottom: 0.3rem;
+		color: var(--text-secondary);
+	}
+
+	.bar-container {
+		height: 6px;
+		background: rgba(0, 0, 0, 0.05);
+		border-radius: 3px;
+		overflow: hidden;
+		margin-bottom: 0.2rem;
+	}
+
+	.bar-fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--teal-secondary), var(--teal-primary));
+		border-radius: 3px;
+	}
+
+	.metric .score {
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--teal-secondary);
+		display: block;
+		text-align: right;
+	}
 </style>
