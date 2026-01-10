@@ -23,13 +23,16 @@
 		height = 400,
 		marginTop = 20,
 		marginRight = 20,
-		marginBottom = 60,
+		marginBottom = 80,
 		marginLeft = 40,
 		color = "steelblue",
         orientation = 'vertical'
 	}: Props = $props();
 
-	let innerWidth = $derived(width - marginLeft - marginRight);
+	let containerWidth = $state(0);
+	let resolvedWidth = $derived(containerWidth || width);
+
+	let innerWidth = $derived(resolvedWidth - marginLeft - marginRight);
 	let innerHeight = $derived(height - marginTop - marginBottom);
 
     // Dynamic font size based on width if needed, but for now just bump base size
@@ -77,13 +80,26 @@
         };
     }));
 
-	let xTicks = $derived(isVertical ? (xScaleVideo as any).domain() : (xScaleVideo as any).ticks(5));
+	let xTicks = $derived.by(() => {
+        if (isVertical) {
+             const domain = (xScaleVideo as any).domain();
+             if (resolvedWidth > 0 && resolvedWidth < 600 && domain.length > 0) {
+                const barWidth = resolvedWidth / domain.length;
+                const minLabelWidth = 30; 
+                const step = Math.ceil(minLabelWidth / barWidth);
+                if (step > 1) return domain.filter((_: any, i: number) => i % step === 0);
+             }
+             return domain;
+        } else {
+            return (xScaleVideo as any).ticks(resolvedWidth / 80);
+        }
+    });
 	let yTicks = $derived(isVertical ? (yScaleVideo as any).ticks(5) : (yScaleVideo as any).domain());
 
 </script>
 
-<div class="chart-container" role="img" aria-label="Bar chart">
-	<svg {width} {height} viewBox="0 0 {width} {height}" style="max-width: 100%; height: auto;">
+<div class="chart-container" role="img" aria-label="Bar chart" bind:clientWidth={containerWidth}>
+	<svg width={resolvedWidth} {height} viewBox="0 0 {resolvedWidth} {height}" style="max-width: 100%; height: auto;">
 		<g transform="translate({marginLeft}, {marginTop})">
 			<!-- X Axis -->
 			<g transform="translate(0, {innerHeight})">

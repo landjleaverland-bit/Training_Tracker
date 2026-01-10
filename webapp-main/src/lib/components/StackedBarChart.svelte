@@ -32,7 +32,10 @@
     // Use keys as labels if no explicit labels provided
     let legendLabels = $derived(labels || keys.map(k => k.charAt(0).toUpperCase() + k.slice(1)));
 
-	let innerWidth = $derived(width - marginLeft - marginRight);
+	let containerWidth = $state(0);
+	let resolvedWidth = $derived(containerWidth || width);
+
+	let innerWidth = $derived(resolvedWidth - marginLeft - marginRight);
 	let innerHeight = $derived(height - marginTop - marginBottom);
     let fontSize = 12;
 
@@ -67,12 +70,22 @@
     // Compute stack
     let stackedData = $derived(d3.stack().keys(keys)(data as any));
 
-    let xTicks = $derived(xScale.domain());
+    let xTicks = $derived.by(() => {
+        const domain = xScale.domain();
+        if (resolvedWidth < 500 && domain.length > 0) {
+            const step = Math.ceil(30 / (resolvedWidth / domain.length)); // Ensure 30px per tick
+            if (step > 1) {
+                return domain.filter((_, i) => i % step === 0);
+            }
+        }
+        return domain;
+    });
+
     let yTicks = $derived(yScale.ticks(5));
 
 </script>
 
-<div class="chart-container" role="img" aria-label="Stacked Bar chart">
+<div class="chart-container" role="img" aria-label="Stacked Bar chart" bind:clientWidth={containerWidth}>
     <!-- Legend -->
     <div class="legend">
         {#each keys as key, i}
@@ -83,7 +96,7 @@
         {/each}
     </div>
 
-	<svg {width} {height} viewBox="0 0 {width} {height}" style="max-width: 100%; height: auto;">
+	<svg width={resolvedWidth} {height} viewBox="0 0 {resolvedWidth} {height}" style="max-width: 100%; height: auto;">
 		<g transform="translate({marginLeft}, {marginTop})">
 			<!-- X Axis -->
 			<g transform="translate(0, {innerHeight})">

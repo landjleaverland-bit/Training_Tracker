@@ -51,7 +51,13 @@
 	<div class="app-container">
 		<header>
 			<TabBar />
-            <button class="mobile-logout" onclick={handleLogout} aria-label="Sign Out">🚪</button>
+            <button class="mobile-logout" onclick={handleLogout} aria-label="Sign Out">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                    <polyline points="10 17 15 12 10 7"></polyline>
+                    <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+            </button>
 		</header>
 		<main>
 			{@render children()}
@@ -117,6 +123,7 @@
             border: 1px solid rgba(74, 155, 155, 0.2);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             font-size: 1.2rem;
+            color: var(--teal-secondary);
             cursor: pointer;
             transition: transform 0.2s;
         }
