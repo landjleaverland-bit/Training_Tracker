@@ -328,6 +328,14 @@ export interface FingerboardSessionPayload {
         }>;
         notes: string;
     }>;
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    openGrip?: number;
+    crimpGrip?: number;
+    pinchGrip?: number;
+    sloperGrip?: number;
+    jugGrip?: number;
 }
 
 export interface RemoteFingerboardSession extends FingerboardSessionPayload {
