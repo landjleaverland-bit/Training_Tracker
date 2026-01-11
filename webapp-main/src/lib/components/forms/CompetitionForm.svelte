@@ -322,10 +322,19 @@
             </div>
         {:else}
             <!-- STANDARD MODE -->
-            <div class="load-metrics-compact">
-                <LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} min={0} max={5} step={0.5} />
-                <LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} min={0} max={5} step={0.5} />
-                <LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} min={0} max={5} step={0.5} />
+            <div class="section-header centered">
+                <h4>Load Metrics</h4>
+            </div>
+            <div class="load-metrics-column">
+                <div class="metric-row">
+                    <LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} max={5} />
+                </div>
+                <div class="metric-row">
+                    <LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} max={5} />
+                </div>
+                <div class="metric-row">
+                    <LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} max={5} />
+                </div>
             </div>
 
             <div class="climbs-table-container">
@@ -441,16 +450,37 @@
         border: 1px solid #e9ecef;
     }
 
-    .load-metrics-compact {
+    .load-metrics-column {
         display: flex;
-        gap: 1rem;
-        margin: 1rem 0;
-        padding: 0.75rem;
-        background: white;
-        border-radius: 8px;
-        justify-content: space-around;
-        border: 1px solid #eee;
-        flex-wrap: wrap; 
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .metric-row {
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+    }
+
+    .metric-row:nth-child(odd) {
+        background-color: rgba(74, 155, 155, 0.08);
+    }
+
+    .metric-row:nth-child(even) {
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .section-header.centered {
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .section-header.centered h4 {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        color: var(--teal-secondary);
+        font-size: 1.1rem;
     }
 
     .climbs-table-container { margin-top: 1rem; }

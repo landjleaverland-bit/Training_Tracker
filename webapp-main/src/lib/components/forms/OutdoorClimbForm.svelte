@@ -599,18 +599,34 @@
 	<div class="load-section">
 		<h4>Load Metrics</h4>
 		<div class="load-metrics">
-			<LoadInput id="finger-load" label="Finger" bind:value={fingerLoad} />
-			<LoadInput id="shoulder-load" label="Shoulder" bind:value={shoulderLoad} />
-			<LoadInput id="forearm-load" label="Forearm" bind:value={forearmLoad} />
+			<div class="metric-row">
+				<LoadInput id="finger-load" label="Finger" bind:value={fingerLoad} />
+			</div>
+			<div class="metric-row">
+				<LoadInput id="shoulder-load" label="Shoulder" bind:value={shoulderLoad} />
+			</div>
+			<div class="metric-row">
+				<LoadInput id="forearm-load" label="Forearm" bind:value={forearmLoad} />
+			</div>
 		</div>
 
 		<h4 class="mt-4">Grip Metrics</h4>
 		<div class="load-metrics">
-			<LoadInput id="open-grip" label="Open" bind:value={openGrip} />
-			<LoadInput id="crimp-grip" label="Crimp" bind:value={crimpGrip} />
-			<LoadInput id="pinch-grip" label="Pinch" bind:value={pinchGrip} />
-			<LoadInput id="sloper-grip" label="Sloper" bind:value={sloperGrip} />
-			<LoadInput id="jug-grip" label="Jug" bind:value={jugGrip} />
+			<div class="metric-row">
+				<LoadInput id="open-grip" label="Open" bind:value={openGrip} />
+			</div>
+			<div class="metric-row">
+				<LoadInput id="crimp-grip" label="Crimp" bind:value={crimpGrip} />
+			</div>
+			<div class="metric-row">
+				<LoadInput id="pinch-grip" label="Pinch" bind:value={pinchGrip} />
+			</div>
+			<div class="metric-row">
+				<LoadInput id="sloper-grip" label="Sloper" bind:value={sloperGrip} />
+			</div>
+			<div class="metric-row">
+				<LoadInput id="jug-grip" label="Jug" bind:value={jugGrip} />
+			</div>
 		</div>
 	</div>
 
@@ -663,10 +679,13 @@
 	}
 
 	.form-content h4 {
-		margin: 0 0 0.75rem 0;
-		color: var(--text-primary);
-		font-size: 1rem;
-		font-weight: 600;
+		margin: 0 0 1rem 0;
+		color: var(--teal-secondary);
+		font-size: 1.1rem;
+		font-weight: 700;
+		text-align: center;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
 	.mt-4 {
@@ -749,9 +768,21 @@
 
 	.load-metrics {
 		display: flex;
-		gap: 1.5rem;
-		justify-content: center;
-		flex-wrap: wrap;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.metric-row {
+		padding: 0.4rem 0.8rem;
+		border-radius: 6px;
+	}
+
+	.metric-row:nth-child(odd) {
+		background-color: rgba(74, 155, 155, 0.08); /* Light teal tint */
+	}
+
+	.metric-row:nth-child(even) {
+		background-color: rgba(255, 255, 255, 0.6); /* Slightly transparent white */
 	}
 
 
