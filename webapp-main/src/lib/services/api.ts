@@ -21,6 +21,7 @@ import {
     deleteDoc,
     doc,
     getDocs,
+    getDoc,
     query,
     where,
     orderBy,
@@ -831,6 +832,84 @@ export async function deleteGymSession(id: string): Promise<{ ok: boolean; error
  */
 export function isOnline(): boolean {
     return typeof navigator !== 'undefined' ? navigator.onLine : true;
+}
+
+// ------------------------------------------------------------------
+// Timer Preferences
+// ------------------------------------------------------------------
+
+/**
+ * @brief Payload for Timer Preferences.
+ */
+export interface TimerPreferencesPayload {
+    workDuration: number;
+    restDuration: number;
+    allowOvertime: boolean;
+}
+
+/**
+ * @brief Timer Preferences object as returned from the API.
+ */
+export interface RemoteTimerPreferences extends TimerPreferencesPayload {
+    id: string; // exerciseId
+    updatedAt: string;
+}
+
+/**
+ * @brief Save Timer Preferences for a specific exercise.
+ *
+ * @param exerciseId The ID of the exercise.
+ * @param preferences The preferences to save.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
+export async function saveTimerPreferences(exerciseId: string, preferences: TimerPreferencesPayload): Promise<{ ok: boolean; error?: string }> {
+    try {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Timer_Preferences', exerciseId);
+        await setDoc(docRef, {
+            ...sanitizePayload(preferences),
+            updatedAt: Timestamp.now()
+        }, { merge: true });
+
+        return { ok: true };
+    } catch (e) {
+        return handleFirestoreError(e);
+    }
+}
+
+/**
+ * @brief Get Timer Preferences for a specific exercise.
+ *
+ * @param exerciseId The ID of the exercise.
+ * @returns {Promise<{ ok: boolean; data?: RemoteTimerPreferences; error?: string }>}
+ */
+export async function getTimerPreferences(exerciseId: string): Promise<{ ok: boolean; data?: RemoteTimerPreferences; error?: string }> {
+    try {
+        const uid = getCurrentUserId();
+        if (!uid) return { ok: false, error: 'User not authenticated' };
+
+        const docRef = getUserDocRef('Timer_Preferences', exerciseId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            return {
+                ok: true,
+                data: {
+                    id: docSnap.id,
+                    workDuration: data.workDuration,
+                    restDuration: data.restDuration,
+                    allowOvertime: data.allowOvertime,
+                    updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString()
+                }
+            };
+        }
+        return { ok: true, data: undefined }; // No prefs found
+    } catch (e) {
+        return handleFirestoreError(e);
+    }
 }
 
 

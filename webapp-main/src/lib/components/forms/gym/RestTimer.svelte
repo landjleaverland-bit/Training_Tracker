@@ -10,10 +10,17 @@
      * - LocalStorage state persistence for resilience
      * - Floating overlay UI
      */
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { fade, fly, scale } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
     import { audioManager } from '$lib/utils/audio';
+    import { getTimerPreferences, saveTimerPreferences } from '$lib/services/api';
+
+    interface NotificationAction {
+        action: string;
+        title: string;
+        icon?: string;
+    }
 
     // -- Props --
     let { 
@@ -45,18 +52,20 @@
     let configWork = $state(30); 
     let configRest = $state(60); 
     let configSets = $state(3);
+    let allowOvertime = $state(false);
 
     // Active State
     let currentSet = $state(1);
     let remaining = $state(30); 
     let endTimestamp = $state<number | null>(null);
     let pausedTimeRemaining = $state<number | null>(null);
+    let overtimeTriggered = $state(false);
     
     // Derived for UI
     let progress = $state(0);
     
     // Preferences Storage
-    const STORAGE_KEY = 'interval_timer_prefs';
+    // const STORAGE_KEY = 'interval_timer_prefs'; // Deprecated in favor of API
 
     // -- Lifecycle --
     let timerInterval: any = null;
@@ -79,34 +88,84 @@
     onMount(() => {
         restoreState();
         timerInterval = setInterval(tick, 100);
+        
+        // Listen for SW messages
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'TIMER_ACTION') {
+                    handleTimerAction(event.data.action);
+                }
+            });
+        }
+        
         return () => clearInterval(timerInterval);
     });
 
+    // -- Notifications --
+    async function requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission !== 'granted') {
+            await Notification.requestPermission();
+        }
+    }
+
+    function sendNotification(title: string, body: string, actions: NotificationAction[] = []) {
+        if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification(title, {
+                    body,
+                    icon: '/favicon.png', // Fallback or app icon
+                    vibrate: [200, 100, 200],
+                    actions,
+                    tag: 'rest-timer',
+                    renotify: true
+                } as any);
+            });
+        }
+    }
+
+    function handleTimerAction(action: string) {
+        if (action === 'extend-10') {
+            remaining += 10;
+            if (endTimestamp) endTimestamp += 10000;
+            // If in overtime (negative), adding 10s might make it positive again?
+            // If remaining was -5, adding 10 makes it +5.
+            // If we want to "Extend Rest" while in overtime, we probably want to reset to +10s?
+            // Or just add 10s to current.
+            // User requirement: "+10s Rest". 
+            // If I am 5s overtime (-5), and I add 10s, I have 5s left. That makes sense.
+            // Overtime trigger should be reset if it goes positive?
+            if (remaining > 0) overtimeTriggered = false;
+            
+            saveState();
+        } else if (action === 'next-set') {
+            skip();
+        }
+    }
+
     // -- Core Logic --
 
-    function loadPreference() {
+    async function loadPreference() {
         if (!associatedExerciseId) return;
         try {
-            const prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            const p = prefs[associatedExerciseId] || prefs['default'];
-            if (p) {
-                configWork = p.work || 30;
-                configRest = p.rest || 60;
-                // Sets usually come from the current session plan (defaultSets prop), so we might not want to overwrite them from history unless we want "last used sets for this exercise"
-                // The user said "automatically retrieve the number of sets from the exercise leaf", so we favor defaultSets.
+            const res = await getTimerPreferences(associatedExerciseId);
+            if (res.ok && res.data) {
+                configWork = res.data.workDuration;
+                configRest = res.data.restDuration;
+                allowOvertime = res.data.allowOvertime;
             }
         } catch (e) {
             console.warn(e);
         }
     }
 
-    function savePreference() {
+    async function savePreference() {
+        if (!associatedExerciseId) return;
         try {
-            const prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-            const p = { work: configWork, rest: configRest };
-            if (associatedExerciseId) prefs[associatedExerciseId] = p;
-            prefs['default'] = p;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+            await saveTimerPreferences(associatedExerciseId, {
+                workDuration: configWork,
+                restDuration: configRest,
+                allowOvertime
+            });
         } catch (e) { console.error(e); }
     }
 
@@ -115,7 +174,9 @@
         if (phase === 'SETUP') return;
         const snapshot = {
             phase, runningState, remaining, endTimestamp, 
-            configWork, configRest, configSets, currentSet,
+            configWork, configRest, configSets, configSetsOverridden: configSets, // Note: configSets might be good to save
+            allowOvertime,
+            currentSet,
             associatedExerciseId, pausedTimeRemaining, timestamp: Date.now()
         };
         localStorage.setItem('active_interval_timer', JSON.stringify(snapshot));
@@ -133,7 +194,11 @@
                     endTimestamp = s.endTimestamp;
                     configWork = s.configWork;
                     configRest = s.configRest;
-                    configSets = s.configSets;
+                    // configSets = s.configSets; // Don't restore sets? Or should we?
+                    // Actually, if we are restoring an active session, we SHOULD restore sets to respect the in-progress state.
+                    if (s.configSets) configSets = s.configSets;
+                    if (s.allowOvertime !== undefined) allowOvertime = s.allowOvertime;
+                    
                     currentSet = s.currentSet;
                     associatedExerciseId = s.associatedExerciseId;
                     pausedTimeRemaining = s.pausedTimeRemaining;
@@ -152,6 +217,7 @@
 
     // Control
     function startSession() {
+        requestNotificationPermission(); // Request on start
         savePreference();
         phase = 'WORK';
         currentSet = 1;
@@ -162,6 +228,7 @@
         runningState = 'RUNNING';
         remaining = duration;
         endTimestamp = Date.now() + (duration * 1000);
+        overtimeTriggered = false;
         saveState();
         audioManager.playChime(); // Beep on start
     }
@@ -195,7 +262,7 @@
         // Work -> Rest (unless last set)
         // Rest -> Work (next set)
         
-        audioManager.playCompletionAlert();
+        // audoManager.playCompletionAlert(); // Handled in tick when crossing 0
         
         if (phase === 'WORK') {
             if (currentSet >= configSets) {
@@ -208,11 +275,13 @@
             } else {
                 phase = 'REST';
                 startPhase(configRest);
+                sendNotification("Work Complete", `Resting for ${configRest}s`);
             }
         } else if (phase === 'REST') {
             currentSet++;
             phase = 'WORK';
             startPhase(configWork);
+            sendNotification("Rest Complete", `Starting Set ${currentSet}/${configSets}`);
         }
     }
 
@@ -225,8 +294,23 @@
             remaining = Math.ceil(diff / 1000);
 
             if (remaining <= 0) {
-                remaining = 0;
-                handlePhaseComplete();
+                if (!overtimeTriggered) {
+                     overtimeTriggered = true;
+                     audioManager.playCompletionAlert();
+                     
+                     if (!allowOvertime) {
+                         remaining = 0;
+                         handlePhaseComplete();
+                     } else {
+                         // Overtime Alert
+                         sendNotification("Timer Finished", "Overtime started", [
+                             { action: 'next-set', title: 'Next Set' },
+                             { action: 'extend-10', title: '+10s' }
+                         ]);
+                     }
+                     // If overtime allowed, we just continue (remaining becomes negative)
+                     // UI should handle negative display
+                }
             }
         }
     }
@@ -310,6 +394,14 @@
                             </div>
                         </div>
                         
+                        <div class="input-group" style="flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label for="allow-overtime" style="margin: 0;">Overtime</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="allow-overtime" bind:checked={allowOvertime}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
                         <button class="start-btn" onclick={startSession}>
                             ▶ Start Interval
                         </button>
@@ -334,8 +426,12 @@
                             />
                          </svg>
                          <div class="timer-val">
-                             <div class="phase-label">{phase}</div>
-                             <div class="digits">{formatTime(remaining)}</div>
+                             <div class="phase-label">
+                                 {remaining < 0 ? 'OVERTIME' : phase}
+                             </div>
+                             <div class="digits" style:color={remaining < 0 ? '#ef4444' : 'inherit'}>
+                                 {formatTime(Math.abs(remaining))}
+                             </div>
                          </div>
                     </div>
 
@@ -345,7 +441,9 @@
                          {:else}
                             <button class="ctl-btn play" onclick={resume}>▶</button>
                          {/if}
-                         <button class="ctl-btn skip" onclick={skip}>⏭</button>
+                         <button class="ctl-btn skip" onclick={skip}>
+                            {remaining < 0 ? 'Next' : '⏭'}
+                         </button>
                          <button class="ctl-btn stop" onclick={stop} style="font-size: 1rem; padding: 1rem;">Stop</button>
                     </div>
                 {/if}
@@ -597,5 +695,56 @@
         border-radius: 12px;
         font-weight: 600;
         cursor: pointer;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #eee;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    input:checked + .slider {
+        background-color: #333;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #333;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
     }
 </style>
