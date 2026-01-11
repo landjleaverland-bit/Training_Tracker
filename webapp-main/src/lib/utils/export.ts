@@ -1,3 +1,17 @@
+/**
+ * @file export.ts
+ * @brief Utility for exporting data to CSV.
+ *
+ * Provides functionality to transform arrays of objects into CSV format
+ * and trigger a browser download.
+ */
+
+/**
+ * @brief Converts data to CSV and triggers a download.
+ *
+ * @param data Array of objects to export.
+ * @param filename Desired filename for the download.
+ */
 export function downloadCSV(data: any[], filename: string) {
     if (!data || data.length === 0) {
         alert("No data to export");

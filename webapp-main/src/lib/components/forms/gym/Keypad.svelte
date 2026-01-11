@@ -1,4 +1,10 @@
 <script lang="ts">
+    /**
+     * @file Keypad.svelte
+     * @component
+     * @description A numeric keypad for easier data entry on mobile devices.
+     * Includes quick-add buttons and basic arithmetic controls.
+     */
     import { createEventDispatcher } from 'svelte';
 
     export let value: number | null = null;

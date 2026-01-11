@@ -1,4 +1,9 @@
 <script>
+	/**
+	 * @file IconLegend.svelte
+	 * @component
+	 * @description Collapsible legend displaying definitions for app icons.
+	 */
 	import { slide } from 'svelte/transition';
 
 	let isOpen = $state(false);

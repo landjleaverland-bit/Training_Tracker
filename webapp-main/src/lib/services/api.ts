@@ -1,3 +1,17 @@
+/**
+ * @file api.ts
+ * @brief Main API service for interacting with Firebase Firestore.
+ *
+ * This module handles all CRUD operations for the application's data models:
+ * - Indoor Climbs
+ * - Outdoor Climbs
+ * - Fingerboarding
+ * - Competitions
+ * - Gym Sessions
+ *
+ * It provides a standardized response wrapper and manages user-specific collections.
+ */
+
 import { db } from './firebase';
 import { getCurrentUserId } from './auth';
 import {
@@ -15,7 +29,9 @@ import {
 } from 'firebase/firestore';
 
 /**
- * Standardized response wrapper to match existing app architecture
+ * @brief Standardized response wrapper to match existing app architecture.
+ *
+ * @template T Type of the data returned in case of success.
  */
 interface ApiResponse<T> {
     ok: boolean;
@@ -24,7 +40,10 @@ interface ApiResponse<T> {
 }
 
 /**
- * Helper to handle Firestore errors
+ * @brief Helper to handle Firestore errors consistently.
+ *
+ * @param e The error object caught from a try-catch block.
+ * @returns {ApiResponse<any>} An error response object.
  */
 function handleFirestoreError(e: unknown): ApiResponse<any> {
     console.error('Firestore Error:', e);
@@ -35,7 +54,14 @@ function handleFirestoreError(e: unknown): ApiResponse<any> {
 }
 
 /**
- * Helper to convert Firestore dates (Timestamps) to ISO strings
+ * @brief Helper to convert Firestore dates (Timestamps) to ISO strings.
+ *
+ * Ensures that all date fields in the document are returned as ISO 8601 strings
+ * instead of Firestore Timestamp objects, making them serializable for the frontend.
+ *
+ * @template T The expected return type.
+ * @param docSnap The Firestore document snapshot data.
+ * @returns {T} The formatted data object.
  */
 function formattedDoc<T>(docSnap: DocumentData): T {
     const data = docSnap.data();
@@ -49,7 +75,13 @@ function formattedDoc<T>(docSnap: DocumentData): T {
 }
 
 /**
- * Helper to get user-specific collection
+ * @brief Helper to get a reference to a user-specific collection.
+ *
+ * Ensures all data is namespaced under `users/{uid}/{collectionName}`.
+ * Throws an error if the user is not authenticated.
+ *
+ * @param collectionName The name of the sub-collection.
+ * @returns {CollectionReference} Firestore collection reference.
  */
 function getUserCollectionRef(collectionName: string) {
     const uid = getCurrentUserId();
@@ -58,7 +90,11 @@ function getUserCollectionRef(collectionName: string) {
 }
 
 /**
- * Helper to get user-specific document
+ * @brief Helper to get a reference to a specific document within a user's collection.
+ *
+ * @param collectionName The name of the sub-collection.
+ * @param id The document ID.
+ * @returns {DocumentReference} Firestore document reference.
  */
 function getUserDocRef(collectionName: string, id: string) {
     const uid = getCurrentUserId();
@@ -67,7 +103,14 @@ function getUserDocRef(collectionName: string, id: string) {
 }
 
 /**
- * Helper to remove undefined fields from payload (Firestore rejects undefined)
+ * @brief Helper to remove undefined fields from payload.
+ *
+ * Firestore rejects `undefined` values, so this function strips them out
+ * by serializing and deserializing via JSON.
+ *
+ * @template T Type of the payload.
+ * @param payload The object to sanitize.
+ * @returns {T} The sanitized object.
  */
 function sanitizePayload<T>(payload: T): T {
     // efficient way to remove undefined values
@@ -75,8 +118,14 @@ function sanitizePayload<T>(payload: T): T {
 }
 
 /**
- * Helper to generate deterministic session ID
- * Format: YYYY-MM-DD_HH-mm_Identifier
+ * @brief Helper to generate a deterministic session ID.
+ *
+ * Format: `YYYY-MM-DD_HH-mm_Identifier`
+ *
+ * @param date The date string (YYYY-MM-DD).
+ * @param time The time string (HH:mm).
+ * @param identifier A unique identifier (e.g., location name).
+ * @returns {string} The generated session ID.
  */
 function generateSessionId(date: string, time: string, identifier: string): string {
     const cleanIdentifier = identifier.replace(/[^a-zA-Z0-9]/g, '_');
@@ -87,6 +136,9 @@ function generateSessionId(date: string, time: string, identifier: string): stri
 // Indoor Sessions
 // ------------------------------------------------------------------
 
+/**
+ * @brief Payload for creating or updating an Indoor Session.
+ */
 export interface IndoorSessionPayload {
     date: string;
     time: string;
@@ -118,6 +170,9 @@ export interface IndoorSessionPayload {
     }>;
 }
 
+/**
+ * @brief Indoor Session object as returned from the API.
+ */
 export interface RemoteIndoorSession extends IndoorSessionPayload {
     id: string;
     createdAt: string;
@@ -125,6 +180,12 @@ export interface RemoteIndoorSession extends IndoorSessionPayload {
     activityType: 'indoor_climb';
 }
 
+/**
+ * @brief Create a new Indoor Climbing Session.
+ *
+ * @param session The session data.
+ * @returns {Promise<{ ok: boolean; id?: string; error?: string }>}
+ */
 export async function createIndoorSession(session: IndoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -146,6 +207,13 @@ export async function createIndoorSession(session: IndoorSessionPayload): Promis
     }
 }
 
+/**
+ * @brief Update an existing Indoor Climbing Session.
+ *
+ * @param id The session ID.
+ * @param session The updated session data.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function updateIndoorSession(id: string, session: IndoorSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -162,6 +230,12 @@ export async function updateIndoorSession(id: string, session: IndoorSessionPayl
     }
 }
 
+/**
+ * @brief Fetch Indoor Climbing Sessions.
+ *
+ * @param since Optional ISO date string to fetch only sessions updated after this date.
+ * @returns {Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }>}
+ */
 export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; data?: RemoteIndoorSession[]; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -169,7 +243,7 @@ export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; 
 
         let q = query(getUserCollectionRef('Indoor_Climbs'), orderBy('date', 'desc'));
 
-        // Client-side filtering optimization: 
+        // Client-side filtering optimization:
         // If dataset becomes large, rely on 'since' timestamp to fetch only deltas.
         if (since) {
             q = query(getUserCollectionRef('Indoor_Climbs'), where('updatedAt', '>', Timestamp.fromDate(new Date(since))));
@@ -186,6 +260,12 @@ export async function getIndoorSessions(since?: string): Promise<{ ok: boolean; 
     }
 }
 
+/**
+ * @brief Delete an Indoor Climbing Session.
+ *
+ * @param id The session ID.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function deleteIndoorSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -202,6 +282,9 @@ export async function deleteIndoorSession(id: string): Promise<{ ok: boolean; er
 // Outdoor Sessions
 // ------------------------------------------------------------------
 
+/**
+ * @brief Payload for creating or updating an Outdoor Session.
+ */
 export interface OutdoorSessionPayload {
     date: string;
     time: string;
@@ -233,6 +316,9 @@ export interface OutdoorSessionPayload {
     }>;
 }
 
+/**
+ * @brief Outdoor Session object as returned from the API.
+ */
 export interface RemoteOutdoorSession extends OutdoorSessionPayload {
     id: string;
     createdAt: string;
@@ -240,6 +326,12 @@ export interface RemoteOutdoorSession extends OutdoorSessionPayload {
     activityType: 'outdoor_climb';
 }
 
+/**
+ * @brief Create a new Outdoor Climbing Session.
+ *
+ * @param session The session data.
+ * @returns {Promise<{ ok: boolean; id?: string; error?: string }>}
+ */
 export async function createOutdoorSession(session: OutdoorSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -261,6 +353,13 @@ export async function createOutdoorSession(session: OutdoorSessionPayload): Prom
     }
 }
 
+/**
+ * @brief Update an existing Outdoor Climbing Session.
+ *
+ * @param id The session ID.
+ * @param session The updated session data.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function updateOutdoorSession(id: string, session: OutdoorSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -277,6 +376,12 @@ export async function updateOutdoorSession(id: string, session: OutdoorSessionPa
     }
 }
 
+/**
+ * @brief Fetch Outdoor Climbing Sessions.
+ *
+ * @param since Optional ISO date string to fetch only sessions updated after this date.
+ * @returns {Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }>}
+ */
 export async function getOutdoorSessions(since?: string): Promise<{ ok: boolean; data?: RemoteOutdoorSession[]; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -297,6 +402,12 @@ export async function getOutdoorSessions(since?: string): Promise<{ ok: boolean;
     }
 }
 
+/**
+ * @brief Delete an Outdoor Climbing Session.
+ *
+ * @param id The session ID.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function deleteOutdoorSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -313,6 +424,9 @@ export async function deleteOutdoorSession(id: string): Promise<{ ok: boolean; e
 // Fingerboard Sessions
 // ------------------------------------------------------------------
 
+/**
+ * @brief Payload for creating or updating a Fingerboard Session.
+ */
 export interface FingerboardSessionPayload {
     date: string;
     time: string;
@@ -338,6 +452,9 @@ export interface FingerboardSessionPayload {
     jugGrip?: number;
 }
 
+/**
+ * @brief Fingerboard Session object as returned from the API.
+ */
 export interface RemoteFingerboardSession extends FingerboardSessionPayload {
     id: string;
     createdAt: string;
@@ -345,6 +462,12 @@ export interface RemoteFingerboardSession extends FingerboardSessionPayload {
     activityType: 'fingerboarding';
 }
 
+/**
+ * @brief Create a new Fingerboard Session.
+ *
+ * @param session The session data.
+ * @returns {Promise<{ ok: boolean; id?: string; error?: string }>}
+ */
 export async function createFingerboardSession(session: FingerboardSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -366,6 +489,13 @@ export async function createFingerboardSession(session: FingerboardSessionPayloa
     }
 }
 
+/**
+ * @brief Update an existing Fingerboard Session.
+ *
+ * @param id The session ID.
+ * @param session The updated session data.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function updateFingerboardSession(id: string, session: FingerboardSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -382,6 +512,12 @@ export async function updateFingerboardSession(id: string, session: FingerboardS
     }
 }
 
+/**
+ * @brief Fetch Fingerboard Sessions.
+ *
+ * @param since Optional ISO date string to fetch only sessions updated after this date.
+ * @returns {Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }>}
+ */
 export async function getFingerboardSessions(since?: string): Promise<{ ok: boolean; data?: RemoteFingerboardSession[]; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -402,6 +538,12 @@ export async function getFingerboardSessions(since?: string): Promise<{ ok: bool
     }
 }
 
+/**
+ * @brief Delete a Fingerboard Session.
+ *
+ * @param id The session ID.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function deleteFingerboardSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -418,6 +560,9 @@ export async function deleteFingerboardSession(id: string): Promise<{ ok: boolea
 // Competition Sessions
 // ------------------------------------------------------------------
 
+/**
+ * @brief Payload for creating or updating a Competition Session.
+ */
 export interface CompetitionSessionPayload {
     date: string;
     time: string;
@@ -440,6 +585,9 @@ export interface CompetitionSessionPayload {
     }>;
 }
 
+/**
+ * @brief Competition Session object as returned from the API.
+ */
 export interface RemoteCompetitionSession extends CompetitionSessionPayload {
     id: string;
     createdAt: string;
@@ -447,6 +595,12 @@ export interface RemoteCompetitionSession extends CompetitionSessionPayload {
     activityType: 'competition';
 }
 
+/**
+ * @brief Create a new Competition Session.
+ *
+ * @param session The session data.
+ * @returns {Promise<{ ok: boolean; id?: string; error?: string }>}
+ */
 export async function createCompetitionSession(session: CompetitionSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -468,6 +622,13 @@ export async function createCompetitionSession(session: CompetitionSessionPayloa
     }
 }
 
+/**
+ * @brief Update an existing Competition Session.
+ *
+ * @param id The session ID.
+ * @param session The updated session data.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function updateCompetitionSession(id: string, session: CompetitionSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -484,6 +645,12 @@ export async function updateCompetitionSession(id: string, session: CompetitionS
     }
 }
 
+/**
+ * @brief Fetch Competition Sessions.
+ *
+ * @param since Optional ISO date string to fetch only sessions updated after this date.
+ * @returns {Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }>}
+ */
 export async function getCompetitionSessions(since?: string): Promise<{ ok: boolean; data?: RemoteCompetitionSession[]; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -504,6 +671,12 @@ export async function getCompetitionSessions(since?: string): Promise<{ ok: bool
     }
 }
 
+/**
+ * @brief Delete a Competition Session.
+ *
+ * @param id The session ID.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function deleteCompetitionSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -520,6 +693,9 @@ export async function deleteCompetitionSession(id: string): Promise<{ ok: boolea
 // Gym Sessions
 // ------------------------------------------------------------------
 
+/**
+ * @brief Payload for creating or updating a Gym Session.
+ */
 export interface GymSessionPayload {
     date: string;
     time: string;
@@ -543,6 +719,9 @@ export interface GymSessionPayload {
     }>;
 }
 
+/**
+ * @brief Gym Session object as returned from the API.
+ */
 export interface RemoteGymSession extends GymSessionPayload {
     id: string;
     createdAt: string;
@@ -550,6 +729,12 @@ export interface RemoteGymSession extends GymSessionPayload {
     activityType: 'gym_session';
 }
 
+/**
+ * @brief Create a new Gym Session.
+ *
+ * @param session The session data.
+ * @returns {Promise<{ ok: boolean; id?: string; error?: string }>}
+ */
 export async function createGymSession(session: GymSessionPayload): Promise<{ ok: boolean; id?: string; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -571,6 +756,13 @@ export async function createGymSession(session: GymSessionPayload): Promise<{ ok
     }
 }
 
+/**
+ * @brief Update an existing Gym Session.
+ *
+ * @param id The session ID.
+ * @param session The updated session data.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function updateGymSession(id: string, session: GymSessionPayload): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -587,6 +779,12 @@ export async function updateGymSession(id: string, session: GymSessionPayload): 
     }
 }
 
+/**
+ * @brief Fetch Gym Sessions.
+ *
+ * @param since Optional ISO date string to fetch only sessions updated after this date.
+ * @returns {Promise<{ ok: boolean; data?: RemoteGymSession[]; error?: string }>}
+ */
 export async function getGymSessions(since?: string): Promise<{ ok: boolean; data?: RemoteGymSession[]; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -607,6 +805,12 @@ export async function getGymSessions(since?: string): Promise<{ ok: boolean; dat
     }
 }
 
+/**
+ * @brief Delete a Gym Session.
+ *
+ * @param id The session ID.
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
 export async function deleteGymSession(id: string): Promise<{ ok: boolean; error?: string }> {
     try {
         const uid = getCurrentUserId();
@@ -620,7 +824,10 @@ export async function deleteGymSession(id: string): Promise<{ ok: boolean; error
 }
 
 /**
- * Check connectivity - largely handled by SDK but helper provided for existing code compatibility
+ * @brief Check network connectivity.
+ *
+ * Helper primarily for legacy code compatibility, now largely handled by the SDK.
+ * @returns {boolean} True if online, false otherwise.
  */
 export function isOnline(): boolean {
     return typeof navigator !== 'undefined' ? navigator.onLine : true;

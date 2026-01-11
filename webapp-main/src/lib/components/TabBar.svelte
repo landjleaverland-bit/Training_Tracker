@@ -1,4 +1,11 @@
 <script lang="ts">
+	/**
+	 * @file TabBar.svelte
+	 * @component
+	 * @description Main navigation bar for the application.
+	 * Displays links to major routes (Log, View, Plot) and handles logout.
+	 * Responsive design adjusts to bottom bar on mobile.
+	 */
 	import { page } from '$app/state';
 	import { base } from '$app/paths';
 	import { logout } from '$lib/services/auth';

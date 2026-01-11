@@ -1,9 +1,17 @@
 <script lang="ts">
+	/**
+	 * @file BarChart.svelte
+	 * @component
+	 * @description A flexible Bar Chart component supporting vertical and horizontal orientations.
+	 */
 	import * as d3 from 'd3';
 
 	interface Props {
+		/** Data points to visualize. */
 		data: any[];
+		/** Accessor for categorical axis (X for vertical, Y for horizontal). */
 		xAccessor: (d: any) => string;
+		/** Accessor for numerical axis (Y for vertical, X for horizontal). */
 		yAccessor: (d: any) => number;
 		width?: number;
 		height?: number;
@@ -11,7 +19,9 @@
 		marginRight?: number;
 		marginBottom?: number;
 		marginLeft?: number;
+		/** Color of the bars. */
 		color?: string;
+		/** Chart orientation. Default: 'vertical'. */
         orientation?: 'vertical' | 'horizontal';
 	}
 

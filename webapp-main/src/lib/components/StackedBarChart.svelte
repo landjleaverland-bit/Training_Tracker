@@ -1,12 +1,23 @@
 <script lang="ts">
+	/**
+	 * @file StackedBarChart.svelte
+	 * @component
+	 * @description A responsive Stacked Bar Chart component using D3.js.
+	 * visualizing distributions across categories (e.g., attempt types per grade).
+	 */
 	import * as d3 from 'd3';
 
 	interface Props {
+		/** Data array to visualize. */
 		data: any[];
+		/** Accessor for the category (X-axis) value. */
 		xAccessor: (d: any) => string;
-		keys: string[]; // Keys for the stack (e.g., ['flash', 'redpoint', 'dnf'])
-        colors: string[]; // Colors corresponding to keys
-        labels?: string[]; // Optional legend labels corresponding to keys
+		/** Array of keys to stack (e.g., ['flash', 'redpoint']). */
+		keys: string[];
+        /** Array of colors corresponding to the keys. */
+        colors: string[];
+        /** Optional labels for the legend if different from keys. */
+        labels?: string[];
 		width?: number;
 		height?: number;
 		marginTop?: number;

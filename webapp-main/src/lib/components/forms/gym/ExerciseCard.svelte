@@ -1,4 +1,11 @@
 <script lang="ts">
+    /**
+     * @file ExerciseCard.svelte
+     * @component
+     * @description Component representing a single exercise within a gym session.
+     * Manages a list of sets (`GymSet`) and displays benchmarks.
+     * Emits events for timer, info, and delete actions.
+     */
     import type { GymExercise, GymSet } from '$lib/types/session';
     import { createEventDispatcher } from 'svelte';
     import ExerciseSetRow from './ExerciseSetRow.svelte';

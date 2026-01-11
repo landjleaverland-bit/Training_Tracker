@@ -1,63 +1,113 @@
 /**
- * Data types for training sessions
+ * @file session.ts
+ * @brief Data types and interfaces for the application's training sessions.
+ *
+ * Defines the shape of data stored in Firestore and used throughout the application.
  */
 
-// Base session with sync tracking
+/**
+ * @brief Base session interface with common properties.
+ *
+ * All specific session types extend this interface.
+ */
 export interface BaseSession {
-    id: string;                    // Unique ID (UUID)
-    activityType: string;          // indoor_climb, outdoor_climb, etc.
-    date: string;                  // ISO date string (YYYY-MM-DD)
-    time?: string;                 // Time string (HH:mm) - Optional for legacy
-    createdAt: string;             // ISO timestamp
-    updatedAt: string;             // ISO timestamp
-    syncStatus: 'pending' | 'synced' | 'error';  // Sync state
-    syncedAt?: string;             // When last successfully synced
+    /** Unique ID (UUID format). */
+    id: string;
+    /** Discriminator for session type (e.g., 'indoor_climb', 'outdoor_climb'). */
+    activityType: string;
+    /** Date string in ISO format (YYYY-MM-DD). */
+    date: string;
+    /** Time string (HH:mm). Optional for legacy records. */
+    time?: string;
+    /** ISO timestamp for creation time. */
+    createdAt: string;
+    /** ISO timestamp for last update. */
+    updatedAt: string;
+    /** offline sync status. managed by service worker/local DB logic. */
+    syncStatus: 'pending' | 'synced' | 'error';
+    /** Timestamp of last successful sync. */
+    syncedAt?: string;
 }
 
-// Climb entry in a session
+/**
+ * @brief Represents a single climb within a session.
+ */
 export interface ClimbEntry {
+    /** True if Sport/Lead, False if Bouldering. */
     isSport: boolean;
+    /** Name of the climb or route. */
     name: string;
+    /** Climbing grade (e.g., "V4", "7a"). */
     grade: string;
+    /** Type of attempt (e.g., "Flash", "Redpoint"). */
     attemptType: string;
+    /** Number of attempts made. */
     attemptsNum: number;
+    /** Specific notes for this climb. */
     notes: string;
+    /** Wall identifier (gym specific). */
     wall?: string;
+    /** Technical focus for this climb. */
     techniqueFocus?: string;
 }
 
-// Indoor climbing session
+/**
+ * @brief Indoor climbing session payload.
+ */
 export interface IndoorClimbSession extends BaseSession {
     activityType: 'indoor_climb';
+    /** Name of the gym/location. */
     location: string;
+    /** Custom location name if 'Other' is selected. */
     customLocation?: string;
-    climbingType: string;         // Bouldering, Sport, Mixed
-    trainingTypes: string[];      // Projecting, Onsighting, Campusing, Repeaters
-    difficulty?: string;          // Easy, Medium, Hard, Max, Limit+
-    categories?: string[];        // None, Technique, Strength, Strength-endurance, Power, Strength Capacity, Power Capacity
-    energySystems?: string[];     // Aerobic capacity, Aerobic lactic power, etc.
+    /** General type: Bouldering, Sport, Mixed. */
+    climbingType: string;
+    /** Focus types: Projecting, Onsighting, Campusing, Repeaters, etc. */
+    trainingTypes: string[];
+    /** Perceived difficulty: Easy, Medium, Hard, Max, Limit+. */
+    difficulty?: string;
+    /** Training categories targeted. */
+    categories?: string[];
+    /** Energy systems targeted (e.g., Aerobic capacity). */
+    energySystems?: string[];
+    /** Wall angles used (Deprecrated in favor of per-climb or general notes in some contexts, still present in specific forms). */
     wallAngles?: string[];
-    // WallAngles removed - now per climb
-    fingerLoad: number;           // 1-5
-    shoulderLoad: number;         // 1-5
-    forearmLoad: number;          // 1-5
-    openGrip: number;             // 1-5
-    crimpGrip: number;            // 1-5
-    pinchGrip: number;            // 1-5
-    sloperGrip: number;           // 1-5
-    jugGrip: number;              // 1-5
+    /** Subjective Finger load (1-5). */
+    fingerLoad: number;
+    /** Subjective Shoulder load (1-5). */
+    shoulderLoad: number;
+    /** Subjective Forearm load (1-5). */
+    forearmLoad: number;
+    /** Volume of Open Hand grip usage (1-5). */
+    openGrip: number;
+    /** Volume of Crimp grip usage (1-5). */
+    crimpGrip: number;
+    /** Volume of Pinch grip usage (1-5). */
+    pinchGrip: number;
+    /** Volume of Sloper grip usage (1-5). */
+    sloperGrip: number;
+    /** Volume of Jug grip usage (1-5). */
+    jugGrip: number;
+    /** List of individual climbs logged. */
     climbs: ClimbEntry[];
+    /** General session notes. */
     notes?: string;
 }
 
-// Outdoor climbing session
+/**
+ * @brief Outdoor climbing session payload.
+ */
 export interface OutdoorClimbSession extends BaseSession {
     activityType: 'outdoor_climb';
-    area: string;                 // e.g., Portland, Swanage
-    crag: string;                 // e.g., Blacknor North, Dancing Ledge
-    sector?: string;              // e.g., Diamond Slab (optional text)
-    climbingType: string;         // Boulder, Sport, Trad
-    trainingTypes: string[];      // Projecting, Onsighting, etc.
+    /** Geographic area (e.g., Portland). */
+    area: string;
+    /** Specific Crag name. */
+    crag: string;
+    /** Specific Sector name (optional). */
+    sector?: string;
+    /** Climbing type: Boulder, Sport, Trad. */
+    climbingType: string;
+    trainingTypes: string[];
     difficulty?: string;
     categories?: string[];
     energySystems?: string[];
@@ -74,21 +124,33 @@ export interface OutdoorClimbSession extends BaseSession {
     notes?: string;
 }
 
-// Fingerboarding session
+/**
+ * @brief Detail set for a fingerboard exercise.
+ */
 export interface ExerciseSet {
+    /** Weight added or removed (kg). */
     weight: number;
+    /** Duration in seconds or number of repetitions. */
     reps: number;
 }
 
+/**
+ * @brief Fingerboard exercise entry.
+ */
 export interface FingerboardExercise {
     id: string;
     name: string;
     gripType: string;
+    /** Number of sets performed. */
     sets: number;
+    /** Breakdown of each set. */
     details: ExerciseSet[];
     notes: string;
 }
 
+/**
+ * @brief Fingerboard session payload.
+ */
 export interface FingerboardSession extends BaseSession {
     activityType: 'fingerboarding';
     location: string;
@@ -104,7 +166,9 @@ export interface FingerboardSession extends BaseSession {
     notes?: string;
 }
 
-// Competition session
+/**
+ * @brief Result of a single climb in a competition.
+ */
 export interface CompetitionClimbResult {
     name: string;
     status: 'Flash' | 'Top' | 'Zone' | 'Attempt';
@@ -112,12 +176,20 @@ export interface CompetitionClimbResult {
     notes: string;
 }
 
+/**
+ * @brief A round within a competition (e.g., Qualifiers, Finals).
+ */
 export interface CompetitionRound {
     name: string;
+    /** Ranking/Position achieved in this round. */
     position?: number | null;
+    /** List of climbs attempted in this round. */
     climbs?: CompetitionClimbResult[];
 }
 
+/**
+ * @brief Competition session payload.
+ */
 export interface CompetitionSession extends BaseSession {
     activityType: 'competition';
     venue: string;
@@ -130,34 +202,58 @@ export interface CompetitionSession extends BaseSession {
     notes?: string;
 }
 
-// Gym session (Strong/Hevy style)
+/**
+ * @brief Set details for a Gym exercise.
+ */
 export interface GymSet {
-    weight: number;      // kg or lbs based on user pref (store as number)
+    /** Weight used (kg or lbs). */
+    weight: number;
+    /** Number of repetitions. */
     reps: number;
+    /** Is this a warmup set? */
     isWarmup: boolean;
+    /** Was failure reached? */
     isFailure: boolean;
+    /** Is this a drop set? */
     isDropSet: boolean;
-    completed: boolean;  // If the user checked it off
+    /** Marked as completed by user. */
+    completed: boolean;
 }
 
+/**
+ * @brief Gym exercise entry.
+ */
 export interface GymExercise {
-    id: string;          // Unique ID for this exercise instance in the session
-    name: string;        // "Barbell Squat"
+    /** Unique ID within session. */
+    id: string;
+    /** Exercise name (e.g., "Barbell Squat"). */
+    name: string;
+    /** Sets details. */
     sets: GymSet[];
     notes?: string;
-    linkedTo?: string;   // ID of another exercise if supersetted
+    /** ID of another exercise if supersetted. */
+    linkedTo?: string;
+    /** Perceived difficulty color code. */
     difficulty?: 'Green' | 'Yellow' | 'Orange' | 'Red';
 }
 
+/**
+ * @brief Gym session payload (Weightlifting/Strength).
+ */
 export interface GymSession extends BaseSession {
     activityType: 'gym_session';
-    name: string;        // e.g., "Leg Day", "Push A"
+    /** Name of the workout (e.g., "Leg Day"). */
+    name: string;
     exercises: GymExercise[];
-    bodyweight?: number; // Optional bodyweight at time of session
+    /** Bodyweight at time of session. */
+    bodyweight?: number;
+    /** Periodization block. */
     trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
     notes?: string;
 }
 
-// Union of all session types
+/**
+ * @brief Union of all possible session types.
+ */
 export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession | GymSession;
 

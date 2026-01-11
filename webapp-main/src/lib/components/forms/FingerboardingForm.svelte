@@ -1,4 +1,11 @@
 <script lang="ts">
+    /**
+     * @file FingerboardingForm.svelte
+     * @component
+     * @description Form for logging fingerboarding sessions.
+     * Supports protocol customization (Max hangs, Recruitment, etc.) and grip types.
+     * Includes an integrated rest timer for interval training.
+     */
     import { onMount, createEventDispatcher } from 'svelte';
 	import { createFingerboardSession, updateFingerboardSession, isOnline } from '$lib/services/api';
     import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
@@ -154,6 +161,9 @@
     let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
     let saveMessage = $state('');
 
+    /**
+     * Validates and saves the fingerboard session to Firestore.
+     */
     async function saveSession() {
         saveStatus = 'saving';
 		

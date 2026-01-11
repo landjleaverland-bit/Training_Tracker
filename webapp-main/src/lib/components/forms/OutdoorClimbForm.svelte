@@ -1,4 +1,14 @@
 <script lang="ts">
+    /**
+     * @file OutdoorClimbForm.svelte
+     * @component
+     * @description Form for logging outdoor climbing sessions.
+     * Includes tracking for:
+     * - Location (Area, Crag, Sector)
+     * - Climbing type (Boulder, Sport, Trad)
+     * - Weather/conditions notes (implicitly via session notes)
+     * - Detailed climb logging
+     */
 	// Outdoor Climb form for logging outdoor climbing sessions
 	import { onMount } from 'svelte';
 	import { createOutdoorSession, updateOutdoorSession, isOnline } from '$lib/services/api';
@@ -268,7 +278,10 @@
 	}
 
 	// Save session to local cache and sync to server
-	async function saveSession() {
+    /**
+     * Validates and saves the outdoor climbing session to Firestore.
+     */
+    async function saveSession() {
 		const error = validateForm();
 		if (error) {
 			saveStatus = 'error';

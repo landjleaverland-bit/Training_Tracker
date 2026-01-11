@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * @file DeleteDataModal.svelte
+	 * @component
+	 * @description A modal for bulk deleting sessions from the local cache.
+	 * Filtering by activity type and time range.
+	 */
     import { fade, scale } from 'svelte/transition';
     import type { Session } from '$lib/types/session';
 
@@ -8,9 +14,13 @@
         onClose,
         onDelete
     } = $props<{
+        /** Visibility state. */
         isOpen: boolean;
+        /** List of all available sessions. */
         sessions: Session[];
+        /** Close callback. */
         onClose: () => void;
+        /** Delete callback with criteria. */
         onDelete: (criteria: { activityType: string, timeRange: string }) => void;
     }>();
 
@@ -34,6 +44,9 @@
         { value: 'all_time', label: 'All Time' }
     ];
 
+    /**
+     * Filters sessions based on selected criteria to preview impact.
+     */
     function filterSessions(sessions: Session[], activity: string, range: string): Session[] {
         const now = new Date();
         return sessions.filter(session => {

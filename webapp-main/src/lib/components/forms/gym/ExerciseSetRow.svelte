@@ -1,4 +1,10 @@
 <script lang="ts">
+    /**
+     * @file ExerciseSetRow.svelte
+     * @component
+     * @description Represents a single set row within an exercise card.
+     * Inputs for weight and reps, and a completion toggle.
+     */
     import { createEventDispatcher } from 'svelte';
     import type { GymSet } from '$lib/types/session';
 

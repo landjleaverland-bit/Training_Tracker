@@ -1,4 +1,10 @@
 <script lang="ts">
+    /**
+     * @file ExerciseDetailModal.svelte
+     * @component
+     * @description Modal to display detailed information about an exercise.
+     * Shows animations (if available), target muscles, and step-by-step instructions.
+     */
     import { onDestroy, createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
     import { base } from '$app/paths';

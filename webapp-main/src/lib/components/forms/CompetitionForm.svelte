@@ -1,4 +1,11 @@
 <script lang="ts">
+    /**
+     * @file CompetitionForm.svelte
+     * @component
+     * @description Form for logging competition climbing sessions.
+     * Supports Bouldering, Lead, and Speed types, with specific round configurations.
+     * Allows for comprehensive tracking of competition results and physical load.
+     */
     import { onMount, createEventDispatcher } from 'svelte';
 	import { createCompetitionSession, updateCompetitionSession, isOnline } from '$lib/services/api';
     import type { CompetitionSession, CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
@@ -7,8 +14,11 @@
 
     // Props
     interface Props {
+        /** Initial data for editing an existing session. */
         initialData?: CompetitionSession | null;
+        /** Callback when the user cancels the form. */
         onCancel?: () => void;
+        /** Callback when the session is successfully saved. */
         onSaved?: () => void;
     }
 
@@ -50,6 +60,9 @@
 
     let loaded = $state(false);
 
+    /**
+     * Initializes the form with existing data or loads a draft from local storage.
+     */
     onMount(() => {
         if (initialData) {
             date = initialData.date;
@@ -112,6 +125,9 @@
         }
     });
 
+    /**
+     * Autosaves current form state to local storage as a draft.
+     */
     $effect(() => {
         if (!loaded || isEditing) return;
         const draft = {
@@ -143,6 +159,9 @@
         }
     }
 
+    /**
+     * Updates climb status and auto-sets attempt count for Flash.
+     */
     function handleStatusChange(index: number, status: string) {
         climbs[index].status = status as any;
         if (status === 'Flash') {
@@ -153,6 +172,9 @@
     let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
     let saveMessage = $state('');
 
+    /**
+     * Validates and saves the competition session to Firestore.
+     */
     async function saveSession() {
         if (!venue || (venue === 'Other' && !customVenue)) {
             saveStatus = 'error';

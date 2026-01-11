@@ -1,12 +1,24 @@
 <script lang="ts">
+	/**
+	 * @file PieChart.svelte
+	 * @component
+	 * @description A reusable Pie/Donut Chart component using D3.js.
+	 * Supports custom labeling, value accessors, and external legends.
+	 */
 	import * as d3 from 'd3';
 
 	interface Props {
+		/** Array of data objects to visualize. */
 		data: any[];
+		/** Function to extract numeric value from a data object. */
 		valueAccessor: (d: any) => number;
+		/** Function to extract string label from a data object. */
 		labelAccessor: (d: any) => string;
+		/** Optional function to determine color for a slice. Falls back to internal scale if omitted. */
         colorAccesor?: (d: any) => string;
+		/** Width of the SVG canvas. Default: 300. */
 		width?: number;
+		/** Height of the SVG canvas. Default: 300. */
 		height?: number;
 	}
 

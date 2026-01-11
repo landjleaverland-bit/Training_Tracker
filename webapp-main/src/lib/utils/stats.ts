@@ -1,17 +1,34 @@
+/**
+ * @file stats.ts
+ * @brief Statistical processing functions for generating charts and analytics.
+ *
+ * Uses D3.js helpers and custom logic to aggregate session data into
+ * formats suitable for visualization.
+ */
+
 import * as d3 from 'd3';
 import type { Session, IndoorClimbSession, OutdoorClimbSession, FingerboardSession } from '$lib/types/session';
 
 // --- Types ---
 
+/**
+ * @brief Generic data point for categorical charts (Pie, Bar).
+ */
 export interface ChartDataPoint {
     label: string;
     value: number;
     color?: string;
 }
 
+/**
+ * @brief Generic data point for time-series charts (Line).
+ */
 export interface TimeSeriesPoint {
+    /** X-axis value. */
     date: Date;
+    /** Y-axis value. */
     value: number;
+    /** Group/Series name for legends. */
     series: string; // e.g., "Crimp", "Sloper", "Training"
 }
 
@@ -33,6 +50,13 @@ const getSessionDate = (s: Session): Date => new Date(s.date);
 
 // --- 1. General Activity & Volume ---
 
+/**
+ * @brief Calculates Climbing Days vs Rest Days within a range.
+ *
+ * @param sessions List of sessions.
+ * @param dateRange Optional date range to filter.
+ * @returns {ChartDataPoint[]} Array of data points for a Pie chart.
+ */
 export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start: Date, end: Date }): ChartDataPoint[] {
     // Filter for valid dates first
     const validSessions = sessions.filter(s => isValidDate(s.date));
@@ -60,7 +84,7 @@ export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start:
     const totalDays = Math.ceil((lastDate.getTime() - firstDate.getTime()) / msPerDay);
 
     // Count climbing days (unique dates where activity is climb)
-    // Filter sessions to ensure they are within range (though sessions passed in should ideally be filtered already, 
+    // Filter sessions to ensure they are within range (though sessions passed in should ideally be filtered already,
     // strictly enforcing range helps if mixed data is passed)
     const climbingDays = new Set(
         sessions
@@ -81,6 +105,13 @@ export function getClimbingVsRestStats(sessions: Session[], dateRange?: { start:
     ];
 }
 
+/**
+ * @brief Calculates Fingerboarding consistency days.
+ *
+ * @param sessions List of sessions.
+ * @param dateRange Optional date range.
+ * @returns {ChartDataPoint[]} Data for Pie chart.
+ */
 export function getFingerboardingConsistency(sessions: Session[], dateRange?: { start: Date, end: Date }): ChartDataPoint[] {
     // Filter for valid dates first
     const validSessions = sessions.filter(s => isValidDate(s.date));
@@ -121,6 +152,12 @@ export function getFingerboardingConsistency(sessions: Session[], dateRange?: { 
     ];
 }
 
+/**
+ * @brief Aggregates count of sessions by activity type.
+ *
+ * @param sessions List of sessions.
+ * @returns {ChartDataPoint[]} Breakdown of session types.
+ */
 export function getSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
     const counts: Record<string, number> = {};
 
@@ -149,6 +186,12 @@ function formatActivityType(type: string): string {
 
 // --- 2. Training System Breakdown ---
 
+/**
+ * @brief Aggregates the frequency of Energy System utilization.
+ *
+ * @param sessions List of sessions.
+ * @returns {ChartDataPoint[]} Sorted distribution of energy systems.
+ */
 export function getTrainingSystemStats(sessions: Session[]): ChartDataPoint[] {
     const systems: Record<string, number> = {};
 
@@ -200,6 +243,15 @@ const HUECO_TO_FRENCH: Record<string, string> = Object.entries(FRENCH_TO_HUECO).
 }, {} as Record<string, string>);
 
 // --- 3. Performance Grade Pyramids ---
+
+/**
+ * @brief Generates grade pyramids for Bouldering or Lead climbing.
+ *
+ * @param sessions List of sessions.
+ * @param type 'boulder' or 'lead'.
+ * @param location 'indoor', 'outdoor', or 'all'.
+ * @returns {ChartDataPoint[]} Grade statistics including Flash/Redpoint counts.
+ */
 export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', location: 'indoor' | 'outdoor' | 'all' = 'all'): ChartDataPoint[] {
     // Structure: Grade -> { total: number, flash: number, redpoint: number, dogged: number, dnf: number }
     const grades: Record<string, { total: number, flash: number, redpoint: number, dogged: number, dnf: number }> = {};
@@ -294,6 +346,9 @@ export function getGradeStats(sessions: Session[], type: 'boulder' | 'lead', loc
 
 // --- 4. Venue & Location ---
 
+/**
+ * @brief Stats for most visited indoor locations.
+ */
 export function getIndoorLocationStats(sessions: Session[]): ChartDataPoint[] {
     const locs: Record<string, number> = {};
     sessions.forEach(s => {
@@ -306,6 +361,9 @@ export function getIndoorLocationStats(sessions: Session[]): ChartDataPoint[] {
     return Object.entries(locs).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 }
 
+/**
+ * @brief Stats for most visited outdoor crags.
+ */
 export function getOutdoorCragStats(sessions: Session[]): ChartDataPoint[] {
     const crags: Record<string, number> = {};
     sessions.forEach(s => {
@@ -318,6 +376,9 @@ export function getOutdoorCragStats(sessions: Session[]): ChartDataPoint[] {
     return Object.entries(crags).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 }
 
+/**
+ * @brief Stats for most visited outdoor areas.
+ */
 export function getOutdoorAreaStats(sessions: Session[]): ChartDataPoint[] {
     const areas: Record<string, number> = {};
     sessions.forEach(s => {
@@ -332,6 +393,12 @@ export function getOutdoorAreaStats(sessions: Session[]): ChartDataPoint[] {
 
 // --- 5. Periodization (Time Series) ---
 
+/**
+ * @brief Calculates weekly load based on finger/shoulder/forearm intensity.
+ *
+ * @param sessions List of sessions.
+ * @returns {TimeSeriesPoint[]} Data for line chart.
+ */
 export function getWeeklyLoadStats(sessions: Session[]): TimeSeriesPoint[] {
     // Group by week
     const weeks: Record<string, number> = {};
@@ -365,6 +432,9 @@ export function getWeeklyLoadStats(sessions: Session[]): TimeSeriesPoint[] {
 
 // --- 6. Finger Strength & Grip Load ---
 
+/**
+ * @brief Tracks max hang weight over time.
+ */
 export function getMaxHangStats(sessions: Session[]): TimeSeriesPoint[] {
     const points: TimeSeriesPoint[] = [];
 
@@ -387,6 +457,9 @@ export function getMaxHangStats(sessions: Session[]): TimeSeriesPoint[] {
     return points.sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
+/**
+ * @brief Tracks volume-load per grip type over weeks.
+ */
 export function getGripLoadStats(sessions: Session[]): TimeSeriesPoint[] {
     const weeks: Record<string, Record<string, number>> = {}; // week -> series -> value
     const weekFormat = d3.timeFormat("%Y-%W");
@@ -419,6 +492,9 @@ export function getGripLoadStats(sessions: Session[]): TimeSeriesPoint[] {
     return parsedData.sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
+/**
+ * @brief Tracks Recruitment Pulls progress.
+ */
 export function getRecruitmentStats(sessions: Session[]): TimeSeriesPoint[] {
     const points: TimeSeriesPoint[] = [];
 
@@ -443,6 +519,9 @@ export function getRecruitmentStats(sessions: Session[]): TimeSeriesPoint[] {
     return points.sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
+/**
+ * @brief Tracks Max Pick-ups progress.
+ */
 export function getMaxPickupStats(sessions: Session[]): TimeSeriesPoint[] {
     const points: TimeSeriesPoint[] = [];
 
@@ -469,6 +548,12 @@ export function getMaxPickupStats(sessions: Session[]): TimeSeriesPoint[] {
 
 // --- 7. Generic Load Tracking ---
 
+/**
+ * @brief Calculates moving average for smoothing time-series data.
+ * @param data Array of time series points.
+ * @param windowSize Number of points to smooth over.
+ * @returns {TimeSeriesPoint[]} Smoothed data.
+ */
 export function movingAverage(data: TimeSeriesPoint[], windowSize: number): TimeSeriesPoint[] {
     if (data.length === 0) return [];
 
@@ -492,6 +577,17 @@ export function movingAverage(data: TimeSeriesPoint[], windowSize: number): Time
     return averaged;
 }
 
+/**
+ * @brief Generic function to aggregate load/counts over time.
+ *
+ * @param sessions Sessions to iterate.
+ * @param filterFn Predicate to include a session.
+ * @param metricFn Function to extract value from a session.
+ * @param seriesName Name of the resulting series.
+ * @param groupBy Aggregation granularity.
+ * @param dateRange Optional zero-filling range.
+ * @returns {TimeSeriesPoint[]}
+ */
 export function getLoadStats(
     sessions: Session[],
     filterFn: (s: Session) => boolean,
@@ -550,4 +646,3 @@ export function getLoadStats(
         series: seriesName
     })).sort((a, b) => a.date.getTime() - b.date.getTime());
 }
-

@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * @file EditSessionModal.svelte
+	 * @component
+	 * @description Full-screen modal for editing an existing session.
+	 * Dynamically loads the appropriate form based on activity type.
+	 */
 	import { fade, fly } from 'svelte/transition';
 	import IndoorClimbForm from '$lib/components/forms/IndoorClimbForm.svelte';
 	import OutdoorClimbForm from '$lib/components/forms/OutdoorClimbForm.svelte';
@@ -7,10 +13,15 @@
 	import CompetitionForm from '$lib/components/forms/CompetitionForm.svelte';
 
 	interface Props {
+		/** Visibility state. */
 		isOpen: boolean;
+		/** Type of activity to edit (e.g., 'indoor_climb'). */
 		activityType: string;
+		/** Original data to populate the form. */
 		initialData: any;
+		/** Close callback. */
 		onClose: () => void;
+		/** Save success callback. */
 		onSaved: () => void;
 	}
 

@@ -1,14 +1,23 @@
 /**
- * Outdoor climbing location data
- * Structure: Area -> Crag -> (Sector/Wall is text input)
+ * @file outdoor_locations.ts
+ * @brief Outdoor climbing location data structure.
+ *
+ * Defines the hierarchy of Area -> Crag -> Sector/Wall used in the
+ * outdoor climb logger key-value pairs.
  */
 
+/**
+ * @brief Dictionary of Areas containing Crags, which contain lists of Sectors.
+ */
 export interface OutdoorLocationData {
     [area: string]: {
         [crag: string]: string[];
     };
 }
 
+/**
+ * @brief Static dataset of known outdoor climbing locations.
+ */
 export const OUTDOOR_LOCATIONS: OutdoorLocationData = {
     Portland: {
         'Blacknor Far North': [
@@ -136,18 +145,30 @@ export const OUTDOOR_LOCATIONS: OutdoorLocationData = {
     }
 };
 
-// Helper to get list of areas
+/**
+ * @brief Retrieves all known areas.
+ * @returns List of area names.
+ */
 export function getAreas(): string[] {
     return Object.keys(OUTDOOR_LOCATIONS);
 }
 
-// Helper to get crags for an area
+/**
+ * @brief Retrieves crags for a specific area.
+ * @param area Name of the area.
+ * @returns List of crag names.
+ */
 export function getCrags(area: string): string[] {
     if (!OUTDOOR_LOCATIONS[area]) return [];
     return Object.keys(OUTDOOR_LOCATIONS[area]);
 }
 
-// Helper to get sectors for a crag
+/**
+ * @brief Retrieves sectors for a specific crag.
+ * @param area Name of the area.
+ * @param crag Name of the crag.
+ * @returns List of sector names.
+ */
 export function getSectors(area: string, crag: string): string[] {
     if (!OUTDOOR_LOCATIONS[area] || !OUTDOOR_LOCATIONS[area][crag]) return [];
     return OUTDOOR_LOCATIONS[area][crag];

@@ -1,4 +1,10 @@
 <script lang="ts">
+    /**
+     * @file PlateCalculator.svelte
+     * @component
+     * @description Visual utility to calculate required barbell plates for a target weight.
+     * Assumes a standard 20kg bar and metric plates.
+     */
     export let targetWeight: number = 0;
     export let barWeight: number = 20; // kg
 

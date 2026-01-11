@@ -1,4 +1,14 @@
 <script lang="ts">
+    /**
+     * @file IndoorClimbForm.svelte
+     * @component
+     * @description Form for logging indoor climbing sessions.
+     * Includes tracking for:
+     * - Climbing type (Boulder, Sport, Mixed)
+     * - Training details (Volume, Limit, etc.)
+     * - Grading (French/V-scale)
+     * - Detailed climb logging with attempts and styles
+     */
 	// Indoor Climb form for logging climbing sessions
 	import { onMount, tick } from 'svelte';
 	import { createIndoorSession, updateIndoorSession, isOnline } from '$lib/services/api';
@@ -298,7 +308,10 @@
 	}
 
 	// Save session to local cache and sync to server
-	async function saveSession() {
+    /**
+     * Validates and saves the indoor climbing session to Firestore.
+     */
+    async function saveSession() {
 		const error = validateForm();
 		if (error) {
 			saveStatus = 'error';

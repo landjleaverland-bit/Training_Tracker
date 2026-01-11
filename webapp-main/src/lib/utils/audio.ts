@@ -1,7 +1,9 @@
 /**
- * Audio and Haptic feedback utility for the Rest Timer.
- * Handles "polite" audio playback by attempting to duck other audio if possible,
- * and manages vibration patterns.
+ * @file audio.ts
+ * @brief Audio and Haptic feedback utility for the Rest Timer.
+ *
+ * This module handles "polite" audio playback by attempting to duck other audio if possible,
+ * and manages vibration patterns for device feedback.
  */
 
 export class audioManager {
@@ -9,7 +11,12 @@ export class audioManager {
     private static gainNode: GainNode | null = null;
     private static isInitialized = false;
 
-    // Initialize AudioContext on first user interaction
+    /**
+     * @brief Initialize AudioContext on first user interaction.
+     *
+     * Browsers often block AudioContext until a user gesture occurs.
+     * This method ensures the context is created and ready.
+     */
     static init() {
         if (this.isInitialized) return;
 
@@ -27,8 +34,12 @@ export class audioManager {
     }
 
     /**
-     * Plays a pleasant chime sound.
+     * @brief Plays a pleasant chime sound.
+     *
      * Uses a synthesized sound to avoid external asset dependencies and ensure snappy loading.
+     * Generates a primary sine wave tone (A5) and a triangle harmonic (A6) with decay.
+     *
+     * @async
      */
     static async playChime() {
         if (!this.isInitialized) this.init();
@@ -76,8 +87,11 @@ export class audioManager {
     }
 
     /**
-     * Triggers device vibration.
-     * @param pattern Vibrate pattern (ms)
+     * @brief Triggers device vibration.
+     *
+     * Wrapper around navigator.vibrate.
+     *
+     * @param pattern Vibrate pattern in ms (single number or array). Default is 200ms.
      */
     static vibrate(pattern: number | number[] = 200) {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -86,7 +100,10 @@ export class audioManager {
     }
 
     /**
-     * Plays the completion alert (Sound + Haptics)
+     * @brief Plays the completion alert (Sound + Haptics).
+     *
+     * Triggers a double pulse vibration and plays the chime.
+     * @async
      */
     static async playCompletionAlert() {
         // Haptics: Double pulse
@@ -97,7 +114,10 @@ export class audioManager {
     }
 
     /**
-     * Plays a subtle tick/warning sound (e.g., for 3-2-1 countdown)
+     * @brief Plays a subtle tick/warning sound.
+     *
+     * Used for countdowns (e.g., 3-2-1). Uses a short, high-frequency blip.
+     * @async
      */
     static async playTick() {
         if (!this.isInitialized) this.init();

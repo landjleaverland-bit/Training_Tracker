@@ -1,9 +1,18 @@
 <script lang="ts">
-	// A simple multi-select component using chips
+	/**
+	 * @file MultiSelect.svelte
+	 * @component
+	 * @description A chip-based multi-select component.
+	 * Handles exclusive "None" selection logic.
+	 */
 	interface Props {
+		/** List of available options. */
 		options: string[];
+		/** Array of currently selected values. */
 		selected: string[];
+		/** Placeholder text (though currently hidden in styles). */
 		placeholder?: string;
+        /** Callback fired when selection changes. */
         onChange: (selected: string[]) => void;
 	}
 
@@ -11,19 +20,10 @@
 
     let isExpanded = $state(false);
 
-	function toggleOption(option: string) {
-		let newSelected;
-		if (selected.includes(option)) {
-			newSelected = selected.filter((s) => s !== option);
-		} else {
-			newSelected = [...selected, option];
-		}
-        onChange(newSelected);
-	}
-    
-    // Derived: check if "None" is selected exclusively or mixed?
-    // User requested "None" option previously. If "None" is selected, usually it should clear others or be exclusive.
-    // Logic: If user clicks "None", clear others. If user clicks other, clear "None".
+	/**
+	 * Toggles an option's selection state.
+	 * Handles exclusive logic for specific options like 'None'.
+	 */
     function handleOptionClick(option: string) {
         let newSelected = [...selected];
         

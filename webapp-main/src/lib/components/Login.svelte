@@ -1,7 +1,14 @@
 <script lang="ts">
+	/**
+	 * @file Login.svelte
+	 * @component
+	 * @description Login page component handling Google Sign-In.
+	 * Displays a centered card with a "Sign in with Google" button.
+	 */
 	import { loginWithGoogle } from '$lib/services/auth';
 
 	interface Props {
+		/** Callback function executed upon successful login. */
 		onSuccess: () => void;
 	}
 
@@ -10,6 +17,9 @@
 	let isLoading = $state(false);
 	let error = $state('');
 
+	/**
+	 * Initiates the Google login flow.
+	 */
 	async function handleLogin() {
 		isLoading = true;
 		error = '';

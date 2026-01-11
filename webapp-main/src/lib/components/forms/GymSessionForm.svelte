@@ -1,4 +1,14 @@
 <script lang="ts">
+    /**
+     * @file GymSessionForm.svelte
+     * @component
+     * @description Form for logging gym workouts (GymSession).
+     * Features include:
+     * - Training block selection (Strength, Power, etc.)
+     * - Rest timer integration
+     * - Plate calculator
+     * - Exercise history benchmarking
+     */
     import { onMount } from 'svelte';
     import { createEventDispatcher } from 'svelte';
     import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
@@ -212,6 +222,9 @@
         // No longer auto-starting timer globally
     }
 
+    /**
+     * Validates and saves the gym session to Firestore.
+     */
     async function saveSession() {
         if (exercises.length === 0) return;
         

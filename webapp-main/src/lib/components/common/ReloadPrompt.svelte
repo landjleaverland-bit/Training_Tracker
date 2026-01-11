@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * @file ReloadPrompt.svelte
+	 * @component
+	 * @description Handles Service Worker updates and offline readiness.
+	 * Displays a prompt (toast) to the user when a new version is available or cached.
+	 */
 	import { onMount } from 'svelte';
     import { base } from '$app/paths';
 

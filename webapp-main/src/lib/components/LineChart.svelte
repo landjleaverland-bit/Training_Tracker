@@ -1,18 +1,31 @@
 <script lang="ts">
+	/**
+	 * @file LineChart.svelte
+	 * @component
+	 * @description A responsive Line Chart component using D3.js.
+	 * Supports multiple series, time-scale X-axis, and responsive resizing.
+	 */
 	import * as d3 from 'd3';
 
 	interface Props {
+		/** Array of data objects. */
 		data: any[];
+		/** Accessor for Date object on X-axis. */
 		xAccessor: (d: any) => Date;
+		/** Accessor for numeric value on Y-axis. */
 		yAccessor: (d: any) => number;
-        zAccessor?: (d: any) => string; // Series accessor
+		/** Optional accessor for series grouping key. */
+        zAccessor?: (d: any) => string;
+		/** Initial width (will be overridden by clientWidth bind). Default: 640. */
 		width?: number;
+		/** Fixed height of the chart. Default: 400. */
 		height?: number;
 		marginTop?: number;
 		marginRight?: number;
 		marginBottom?: number;
 		marginLeft?: number;
-		color?: string; // Fallback color if zAccessor not used
+		/** Fallback color for single-series lines. Default: "steelblue". */
+		color?: string;
 	}
 
 	let {
@@ -159,4 +172,3 @@
         display: inline-block;
     }
 </style>
-

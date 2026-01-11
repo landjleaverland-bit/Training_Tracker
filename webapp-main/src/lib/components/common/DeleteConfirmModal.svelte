@@ -1,4 +1,10 @@
 <script lang="ts">
+	/**
+	 * @file DeleteConfirmModal.svelte
+	 * @component
+	 * @description A generic modal for confirming destructive actions.
+	 * Supports requiring the user to type a keyword to confirm.
+	 */
     import { fade, scale } from 'svelte/transition';
 
     let { 
@@ -10,12 +16,19 @@
         onCancel,
         requireInput = true
     } = $props<{
+        /** Whether the modal is visible. */
         isOpen: boolean;
+        /** Title of the modal. */
         title?: string;
+        /** Warning message displayed in the body. */
         message?: string;
+        /** Keyword user must type to enable confirm button. Default: 'delete'. */
         confirmKeyword?: string;
+        /** Callback when confirmed. */
         onConfirm: () => void;
+        /** Callback when cancelled. */
         onCancel: () => void;
+        /** Whether to enforce typing the keyword. Default: true. */
         requireInput?: boolean;
     }>();
 

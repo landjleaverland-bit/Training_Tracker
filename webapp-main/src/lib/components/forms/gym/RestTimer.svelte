@@ -1,4 +1,15 @@
 <script lang="ts">
+    /**
+     * @file RestTimer.svelte
+     * @component
+     * @description A versatile interval timer for rest and work periods.
+     * Features:
+     * - Configurable Work/Rest durations
+     * - Set counting
+     * - Audio feedback (chimes)
+     * - LocalStorage state persistence for resilience
+     * - Floating overlay UI
+     */
     import { onMount } from 'svelte';
     import { fade, fly, scale } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
