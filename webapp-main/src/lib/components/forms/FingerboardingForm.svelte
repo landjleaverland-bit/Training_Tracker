@@ -10,6 +10,8 @@
 	import { createFingerboardSession, updateFingerboardSession, isOnline } from '$lib/services/api';
     import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
     import RestTimer from './gym/RestTimer.svelte';
+	import LoadInput from '$lib/components/ui/LoadInput.svelte';
+	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
     
     const dispatch = createEventDispatcher();
 
@@ -309,62 +311,23 @@
 	<div class="load-section">
 		<h4>Load Metrics</h4>
 		<div class="load-metrics">
-			<div class="load-item">
-				<label for="finger-load">Finger</label>
-				<input type="number" id="finger-load" bind:value={fingerLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="shoulder-load">Shoulder</label>
-				<input type="number" id="shoulder-load" bind:value={shoulderLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="forearm-load">Forearm</label>
-				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
+			<LoadInput id="finger-load" label="Finger" bind:value={fingerLoad} />
+			<LoadInput id="shoulder-load" label="Shoulder" bind:value={shoulderLoad} />
+			<LoadInput id="forearm-load" label="Forearm" bind:value={forearmLoad} />
 		</div>
 		
 		<h4 class="mt-4">Grip Metrics</h4>
 		<div class="load-metrics">
-			<div class="load-item">
-				<label for="open-grip">Open</label>
-				<input type="number" id="open-grip" bind:value={openGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="crimp-grip">Crimp</label>
-				<input type="number" id="crimp-grip" bind:value={crimpGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="pinch-grip">Pinch</label>
-				<input type="number" id="pinch-grip" bind:value={pinchGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="sloper-grip">Sloper</label>
-				<input type="number" id="sloper-grip" bind:value={sloperGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="jug-grip">Jug</label>
-				<input type="number" id="jug-grip" bind:value={jugGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
+			<LoadInput id="open-grip" label="Open" bind:value={openGrip} />
+			<LoadInput id="crimp-grip" label="Crimp" bind:value={crimpGrip} />
+			<LoadInput id="pinch-grip" label="Pinch" bind:value={pinchGrip} />
+			<LoadInput id="sloper-grip" label="Sloper" bind:value={sloperGrip} />
+			<LoadInput id="jug-grip" label="Jug" bind:value={jugGrip} />
 		</div>
 	</div>
 
-    <div class="form-group notes-section">
-        <label for="session-notes">Session Notes</label>
-        <textarea 
-            id="session-notes" 
-            bind:value={notes} 
-            placeholder="How did the session feel? Energy levels, mood, etc."
-            rows="3"
-            class="session-notes-area"
-        ></textarea>
+    <div class="notes-section">
+        <SessionNotes bind:value={notes} placeholder="How did the session feel? Energy levels, mood, etc." />
     </div>
 
 	<div class="submit-section">
@@ -634,9 +597,6 @@
 		background: white;
 	}
 
-	.mt-4 {
-		margin-top: 1.5rem !important;
-	}
 
 	/* Load Metrics Section */
 	.load-section {
@@ -661,52 +621,5 @@
 		font-weight: 600;
 	}
 
-	.load-metrics {
-		display: flex;
-		gap: 1.5rem;
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
-	.load-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.4rem;
-	}
-
-	.load-item label {
-		font-weight: 500;
-		color: var(--text-primary);
-		font-size: 0.85rem;
-	}
     
-    .load-item input {
-		width: 60px;
-		padding: 0.4rem;
-		border: 1px solid rgba(74, 155, 155, 0.3);
-		border-radius: 6px;
-		text-align: center;
-	}
-
-	.load-scale {
-		font-size: 0.75rem;
-		color: var(--text-secondary);
-	}
-    
-    .session-notes-area {
-        width: 100%;
-        padding: 0.8rem;
-        border-radius: 8px;
-        border: 2px solid rgba(74, 155, 155, 0.25);
-        background: white;
-        font-size: 0.95rem;
-        font-family: inherit;
-        resize: vertical;
-        box-sizing: border-box;
-    }
-    
-    .form-group.notes-section {
-        margin: 1.5rem 0;
-    }
 </style>

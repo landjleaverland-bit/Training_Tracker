@@ -22,6 +22,7 @@
     import PlateCalculator from './gym/PlateCalculator.svelte';
     import ExerciseDetailModal from './gym/ExerciseDetailModal.svelte';
     import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
+	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
     import { fly, fade } from 'svelte/transition';
 
     const dispatch = createEventDispatcher();
@@ -334,14 +335,7 @@
 
     <!-- Session Notes Section -->
     <div class="session-notes-container">
-        <label for="session-notes">Session Notes</label>
-        <textarea 
-            id="session-notes" 
-            bind:value={notes} 
-            class="session-notes-area"
-            placeholder="How did the workout feel? Energy, sleep, stress..."
-            rows="3"
-        ></textarea>
+        <SessionNotes bind:value={notes} placeholder="How did the workout feel? Energy, sleep, stress..." />
     </div>
 
     <!-- Save Button -->
@@ -724,29 +718,4 @@
         gap: 0.5rem;
     }
     
-    .session-notes-container label {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-left: 0.2rem;
-    }
-    
-    .session-notes-area {
-        width: 100%;
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid var(--border-primary);
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        font-family: inherit;
-        font-size: 1rem;
-        resize: vertical;
-        box-sizing: border-box;
-    }
-    
-    .session-notes-area:focus {
-        outline: none;
-        border-color: var(--teal-primary);
-        box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
-    }
 </style>

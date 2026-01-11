@@ -30,6 +30,12 @@ export interface BaseSession {
 }
 
 /**
+ * Helper type to create a Payload type from a Session type.
+ * Removes server-generated fields.
+ */
+export type SessionPayload<T extends BaseSession> = Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncedAt' | 'activityType'>;
+
+/**
  * @brief Represents a single climb within a session.
  */
 export interface ClimbEntry {
@@ -94,6 +100,8 @@ export interface IndoorClimbSession extends BaseSession {
     notes?: string;
 }
 
+export type IndoorSessionPayload = SessionPayload<IndoorClimbSession>;
+
 /**
  * @brief Outdoor climbing session payload.
  */
@@ -123,6 +131,8 @@ export interface OutdoorClimbSession extends BaseSession {
     climbs: ClimbEntry[];
     notes?: string;
 }
+
+export type OutdoorSessionPayload = SessionPayload<OutdoorClimbSession>;
 
 /**
  * @brief Detail set for a fingerboard exercise.
@@ -166,6 +176,8 @@ export interface FingerboardSession extends BaseSession {
     notes?: string;
 }
 
+export type FingerboardSessionPayload = SessionPayload<FingerboardSession>;
+
 /**
  * @brief Result of a single climb in a competition.
  */
@@ -174,6 +186,7 @@ export interface CompetitionClimbResult {
     status: 'Flash' | 'Top' | 'Zone' | 'Attempt';
     attemptCount: number;
     notes: string;
+    // position field removed from climb result as it belongs to round
 }
 
 /**
@@ -201,6 +214,8 @@ export interface CompetitionSession extends BaseSession {
     rounds: CompetitionRound[];
     notes?: string;
 }
+
+export type CompetitionSessionPayload = SessionPayload<CompetitionSession>;
 
 /**
  * @brief Set details for a Gym exercise.
@@ -252,8 +267,9 @@ export interface GymSession extends BaseSession {
     notes?: string;
 }
 
+export type GymSessionPayload = SessionPayload<GymSession>;
+
 /**
  * @brief Union of all possible session types.
  */
 export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession | GymSession;
-

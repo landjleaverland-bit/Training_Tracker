@@ -67,32 +67,10 @@
 	const climbWallOptions = ['None', 'Overhang', 'Vertical', 'Slab', 'Roof'];
     const sessionWallOptions = ['None', 'Moon Board', 'Kilter Board', 'Tension Board', 'Beast', 'Circuit Board', 'Boulder wall', 'Lead wall', 'Comp wall', 'Auto belays'];
 
-	// Valid grades (case-insensitive matching)
-	const validGrades = [
-		'V0-', '4-',
-		'V0', '4',
-		'V0+', '4+',
-		'V1', '5',
-		'V2', '5+',
-		'V3', '6A', '6A+',
-		'V4', '6B', '6B+',
-		'V5', '6C', '6C+',
-		'V6', '7A',
-		'V7', '7A+',
-		'V8', '7B', '7B+',
-		'V9', '7C',
-		'V10', '7C+',
-		'V11', '8A',
-		'V12', '8A+',
-		'V13', '8B',
-		'V14', '8B+',
-		'V15', '8C',
-		'V16', '8C+',
-		'V17', '9A'
-	];
-
-	// Normalize grades for case-insensitive comparison
-	const validGradesLower = validGrades.map(g => g.toLowerCase());
+	import GradeInput from '$lib/components/ui/GradeInput.svelte';
+	import LoadInput from '$lib/components/ui/LoadInput.svelte';
+	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
+	import { VALID_GRADES_LOWER } from '$lib/constants';
 
 	// Track which notes field is expanded
 	let expandedNoteIndex = $state<number | null>(null);
@@ -287,7 +265,7 @@
 	// Validate grade input
 	function isValidGrade(grade: string): boolean {
 		if (!grade.trim()) return true; // Empty is allowed (not filled yet)
-		return validGradesLower.includes(grade.trim().toLowerCase());
+		return VALID_GRADES_LOWER.includes(grade.trim().toLowerCase());
 	}
 
 	// Save status
@@ -561,16 +539,7 @@
 								<input type="text" bind:value={climb.name} placeholder="Route name..." />
 							</td>
 							<td>
-								<input 
-									type="text" 
-									bind:value={climb.grade} 
-									placeholder="V3" 
-									class="grade-input" 
-									class:invalid={!isValidGrade(climb.grade)}
-								/>
-								{#if !isValidGrade(climb.grade)}
-									<span class="grade-error">Invalid</span>
-								{/if}
+								<GradeInput bind:value={climb.grade} />
 							</td>
 							<td>
 								<select 
@@ -629,65 +598,24 @@
 	<div class="load-section">
 		<h4>Load Metrics</h4>
 		<div class="load-metrics">
-			<div class="load-item">
-				<label for="finger-load">Finger</label>
-				<input type="number" id="finger-load" bind:value={fingerLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="shoulder-load">Shoulder</label>
-				<input type="number" id="shoulder-load" bind:value={shoulderLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="forearm-load">Forearm</label>
-				<input type="number" id="forearm-load" bind:value={forearmLoad} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
+			<LoadInput id="finger-load" label="Finger" bind:value={fingerLoad} />
+			<LoadInput id="shoulder-load" label="Shoulder" bind:value={shoulderLoad} />
+			<LoadInput id="forearm-load" label="Forearm" bind:value={forearmLoad} />
 		</div>
 		
 		<h4 class="mt-4">Grip Metrics</h4>
 		<div class="load-metrics">
-			<div class="load-item">
-				<label for="open-grip">Open</label>
-				<input type="number" id="open-grip" bind:value={openGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="crimp-grip">Crimp</label>
-				<input type="number" id="crimp-grip" bind:value={crimpGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="pinch-grip">Pinch</label>
-				<input type="number" id="pinch-grip" bind:value={pinchGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="sloper-grip">Sloper</label>
-				<input type="number" id="sloper-grip" bind:value={sloperGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
-			<div class="load-item">
-				<label for="jug-grip">Jug</label>
-				<input type="number" id="jug-grip" bind:value={jugGrip} min="1" max="5" />
-				<span class="load-scale">/ 5</span>
-			</div>
+			<LoadInput id="open-grip" label="Open" bind:value={openGrip} />
+			<LoadInput id="crimp-grip" label="Crimp" bind:value={crimpGrip} />
+			<LoadInput id="pinch-grip" label="Pinch" bind:value={pinchGrip} />
+			<LoadInput id="sloper-grip" label="Sloper" bind:value={sloperGrip} />
+			<LoadInput id="jug-grip" label="Jug" bind:value={jugGrip} />
 		</div>
 	</div>
 
     <!-- Session Notes Section -->
     <div class="notes-section">
-        <div class="form-group">
-            <label for="session-notes">Session Notes</label>
-            <textarea 
-                id="session-notes" 
-                bind:value={notes} 
-                class="session-notes-area"
-                placeholder="How did the session feel? Key takeaways..."
-                rows="3"
-            ></textarea>
-        </div>
+        <SessionNotes bind:value={notes} />
     </div>
 
 
@@ -753,12 +681,28 @@
 		margin-top: 1.5rem !important;
 	}
 
-	/* Form Layout */
-	.form-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-		margin-bottom: 1rem;
+	/* Load Metrics Section */
+	.load-section {
+		background: linear-gradient(135deg, rgba(244, 196, 48, 0.08) 0%, rgba(74, 155, 155, 0.08) 100%);
+		border-radius: 12px;
+		padding: 1.25rem;
+		margin: 1.5rem 0;
+		border: 1px solid rgba(74, 155, 155, 0.15);
+	}
+
+	@media (max-width: 640px) {
+		.load-section {
+			padding: 0.8rem;
+			margin: 1rem 0;
+		}
+	}
+
+	.load-metrics {
+		display: flex;
+		gap: 1.5rem;
+		overflow-x: auto;
+		padding-bottom: 0.5rem;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.date-time-row {
@@ -809,6 +753,15 @@
 		box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.12);
 	}
 
+
+	/* Form Layout */
+	.form-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
 	/* Load Metrics Section */
 	.load-section {
 		background: linear-gradient(135deg, rgba(244, 196, 48, 0.08) 0%, rgba(74, 155, 155, 0.08) 100%);
@@ -830,41 +783,6 @@
 		gap: 1.5rem;
 		justify-content: center;
 		flex-wrap: wrap;
-	}
-
-	.load-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.4rem;
-	}
-
-	.load-item label {
-		font-weight: 500;
-		color: var(--text-primary);
-		font-size: 0.85rem;
-	}
-
-	.load-item input {
-		width: 60px;
-		padding: 0.5rem;
-		text-align: center;
-		border-radius: 8px;
-		border: 2px solid rgba(74, 155, 155, 0.3);
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--teal-secondary);
-	}
-
-	.load-item input:focus {
-		outline: none;
-		border-color: var(--gold-primary);
-		box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.2);
-	}
-
-	.load-scale {
-		font-size: 0.8rem;
-		color: var(--text-secondary);
 	}
 
 	/* Training Details Section */
@@ -963,23 +881,6 @@
 		box-shadow: 0 0 0 2px rgba(74, 155, 155, 0.1);
 	}
 
-	.grade-input {
-		width: 60px !important;
-		font-weight: 600;
-		text-transform: uppercase;
-	}
-	
-	.grade-input.invalid {
-		border-color: #ffcccc;
-		background: #fffafa;
-	}
-	
-	.grade-error {
-		display: block;
-		font-size: 0.7rem;
-		color: #e57373;
-		margin-top: 2px;
-	}
 
 	.center {
 		text-align: center;

@@ -9,6 +9,8 @@
     import { onMount, createEventDispatcher } from 'svelte';
 	import { createCompetitionSession, updateCompetitionSession, isOnline } from '$lib/services/api';
     import type { CompetitionSession, CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
+	import LoadInput from '$lib/components/ui/LoadInput.svelte';
+	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
 
     const dispatch = createEventDispatcher();
 
@@ -293,13 +295,7 @@
 
     <!-- Session Notes Section -->
     <div class="form-group mb-4">
-        <label for="session-notes">Session Notes</label>
-        <textarea 
-            id="session-notes" 
-            bind:value={notes} 
-            placeholder="How did the comp go? Strategy, mindset, etc."
-            rows="3"
-        ></textarea>
+        <SessionNotes bind:value={notes} placeholder="How did the comp go? Strategy, mindset, etc." />
     </div>
 
     <!-- Round Configuration -->
@@ -327,18 +323,9 @@
         {:else}
             <!-- STANDARD MODE -->
             <div class="load-metrics-compact">
-                <div class="metric">
-                    <label for="finger">Finger Load</label>
-                    <input type="number" id="finger" bind:value={fingerLoad} min="0" max="5" step="0.5" />
-                </div>
-                <div class="metric">
-                    <label for="shoulder">Shoulder Load</label>
-                    <input type="number" id="shoulder" bind:value={shoulderLoad} min="0" max="5" step="0.5" />
-                </div>
-                <div class="metric">
-                    <label for="forearm">Forearm Load</label>
-                    <input type="number" id="forearm" bind:value={forearmLoad} min="0" max="5" step="0.5" />
-                </div>
+                <LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} min={0} max={5} step={0.5} />
+                <LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} min={0} max={5} step={0.5} />
+                <LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} min={0} max={5} step={0.5} />
             </div>
 
             <div class="climbs-table-container">
@@ -463,10 +450,8 @@
         border-radius: 8px;
         justify-content: space-around;
         border: 1px solid #eee;
+        flex-wrap: wrap; 
     }
-
-    .metric { text-align: center; }
-    .metric input { width: 60px; text-align: center; font-weight: 600; color: var(--teal-secondary); }
 
     .climbs-table-container { margin-top: 1rem; }
     .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
@@ -547,15 +532,5 @@
 	.save-message.success { background: #d4edda; color: #155724; }
 	.save-message.error { background: #f8d7da; color: #721c24; }
 
-    textarea {
-        width: 100%;
-        padding: 0.6rem;
-        border: 1px solid rgba(74, 155, 155, 0.3);
-        border-radius: 8px;
-        font-size: 0.95rem;
-        box-sizing: border-box;
-        font-family: inherit;
-        resize: vertical;
-    }
 
 </style>
