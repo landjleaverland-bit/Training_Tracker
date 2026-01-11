@@ -47,9 +47,10 @@
         font-weight: 600;
         color: var(--text-primary, #2d3748);
         text-transform: uppercase;
+        text-transform: uppercase;
         letter-spacing: 0.05em;
-        flex-shrink: 0; /* Prevent label from wrap/squish */
-        margin-right: auto; /* Push buttons to right if space permits */
+        flex-shrink: 0;
+        width: 5.5rem; /* Fixed width for alignment */
     }
 
     .button-group {
@@ -90,7 +91,7 @@
 
     @media (min-width: 640px) {
         .load-label {
-            min-width: 100px;
+            width: 7rem; /* Slightly larger on desktop */
             margin-bottom: 0;
         }
 
