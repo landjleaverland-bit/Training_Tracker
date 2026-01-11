@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_47219f75777f5814837e1d1f378ab9cd" kind="dir">
+    <compoundname>src/lib/components/views/indoor</compoundname>
+    <innerfile refid="IndoorClimbCard_8svelte">IndoorClimbCard.svelte</innerfile>
+    <innerfile refid="IndoorClimbEntry_8svelte">IndoorClimbEntry.svelte</innerfile>
+    <innerfile refid="IndoorClimbFilters_8svelte">IndoorClimbFilters.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/views/indoor/"/>
+  </compounddef>
+</doxygen>

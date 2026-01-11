@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_868a85b1ada935d5cbde51d7e297cf7d" kind="dir">
+    <compoundname>src/lib/data</compoundname>
+    <innerfile refid="exercises_8ts">exercises.ts</innerfile>
+    <innerfile refid="outdoor__locations_8ts">outdoor_locations.ts</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/data/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_73b92ad99cfcdd6febf72afc9ff307cd" kind="dir">
+    <compoundname>src/lib/services</compoundname>
+    <innerfile refid="api_8ts">api.ts</innerfile>
+    <innerfile refid="auth_8ts">auth.ts</innerfile>
+    <innerfile refid="firebase_8ts">firebase.ts</innerfile>
+    <innerfile refid="firebaseConfig_8ts">firebaseConfig.ts</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/services/"/>
+  </compounddef>
+</doxygen>

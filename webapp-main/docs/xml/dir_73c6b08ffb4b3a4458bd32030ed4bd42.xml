@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_73c6b08ffb4b3a4458bd32030ed4bd42" kind="dir">
+    <compoundname>src/lib/types</compoundname>
+    <innerfile refid="session_8ts">session.ts</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/types/"/>
+  </compounddef>
+</doxygen>

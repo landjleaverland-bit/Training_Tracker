@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_9882d8ae75389091d766c1fcc6cf6012" kind="dir">
+    <compoundname>src/lib/components/forms</compoundname>
+    <innerdir refid="dir_5967c61335952c41355e0c1eb6b5a72d">src/lib/components/forms/gym</innerdir>
+    <innerfile refid="CompetitionForm_8svelte">CompetitionForm.svelte</innerfile>
+    <innerfile refid="FingerboardingForm_8svelte">FingerboardingForm.svelte</innerfile>
+    <innerfile refid="GymSessionForm_8svelte">GymSessionForm.svelte</innerfile>
+    <innerfile refid="IndoorClimbForm_8svelte">IndoorClimbForm.svelte</innerfile>
+    <innerfile refid="OutdoorClimbForm_8svelte">OutdoorClimbForm.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/forms/"/>
+  </compounddef>
+</doxygen>

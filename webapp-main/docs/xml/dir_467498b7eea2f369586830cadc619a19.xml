@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_467498b7eea2f369586830cadc619a19" kind="dir">
+    <compoundname>src/lib/components/views/competition</compoundname>
+    <innerfile refid="CompetitionCard_8svelte">CompetitionCard.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/views/competition/"/>
+  </compounddef>
+</doxygen>

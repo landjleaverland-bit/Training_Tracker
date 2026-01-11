@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_5967c61335952c41355e0c1eb6b5a72d" kind="dir">
+    <compoundname>src/lib/components/forms/gym</compoundname>
+    <innerfile refid="ExerciseCard_8svelte">ExerciseCard.svelte</innerfile>
+    <innerfile refid="ExerciseDetailModal_8svelte">ExerciseDetailModal.svelte</innerfile>
+    <innerfile refid="ExerciseSetRow_8svelte">ExerciseSetRow.svelte</innerfile>
+    <innerfile refid="Keypad_8svelte">Keypad.svelte</innerfile>
+    <innerfile refid="PlateCalculator_8svelte">PlateCalculator.svelte</innerfile>
+    <innerfile refid="RestTimer_8svelte">RestTimer.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/forms/gym/"/>
+  </compounddef>
+</doxygen>

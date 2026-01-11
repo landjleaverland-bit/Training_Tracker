@@ -1,0 +1,1623 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="session_8ts" kind="file" language="JavaScript">
+    <compoundname>session.ts</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface GymSession extends BaseSession</definition>
+        <argsstring></argsstring>
+        <name>BaseSession</name>
+        <initializer>{
+    
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">id:</ref> <ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref></initializer>
+        <briefdescription>
+<para>Base session interface with common properties. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Gym session payload (Weightlifting/Strength).</para>
+<para>Competition session payload.</para>
+<para>Fingerboard session payload.</para>
+<para>Outdoor climbing session payload.</para>
+<para>Indoor climbing session payload.</para>
+<para>All specific session types extend this interface. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="13" column="18" bodyfile="src/lib/types/session.ts" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ab4a4eb3a853232ef292a4e97dcc3f8a9" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref></type>
+        <definition>activityType __pad0__</definition>
+        <argsstring></argsstring>
+        <name>__pad0__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Discriminator for session type (e.g., &apos;indoor_climb&apos;, &apos;outdoor_climb&apos;). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="17" column="5" bodyfile="src/lib/types/session.ts" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a68c81c2a6eae6a617c69e5421732e1bc" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1ab2e1d5074d8a7ecd182571149f3bc438" kindref="member">date</ref></type>
+        <definition>date __pad1__</definition>
+        <argsstring></argsstring>
+        <name>__pad1__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Date string in ISO format (YYYY-MM-DD). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="19" column="5" bodyfile="src/lib/types/session.ts" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1abd38dd9879b5a42417c5c355d7a9a5a1" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a86a03a06e773fccee48b53dfe874870e" kindref="member">time</ref></type>
+        <definition>time __pad2__</definition>
+        <argsstring></argsstring>
+        <name>__pad2__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Time string (HH:mm). Optional for legacy records. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="21" column="5" bodyfile="src/lib/types/session.ts" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ab6054ca1e90a89bcd8ab6836d0cfe174" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">createdAt</ref></type>
+        <definition>createdAt __pad3__</definition>
+        <argsstring></argsstring>
+        <name>__pad3__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>ISO timestamp for creation time. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="23" column="5" bodyfile="src/lib/types/session.ts" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1af8ac353c67b81223f075fb5deffb0ea4" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">updatedAt</ref></type>
+        <definition>updatedAt __pad4__</definition>
+        <argsstring></argsstring>
+        <name>__pad4__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>ISO timestamp for last update. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="25" column="5" bodyfile="src/lib/types/session.ts" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a4a8621b8adb8cd072808d83e67a0b345" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">syncStatus</ref></type>
+        <definition>syncStatus __pad5__</definition>
+        <argsstring></argsstring>
+        <name>__pad5__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>offline sync status. managed by service worker/local DB logic. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="27" column="5" bodyfile="src/lib/types/session.ts" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a35cc4380b0bc7420bf7ee857470339fd" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">syncedAt</ref></type>
+        <definition>syncedAt __pad6__</definition>
+        <argsstring></argsstring>
+        <name>__pad6__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Timestamp of last successful sync. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="29" column="5" bodyfile="src/lib/types/session.ts" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a43ace53fc94283b47f2d9d70770a90c3" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface ClimbEntry</definition>
+        <argsstring></argsstring>
+        <name>ClimbEntry</name>
+        <initializer>{
+    
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isSport:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">boolean</ref></initializer>
+        <briefdescription>
+<para>Represents a single climb within a session. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="35" column="18" bodyfile="src/lib/types/session.ts" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a90c9fba5ea90c7d64e281c6ad1ce954e" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref></type>
+        <definition>name __pad7__</definition>
+        <argsstring></argsstring>
+        <name>__pad7__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Name of the climb or route. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="39" column="5" bodyfile="src/lib/types/session.ts" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ac520ebf56d3cc5d7ebcb47d38a3ce6e6" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref></type>
+        <definition>grade __pad8__</definition>
+        <argsstring></argsstring>
+        <name>__pad8__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Climbing grade (e.g., &quot;V4&quot;, &quot;7a&quot;). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="41" column="5" bodyfile="src/lib/types/session.ts" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1acf1727fe4d452f47b1669e17cae146dc" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">attemptType</ref></type>
+        <definition>attemptType __pad9__</definition>
+        <argsstring></argsstring>
+        <name>__pad9__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Type of attempt (e.g., &quot;Flash&quot;, &quot;Redpoint&quot;). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="43" column="5" bodyfile="src/lib/types/session.ts" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a8a5f32fe5c70a80a53120e92b985128d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">attemptsNum</ref></type>
+        <definition>attemptsNum __pad10__</definition>
+        <argsstring></argsstring>
+        <name>__pad10__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Number of attempts made. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="45" column="5" bodyfile="src/lib/types/session.ts" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a3367860256f384e3639fd41453673e24" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad11__</definition>
+        <argsstring></argsstring>
+        <name>__pad11__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Specific notes for this climb. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="47" column="5" bodyfile="src/lib/types/session.ts" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a0f44cf24e5559ce367338f5b0e47d8d3" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">wall</ref></type>
+        <definition>wall __pad12__</definition>
+        <argsstring></argsstring>
+        <name>__pad12__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Wall identifier (gym specific). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="49" column="5" bodyfile="src/lib/types/session.ts" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1addbaf2b04c41b1e7ebc8d155d65b7cb6" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">techniqueFocus</ref></type>
+        <definition>techniqueFocus __pad13__</definition>
+        <argsstring></argsstring>
+        <name>__pad13__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Technical focus for this climb. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="51" column="5" bodyfile="src/lib/types/session.ts" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a2d4ab5c06af6c3bd896dff73d278449d" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a8d924386857753d4b5bd270b88b585da" kindref="member">location</ref></type>
+        <definition>location __pad14__</definition>
+        <argsstring></argsstring>
+        <name>__pad14__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Name of the gym/location. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="60" column="5" bodyfile="src/lib/types/session.ts" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ae6beb9b84c60ec59350a53d7f6ab9dce" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">customLocation</ref></type>
+        <definition>customLocation __pad15__</definition>
+        <argsstring></argsstring>
+        <name>__pad15__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Custom location name if &apos;Other&apos; is selected. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="62" column="5" bodyfile="src/lib/types/session.ts" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a437005077a4849e11f6aad293f82ee16" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref></type>
+        <definition>climbingType __pad16__</definition>
+        <argsstring></argsstring>
+        <name>__pad16__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>General type: Bouldering, Sport, Mixed. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="64" column="5" bodyfile="src/lib/types/session.ts" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1add758bb8fe23764effd70e92990ae5dc" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a37cb751479d097002d2f5fb5e6d51485" kindref="member">trainingTypes</ref></type>
+        <definition>trainingTypes __pad17__</definition>
+        <argsstring></argsstring>
+        <name>__pad17__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Focus types: Projecting, Onsighting, Campusing, Repeaters, etc. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="66" column="5" bodyfile="src/lib/types/session.ts" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a663182d2dce14fac330c735a9df7f6f9" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a885551759b9ec39c5ee2b2358c92ec38" kindref="member">difficulty</ref></type>
+        <definition>difficulty __pad18__</definition>
+        <argsstring></argsstring>
+        <name>__pad18__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Perceived difficulty: Easy, Medium, Hard, Max, Limit+. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="68" column="5" bodyfile="src/lib/types/session.ts" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a55f2918173f70cddad2e6465a6f78fe5" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionForm_8svelte_1a7381ddc7e4d4b483cd0de764f6912999" kindref="member">categories</ref></type>
+        <definition>categories __pad19__</definition>
+        <argsstring></argsstring>
+        <name>__pad19__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Training categories targeted. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="70" column="5" bodyfile="src/lib/types/session.ts" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a54b68a867ccced25cdd7ac29da22f255" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a642764d32f8abe67029b772508083237" kindref="member">energySystems</ref></type>
+        <definition>energySystems __pad20__</definition>
+        <argsstring></argsstring>
+        <name>__pad20__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Energy systems targeted (e.g., Aerobic capacity). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="72" column="5" bodyfile="src/lib/types/session.ts" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a7d92a9f7a69ee934d10ca2f931d02d69" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a9d9ecb52c82641401bb590ddbeb47c1e" kindref="member">wallAngles</ref></type>
+        <definition>wallAngles __pad21__</definition>
+        <argsstring></argsstring>
+        <name>__pad21__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Wall angles used (Deprecrated in favor of per-climb or general notes in some contexts, still present in specific forms). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="74" column="5" bodyfile="src/lib/types/session.ts" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a6001682b21b2d428ea894e93c07cfc78" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref></type>
+        <definition>fingerLoad __pad22__</definition>
+        <argsstring></argsstring>
+        <name>__pad22__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Subjective Finger load (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="76" column="5" bodyfile="src/lib/types/session.ts" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a8811cfc6a71333fa525eaa2ffcf9d6d4" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref></type>
+        <definition>shoulderLoad __pad23__</definition>
+        <argsstring></argsstring>
+        <name>__pad23__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Subjective Shoulder load (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="78" column="5" bodyfile="src/lib/types/session.ts" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a7c5c4730d2e885857195718366e4abba" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref></type>
+        <definition>forearmLoad __pad24__</definition>
+        <argsstring></argsstring>
+        <name>__pad24__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Subjective Forearm load (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="80" column="5" bodyfile="src/lib/types/session.ts" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ad904c60b6a04535b855761cd8d5ef47d" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a4c4deb58cdf6c5dc6c69ed7216073885" kindref="member">openGrip</ref></type>
+        <definition>openGrip __pad25__</definition>
+        <argsstring></argsstring>
+        <name>__pad25__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Volume of Open Hand grip usage (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="82" column="5" bodyfile="src/lib/types/session.ts" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a6abbfec86247666156f4c6bf6d9a0b06" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a07d6df613cdbef99e45dc019d33ab30a" kindref="member">crimpGrip</ref></type>
+        <definition>crimpGrip __pad26__</definition>
+        <argsstring></argsstring>
+        <name>__pad26__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Volume of Crimp grip usage (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="84" column="5" bodyfile="src/lib/types/session.ts" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ad5a1c853876888aa4bfa19e1a9027f35" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a15b1d1f30002e66da7cdf7b9349ee3ef" kindref="member">pinchGrip</ref></type>
+        <definition>pinchGrip __pad27__</definition>
+        <argsstring></argsstring>
+        <name>__pad27__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Volume of Pinch grip usage (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="86" column="5" bodyfile="src/lib/types/session.ts" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ad3e8759417bfd1a0f389a3f9e06dfb97" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1ab8ba4f1487c1c9199c9c1564ebad4226" kindref="member">sloperGrip</ref></type>
+        <definition>sloperGrip __pad28__</definition>
+        <argsstring></argsstring>
+        <name>__pad28__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Volume of Sloper grip usage (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="88" column="5" bodyfile="src/lib/types/session.ts" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a2e0bb7c0f25d5c12b37e73bb50306426" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a3830dcdfe85ec4336ce934e165e4192e" kindref="member">jugGrip</ref></type>
+        <definition>jugGrip __pad29__</definition>
+        <argsstring></argsstring>
+        <name>__pad29__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Volume of Jug grip usage (1-5). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="90" column="5" bodyfile="src/lib/types/session.ts" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a1cbc37036a744f51301af441dc594f50" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1acf2493b0db516cf682901c00facc2431" kindref="member">climbs</ref></type>
+        <definition>climbs __pad30__</definition>
+        <argsstring></argsstring>
+        <name>__pad30__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>List of individual climbs logged. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="92" column="5" bodyfile="src/lib/types/session.ts" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a2966801a30ccbcb56a351cf9f5c8c85f" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad31__</definition>
+        <argsstring></argsstring>
+        <name>__pad31__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>General session notes. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="94" column="5" bodyfile="src/lib/types/session.ts" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a7af8d84cb067aa459f37cb6ae4797b78" prot="public" static="no" mutable="no">
+        <type><ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref></type>
+        <definition>area __pad32__</definition>
+        <argsstring></argsstring>
+        <name>__pad32__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Geographic area (e.g., Portland). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="103" column="5" bodyfile="src/lib/types/session.ts" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a863e0dec915e2b21ce1b2abe6c1bf1f3" prot="public" static="no" mutable="no">
+        <type><ref refid="OutdoorClimbForm_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref></type>
+        <definition>crag __pad33__</definition>
+        <argsstring></argsstring>
+        <name>__pad33__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Specific Crag name. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="105" column="5" bodyfile="src/lib/types/session.ts" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ac032fe07955690c5c7920b13922ccac1" prot="public" static="no" mutable="no">
+        <type><ref refid="OutdoorClimbForm_8svelte_1a3198fb7fd3a03f2e821685fb6f03ab9d" kindref="member">sector</ref></type>
+        <definition>sector __pad34__</definition>
+        <argsstring></argsstring>
+        <name>__pad34__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Specific Sector name (optional). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="107" column="5" bodyfile="src/lib/types/session.ts" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a3aae508b3d51d90106c209f4f5a443db" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref></type>
+        <definition>climbingType __pad35__</definition>
+        <argsstring></argsstring>
+        <name>__pad35__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Climbing type: Boulder, Sport, Trad. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="109" column="5" bodyfile="src/lib/types/session.ts" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1afd1b084a8ee38fd309194a06979c6ee5" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a37cb751479d097002d2f5fb5e6d51485" kindref="member">trainingTypes</ref></type>
+        <definition>trainingTypes __pad36__</definition>
+        <argsstring></argsstring>
+        <name>__pad36__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="110" column="5" bodyfile="src/lib/types/session.ts" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a9a082cfc0a075424b1749675cb3e5091" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a885551759b9ec39c5ee2b2358c92ec38" kindref="member">difficulty</ref></type>
+        <definition>difficulty __pad37__</definition>
+        <argsstring></argsstring>
+        <name>__pad37__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="111" column="5" bodyfile="src/lib/types/session.ts" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a972957742084e05bd2ee172cf32328e9" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionForm_8svelte_1a7381ddc7e4d4b483cd0de764f6912999" kindref="member">categories</ref></type>
+        <definition>categories __pad38__</definition>
+        <argsstring></argsstring>
+        <name>__pad38__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="112" column="5" bodyfile="src/lib/types/session.ts" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a89f35a36d217f5770a7d49e4acd696b5" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a642764d32f8abe67029b772508083237" kindref="member">energySystems</ref></type>
+        <definition>energySystems __pad39__</definition>
+        <argsstring></argsstring>
+        <name>__pad39__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="113" column="5" bodyfile="src/lib/types/session.ts" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a28812a7c6995528af9ab9f8980954b73" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a9d9ecb52c82641401bb590ddbeb47c1e" kindref="member">wallAngles</ref></type>
+        <definition>wallAngles __pad40__</definition>
+        <argsstring></argsstring>
+        <name>__pad40__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="114" column="5" bodyfile="src/lib/types/session.ts" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1aa60c188cbc28b017017800ddbda178b0" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref></type>
+        <definition>fingerLoad __pad41__</definition>
+        <argsstring></argsstring>
+        <name>__pad41__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="115" column="5" bodyfile="src/lib/types/session.ts" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a5e17849a1dc082d6f47489abd98cbfb5" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref></type>
+        <definition>shoulderLoad __pad42__</definition>
+        <argsstring></argsstring>
+        <name>__pad42__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="116" column="5" bodyfile="src/lib/types/session.ts" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a3d4244430b6c6fc9a37e7ca060f6ca80" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref></type>
+        <definition>forearmLoad __pad43__</definition>
+        <argsstring></argsstring>
+        <name>__pad43__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="117" column="5" bodyfile="src/lib/types/session.ts" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a4b1389a8844ffe692a3c14e97fe3238e" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a4c4deb58cdf6c5dc6c69ed7216073885" kindref="member">openGrip</ref></type>
+        <definition>openGrip __pad44__</definition>
+        <argsstring></argsstring>
+        <name>__pad44__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="118" column="5" bodyfile="src/lib/types/session.ts" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1aa3509cc45ab6a59c27913d48643790b7" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a07d6df613cdbef99e45dc019d33ab30a" kindref="member">crimpGrip</ref></type>
+        <definition>crimpGrip __pad45__</definition>
+        <argsstring></argsstring>
+        <name>__pad45__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="119" column="5" bodyfile="src/lib/types/session.ts" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a17bf5e8c4946e2ba5f40cc21667c27ac" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a15b1d1f30002e66da7cdf7b9349ee3ef" kindref="member">pinchGrip</ref></type>
+        <definition>pinchGrip __pad46__</definition>
+        <argsstring></argsstring>
+        <name>__pad46__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="120" column="5" bodyfile="src/lib/types/session.ts" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a9a335306e96bbb4dfb984dcc3f6414dc" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1ab8ba4f1487c1c9199c9c1564ebad4226" kindref="member">sloperGrip</ref></type>
+        <definition>sloperGrip __pad47__</definition>
+        <argsstring></argsstring>
+        <name>__pad47__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="121" column="5" bodyfile="src/lib/types/session.ts" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a11accc2c19b0cb7804ccdaeda11227b2" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a3830dcdfe85ec4336ce934e165e4192e" kindref="member">jugGrip</ref></type>
+        <definition>jugGrip __pad48__</definition>
+        <argsstring></argsstring>
+        <name>__pad48__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="122" column="5" bodyfile="src/lib/types/session.ts" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a75f52080098045e57e3bfadad2b278b0" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1acf2493b0db516cf682901c00facc2431" kindref="member">climbs</ref></type>
+        <definition>climbs __pad49__</definition>
+        <argsstring></argsstring>
+        <name>__pad49__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="123" column="5" bodyfile="src/lib/types/session.ts" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a158aae001417efe0271ff564889d8df8" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad50__</definition>
+        <argsstring></argsstring>
+        <name>__pad50__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="124" column="5" bodyfile="src/lib/types/session.ts" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a02720e0d9e9a66bec16b4b4994c18d8b" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface ExerciseSet</definition>
+        <argsstring></argsstring>
+        <name>ExerciseSet</name>
+        <initializer>{
+    
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">weight:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref></initializer>
+        <briefdescription>
+<para>Detail set for a fingerboard exercise. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="130" column="18" bodyfile="src/lib/types/session.ts" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ab3cc6b4183302425e2bfb2fdd8da07a5" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">reps</ref></type>
+        <definition>reps __pad51__</definition>
+        <argsstring></argsstring>
+        <name>__pad51__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Duration in seconds or number of repetitions. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="134" column="5" bodyfile="src/lib/types/session.ts" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a5ac99c683cfd5428d7e56d1dd441dd68" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface FingerboardExercise</definition>
+        <argsstring></argsstring>
+        <name>FingerboardExercise</name>
+        <initializer>{
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">id:</ref> <ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref></initializer>
+        <briefdescription>
+<para>Fingerboard exercise entry. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="140" column="18" bodyfile="src/lib/types/session.ts" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1af5e5ee55bb48bfea4a144e125af898c0" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref></type>
+        <definition>name __pad52__</definition>
+        <argsstring></argsstring>
+        <name>__pad52__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="142" column="5" bodyfile="src/lib/types/session.ts" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1af89cd09fd475b6c1c0e1f6f9cfaf950a" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gripType</ref></type>
+        <definition>gripType __pad53__</definition>
+        <argsstring></argsstring>
+        <name>__pad53__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="143" column="5" bodyfile="src/lib/types/session.ts" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ac82fe3447a297f8f0a83e3ffcf3f35e1" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">sets</ref></type>
+        <definition>sets __pad54__</definition>
+        <argsstring></argsstring>
+        <name>__pad54__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Number of sets performed. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="145" column="5" bodyfile="src/lib/types/session.ts" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a54fc94f511226c83063f5e713d8c1f1b" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">details</ref></type>
+        <definition>details __pad55__</definition>
+        <argsstring></argsstring>
+        <name>__pad55__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Breakdown of each set. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="147" column="5" bodyfile="src/lib/types/session.ts" bodystart="147" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a17a73033aba1ae5ad25bd1290e8273be" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad56__</definition>
+        <argsstring></argsstring>
+        <name>__pad56__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="148" column="5" bodyfile="src/lib/types/session.ts" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a5c6ecfd2af4885aaf4e1f8a2d803f09b" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a8d924386857753d4b5bd270b88b585da" kindref="member">location</ref></type>
+        <definition>location __pad57__</definition>
+        <argsstring></argsstring>
+        <name>__pad57__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="156" column="5" bodyfile="src/lib/types/session.ts" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ae7e1bd87cdc9fd33bbeb3f25bb23e34f" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a49693dcd1be6632103111aac96671109" kindref="member">exercises</ref></type>
+        <definition>exercises __pad58__</definition>
+        <argsstring></argsstring>
+        <name>__pad58__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="157" column="5" bodyfile="src/lib/types/session.ts" bodystart="157" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a5489f710e0b44408792ea06c80150d1f" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref></type>
+        <definition>fingerLoad __pad59__</definition>
+        <argsstring></argsstring>
+        <name>__pad59__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="158" column="5" bodyfile="src/lib/types/session.ts" bodystart="158" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a860dd1301b7ff991e3fc489beb7bd0f1" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref></type>
+        <definition>shoulderLoad __pad60__</definition>
+        <argsstring></argsstring>
+        <name>__pad60__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="159" column="5" bodyfile="src/lib/types/session.ts" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1aefe2999f3f631a8bbcf6bcf837704f27" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref></type>
+        <definition>forearmLoad __pad61__</definition>
+        <argsstring></argsstring>
+        <name>__pad61__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="160" column="5" bodyfile="src/lib/types/session.ts" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a473229d295399a08eaf2d486b51869ac" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a4c4deb58cdf6c5dc6c69ed7216073885" kindref="member">openGrip</ref></type>
+        <definition>openGrip __pad62__</definition>
+        <argsstring></argsstring>
+        <name>__pad62__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="161" column="5" bodyfile="src/lib/types/session.ts" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a4d3c324b42cc3e43f861599deb9d0756" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a07d6df613cdbef99e45dc019d33ab30a" kindref="member">crimpGrip</ref></type>
+        <definition>crimpGrip __pad63__</definition>
+        <argsstring></argsstring>
+        <name>__pad63__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="162" column="5" bodyfile="src/lib/types/session.ts" bodystart="162" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a0e247e935d219fa026ca2da858e2083c" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a15b1d1f30002e66da7cdf7b9349ee3ef" kindref="member">pinchGrip</ref></type>
+        <definition>pinchGrip __pad64__</definition>
+        <argsstring></argsstring>
+        <name>__pad64__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="163" column="5" bodyfile="src/lib/types/session.ts" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a6dfffd9a502c8b800c8b038d9046f91c" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1ab8ba4f1487c1c9199c9c1564ebad4226" kindref="member">sloperGrip</ref></type>
+        <definition>sloperGrip __pad65__</definition>
+        <argsstring></argsstring>
+        <name>__pad65__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="164" column="5" bodyfile="src/lib/types/session.ts" bodystart="164" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a276187de68b0d1a5992212212b57a6fe" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a3830dcdfe85ec4336ce934e165e4192e" kindref="member">jugGrip</ref></type>
+        <definition>jugGrip __pad66__</definition>
+        <argsstring></argsstring>
+        <name>__pad66__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="165" column="5" bodyfile="src/lib/types/session.ts" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a93164f8af0d695e30fa17e85560d7402" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad67__</definition>
+        <argsstring></argsstring>
+        <name>__pad67__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="166" column="5" bodyfile="src/lib/types/session.ts" bodystart="166" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ae44ca3e20a33203b808f80f0a6a29e98" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface CompetitionClimbResult</definition>
+        <argsstring></argsstring>
+        <name>CompetitionClimbResult</name>
+        <initializer>{
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">name:</ref> <ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref></initializer>
+        <briefdescription>
+<para>Result of a single climb in a competition. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="172" column="18" bodyfile="src/lib/types/session.ts" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ace190c0721a23ebb6fe27ca8f1aaaef1" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">status</ref></type>
+        <definition>status __pad68__</definition>
+        <argsstring></argsstring>
+        <name>__pad68__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="174" column="5" bodyfile="src/lib/types/session.ts" bodystart="174" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1af2514812e331c25014a11f209d60fffa" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">attemptCount</ref></type>
+        <definition>attemptCount __pad69__</definition>
+        <argsstring></argsstring>
+        <name>__pad69__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="175" column="5" bodyfile="src/lib/types/session.ts" bodystart="175" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a959cd884a90663fba1a6ab5b2bef020a" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad70__</definition>
+        <argsstring></argsstring>
+        <name>__pad70__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="176" column="5" bodyfile="src/lib/types/session.ts" bodystart="176" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ad9e640ae306f01de603db9c4d089bd93" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface CompetitionRound</definition>
+        <argsstring></argsstring>
+        <name>CompetitionRound</name>
+        <initializer>{
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">name:</ref> <ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref></initializer>
+        <briefdescription>
+<para>A round within a competition (e.g., Qualifiers, Finals). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="182" column="18" bodyfile="src/lib/types/session.ts" bodystart="182" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a707decbc5a33fe6c0e7e93d9ddd006e4" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">position</ref></type>
+        <definition>position __pad71__</definition>
+        <argsstring></argsstring>
+        <name>__pad71__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Ranking/Position achieved in this round. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="185" column="5" bodyfile="src/lib/types/session.ts" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1af2d51670f67540a0a2dd688081f34071" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1acf2493b0db516cf682901c00facc2431" kindref="member">climbs</ref></type>
+        <definition>climbs __pad72__</definition>
+        <argsstring></argsstring>
+        <name>__pad72__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>List of climbs attempted in this round. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="187" column="5" bodyfile="src/lib/types/session.ts" bodystart="187" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a9c454c5748be5806c247711ca68dfd22" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a2c74ec6fcce8c3a4b16fcb9973ca9882" kindref="member">venue</ref></type>
+        <definition>venue __pad73__</definition>
+        <argsstring></argsstring>
+        <name>__pad73__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="195" column="5" bodyfile="src/lib/types/session.ts" bodystart="195" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1abb79e907eb67caebb336269080fb1fa7" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a3259c69a48d8c8c888ae1b1b10838077" kindref="member">customVenue</ref></type>
+        <definition>customVenue __pad74__</definition>
+        <argsstring></argsstring>
+        <name>__pad74__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="196" column="5" bodyfile="src/lib/types/session.ts" bodystart="196" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1aa76551b4bbf6b876b4ad44ae3a0ec72a" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref></type>
+        <definition>type __pad75__</definition>
+        <argsstring></argsstring>
+        <name>__pad75__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="197" column="5" bodyfile="src/lib/types/session.ts" bodystart="197" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a6a23919f7e75bf1dee31942fc6d625fe" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref></type>
+        <definition>fingerLoad __pad76__</definition>
+        <argsstring></argsstring>
+        <name>__pad76__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="198" column="5" bodyfile="src/lib/types/session.ts" bodystart="198" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a07ca221f72e46caeeed19b83772d696a" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref></type>
+        <definition>shoulderLoad __pad77__</definition>
+        <argsstring></argsstring>
+        <name>__pad77__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="199" column="5" bodyfile="src/lib/types/session.ts" bodystart="199" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1add4cade42734d94e1c4c986cf734e812" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref></type>
+        <definition>forearmLoad __pad78__</definition>
+        <argsstring></argsstring>
+        <name>__pad78__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="200" column="5" bodyfile="src/lib/types/session.ts" bodystart="200" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1aee8331c0ac8f66eb0444e0e5e84accbd" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rounds</ref></type>
+        <definition>rounds __pad79__</definition>
+        <argsstring></argsstring>
+        <name>__pad79__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="201" column="5" bodyfile="src/lib/types/session.ts" bodystart="201" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a9e4c3b7aedda5af9887f2d4794821f7f" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad80__</definition>
+        <argsstring></argsstring>
+        <name>__pad80__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="202" column="5" bodyfile="src/lib/types/session.ts" bodystart="202" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a96dfbc09eb551e18e9ad922f1899f1dc" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface GymSet</definition>
+        <argsstring></argsstring>
+        <name>GymSet</name>
+        <initializer>{
+    
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">weight:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref></initializer>
+        <briefdescription>
+<para>Set details for a Gym exercise. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="208" column="18" bodyfile="src/lib/types/session.ts" bodystart="208" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a1fda2d26c7aa86fdd6b90b93fad6b434" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">reps</ref></type>
+        <definition>reps __pad81__</definition>
+        <argsstring></argsstring>
+        <name>__pad81__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Number of repetitions. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="212" column="5" bodyfile="src/lib/types/session.ts" bodystart="212" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a1f8d8cd672404c19e6cbf75b2fcb9e8f" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isWarmup</ref></type>
+        <definition>isWarmup __pad82__</definition>
+        <argsstring></argsstring>
+        <name>__pad82__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Is this a warmup set? </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="214" column="5" bodyfile="src/lib/types/session.ts" bodystart="214" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a61f98433bc8b0d4df8295ab9f6c2608e" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isFailure</ref></type>
+        <definition>isFailure __pad83__</definition>
+        <argsstring></argsstring>
+        <name>__pad83__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Was failure reached? </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="216" column="5" bodyfile="src/lib/types/session.ts" bodystart="216" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a327cef7fafe18f097730dce56116408a" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isDropSet</ref></type>
+        <definition>isDropSet __pad84__</definition>
+        <argsstring></argsstring>
+        <name>__pad84__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Is this a drop set? </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="218" column="5" bodyfile="src/lib/types/session.ts" bodystart="218" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1aa8f77dec12a73af81485ec7fae1606a9" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">completed</ref></type>
+        <definition>completed __pad85__</definition>
+        <argsstring></argsstring>
+        <name>__pad85__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Marked as completed by user. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="220" column="5" bodyfile="src/lib/types/session.ts" bodystart="220" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a76b5139d73f7339b12b1555b35f74126" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface GymExercise</definition>
+        <argsstring></argsstring>
+        <name>GymExercise</name>
+        <initializer>{
+    
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">id:</ref> <ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref></initializer>
+        <briefdescription>
+<para>Gym exercise entry. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="226" column="18" bodyfile="src/lib/types/session.ts" bodystart="226" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a9a6582bae4dddf91bcc815955d8fc38d" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref></type>
+        <definition>name __pad86__</definition>
+        <argsstring></argsstring>
+        <name>__pad86__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Exercise name (e.g., &quot;Barbell Squat&quot;). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="230" column="5" bodyfile="src/lib/types/session.ts" bodystart="230" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ae308957ec2b8d28ad007e7a41cc70661" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">sets</ref></type>
+        <definition>sets __pad87__</definition>
+        <argsstring></argsstring>
+        <name>__pad87__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Sets details. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="232" column="5" bodyfile="src/lib/types/session.ts" bodystart="232" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a565271f29e544e22d49d59cbea3d0592" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad88__</definition>
+        <argsstring></argsstring>
+        <name>__pad88__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="233" column="5" bodyfile="src/lib/types/session.ts" bodystart="233" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a7cf145d104a8a8b7e0fe66eed098ed89" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">linkedTo</ref></type>
+        <definition>linkedTo __pad89__</definition>
+        <argsstring></argsstring>
+        <name>__pad89__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>ID of another exercise if supersetted. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="235" column="5" bodyfile="src/lib/types/session.ts" bodystart="235" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a77e3eedeff74fc94419b8bc643d21761" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a885551759b9ec39c5ee2b2358c92ec38" kindref="member">difficulty</ref></type>
+        <definition>difficulty __pad90__</definition>
+        <argsstring></argsstring>
+        <name>__pad90__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Perceived difficulty color code. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="237" column="5" bodyfile="src/lib/types/session.ts" bodystart="237" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a6f269292194703924e5bc4d99b7e9665" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref></type>
+        <definition>name __pad91__</definition>
+        <argsstring></argsstring>
+        <name>__pad91__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Name of the workout (e.g., &quot;Leg Day&quot;). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="246" column="5" bodyfile="src/lib/types/session.ts" bodystart="246" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a6c5d81207b8879922a51a5a44511aece" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingForm_8svelte_1a49693dcd1be6632103111aac96671109" kindref="member">exercises</ref></type>
+        <definition>exercises __pad92__</definition>
+        <argsstring></argsstring>
+        <name>__pad92__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="247" column="5" bodyfile="src/lib/types/session.ts" bodystart="247" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a748c67a9bda8d9780440f306ae1902d5" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionForm_8svelte_1a3fcdbad43ff3ff49c51c6e5bdcf2d112" kindref="member">bodyweight</ref></type>
+        <definition>bodyweight __pad93__</definition>
+        <argsstring></argsstring>
+        <name>__pad93__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Bodyweight at time of session. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="249" column="5" bodyfile="src/lib/types/session.ts" bodystart="249" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1ae4620c3388c595be6c984669eea66338" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionForm_8svelte_1a8adf4d5f5e1c8cebdc4a85c3ca5bddb6" kindref="member">trainingBlock</ref></type>
+        <definition>trainingBlock __pad94__</definition>
+        <argsstring></argsstring>
+        <name>__pad94__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Periodization block. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="251" column="5" bodyfile="src/lib/types/session.ts" bodystart="251" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a04a516e485850a12b20a6eb3885996d8" prot="public" static="no" mutable="no">
+        <type><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref></type>
+        <definition>notes __pad95__</definition>
+        <argsstring></argsstring>
+        <name>__pad95__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="252" column="5" bodyfile="src/lib/types/session.ts" bodystart="252" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="session_8ts_1a1d7ec2e3d38dd639e46a4548841f9936" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref></type>
+        <definition>export type Session</definition>
+        <argsstring></argsstring>
+        <name>Session</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">IndoorClimbSession</ref> | <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">OutdoorClimbSession</ref> | <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">FingerboardSession</ref> | <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">CompetitionSession</ref> | <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">GymSession</ref></initializer>
+        <briefdescription>
+<para>Union of all possible session types. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/types/session.ts" line="258" column="13" bodyfile="src/lib/types/session.ts" bodystart="258" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Data types and interfaces for the application&apos;s training sessions. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Defines the shape of data stored in Firestore and used throughout the application. </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="13" refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" kindref="member">BaseSession</ref><sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">id</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="17" refid="session_8ts_1ab4a4eb3a853232ef292a4e97dcc3f8a9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="19" refid="session_8ts_1a68c81c2a6eae6a617c69e5421732e1bc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1ab2e1d5074d8a7ecd182571149f3bc438" kindref="member">date</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="21" refid="session_8ts_1abd38dd9879b5a42417c5c355d7a9a5a1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a86a03a06e773fccee48b53dfe874870e" kindref="member">time</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="23" refid="session_8ts_1ab6054ca1e90a89bcd8ab6836d0cfe174" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">createdAt</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="25" refid="session_8ts_1af8ac353c67b81223f075fb5deffb0ea4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">updatedAt</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="27" refid="session_8ts_1a4a8621b8adb8cd072808d83e67a0b345" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">syncStatus</ref>:<sp/></highlight><highlight class="stringliteral">&apos;pending&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;synced&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;error&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="29" refid="session_8ts_1a35cc4380b0bc7420bf7ee857470339fd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">syncedAt</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="session_8ts_1a43ace53fc94283b47f2d9d70770a90c3" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1a43ace53fc94283b47f2d9d70770a90c3" kindref="member">ClimbEntry</ref><sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isSport</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">boolean</ref>;</highlight></codeline>
+<codeline lineno="39" refid="session_8ts_1a90c9fba5ea90c7d64e281c6ad1ce954e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="41" refid="session_8ts_1ac520ebf56d3cc5d7ebcb47d38a3ce6e6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="43" refid="session_8ts_1acf1727fe4d452f47b1669e17cae146dc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">attemptType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="45" refid="session_8ts_1a8a5f32fe5c70a80a53120e92b985128d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">attemptsNum</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="47" refid="session_8ts_1a3367860256f384e3639fd41453673e24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="49" refid="session_8ts_1a0f44cf24e5559ce367338f5b0e47d8d3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">wall</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="51" refid="session_8ts_1addbaf2b04c41b1e7ebc8d155d65b7cb6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">techniqueFocus</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">IndoorClimbSession</ref><sp/></highlight><highlight class="keyword">extends</highlight><highlight class="normal"><sp/><ref refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" kindref="member">BaseSession</ref><sp/>{</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref>:<sp/></highlight><highlight class="stringliteral">&apos;indoor_climb&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60" refid="session_8ts_1a2d4ab5c06af6c3bd896dff73d278449d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a8d924386857753d4b5bd270b88b585da" kindref="member">location</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="62" refid="session_8ts_1ae6beb9b84c60ec59350a53d7f6ab9dce" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">customLocation</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="64" refid="session_8ts_1a437005077a4849e11f6aad293f82ee16" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="66" refid="session_8ts_1add758bb8fe23764effd70e92990ae5dc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a37cb751479d097002d2f5fb5e6d51485" kindref="member">trainingTypes</ref>:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="68" refid="session_8ts_1a663182d2dce14fac330c735a9df7f6f9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a885551759b9ec39c5ee2b2358c92ec38" kindref="member">difficulty</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="70" refid="session_8ts_1a55f2918173f70cddad2e6465a6f78fe5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionForm_8svelte_1a7381ddc7e4d4b483cd0de764f6912999" kindref="member">categories</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="72" refid="session_8ts_1a54b68a867ccced25cdd7ac29da22f255" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a642764d32f8abe67029b772508083237" kindref="member">energySystems</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="74" refid="session_8ts_1a7d92a9f7a69ee934d10ca2f931d02d69" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a9d9ecb52c82641401bb590ddbeb47c1e" kindref="member">wallAngles</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="76" refid="session_8ts_1a6001682b21b2d428ea894e93c07cfc78" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="78" refid="session_8ts_1a8811cfc6a71333fa525eaa2ffcf9d6d4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="80" refid="session_8ts_1a7c5c4730d2e885857195718366e4abba" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="82" refid="session_8ts_1ad904c60b6a04535b855761cd8d5ef47d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a4c4deb58cdf6c5dc6c69ed7216073885" kindref="member">openGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="84" refid="session_8ts_1a6abbfec86247666156f4c6bf6d9a0b06" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a07d6df613cdbef99e45dc019d33ab30a" kindref="member">crimpGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="86" refid="session_8ts_1ad5a1c853876888aa4bfa19e1a9027f35" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a15b1d1f30002e66da7cdf7b9349ee3ef" kindref="member">pinchGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="88" refid="session_8ts_1ad3e8759417bfd1a0f389a3f9e06dfb97" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1ab8ba4f1487c1c9199c9c1564ebad4226" kindref="member">sloperGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="90" refid="session_8ts_1a2e0bb7c0f25d5c12b37e73bb50306426" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a3830dcdfe85ec4336ce934e165e4192e" kindref="member">jugGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="92" refid="session_8ts_1a1cbc37036a744f51301af441dc594f50" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1acf2493b0db516cf682901c00facc2431" kindref="member">climbs</ref>:<sp/><ref refid="session_8ts_1a43ace53fc94283b47f2d9d70770a90c3" kindref="member">ClimbEntry</ref>[];</highlight></codeline>
+<codeline lineno="94" refid="session_8ts_1a2966801a30ccbcb56a351cf9f5c8c85f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">OutdoorClimbSession</ref><sp/></highlight><highlight class="keyword">extends</highlight><highlight class="normal"><sp/><ref refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" kindref="member">BaseSession</ref><sp/>{</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref>:<sp/></highlight><highlight class="stringliteral">&apos;outdoor_climb&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="103" refid="session_8ts_1a7af8d84cb067aa459f37cb6ae4797b78" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="105" refid="session_8ts_1a863e0dec915e2b21ce1b2abe6c1bf1f3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbForm_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="107" refid="session_8ts_1ac032fe07955690c5c7920b13922ccac1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbForm_8svelte_1a3198fb7fd3a03f2e821685fb6f03ab9d" kindref="member">sector</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="109" refid="session_8ts_1a3aae508b3d51d90106c209f4f5a443db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="110" refid="session_8ts_1afd1b084a8ee38fd309194a06979c6ee5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a37cb751479d097002d2f5fb5e6d51485" kindref="member">trainingTypes</ref>:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="111" refid="session_8ts_1a9a082cfc0a075424b1749675cb3e5091" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a885551759b9ec39c5ee2b2358c92ec38" kindref="member">difficulty</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="112" refid="session_8ts_1a972957742084e05bd2ee172cf32328e9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionForm_8svelte_1a7381ddc7e4d4b483cd0de764f6912999" kindref="member">categories</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="113" refid="session_8ts_1a89f35a36d217f5770a7d49e4acd696b5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a642764d32f8abe67029b772508083237" kindref="member">energySystems</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="114" refid="session_8ts_1a28812a7c6995528af9ab9f8980954b73" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a9d9ecb52c82641401bb590ddbeb47c1e" kindref="member">wallAngles</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="115" refid="session_8ts_1aa60c188cbc28b017017800ddbda178b0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="116" refid="session_8ts_1a5e17849a1dc082d6f47489abd98cbfb5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="117" refid="session_8ts_1a3d4244430b6c6fc9a37e7ca060f6ca80" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="118" refid="session_8ts_1a4b1389a8844ffe692a3c14e97fe3238e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a4c4deb58cdf6c5dc6c69ed7216073885" kindref="member">openGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="119" refid="session_8ts_1aa3509cc45ab6a59c27913d48643790b7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a07d6df613cdbef99e45dc019d33ab30a" kindref="member">crimpGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="120" refid="session_8ts_1a17bf5e8c4946e2ba5f40cc21667c27ac" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a15b1d1f30002e66da7cdf7b9349ee3ef" kindref="member">pinchGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="121" refid="session_8ts_1a9a335306e96bbb4dfb984dcc3f6414dc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1ab8ba4f1487c1c9199c9c1564ebad4226" kindref="member">sloperGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="122" refid="session_8ts_1a11accc2c19b0cb7804ccdaeda11227b2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a3830dcdfe85ec4336ce934e165e4192e" kindref="member">jugGrip</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="123" refid="session_8ts_1a75f52080098045e57e3bfadad2b278b0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1acf2493b0db516cf682901c00facc2431" kindref="member">climbs</ref>:<sp/><ref refid="session_8ts_1a43ace53fc94283b47f2d9d70770a90c3" kindref="member">ClimbEntry</ref>[];</highlight></codeline>
+<codeline lineno="124" refid="session_8ts_1a158aae001417efe0271ff564889d8df8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130" refid="session_8ts_1a02720e0d9e9a66bec16b4b4994c18d8b" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1a02720e0d9e9a66bec16b4b4994c18d8b" kindref="member">ExerciseSet</ref><sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionView_8svelte_1a9b9780cce21a0de7f2a4efdab697bc39" kindref="member">weight</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="134" refid="session_8ts_1ab3cc6b4183302425e2bfb2fdd8da07a5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">reps</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140" refid="session_8ts_1a5ac99c683cfd5428d7e56d1dd441dd68" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1a5ac99c683cfd5428d7e56d1dd441dd68" kindref="member">FingerboardExercise</ref><sp/>{</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">id</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="142" refid="session_8ts_1af5e5ee55bb48bfea4a144e125af898c0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="143" refid="session_8ts_1af89cd09fd475b6c1c0e1f6f9cfaf950a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gripType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="145" refid="session_8ts_1ac82fe3447a297f8f0a83e3ffcf3f35e1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">sets</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="147" refid="session_8ts_1a54fc94f511226c83063f5e713d8c1f1b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">details</ref>:<sp/><ref refid="session_8ts_1a02720e0d9e9a66bec16b4b4994c18d8b" kindref="member">ExerciseSet</ref>[];</highlight></codeline>
+<codeline lineno="148" refid="session_8ts_1a17a73033aba1ae5ad25bd1290e8273be" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">FingerboardSession</ref><sp/></highlight><highlight class="keyword">extends</highlight><highlight class="normal"><sp/><ref refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" kindref="member">BaseSession</ref><sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref>:<sp/></highlight><highlight class="stringliteral">&apos;fingerboarding&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="156" refid="session_8ts_1a5c6ecfd2af4885aaf4e1f8a2d803f09b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a8d924386857753d4b5bd270b88b585da" kindref="member">location</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="157" refid="session_8ts_1ae7e1bd87cdc9fd33bbeb3f25bb23e34f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a49693dcd1be6632103111aac96671109" kindref="member">exercises</ref>:<sp/><ref refid="session_8ts_1a5ac99c683cfd5428d7e56d1dd441dd68" kindref="member">FingerboardExercise</ref>[];</highlight></codeline>
+<codeline lineno="158" refid="session_8ts_1a5489f710e0b44408792ea06c80150d1f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="159" refid="session_8ts_1a860dd1301b7ff991e3fc489beb7bd0f1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="160" refid="session_8ts_1aefe2999f3f631a8bbcf6bcf837704f27" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="161" refid="session_8ts_1a473229d295399a08eaf2d486b51869ac" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a4c4deb58cdf6c5dc6c69ed7216073885" kindref="member">openGrip</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="162" refid="session_8ts_1a4d3c324b42cc3e43f861599deb9d0756" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a07d6df613cdbef99e45dc019d33ab30a" kindref="member">crimpGrip</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="163" refid="session_8ts_1a0e247e935d219fa026ca2da858e2083c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a15b1d1f30002e66da7cdf7b9349ee3ef" kindref="member">pinchGrip</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="164" refid="session_8ts_1a6dfffd9a502c8b800c8b038d9046f91c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1ab8ba4f1487c1c9199c9c1564ebad4226" kindref="member">sloperGrip</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="165" refid="session_8ts_1a276187de68b0d1a5992212212b57a6fe" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a3830dcdfe85ec4336ce934e165e4192e" kindref="member">jugGrip</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="166" refid="session_8ts_1a93164f8af0d695e30fa17e85560d7402" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="172" refid="session_8ts_1ae44ca3e20a33203b808f80f0a6a29e98" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1ae44ca3e20a33203b808f80f0a6a29e98" kindref="member">CompetitionClimbResult</ref><sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="174" refid="session_8ts_1ace190c0721a23ebb6fe27ca8f1aaaef1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">status</ref>:<sp/></highlight><highlight class="stringliteral">&apos;Flash&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Top&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Zone&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Attempt&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="175" refid="session_8ts_1af2514812e331c25014a11f209d60fffa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">attemptCount</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="176" refid="session_8ts_1a959cd884a90663fba1a6ab5b2bef020a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182" refid="session_8ts_1ad9e640ae306f01de603db9c4d089bd93" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1ad9e640ae306f01de603db9c4d089bd93" kindref="member">CompetitionRound</ref><sp/>{</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="185" refid="session_8ts_1a707decbc5a33fe6c0e7e93d9ddd006e4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">position</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref><sp/>|<sp/></highlight><highlight class="keyword">null</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="187" refid="session_8ts_1af2d51670f67540a0a2dd688081f34071" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1acf2493b0db516cf682901c00facc2431" kindref="member">climbs</ref>?:<sp/><ref refid="session_8ts_1ae44ca3e20a33203b808f80f0a6a29e98" kindref="member">CompetitionClimbResult</ref>[];</highlight></codeline>
+<codeline lineno="188"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">CompetitionSession</ref><sp/></highlight><highlight class="keyword">extends</highlight><highlight class="normal"><sp/><ref refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" kindref="member">BaseSession</ref><sp/>{</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref>:<sp/></highlight><highlight class="stringliteral">&apos;competition&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="195" refid="session_8ts_1a9c454c5748be5806c247711ca68dfd22" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a2c74ec6fcce8c3a4b16fcb9973ca9882" kindref="member">venue</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="196" refid="session_8ts_1abb79e907eb67caebb336269080fb1fa7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a3259c69a48d8c8c888ae1b1b10838077" kindref="member">customVenue</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="197" refid="session_8ts_1aa76551b4bbf6b876b4ad44ae3a0ec72a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>:<sp/></highlight><highlight class="stringliteral">&apos;Bouldering&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Lead&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Speed&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="198" refid="session_8ts_1a6a23919f7e75bf1dee31942fc6d625fe" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a8b83d2d275a44d47af9cc7a7c416bc10" kindref="member">fingerLoad</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="199" refid="session_8ts_1a07ca221f72e46caeeed19b83772d696a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a5a36ecaa944a6841807ef73f4207d372" kindref="member">shoulderLoad</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="200" refid="session_8ts_1add4cade42734d94e1c4c986cf734e812" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a3d46b542a424a69f32fbebdf67e32be9" kindref="member">forearmLoad</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="201" refid="session_8ts_1aee8331c0ac8f66eb0444e0e5e84accbd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rounds</ref>:<sp/><ref refid="session_8ts_1ad9e640ae306f01de603db9c4d089bd93" kindref="member">CompetitionRound</ref>[];</highlight></codeline>
+<codeline lineno="202" refid="session_8ts_1a9e4c3b7aedda5af9887f2d4794821f7f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight></codeline>
+<codeline lineno="208" refid="session_8ts_1a96dfbc09eb551e18e9ad922f1899f1dc" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1a96dfbc09eb551e18e9ad922f1899f1dc" kindref="member">GymSet</ref><sp/>{</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionView_8svelte_1a9b9780cce21a0de7f2a4efdab697bc39" kindref="member">weight</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="212" refid="session_8ts_1a1fda2d26c7aa86fdd6b90b93fad6b434" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">reps</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="214" refid="session_8ts_1a1f8d8cd672404c19e6cbf75b2fcb9e8f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isWarmup</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">boolean</ref>;</highlight></codeline>
+<codeline lineno="216" refid="session_8ts_1a61f98433bc8b0d4df8295ab9f6c2608e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isFailure</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">boolean</ref>;</highlight></codeline>
+<codeline lineno="218" refid="session_8ts_1a327cef7fafe18f097730dce56116408a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">isDropSet</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">boolean</ref>;</highlight></codeline>
+<codeline lineno="220" refid="session_8ts_1aa8f77dec12a73af81485ec7fae1606a9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">completed</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">boolean</ref>;</highlight></codeline>
+<codeline lineno="221"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight></codeline>
+<codeline lineno="226" refid="session_8ts_1a76b5139d73f7339b12b1555b35f74126" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="session_8ts_1a76b5139d73f7339b12b1555b35f74126" kindref="member">GymExercise</ref><sp/>{</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">id</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="230" refid="session_8ts_1a9a6582bae4dddf91bcc815955d8fc38d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="232" refid="session_8ts_1ae308957ec2b8d28ad007e7a41cc70661" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">sets</ref>:<sp/><ref refid="session_8ts_1a96dfbc09eb551e18e9ad922f1899f1dc" kindref="member">GymSet</ref>[];</highlight></codeline>
+<codeline lineno="233" refid="session_8ts_1a565271f29e544e22d49d59cbea3d0592" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="235" refid="session_8ts_1a7cf145d104a8a8b7e0fe66eed098ed89" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">linkedTo</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="237" refid="session_8ts_1a77e3eedeff74fc94419b8bc643d21761" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a885551759b9ec39c5ee2b2358c92ec38" kindref="member">difficulty</ref>?:<sp/></highlight><highlight class="stringliteral">&apos;Green&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Yellow&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Orange&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Red&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="238"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">GymSession</ref><sp/></highlight><highlight class="keyword">extends</highlight><highlight class="normal"><sp/><ref refid="session_8ts_1a050d779e70c0f9ffd93087f8b9bb1ca9" kindref="member">BaseSession</ref><sp/>{</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">activityType</ref>:<sp/></highlight><highlight class="stringliteral">&apos;gym_session&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="246" refid="session_8ts_1a6f269292194703924e5bc4d99b7e9665" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aad14a82e153056f3f84d0005ca38b96b" kindref="member">name</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="247" refid="session_8ts_1a6c5d81207b8879922a51a5a44511aece" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="FingerboardingForm_8svelte_1a49693dcd1be6632103111aac96671109" kindref="member">exercises</ref>:<sp/><ref refid="session_8ts_1a76b5139d73f7339b12b1555b35f74126" kindref="member">GymExercise</ref>[];</highlight></codeline>
+<codeline lineno="249" refid="session_8ts_1a748c67a9bda8d9780440f306ae1902d5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionForm_8svelte_1a3fcdbad43ff3ff49c51c6e5bdcf2d112" kindref="member">bodyweight</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="251" refid="session_8ts_1ae4620c3388c595be6c984669eea66338" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="GymSessionForm_8svelte_1a8adf4d5f5e1c8cebdc4a85c3ca5bddb6" kindref="member">trainingBlock</ref>?:<sp/></highlight><highlight class="stringliteral">&apos;Strength&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Power&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Power<sp/>Endurance&apos;</highlight><highlight class="normal"><sp/>|<sp/></highlight><highlight class="stringliteral">&apos;Muscular<sp/>Endurance&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="252" refid="session_8ts_1a04a516e485850a12b20a6eb3885996d8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a134e9f55024f8749aa74713f41f26dc6" kindref="member">notes</ref>?:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"></highlight></codeline>
+<codeline lineno="258" refid="session_8ts_1a1d7ec2e3d38dd639e46a4548841f9936" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref><sp/><ref refid="session_8ts_1a1d7ec2e3d38dd639e46a4548841f9936" kindref="member">Session</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">IndoorClimbSession</ref><sp/>|<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">OutdoorClimbSession</ref><sp/>|<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">FingerboardSession</ref><sp/>|<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">CompetitionSession</ref><sp/>|<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">GymSession</ref>;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="src/lib/types/session.ts"/>
+  </compounddef>
+</doxygen>

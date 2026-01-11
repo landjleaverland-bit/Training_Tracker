@@ -1,0 +1,1172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="OutdoorClimbFilters_8svelte" kind="file" language="JavaScript">
+    <compoundname>OutdoorClimbFilters.svelte</compoundname>
+    <includes local="no">slide</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>src/lib/components/views/outdoor/OutdoorClimbFilters.svelte</label>
+        <link refid="OutdoorClimbFilters_8svelte"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>slide</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" prot="public" static="no" mutable="no">
+        <type>&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">lang</ref>=&quot;ts&quot;&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>&lt;script lang=&quot;ts&quot;&gt; interface Props</definition>
+        <argsstring></argsstring>
+        <name>Props</name>
+        <initializer>{
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onFilterParamsChange:</ref> (<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">params:</ref> <ref refid="GymSessionFilters_8svelte_1af1a29c6a9cb6d8d6ef5c9cff3481b86e" kindref="member">FilterParams</ref>) =&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">void</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="7" column="11" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>let</definition>
+        <argsstring></argsstring>
+        <name>let</name>
+        <initializer>{ <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onFilterParamsChange</ref> }: <ref refid="CompetitionCard_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" kindref="member">Props</ref> = $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">props</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="11" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1af1a29c6a9cb6d8d6ef5c9cff3481b86e" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">interface</ref></type>
+        <definition>export interface FilterParams</definition>
+        <argsstring></argsstring>
+        <name>FilterParams</name>
+        <initializer>{
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">startDate:</ref> <ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="13" column="18" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a5984f18ca5195851976350fb2b30ede3" prot="public" static="no" mutable="no">
+        <type><ref refid="FingerboardingView_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" kindref="member">endDate</ref></type>
+        <definition>endDate __pad0__</definition>
+        <argsstring></argsstring>
+        <name>__pad0__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="15" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ae285e7d5447eabb43555eceb6fc8bf26" prot="public" static="no" mutable="no">
+        <type><ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref></type>
+        <definition>area __pad1__</definition>
+        <argsstring></argsstring>
+        <name>__pad1__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="16" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aa3837d121a27eba0d4a7676428a3b168" prot="public" static="no" mutable="no">
+        <type><ref refid="OutdoorClimbForm_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref></type>
+        <definition>crag __pad2__</definition>
+        <argsstring></argsstring>
+        <name>__pad2__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="17" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a9bb8214b3e96e1040f939aa07744d966" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbForm_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref></type>
+        <definition>climbingType __pad3__</definition>
+        <argsstring></argsstring>
+        <name>__pad3__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="18" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a446606d0c741684a0619da86f9a1edd4" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" kindref="member">sessionType</ref></type>
+        <definition>sessionType __pad4__</definition>
+        <argsstring></argsstring>
+        <name>__pad4__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="19" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a81191274436c2e6dd37136e0da3daf3e" prot="public" static="no" mutable="no">
+        <type><ref refid="IndoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref></type>
+        <definition>grade __pad5__</definition>
+        <argsstring></argsstring>
+        <name>__pad5__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="20" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a7f3c156f57ee21907dce360ea0a18df0" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const areas</definition>
+        <argsstring></argsstring>
+        <name>areas</name>
+        <initializer>= <ref refid="outdoor__locations_8ts_1ab1eb53c604859e2266fc33f243b472bb" kindref="member">getAreas</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="24" column="7" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a857a2ce01ff6255b716c9017c9f417ec" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const climbingTypes</definition>
+        <argsstring></argsstring>
+        <name>climbingTypes</name>
+        <initializer>= [&apos;<ref refid="outdoor__locations_8ts_1a2b81ea19e465ba14e2cb3453161446f3" kindref="member">Bouldering</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Sport</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Mixed</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Trad</ref>&apos;]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="27" column="11" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aa824f71ca3c48709856e170df157b032" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const trainingTypes</definition>
+        <argsstring></argsstring>
+        <name>trainingTypes</name>
+        <initializer>= [&apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Projecting</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Onsighting</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Campusing</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Repeaters</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Fun</ref>&apos;, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Volume</ref>&apos;]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="30" column="7" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let isExpanded</definition>
+        <argsstring></argsstring>
+        <name>isExpanded</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">false</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="33" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a6f9cbae15327aa864fff15a15c096218" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let startDate</definition>
+        <argsstring></argsstring>
+        <name>startDate</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="35" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let endDate</definition>
+        <argsstring></argsstring>
+        <name>endDate</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="36" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let area</definition>
+        <argsstring></argsstring>
+        <name>area</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="37" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let crag</definition>
+        <argsstring></argsstring>
+        <name>crag</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="38" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a92a4425520ff78ef897f8e247b572d56" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let climbingType</definition>
+        <argsstring></argsstring>
+        <name>climbingType</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="39" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let sessionType</definition>
+        <argsstring></argsstring>
+        <name>sessionType</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="40" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let grade</definition>
+        <argsstring></argsstring>
+        <name>grade</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(&apos;&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="41" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let isOtherArea</definition>
+        <argsstring></argsstring>
+        <name>isOtherArea</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">false</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="42" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let isOtherCrag</definition>
+        <argsstring></argsstring>
+        <name>isOtherCrag</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">false</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="43" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ad4e43817e405aad7147368c9fc77d21d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let availableCrags</definition>
+        <argsstring></argsstring>
+        <name>availableCrags</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref> &amp;&amp; <ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref> !== &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Other</ref>&apos; ? <ref refid="outdoor__locations_8ts_1a83b1c49906e69ad67d36d98b3f9f6c90" kindref="member">getCrags</ref>(<ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>) : [])</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="47" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a71c256d3690810c9a63c31def85b1b99" prot="public" static="no" mutable="no">
+        <type>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref> &gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">container&quot;</ref>&gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">header&quot;</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onclick</ref>={<ref refid="CompetitionCard_8svelte_1a681439c7536c5f95869c5fe77a3100d3" kindref="member">toggleExpand</ref>} <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">aria</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">expanded</ref>={<ref refid="MultiSelect_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref>}&gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;header-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">content&quot;</ref>&gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;icon&quot;&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">🔍</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref> &gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;title&quot;&gt;</type>
+        <definition>&lt;/script&gt;&lt;div class=&quot;filter-container&quot;&gt;&lt;button class=&quot;filter-header&quot; onclick={toggleExpand} aria-expanded={isExpanded}&gt;&lt;div class=&quot;header-content&quot;&gt;&lt;span class=&quot;icon&quot;&gt; 🔍&lt;/span&gt;&lt;span class=&quot;title&quot;&gt; Filters&lt;/span &gt;</definition>
+        <argsstring></argsstring>
+        <name>Filters&lt;/span &gt;</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="96" column="10" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="114" bodyend="306"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" prot="public" static="no" mutable="no">
+        <type>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref> &gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">container&quot;</ref>&gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">header&quot;</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onclick</ref>={<ref refid="CompetitionCard_8svelte_1a681439c7536c5f95869c5fe77a3100d3" kindref="member">toggleExpand</ref>} <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">aria</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">expanded</ref>={<ref refid="MultiSelect_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref>}&gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;header-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">content&quot;</ref>&gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;icon&quot;&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">🔍</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref> &gt;&lt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">class</ref>=&quot;title&quot;&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filter</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref></type>
+        <definition>filter item filter item select</definition>
+        <argsstring></argsstring>
+        <name>select</name>
+        <initializer>{
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding:</ref> 0.5<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref> 0.75<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="309" column="12" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="309" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref></type>
+        <definition>border bottom right radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="311" column="7" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="311" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aeacb8d0dbe6a5616ff396347ab118c3e" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref></type>
+        <definition>border __pad6__</definition>
+        <argsstring></argsstring>
+        <name>__pad6__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="312" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="312" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref></type>
+        <definition>font size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="313" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="313" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ab964f221708006f07da9d376a6980fe5" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref></type>
+        <definition>color __pad7__</definition>
+        <argsstring></argsstring>
+        <name>__pad7__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="314" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="314" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a651d3c68e36013af0a9edb66a0406441" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref></type>
+        <definition>background __pad8__</definition>
+        <argsstring></argsstring>
+        <name>__pad8__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="315" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="315" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filter</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref></type>
+        <definition>input with action input</definition>
+        <argsstring></argsstring>
+        <name>input</name>
+        <initializer>{
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex:</ref> 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="318" column="12" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="318" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref></type>
+        <definition>border color</definition>
+        <argsstring></argsstring>
+        <name>color</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="321" column="7" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="321" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1afb2fd8f53f973be6e4f74331d4db64d5" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">box</ref></type>
+        <definition>box shadow</definition>
+        <argsstring></argsstring>
+        <name>shadow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="322" column="4" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="322" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aab3ee05b5d0b34fb4612855eb007dba8" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">box</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filter</ref></type>
+        <definition>box filter actions</definition>
+        <argsstring></argsstring>
+        <name>actions</name>
+        <initializer>{
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="325" column="7" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="325" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aa847f2bbc747f47e666a46cb74f30e00" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">justify</ref></type>
+        <definition>justify content</definition>
+        <argsstring></argsstring>
+        <name>content</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="327" column="8" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="327" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">margin</ref></type>
+        <definition>border top</definition>
+        <argsstring></argsstring>
+        <name>top</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="328" column="7" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="328" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">reset</ref></type>
+        <definition>action btn</definition>
+        <argsstring></argsstring>
+        <name>btn</name>
+        <initializer>{
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">none</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="333" column="6" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="333" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ab7acea9d7968eb07f4a76683ce1a4d99" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref></type>
+        <definition>border __pad9__</definition>
+        <argsstring></argsstring>
+        <name>__pad9__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="335" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="335" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a3874a778fe05ca36cd60ff2872850a7f" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref></type>
+        <definition>color __pad10__</definition>
+        <argsstring></argsstring>
+        <name>__pad10__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="336" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="336" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1aeffde751ec4202e0be7a9aba179735c7" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cursor</ref></type>
+        <definition>cursor __pad11__</definition>
+        <argsstring></argsstring>
+        <name>__pad11__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="338" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="338" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ad1ba8052b5e15f7bd3093dcb839f840b" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref></type>
+        <definition>text decoration</definition>
+        <argsstring></argsstring>
+        <name>decoration</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="339" column="5" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="339" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a0772c152894ab58cc0f9528c0f1c39d5" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref></type>
+        <definition>padding __pad12__</definition>
+        <argsstring></argsstring>
+        <name>__pad12__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="340" column="1" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="340" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a044ae57de393d3bdfa0c3d59ec5c8094" prot="public" static="no" mutable="no">
+        <type><ref refid="DeleteConfirmModal_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">with</ref></type>
+        <definition>input with action</definition>
+        <argsstring></argsstring>
+        <name>action</name>
+        <initializer>{
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="347" column="14" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="347" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref></type>
+        <definition>align items</definition>
+        <argsstring></argsstring>
+        <name>items</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="349" column="14" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="349" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ab6686212f322ffb801a90ae9be1e96b5" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref></type>
+        <definition>width __pad13__</definition>
+        <argsstring></argsstring>
+        <name>__pad13__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="350" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="350" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1afbc2876d06a758117c788ebdd6e98cc9" prot="public" static="no" mutable="no">
+        <type><ref refid="DeleteConfirmModal_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">with</ref> <ref refid="IndoorClimbFilters_8svelte_1a044ae57de393d3bdfa0c3d59ec5c8094" kindref="member">action</ref> <ref refid="DeleteConfirmModal_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flat</ref></type>
+        <definition>border left</definition>
+        <argsstring></argsstring>
+        <name>left</name>
+        <initializer>{
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="GymSessionFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>-<ref refid="IndoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">radius:</ref> 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="357" column="30" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="357" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref></type>
+        <definition>action btn flat right</definition>
+        <argsstring></argsstring>
+        <name>right</name>
+        <initializer>{
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="GymSessionFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>-right-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">radius:</ref> 8<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="360" column="15" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="360" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a1d80d3058b4c8d5876f2e2fca433335b" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref></type>
+        <definition>background __pad14__</definition>
+        <argsstring></argsstring>
+        <name>__pad14__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="365" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="365" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1a17a814dc5d5c68839f8bc32ab5f75b84" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref></type>
+        <definition>border __pad15__</definition>
+        <argsstring></argsstring>
+        <name>__pad15__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="366" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="366" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1add44e5c12e292c09be1f6a04d19de543" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cursor</ref></type>
+        <definition>cursor __pad16__</definition>
+        <argsstring></argsstring>
+        <name>__pad16__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="368" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="368" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="OutdoorClimbFilters_8svelte_1abbdd5374b823e6d8dc0a0663727b8c6b" prot="public" static="no" mutable="no">
+        <type><ref refid="GymSessionFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref></type>
+        <definition>color __pad17__</definition>
+        <argsstring></argsstring>
+        <name>__pad17__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="374" column="9" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="374" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="OutdoorClimbFilters_8svelte_1a6f965d3f8930274799876af3f8188158" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">function</ref></type>
+        <definition>function onAreaChange</definition>
+        <argsstring>()</argsstring>
+        <name>onAreaChange</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="50" column="14" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="50" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="OutdoorClimbFilters_8svelte_1a40ba34bb9ba6c8758c2c8e8b7108f614" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">function</ref></type>
+        <definition>function onCragChange</definition>
+        <argsstring>()</argsstring>
+        <name>onCragChange</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="69" column="14" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="69" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="OutdoorClimbFilters_8svelte_1a681439c7536c5f95869c5fe77a3100d3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">function</ref></type>
+        <definition>function toggleExpand</definition>
+        <argsstring>()</argsstring>
+        <name>toggleExpand</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="79" column="10" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="79" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="OutdoorClimbFilters_8svelte_1a0fe3ad52004c6bc2cfbee3d04833504e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">function</ref></type>
+        <definition>function resetFilters</definition>
+        <argsstring>()</argsstring>
+        <name>resetFilters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="83" column="10" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="83" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="function" id="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">function</ref></type>
+        <definition>function applyFilters</definition>
+        <argsstring>()</argsstring>
+        <name>applyFilters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" line="96" column="10" bodyfile="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte" bodystart="96" bodyend="106"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal">&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">lang</ref>=</highlight><highlight class="stringliteral">&quot;ts&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Filter<sp/>component<sp/>for<sp/>Outdoor<sp/>Climbs</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">slide</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;svelte/transition&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="outdoor__locations_8ts_1ab1eb53c604859e2266fc33f243b472bb" kindref="member">getAreas</ref>,<sp/><ref refid="outdoor__locations_8ts_1a83b1c49906e69ad67d36d98b3f9f6c90" kindref="member">getCrags</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;$lib/data/outdoor_locations&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Props</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="OutdoorClimbFilters_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="OutdoorClimbFilters_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" kindref="member">Props</ref><sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onFilterParamsChange</ref>:<sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">params</ref>:<sp/><ref refid="GymSessionFilters_8svelte_1af1a29c6a9cb6d8d6ef5c9cff3481b86e" kindref="member">FilterParams</ref>)<sp/>=&gt;<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onFilterParamsChange</ref><sp/>}:<sp/><ref refid="OutdoorClimbFilters_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" kindref="member">Props</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$props</ref>();</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="OutdoorClimbFilters_8svelte_1af1a29c6a9cb6d8d6ef5c9cff3481b86e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="OutdoorClimbFilters_8svelte_1af1a29c6a9cb6d8d6ef5c9cff3481b86e" kindref="member">FilterParams</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="FingerboardingView_8svelte_1a6f9cbae15327aa864fff15a15c096218" kindref="member">startDate</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="15" refid="OutdoorClimbFilters_8svelte_1a5984f18ca5195851976350fb2b30ede3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="FingerboardingView_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" kindref="member">endDate</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="16" refid="OutdoorClimbFilters_8svelte_1ae285e7d5447eabb43555eceb6fc8bf26" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbForm_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="17" refid="OutdoorClimbFilters_8svelte_1aa3837d121a27eba0d4a7676428a3b168" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbForm_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="18" refid="OutdoorClimbFilters_8svelte_1a9bb8214b3e96e1040f939aa07744d966" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="IndoorClimbForm_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="19" refid="OutdoorClimbFilters_8svelte_1a446606d0c741684a0619da86f9a1edd4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="IndoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" kindref="member">sessionType</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="20" refid="OutdoorClimbFilters_8svelte_1a81191274436c2e6dd37136e0da3daf3e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="IndoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>areas<sp/>from<sp/>data<sp/>source</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="OutdoorClimbFilters_8svelte_1a7f3c156f57ee21907dce360ea0a18df0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1a7f3c156f57ee21907dce360ea0a18df0" kindref="member">areas</ref><sp/>=<sp/><ref refid="outdoor__locations_8ts_1ab1eb53c604859e2266fc33f243b472bb" kindref="member">getAreas</ref>();</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Climbing<sp/>types</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="OutdoorClimbFilters_8svelte_1a857a2ce01ff6255b716c9017c9f417ec" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1a857a2ce01ff6255b716c9017c9f417ec" kindref="member">climbingTypes</ref><sp/>=<sp/>[</highlight><highlight class="stringliteral">&apos;Bouldering&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Sport&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Mixed&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Trad&apos;</highlight><highlight class="normal">];</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Extract<sp/>standard<sp/>training<sp/>types<sp/>used<sp/>in<sp/>the<sp/>form</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="OutdoorClimbFilters_8svelte_1aa824f71ca3c48709856e170df157b032" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa824f71ca3c48709856e170df157b032" kindref="member">trainingTypes</ref><sp/>=<sp/>[</highlight><highlight class="stringliteral">&apos;Projecting&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Onsighting&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Campusing&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Repeaters&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Fun&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&apos;Volume&apos;</highlight><highlight class="normal">];</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>State</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="35" refid="OutdoorClimbFilters_8svelte_1a6f9cbae15327aa864fff15a15c096218" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a6f9cbae15327aa864fff15a15c096218" kindref="member">startDate</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="36" refid="OutdoorClimbFilters_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" kindref="member">endDate</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="37" refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="38" refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="39" refid="OutdoorClimbFilters_8svelte_1a92a4425520ff78ef897f8e247b572d56" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="40" refid="OutdoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" kindref="member">sessionType</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);<sp/></highlight><highlight class="comment">//<sp/>Maps<sp/>to<sp/>trainingType<sp/>in<sp/>data</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="OutdoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="42" refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="43" refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(</highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Reactive<sp/>crag<sp/>list<sp/>based<sp/>on<sp/>selected<sp/>area</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>If<sp/>area<sp/>is<sp/>&apos;Other&apos;,<sp/>we<sp/>don&apos;t<sp/>fetch<sp/>crags</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="OutdoorClimbFilters_8svelte_1ad4e43817e405aad7147368c9fc77d21d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1ad4e43817e405aad7147368c9fc77d21d" kindref="member">availableCrags</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>&amp;&amp;<sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>!==<sp/></highlight><highlight class="stringliteral">&apos;Other&apos;</highlight><highlight class="normal"><sp/>?<sp/><ref refid="outdoor__locations_8ts_1a83b1c49906e69ad67d36d98b3f9f6c90" kindref="member">getCrags</ref>(<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>)<sp/>:<sp/>[]);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Reset<sp/>details<sp/>when<sp/>area<sp/>changes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="OutdoorClimbFilters_8svelte_1a6f965d3f8930274799876af3f8188158" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1a6f965d3f8930274799876af3f8188158" kindref="member">onAreaChange</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>===<sp/></highlight><highlight class="stringliteral">&apos;Other&apos;</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Clear<sp/>filtering<sp/>area<sp/>value<sp/>if<sp/>it<sp/>was<sp/>&apos;Other&apos;<sp/>so<sp/>we<sp/>don&apos;t<sp/>filter<sp/>by<sp/>literal<sp/>&quot;Other&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Wait,<sp/>typically<sp/>we<sp/>want<sp/>to<sp/>allow<sp/>typing.<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>In<sp/>the<sp/>filter<sp/>context,<sp/>selecting<sp/>&apos;Other&apos;<sp/>likely<sp/>implies<sp/>&quot;I<sp/>want<sp/>to<sp/>type<sp/>a<sp/>manual<sp/>area&quot;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>So<sp/>we&apos;ll<sp/>clear<sp/>the<sp/>&apos;area&apos;<sp/>bound<sp/>value<sp/>to<sp/>allow<sp/>typing?</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>No,<sp/>the<sp/>UI<sp/>pattern<sp/>usually<sp/>is:<sp/>Select<sp/>&apos;Other&apos;<sp/>-&gt;<sp/>input<sp/>box<sp/>appears.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Let&apos;s<sp/>implement<sp/>that.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//<sp/>Clear<sp/>so<sp/>they<sp/>can<sp/>type</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//<sp/>Reset<sp/>crag</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>();</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="69" refid="OutdoorClimbFilters_8svelte_1a40ba34bb9ba6c8758c2c8e8b7108f614" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1a40ba34bb9ba6c8758c2c8e8b7108f614" kindref="member">onCragChange</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref><sp/>===<sp/></highlight><highlight class="stringliteral">&apos;Other&apos;</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>();</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79" refid="OutdoorClimbFilters_8svelte_1a681439c7536c5f95869c5fe77a3100d3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1a681439c7536c5f95869c5fe77a3100d3" kindref="member">toggleExpand</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref><sp/>=<sp/>!<ref refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref>;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83" refid="OutdoorClimbFilters_8svelte_1a0fe3ad52004c6bc2cfbee3d04833504e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1a0fe3ad52004c6bc2cfbee3d04833504e" kindref="member">resetFilters</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a6f9cbae15327aa864fff15a15c096218" kindref="member">startDate</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" kindref="member">endDate</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" kindref="member">sessionType</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>();</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onFilterParamsChange</ref>({</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a6f9cbae15327aa864fff15a15c096218" kindref="member">startDate</ref>,</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" kindref="member">endDate</ref>,</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>,</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref>,</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref>,</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" kindref="member">sessionType</ref>,</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal">&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref>&gt;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal">&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-container&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-header&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onclick</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a681439c7536c5f95869c5fe77a3100d3" kindref="member">toggleExpand</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">aria</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">expanded</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref>}&gt;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;header-content&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;icon&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">🔍</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref>&gt;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;title&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Filters</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref>&gt;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#</highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref>}</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;chevron&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">▲</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref>&gt;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{:</highlight><highlight class="keywordflow">else</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;chevron&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">▼</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref>&gt;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/</highlight><highlight class="keywordflow">if</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref>&gt;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>{#</highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1ab80ae4ad61e6d3c8b4283b39eef41cf2" kindref="member">isExpanded</ref>}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-body&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">transition</ref>:<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">slide</ref>={{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">duration</ref>:<sp/>200<sp/>}}&gt;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-grid&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;start-date&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Start</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Date</ref>&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>=</highlight><highlight class="stringliteral">&quot;date&quot;</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;start-date&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a6f9cbae15327aa864fff15a15c096218" kindref="member">startDate</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onchange</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}<sp/>/&gt;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;end-date&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">End</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Date</ref>&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>=</highlight><highlight class="stringliteral">&quot;date&quot;</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;end-date&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a5402432a66cdc01c5e51946e1bb0054c" kindref="member">endDate</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onchange</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}<sp/>/&gt;</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;area-filter&quot;</highlight><highlight class="normal">&gt;<ref refid="outdoor__locations_8ts_1a4023627ab6bfa36227cf344110b100f0" kindref="member">Area</ref>&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#</highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref>}</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;input-with-action&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>=</highlight><highlight class="stringliteral">&quot;text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;area-filter-text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>}<sp/></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">placeholder</ref>=</highlight><highlight class="stringliteral">&quot;Type<sp/>area<sp/>name...&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">oninput</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;flat-left&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/&gt;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref><sp/></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;action-btn<sp/>flat-right&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onclick</ref>={()<sp/>=&gt;<sp/>{<sp/><ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;<sp/><ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>();<sp/>}}</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">title</ref>=</highlight><highlight class="stringliteral">&quot;Back<sp/>to<sp/>list&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">✕</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref>&gt;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{:</highlight><highlight class="keywordflow">else</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;area-filter&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onchange</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a6f965d3f8930274799876af3f8188158" kindref="member">onAreaChange</ref>}&gt;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>=</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">All</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Areas</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a7f3c156f57ee21907dce360ea0a18df0" kindref="member">areas</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">a</ref>}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">a</ref>}&gt;{<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">a</ref>}&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>=</highlight><highlight class="stringliteral">&quot;Other&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Other</ref><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Manual</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Entry</ref>)&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref>&gt;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/</highlight><highlight class="keywordflow">if</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;crag-filter&quot;</highlight><highlight class="normal">&gt;<ref refid="outdoor__locations_8ts_1a54314fa2d9bf23dfb2bb5841eb159d29" kindref="member">Crag</ref>&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#</highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref>}</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;input-with-action&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>=</highlight><highlight class="stringliteral">&quot;text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;crag-filter-text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref>}<sp/></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">placeholder</ref>=</highlight><highlight class="stringliteral">&quot;Type<sp/>crag<sp/>name...&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">oninput</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;flat-left&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/&gt;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref><sp/></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;action-btn<sp/>flat-right&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onclick</ref>={()<sp/>=&gt;<sp/>{<sp/><ref refid="OutdoorClimbFilters_8svelte_1aaf63119b10fdb27c0f013c66c23952c9" kindref="member">isOtherCrag</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;<sp/><ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;<sp/><ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>();<sp/>}}</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">title</ref>=</highlight><highlight class="stringliteral">&quot;Back<sp/>to<sp/>list&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">✕</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref>&gt;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{:</highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>!<ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>&amp;&amp;<sp/><ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>&amp;&amp;<sp/><ref refid="OutdoorClimbFilters_8svelte_1ad4e43817e405aad7147368c9fc77d21d" kindref="member">availableCrags</ref>.length<sp/>&gt;<sp/>0}</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;crag-filter&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onchange</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a40ba34bb9ba6c8758c2c8e8b7108f614" kindref="member">onCragChange</ref>}&gt;</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>=</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">All</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Crags</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1ad4e43817e405aad7147368c9fc77d21d" kindref="member">availableCrags</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">c</ref>}</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">c</ref>}&gt;{<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">c</ref>}&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>=</highlight><highlight class="stringliteral">&quot;Other&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Other</ref><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Manual</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Entry</ref>)&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref>&gt;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{:</highlight><highlight class="keywordflow">else</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/></highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>=</highlight><highlight class="stringliteral">&quot;text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;crag-filter-text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1aef48704401a39bbc461888c128457393" kindref="member">crag</ref>}<sp/></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">placeholder</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref><sp/>?<sp/></highlight><highlight class="stringliteral">&quot;Filter<sp/>crag...&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;Select<sp/>area<sp/>first&quot;</highlight><highlight class="normal">}<sp/></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">oninput</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">disabled</ref>={!<ref refid="OutdoorClimbFilters_8svelte_1aa9758edf12c439e8ef2ce61afe0ed417" kindref="member">isOtherArea</ref><sp/>&amp;&amp;<sp/>!<ref refid="OutdoorClimbFilters_8svelte_1ad8cbd0dca152408aba797668184652be" kindref="member">area</ref>}<sp/></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/&gt;</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/</highlight><highlight class="keywordflow">if</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;climbing-type-filter&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Climb</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Type</ref>&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;climbing-type-filter&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a92a4425520ff78ef897f8e247b572d56" kindref="member">climbingType</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onchange</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}&gt;</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>=</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Any</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Type</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a857a2ce01ff6255b716c9017c9f417ec" kindref="member">climbingTypes</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>}</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>}&gt;{<ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>}&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref>&gt;</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;session-type-filter&quot;</highlight><highlight class="normal">&gt;<ref refid="session_8ts_1a1d7ec2e3d38dd639e46a4548841f9936" kindref="member">Session</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Type</ref>&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;session-type-filter&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1aa137c75e6a6399ce2c0aca3a8404cc79" kindref="member">sessionType</ref>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onchange</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}&gt;</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>=</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Any</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Type</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1aa824f71ca3c48709856e170df157b032" kindref="member">trainingTypes</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>}</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref><sp/><ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>}&gt;{<ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>}&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">option</ref>&gt;</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref>&gt;</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;grade-filter&quot;</highlight><highlight class="normal">&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Grade</ref><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Exact</ref>)&lt;/<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>&gt;</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/></highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>=</highlight><highlight class="stringliteral">&quot;text&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;grade-filter&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="Keypad_8svelte_1aec1cc0f8b4de3ef546ada9f26d5619c4" kindref="member">value</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a254da8aecec04c8773eb8c68dd953e65" kindref="member">grade</ref>}<sp/></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">placeholder</ref>=</highlight><highlight class="stringliteral">&quot;e.g.<sp/>7a&quot;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">oninput</ref>={<ref refid="OutdoorClimbFilters_8svelte_1ac536ae06af10b51fb4624195ced16395" kindref="member">applyFilters</ref>}</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/&gt;</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;filter-actions&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;reset-btn&quot;</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">onclick</ref>={<ref refid="OutdoorClimbFilters_8svelte_1a0fe3ad52004c6bc2cfbee3d04833504e" kindref="member">resetFilters</ref>}&gt;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Reset</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Filters</ref>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">button</ref>&gt;</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/>{/</highlight><highlight class="keywordflow">if</highlight><highlight class="normal">}</highlight></codeline>
+<codeline lineno="233"><highlight class="normal">&lt;/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal">&lt;<ref refid="CompetitionView_8svelte_1a8ba9b58991c02462588258e164fe3f84" kindref="member">style</ref>&gt;</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="CompetitionView_8svelte_1a4f1eaad52169807126a9fdb200b2e486" kindref="member">container</ref><sp/>{</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">white</ref>;</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>12<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">solid</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.2);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">margin</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bottom</ref>:<sp/>1.5rem;</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">overflow</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">hidden</ref>;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">box</ref>-<ref refid="OutdoorClimbFilters_8svelte_1afb2fd8f53f973be6e4f74331d4db64d5" kindref="member">shadow</ref>:<sp/>0<sp/>2<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/>8<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(0,<sp/>0,<sp/>0,<sp/>0.03);</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">header</ref><sp/>{</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>:<sp/>100%;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" kindref="member">items</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">center</ref>;</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">justify</ref>-<ref refid="OutdoorClimbFilters_8svelte_1aa847f2bbc747f47e666a46cb74f30e00" kindref="member">content</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">space</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">between</ref>;</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref><sp/>1.25rem;</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.05);</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">none</ref>;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cursor</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">pointer</ref>;</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">transition</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref><sp/>0.2s<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">ease</ref>;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">header</ref>:<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">hover</ref><sp/>{</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.1);</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/>.header-<ref refid="OutdoorClimbFilters_8svelte_1aa847f2bbc747f47e666a46cb74f30e00" kindref="member">content</ref><sp/>{</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" kindref="member">items</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">center</ref>;</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gap</ref>:<sp/>0.75rem;</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>:<sp/>100%;</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/>.title<sp/>{</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="CompetitionView_8svelte_1a9b9780cce21a0de7f2a4efdab697bc39" kindref="member">weight</ref>:<sp/>600;</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">teal</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">secondary</ref>);</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref>;</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>:<sp/>1;</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref>:<sp/><ref refid="OutdoorClimbFilters_8svelte_1afbc2876d06a758117c788ebdd6e98cc9" kindref="member">left</ref>;</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/>.icon<sp/>{</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>1.1rem;</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"></highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/>.chevron<sp/>{</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">teal</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">secondary</ref>);</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>0.8rem;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">body</ref><sp/>{</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>:<sp/>1.25rem;</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">solid</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.1);</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"></highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">grid</ref><sp/>{</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">grid</ref>;</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">grid</ref>-</highlight><highlight class="keyword">template</highlight><highlight class="normal">-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">columns</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">repeat</ref>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal">-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fill</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">minmax</ref>(200<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>,<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fr</ref>));</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gap</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref>;</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"></highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/>{</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">direction</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">column</ref>;</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gap</ref>:<sp/>0.4rem;</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"></highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/><ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref><sp/>{</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>0.85rem;</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="CompetitionView_8svelte_1a9b9780cce21a0de7f2a4efdab697bc39" kindref="member">weight</ref>:<sp/>500;</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">secondary</ref>);</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"></highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref>,</highlight></codeline>
+<codeline lineno="309" refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref><sp/>{</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>:<sp/>0.5rem<sp/>0.75rem;</highlight></codeline>
+<codeline lineno="311" refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>8<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="312" refid="OutdoorClimbFilters_8svelte_1aeacb8d0dbe6a5616ff396347ab118c3e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">solid</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.3);</highlight></codeline>
+<codeline lineno="313" refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>0.9rem;</highlight></codeline>
+<codeline lineno="314" refid="OutdoorClimbFilters_8svelte_1ab964f221708006f07da9d376a6980fe5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">primary</ref>);</highlight></codeline>
+<codeline lineno="315" refid="OutdoorClimbFilters_8svelte_1a651d3c68e36013af0a9edb66a0406441" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">white</ref>;</highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="317"><highlight class="normal"></highlight></codeline>
+<codeline lineno="318" refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref>:<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">focus</ref>,</highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a6b92918158b269c68468a79303d8f84c" kindref="member">select</ref>:<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">focus</ref><sp/>{</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">outline</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">none</ref>;</highlight></codeline>
+<codeline lineno="321" refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">teal</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">primary</ref>);</highlight></codeline>
+<codeline lineno="322" refid="OutdoorClimbFilters_8svelte_1afb2fd8f53f973be6e4f74331d4db64d5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">box</ref>-<ref refid="OutdoorClimbFilters_8svelte_1afb2fd8f53f973be6e4f74331d4db64d5" kindref="member">shadow</ref>:<sp/>0<sp/>0<sp/>0<sp/>3<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.1);</highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"></highlight></codeline>
+<codeline lineno="325" refid="OutdoorClimbFilters_8svelte_1aab3ee05b5d0b34fb4612855eb007dba8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>.filter-<ref refid="OutdoorClimbFilters_8svelte_1aab3ee05b5d0b34fb4612855eb007dba8" kindref="member">actions</ref><sp/>{</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="327" refid="OutdoorClimbFilters_8svelte_1aa847f2bbc747f47e666a46cb74f30e00" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">justify</ref>-<ref refid="OutdoorClimbFilters_8svelte_1aa847f2bbc747f47e666a46cb74f30e00" kindref="member">content</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">end</ref>;</highlight></codeline>
+<codeline lineno="328" refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">margin</ref>-<ref refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref>;</highlight></codeline>
+<codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>-<ref refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref>;</highlight></codeline>
+<codeline lineno="330"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">dashed</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.2);</highlight></codeline>
+<codeline lineno="331"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="332"><highlight class="normal"></highlight></codeline>
+<codeline lineno="333" refid="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>.reset-<ref refid="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" kindref="member">btn</ref><sp/>{</highlight></codeline>
+<codeline lineno="334"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">none</ref>;</highlight></codeline>
+<codeline lineno="335" refid="OutdoorClimbFilters_8svelte_1ab7acea9d7968eb07f4a76683ce1a4d99" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">none</ref>;</highlight></codeline>
+<codeline lineno="336" refid="OutdoorClimbFilters_8svelte_1a3874a778fe05ca36cd60ff2872850a7f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">secondary</ref>);</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>0.9rem;</highlight></codeline>
+<codeline lineno="338" refid="OutdoorClimbFilters_8svelte_1aeffde751ec4202e0be7a9aba179735c7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cursor</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">pointer</ref>;</highlight></codeline>
+<codeline lineno="339" refid="OutdoorClimbFilters_8svelte_1ad1ba8052b5e15f7bd3093dcb839f840b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ad1ba8052b5e15f7bd3093dcb839f840b" kindref="member">decoration</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">underline</ref>;</highlight></codeline>
+<codeline lineno="340" refid="OutdoorClimbFilters_8svelte_1a0772c152894ab58cc0f9528c0f1c39d5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>:<sp/>0.25rem<sp/>0.5rem;</highlight></codeline>
+<codeline lineno="341"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="342"><highlight class="normal"></highlight></codeline>
+<codeline lineno="343"><highlight class="normal"><sp/><sp/><sp/><sp/>.reset-<ref refid="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" kindref="member">btn</ref>:<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">hover</ref><sp/>{</highlight></codeline>
+<codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">var</ref>(--<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">teal</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">secondary</ref>);</highlight></codeline>
+<codeline lineno="345"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="346"><highlight class="normal"></highlight></codeline>
+<codeline lineno="347" refid="OutdoorClimbFilters_8svelte_1a044ae57de393d3bdfa0c3d59ec5c8094" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>.input-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">with</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a044ae57de393d3bdfa0c3d59ec5c8094" kindref="member">action</ref><sp/>{</highlight></codeline>
+<codeline lineno="348"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="349" refid="OutdoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" kindref="member">items</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">center</ref>;</highlight></codeline>
+<codeline lineno="350" refid="OutdoorClimbFilters_8svelte_1ab6686212f322ffb801a90ae9be1e96b5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>:<sp/>100%;</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="352"><highlight class="normal"></highlight></codeline>
+<codeline lineno="353"><highlight class="normal"><sp/><sp/><sp/><sp/>.input-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">with</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a044ae57de393d3bdfa0c3d59ec5c8094" kindref="member">action</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref><sp/>{</highlight></codeline>
+<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>:<sp/>1;</highlight></codeline>
+<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"></highlight></codeline>
+<codeline lineno="357" refid="OutdoorClimbFilters_8svelte_1afbc2876d06a758117c788ebdd6e98cc9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>.input-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">with</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a044ae57de393d3bdfa0c3d59ec5c8094" kindref="member">action</ref><sp/><ref refid="OutdoorClimbFilters_8svelte_1a2a57b7fe7bdfbb619072da370f189c46" kindref="member">input</ref>.flat-<ref refid="OutdoorClimbFilters_8svelte_1afbc2876d06a758117c788ebdd6e98cc9" kindref="member">left</ref><sp/>{</highlight></codeline>
+<codeline lineno="358"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>0;</highlight></codeline>
+<codeline lineno="359"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bottom</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>0;</highlight></codeline>
+<codeline lineno="360" refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">none</ref>;</highlight></codeline>
+<codeline lineno="361"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"></highlight></codeline>
+<codeline lineno="363"><highlight class="normal"><sp/><sp/><sp/><sp/>.action-<ref refid="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" kindref="member">btn</ref><sp/>{</highlight></codeline>
+<codeline lineno="364"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>:<sp/>0.5rem<sp/>0.8rem;</highlight></codeline>
+<codeline lineno="365" refid="OutdoorClimbFilters_8svelte_1a1d80d3058b4c8d5876f2e2fca433335b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/>#<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">f8f9fa</ref>;</highlight></codeline>
+<codeline lineno="366" refid="OutdoorClimbFilters_8svelte_1a17a814dc5d5c68839f8bc32ab5f75b84" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">solid</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.3);</highlight></codeline>
+<codeline lineno="367"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/>#666;</highlight></codeline>
+<codeline lineno="368" refid="OutdoorClimbFilters_8svelte_1add44e5c12e292c09be1f6a04d19de543" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cursor</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">pointer</ref>;</highlight></codeline>
+<codeline lineno="369"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>0.9rem;</highlight></codeline>
+<codeline lineno="370"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="371"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="372"><highlight class="normal"><sp/><sp/><sp/><sp/>.action-<ref refid="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" kindref="member">btn</ref>:<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">hover</ref><sp/>{</highlight></codeline>
+<codeline lineno="373"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">background</ref>:<sp/>#<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">eee</ref>;</highlight></codeline>
+<codeline lineno="374" refid="OutdoorClimbFilters_8svelte_1abbdd5374b823e6d8dc0a0663727b8c6b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="OutdoorClimbFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/>#333;</highlight></codeline>
+<codeline lineno="375"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="376"><highlight class="normal"></highlight></codeline>
+<codeline lineno="377"><highlight class="normal"><sp/><sp/><sp/><sp/>.action-<ref refid="OutdoorClimbFilters_8svelte_1a69861dedb5ffea75e5c235cb88d807f6" kindref="member">btn</ref>.flat-<ref refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref><sp/>{</highlight></codeline>
+<codeline lineno="378"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1abbe5f8a14ab05571adc66f8f068776c8" kindref="member">top</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>8<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="379"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bottom</ref>-<ref refid="OutdoorClimbFilters_8svelte_1ac381e168109e3898e169acd48b4b21dd" kindref="member">right</ref>-<ref refid="OutdoorClimbFilters_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>8<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="380"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="OutdoorClimbFilters_8svelte_1afbc2876d06a758117c788ebdd6e98cc9" kindref="member">left</ref>:<sp/>1<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">solid</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rgba</ref>(74,<sp/>155,<sp/>155,<sp/>0.3);</highlight></codeline>
+<codeline lineno="381"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="382"><highlight class="normal">&lt;/<ref refid="CompetitionView_8svelte_1a8ba9b58991c02462588258e164fe3f84" kindref="member">style</ref>&gt;</highlight></codeline>
+    </programlisting>
+    <location file="src/lib/components/views/outdoor/OutdoorClimbFilters.svelte"/>
+  </compounddef>
+</doxygen>

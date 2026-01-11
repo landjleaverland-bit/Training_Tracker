@@ -38,3 +38,14 @@
 ## Authentication Implementation
  * Frontend: src/lib/api.ts -> reads localStorage -> sets x-api-key header.
  * Backend: function.go -> compares r.Header.Get("x-api-key") vs os.Getenv("APP_SECRET_PASSWORD").
+
+## Using Generated Documentation
+
+For all implementation tasks, you MUST consult the generated documentation digest at `webapp-main/docs/llm_context.md`.
+
+This file contains the most up-to-date information about:
+- Component props and usage
+- Service API signatures and types
+- Data structures and constants
+
+Always check this file before making assumptions about existing code or interfaces.

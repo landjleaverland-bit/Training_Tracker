@@ -143,3 +143,6 @@ EXTRA_SEARCH_MAPPINGS  =
 
 # LaTeX related configuration options
 GENERATE_LATEX         = NO
+# XML related configuration options
+GENERATE_XML           = YES
+XML_OUTPUT             = xml

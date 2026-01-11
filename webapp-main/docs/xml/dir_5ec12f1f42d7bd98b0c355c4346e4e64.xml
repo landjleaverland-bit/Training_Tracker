@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_5ec12f1f42d7bd98b0c355c4346e4e64" kind="dir">
+    <compoundname>src/lib/components/views/outdoor</compoundname>
+    <innerfile refid="OutdoorClimbCard_8svelte">OutdoorClimbCard.svelte</innerfile>
+    <innerfile refid="OutdoorClimbEntry_8svelte">OutdoorClimbEntry.svelte</innerfile>
+    <innerfile refid="OutdoorClimbFilters_8svelte">OutdoorClimbFilters.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/views/outdoor/"/>
+  </compounddef>
+</doxygen>

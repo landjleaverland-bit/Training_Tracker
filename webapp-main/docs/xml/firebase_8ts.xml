@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="firebase_8ts" kind="file" language="JavaScript">
+    <compoundname>firebase.ts</compoundname>
+    <includes local="no">initializeApp</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>src/lib/services/firebase.ts</label>
+        <link refid="firebase_8ts"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>initializeApp</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const app</definition>
+        <argsstring></argsstring>
+        <name>app</name>
+        <initializer>= !<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getApps</ref>().<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">length</ref> ? <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">initializeApp</ref>(<ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref>) : <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getApp</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/services/firebase.ts" line="12" column="7" bodyfile="src/lib/services/firebase.ts" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="firebase_8ts_1a4a785497072ed7feaa10dc21f1795341" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>export const db</definition>
+        <argsstring></argsstring>
+        <name>db</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">initializeFirestore</ref>(<ref refid="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" kindref="member">app</ref>, {
+    <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">localCache:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">persistentLocalCache</ref>({
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">tabManager:</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">persistentMultipleTabManager</ref>()
+    })
+}, &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">climbing</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">tracker</ref>-db&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/services/firebase.ts" line="14" column="14" bodyfile="src/lib/services/firebase.ts" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="firebase_8ts_1ab735783ec1f49c1b8740f4dba3dfbfd0" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>export const auth</definition>
+        <argsstring></argsstring>
+        <name>auth</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getAuth</ref>(<ref refid="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" kindref="member">app</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/services/firebase.ts" line="19" column="14" bodyfile="src/lib/services/firebase.ts" bodystart="19" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="firebase_8ts_1a5a9803ff4a252085ddefe36bc2dfc19d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>if</definition>
+        <argsstring>(!firebaseConfig||!firebaseConfig.apiKey)</argsstring>
+        <name>if</name>
+        <param>
+          <type>!<ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref>||!firebaseConfig.</type>
+          <declname>apiKey</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/services/firebase.ts" line="8" column="1" bodyfile="src/lib/services/firebase.ts" bodystart="8" bodyend="10"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">initializeApp</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getApps</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getApp</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;firebase/app&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">initializeFirestore</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">persistentLocalCache</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">persistentMultipleTabManager</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;firebase/firestore&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getAuth</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;firebase/auth&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;./firebaseConfig&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Validate<sp/>config</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="firebase_8ts_1a5a9803ff4a252085ddefe36bc2dfc19d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref><sp/>||<sp/>!<ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref>.apiKey)<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Error</ref>(</highlight><highlight class="stringliteral">&apos;Firebase<sp/>config<sp/>is<sp/>missing<sp/>or<sp/>invalid.<sp/>Please<sp/>check<sp/>src/lib/services/firebaseConfig.ts&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" kindref="member">app</ref><sp/>=<sp/>!<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getApps</ref>().length<sp/>?<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">initializeApp</ref>(<ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref>)<sp/>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getApp</ref>();</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="firebase_8ts_1a4a785497072ed7feaa10dc21f1795341" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="firebase_8ts_1a4a785497072ed7feaa10dc21f1795341" kindref="member">db</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">initializeFirestore</ref>(<ref refid="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" kindref="member">app</ref>,<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">localCache</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">persistentLocalCache</ref>({</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">tabManager</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">persistentMultipleTabManager</ref>()</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>})</highlight></codeline>
+<codeline lineno="18"><highlight class="normal">},<sp/></highlight><highlight class="stringliteral">&apos;climbing-tracker-db&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="19" refid="firebase_8ts_1ab735783ec1f49c1b8740f4dba3dfbfd0" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="firebase_8ts_1ab735783ec1f49c1b8740f4dba3dfbfd0" kindref="member">auth</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">getAuth</ref>(<ref refid="firebase_8ts_1a61cd714f583f5ea8c02710a85ef32b9c" kindref="member">app</ref>);</highlight></codeline>
+    </programlisting>
+    <location file="src/lib/services/firebase.ts"/>
+  </compounddef>
+</doxygen>

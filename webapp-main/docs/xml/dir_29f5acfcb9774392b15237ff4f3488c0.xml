@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_29f5acfcb9774392b15237ff4f3488c0" kind="dir">
+    <compoundname>src/routes</compoundname>
+    <innerdir refid="dir_e1fbc891c9588d30b0c8c9058627996a">src/routes/log</innerdir>
+    <innerdir refid="dir_054db621203cc0418f851839c4133756">src/routes/plot</innerdir>
+    <innerdir refid="dir_6103b46104e1ba4a8af0d724f99f818b">src/routes/view</innerdir>
+    <innerfile refid="_09layout_8svelte">+layout.svelte</innerfile>
+    <innerfile refid="_09layout_8ts">+layout.ts</innerfile>
+    <innerfile refid="_09page_8svelte">+page.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/routes/"/>
+  </compounddef>
+</doxygen>

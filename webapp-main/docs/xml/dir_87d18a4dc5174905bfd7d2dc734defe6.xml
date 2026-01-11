@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_87d18a4dc5174905bfd7d2dc734defe6" kind="dir">
+    <compoundname>src/lib/utils</compoundname>
+    <innerfile refid="audio_8ts">audio.ts</innerfile>
+    <innerfile refid="export_8ts">export.ts</innerfile>
+    <innerfile refid="stats_8ts">stats.ts</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/utils/"/>
+  </compounddef>
+</doxygen>

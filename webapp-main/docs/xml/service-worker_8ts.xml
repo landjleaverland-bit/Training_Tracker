@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="service-worker_8ts" kind="file" language="JavaScript">
+    <compoundname>service-worker.ts</compoundname>
+    <includes local="no">build</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>src/service-worker.ts</label>
+        <link refid="service-worker_8ts"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>build</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="service-worker_8ts_1ab5e3ff56e48ffcdd5de92788cb1fa81f" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const CACHE</definition>
+        <argsstring></argsstring>
+        <name>CACHE</name>
+        <initializer>= `<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>-${<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">version</ref>}`</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>&lt;reference types=&quot;@sveltejs/kit&quot; &gt; &lt;reference lib=&quot;webworker&quot; &gt; </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/service-worker.ts" line="7" column="7" bodyfile="src/service-worker.ts" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="variable" id="service-worker_8ts_1aba1c6053d895523ed7595423b282755b" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const ASSETS</definition>
+        <argsstring></argsstring>
+        <name>ASSETS</name>
+        <initializer>= [
+    ...<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">build</ref>, 
+    ...<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">files</ref>  
+]</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/service-worker.ts" line="9" column="7" bodyfile="src/service-worker.ts" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const sw</definition>
+        <argsstring></argsstring>
+        <name>sw</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">self</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">unknown</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">ServiceWorkerGlobalScope</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/service-worker.ts" line="14" column="7" bodyfile="src/service-worker.ts" bodystart="14" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">build</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">files</ref>,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">version</ref><sp/>}<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;$service-worker&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Create<sp/>a<sp/>unique<sp/>cache<sp/>name<sp/>for<sp/>this<sp/>deployment</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="service-worker_8ts_1ab5e3ff56e48ffcdd5de92788cb1fa81f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="service-worker_8ts_1ab5e3ff56e48ffcdd5de92788cb1fa81f" kindref="member">CACHE</ref><sp/>=<sp/>`<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$</ref>{<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">version</ref>}`;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="service-worker_8ts_1aba1c6053d895523ed7595423b282755b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="service-worker_8ts_1aba1c6053d895523ed7595423b282755b" kindref="member">ASSETS</ref><sp/>=<sp/>[</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>...build,<sp/></highlight><highlight class="comment">//<sp/>the<sp/>app<sp/>itself</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>...files<sp/><sp/></highlight><highlight class="comment">//<sp/>everything<sp/>in<sp/>`static`</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal">];</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" kindref="member">sw</ref><sp/>=<sp/></highlight><highlight class="keyword">self</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">unknown</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">ServiceWorkerGlobalScope</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><ref refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" kindref="member">sw</ref>.addEventListener(</highlight><highlight class="stringliteral">&apos;install&apos;</highlight><highlight class="normal">,<sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">ExtendableEvent</ref>)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Create<sp/>a<sp/>new<sp/>cache<sp/>and<sp/>add<sp/>all<sp/>files<sp/>to<sp/>it</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">async</ref><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">addFilesToCache</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">caches</ref>.open(<ref refid="service-worker_8ts_1ab5e3ff56e48ffcdd5de92788cb1fa81f" kindref="member">CACHE</ref>);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>.addAll(<ref refid="service-worker_8ts_1aba1c6053d895523ed7595423b282755b" kindref="member">ASSETS</ref>);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">event</highlight><highlight class="normal">.waitUntil(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">addFilesToCache</ref>());</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" kindref="member">sw</ref>.skipWaiting();</highlight></codeline>
+<codeline lineno="25"><highlight class="normal">});</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><ref refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" kindref="member">sw</ref>.addEventListener(</highlight><highlight class="stringliteral">&apos;activate&apos;</highlight><highlight class="normal">,<sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">ExtendableEvent</ref>)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Remove<sp/>previous<sp/>caches</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">async</ref><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">deleteOldCaches</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">key</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">of</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">caches</ref>.keys())<sp/>{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">key</ref><sp/>!==<sp/><ref refid="service-worker_8ts_1ab5e3ff56e48ffcdd5de92788cb1fa81f" kindref="member">CACHE</ref>)<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">caches</ref>.delete(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">key</ref>);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">event</highlight><highlight class="normal">.waitUntil(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">deleteOldCaches</ref>());</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" kindref="member">sw</ref>.clients.claim();</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">});</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><ref refid="service-worker_8ts_1a5b76f0df1af0b9e93107e3ed0a0b976a" kindref="member">sw</ref>.addEventListener(</highlight><highlight class="stringliteral">&apos;fetch&apos;</highlight><highlight class="normal">,<sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">FetchEvent</ref>)<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ignore<sp/>POST<sp/>requests<sp/>etc</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.method<sp/>!==<sp/></highlight><highlight class="stringliteral">&apos;GET&apos;</highlight><highlight class="normal">)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">url</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">URL</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.url);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Ignore<sp/>non-http<sp/>protocols<sp/>(like<sp/>chrome-extension://)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">url</ref>.protocol.startsWith(</highlight><highlight class="stringliteral">&apos;http&apos;</highlight><highlight class="normal">))<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Skip<sp/>Firebase/Firestore<sp/>API<sp/>calls<sp/>-<sp/>always<sp/>go<sp/>to<sp/>network</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.url.includes(</highlight><highlight class="stringliteral">&apos;firestore.googleapis.com&apos;</highlight><highlight class="normal">)<sp/>||</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.url.includes(</highlight><highlight class="stringliteral">&apos;firebase&apos;</highlight><highlight class="normal">)<sp/>||</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.url.includes(</highlight><highlight class="stringliteral">&apos;googleapis.com&apos;</highlight><highlight class="normal">))<sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">async</ref><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">respond</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">url</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">URL</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.url);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">caches</ref>.open(<ref refid="service-worker_8ts_1ab5e3ff56e48ffcdd5de92788cb1fa81f" kindref="member">CACHE</ref>);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Serve<sp/>build<sp/>assets<sp/>from<sp/>the<sp/>cache</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="service-worker_8ts_1aba1c6053d895523ed7595423b282755b" kindref="member">ASSETS</ref>.includes(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">url</ref>.pathname))<sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>.match(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref>;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>For<sp/>everything<sp/>else,<sp/>try<sp/>the<sp/>network<sp/>first,<sp/>but</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>fall<sp/>back<sp/>to<sp/>the<sp/>cache<sp/>if<sp/>we&apos;re<sp/>offline</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fetch</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref>.status<sp/>===<sp/>200)<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>.put(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref>.clone());</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">response</ref>;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cachedResponse</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>.match(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cachedResponse</ref>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cachedResponse</ref>;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Fallback<sp/>for<sp/>navigation<sp/>requests</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">event</ref>.request.mode<sp/>===<sp/></highlight><highlight class="stringliteral">&apos;navigate&apos;</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Try<sp/>multiple<sp/>fallbacks<sp/>for<sp/>the<sp/>SPA<sp/>entry<sp/>point</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallbackUrls</ref><sp/>=<sp/>[</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;/Training_Tracker/&apos;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;/Training_Tracker/index.html&apos;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="charliteral">&apos;/&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>];</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallback</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">of</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallbackUrls</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallbackResponse</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">await</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">cache</ref>.match(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallback</ref>);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallbackResponse</ref>)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fallbackResponse</ref>;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Return<sp/>a<sp/>fallback<sp/>response<sp/>to<sp/>prevent<sp/>&quot;Failed<sp/>to<sp/>convert<sp/>value<sp/>to<sp/>&apos;Response&apos;&quot;<sp/>error</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Response</ref>(</highlight><highlight class="stringliteral">&apos;Offline&apos;</highlight><highlight class="normal">,<sp/>{<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">status</ref>:<sp/>404,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">statusText</ref>:<sp/></highlight><highlight class="stringliteral">&apos;Offline&apos;</highlight><highlight class="normal"><sp/>});</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">event</highlight><highlight class="normal">.respondWith(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">respond</ref>());</highlight></codeline>
+<codeline lineno="100"><highlight class="normal">});</highlight></codeline>
+    </programlisting>
+    <location file="src/service-worker.ts"/>
+  </compounddef>
+</doxygen>

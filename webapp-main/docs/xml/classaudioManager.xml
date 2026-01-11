@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="classaudioManager" kind="class" language="JavaScript" prot="public">
+    <compoundname>audioManager</compoundname>
+    <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="classaudioManager_1a08d8924e6c8f037d821e75a0b1286dc0" prot="private" static="yes" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">static</ref></type>
+        <definition>audioManager::audioContext</definition>
+        <argsstring></argsstring>
+        <name>audioContext</name>
+        <qualifiedname>audioManager::audioContext</qualifiedname>
+        <bitfield> AudioContext | null = null</bitfield>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="10" column="20" bodyfile="src/lib/utils/audio.ts" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classaudioManager_1ab555df146475120cd892308654ea9766" prot="private" static="yes" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">static</ref></type>
+        <definition>audioManager::gainNode</definition>
+        <argsstring></argsstring>
+        <name>gainNode</name>
+        <qualifiedname>audioManager::gainNode</qualifiedname>
+        <bitfield> GainNode | null = null</bitfield>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="11" column="20" bodyfile="src/lib/utils/audio.ts" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classaudioManager_1a10a825c8ff8f1d6bfe0978a406853c8c" prot="private" static="yes" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">static</ref></type>
+        <definition>audioManager::isInitialized</definition>
+        <argsstring></argsstring>
+        <name>isInitialized</name>
+        <qualifiedname>audioManager::isInitialized</qualifiedname>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">false</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="12" column="20" bodyfile="src/lib/utils/audio.ts" bodystart="12" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classaudioManager_1a53ebeb1a6c54889cf4d42c0a20ab2fa1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">static</ref></type>
+        <definition>static audioManager::init</definition>
+        <argsstring>()</argsstring>
+        <name>init</name>
+        <qualifiedname>audioManager::init</qualifiedname>
+        <briefdescription>
+<para>Initialize AudioContext on first user interaction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Browsers often block AudioContext until a user gesture occurs. This method ensures the context is created and ready. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="20" column="12" bodyfile="src/lib/utils/audio.ts" bodystart="20" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="classaudioManager_1a3a7ab4e92c2b6bed38ee722d536fb6a8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">async</ref></type>
+        <definition>static async audioManager::playChime</definition>
+        <argsstring>()</argsstring>
+        <name>playChime</name>
+        <qualifiedname>audioManager::playChime</qualifiedname>
+        <briefdescription>
+<para>Plays a pleasant chime sound. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Uses a synthesized sound to avoid external asset dependencies and ensure snappy loading. Generates a primary sine wave tone (A5) and a triangle harmonic (A6) with decay.</para>
+<para>@async </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="44" column="18" bodyfile="src/lib/utils/audio.ts" bodystart="44" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="classaudioManager_1afee518d092dfd7dc175210374ce16eb7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">static</ref></type>
+        <definition>static audioManager::vibrate</definition>
+        <argsstring>(pattern:number|number[]=200)</argsstring>
+        <name>vibrate</name>
+        <qualifiedname>audioManager::vibrate</qualifiedname>
+        <param>
+          <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">pattern:number</ref>|</type>
+          <declname>number</declname>
+          <array>[]</array>
+          <defval>200</defval>
+        </param>
+        <briefdescription>
+<para>Triggers device vibration. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Wrapper around navigator.vibrate.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pattern</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vibrate pattern in ms (single number or array). Default is 200ms. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="96" column="12" bodyfile="src/lib/utils/audio.ts" bodystart="96" bodyend="100"/>
+      </memberdef>
+      <memberdef kind="function" id="classaudioManager_1a7e4e7c5af38f1cfe20beab575c08ff17" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">async</ref></type>
+        <definition>static async audioManager::playCompletionAlert</definition>
+        <argsstring>()</argsstring>
+        <name>playCompletionAlert</name>
+        <qualifiedname>audioManager::playCompletionAlert</qualifiedname>
+        <briefdescription>
+<para>Plays the completion alert (Sound + Haptics). </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Triggers a double pulse vibration and plays the chime. @async </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="108" column="18" bodyfile="src/lib/utils/audio.ts" bodystart="108" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="classaudioManager_1a0e38214706e91235b09b0e5bfeb41d0a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">async</ref></type>
+        <definition>static async audioManager::playTick</definition>
+        <argsstring>()</argsstring>
+        <name>playTick</name>
+        <qualifiedname>audioManager::playTick</qualifiedname>
+        <briefdescription>
+<para>Plays a subtle tick/warning sound. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Used for countdowns (e.g., 3-2-1). Uses a short, high-frequency blip. @async </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/audio.ts" line="122" column="18" bodyfile="src/lib/utils/audio.ts" bodystart="122" bodyend="147"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/utils/audio.ts" line="9" column="7" bodyfile="src/lib/utils/audio.ts" bodystart="9" bodyend="148"/>
+    <listofallmembers>
+      <member refid="classaudioManager_1a08d8924e6c8f037d821e75a0b1286dc0" prot="private" virt="non-virtual"><scope>audioManager</scope><name>audioContext</name></member>
+      <member refid="classaudioManager_1ab555df146475120cd892308654ea9766" prot="private" virt="non-virtual"><scope>audioManager</scope><name>gainNode</name></member>
+      <member refid="classaudioManager_1a53ebeb1a6c54889cf4d42c0a20ab2fa1" prot="public" virt="non-virtual"><scope>audioManager</scope><name>init</name></member>
+      <member refid="classaudioManager_1a10a825c8ff8f1d6bfe0978a406853c8c" prot="private" virt="non-virtual"><scope>audioManager</scope><name>isInitialized</name></member>
+      <member refid="classaudioManager_1a3a7ab4e92c2b6bed38ee722d536fb6a8" prot="public" virt="non-virtual"><scope>audioManager</scope><name>playChime</name></member>
+      <member refid="classaudioManager_1a7e4e7c5af38f1cfe20beab575c08ff17" prot="public" virt="non-virtual"><scope>audioManager</scope><name>playCompletionAlert</name></member>
+      <member refid="classaudioManager_1a0e38214706e91235b09b0e5bfeb41d0a" prot="public" virt="non-virtual"><scope>audioManager</scope><name>playTick</name></member>
+      <member refid="classaudioManager_1afee518d092dfd7dc175210374ce16eb7" prot="public" virt="non-virtual"><scope>audioManager</scope><name>vibrate</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

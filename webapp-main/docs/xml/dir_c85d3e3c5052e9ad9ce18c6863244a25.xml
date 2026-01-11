@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_c85d3e3c5052e9ad9ce18c6863244a25" kind="dir">
+    <compoundname>src/lib</compoundname>
+    <innerdir refid="dir_d651933de2b6a4a55f1ba9edd1e2a68d">src/lib/components</innerdir>
+    <innerdir refid="dir_868a85b1ada935d5cbde51d7e297cf7d">src/lib/data</innerdir>
+    <innerdir refid="dir_73b92ad99cfcdd6febf72afc9ff307cd">src/lib/services</innerdir>
+    <innerdir refid="dir_73c6b08ffb4b3a4458bd32030ed4bd42">src/lib/types</innerdir>
+    <innerdir refid="dir_87d18a4dc5174905bfd7d2dc734defe6">src/lib/utils</innerdir>
+    <innerfile refid="index_8ts">index.ts</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/"/>
+  </compounddef>
+</doxygen>

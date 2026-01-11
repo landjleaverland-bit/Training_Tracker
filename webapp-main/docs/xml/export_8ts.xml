@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="export_8ts" kind="file" language="JavaScript">
+    <compoundname>export.ts</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="export_8ts_1a98fce97231aeed091a76ea8b55d164f8" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const blob</definition>
+        <argsstring></argsstring>
+        <name>blob</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">new</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Blob</ref>([<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">csvContent</ref>], { <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">type:</ref> &apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>/<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">csv</ref>;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">charset</ref>=<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">utf</ref>-8;&apos; })</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/export.ts" line="56" column="11" bodyfile="src/lib/utils/export.ts" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>const link</definition>
+        <argsstring></argsstring>
+        <name>link</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">document.createElement</ref>(&apos;<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">a</ref>&apos;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/export.ts" line="57" column="11" bodyfile="src/lib/utils/export.ts" bodystart="57" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="export_8ts_1a5ac1a302bd7de99c4260c64957ee06d8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">function</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref></type>
+        <definition>function export downloadCSV</definition>
+        <argsstring>(data:any[], filename:string)</argsstring>
+        <name>downloadCSV</name>
+        <param>
+          <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data:any</ref></type>
+          <defname>data:any</defname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filename:string</ref></type>
+          <defname>filename:string</defname>
+        </param>
+        <briefdescription>
+<para>Converts data to CSV and triggers a download. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Array of objects to export. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>filename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Desired filename for the download. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/export.ts" line="15" column="17" bodyfile="src/lib/utils/export.ts" bodystart="15" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="export_8ts_1a9a18980c95ddde59b7c6b0ff0e3905cb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>if</definition>
+        <argsstring>(link.download !==undefined)</argsstring>
+        <name>if</name>
+        <param>
+          <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">link.download</ref> !</type>
+          <defname>link.download !</defname>
+          <defval>=<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">undefined</ref></defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/utils/export.ts" line="58" column="5" bodyfile="src/lib/utils/export.ts" bodystart="58" bodyend="66"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Utility for exporting data to CSV. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Provides functionality to transform arrays of objects into CSV format and trigger a browser download. </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="15" refid="export_8ts_1a5ac1a302bd7de99c4260c64957ee06d8" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">function</highlight><highlight class="normal"><sp/><ref refid="export_8ts_1a5ac1a302bd7de99c4260c64957ee06d8" kindref="member">downloadCSV</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">any</ref>[],<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filename</ref>:<sp/><ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref><sp/>||<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>.length<sp/>===<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">alert</ref>(</highlight><highlight class="stringliteral">&quot;No<sp/>data<sp/>to<sp/>export&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>all<sp/>unique<sp/>keys<sp/>from<sp/>all<sp/>objects<sp/>(in<sp/>case<sp/>of<sp/>optional<sp/>fields)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">headers</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Array</ref>.from(</highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Set</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>.flatMap(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Object</ref>.keys)));</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Create<sp/>CSV<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">csvContent</ref><sp/>=<sp/>[</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">headers</ref>.join(</highlight><highlight class="charliteral">&apos;,&apos;</highlight><highlight class="normal">),<sp/></highlight><highlight class="comment">//<sp/>Header<sp/>row</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>...data.map(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">row</ref><sp/>=&gt;<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">headers</ref>.map(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">header</ref><sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>let<sp/>val<sp/>=<sp/>row[header];</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Handle<sp/>null/undefined</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(val<sp/>===<sp/>null<sp/>||<sp/>val<sp/>===<sp/>undefined)<sp/>return<sp/></highlight><highlight class="stringliteral">&apos;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Handle<sp/>arrays/objects</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>val<sp/>===<sp/></highlight><highlight class="stringliteral">&apos;object&apos;</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>If<sp/>it&apos;s<sp/>a<sp/>date<sp/>object,<sp/>format<sp/>it</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(val<sp/>instanceof<sp/>Date)<sp/>return<sp/>val.toISOString();</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Otherwise<sp/>stringify,<sp/>but<sp/>escape<sp/>double<sp/>quotes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>val<sp/>=<sp/>JSON.stringify(val).replace(/</highlight><highlight class="stringliteral">&quot;/g,<sp/>&apos;&quot;</highlight><highlight class="stringliteral">&quot;&apos;);</highlight></codeline>
+<codeline lineno="40"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>Escape<sp/>strings<sp/>containing<sp/>commas<sp/>or<sp/>quotes</highlight></codeline>
+<codeline lineno="42"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(typeof<sp/>val<sp/>===<sp/>&apos;string&apos;)<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>val<sp/>=<sp/>val.replace(/&quot;</highlight><highlight class="normal">/g,<sp/></highlight><highlight class="stringliteral">&apos;&quot;&quot;&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Wrap<sp/>in<sp/>quotes<sp/>if<sp/>it<sp/>contains<sp/>comma,<sp/>quote<sp/>or<sp/>newline,<sp/>or<sp/>is<sp/>an<sp/>object<sp/>string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">typeof</ref><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">val</ref><sp/>===<sp/></highlight><highlight class="stringliteral">&apos;string&apos;</highlight><highlight class="normal"><sp/>&amp;&amp;<sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">val</ref>.includes(</highlight><highlight class="charliteral">&apos;,&apos;</highlight><highlight class="normal">)<sp/>||<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">val</ref>.includes(</highlight><highlight class="charliteral">&apos;&quot;&apos;</highlight><highlight class="normal">)<sp/>||<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">val</ref>.includes(</highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal">)))<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>`</highlight><highlight class="stringliteral">&quot;${val}&quot;</highlight><highlight class="normal">`;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">val</ref>;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}).<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">join</ref>(</highlight><highlight class="charliteral">&apos;,&apos;</highlight><highlight class="normal">))</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>].<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">join</ref>(</highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Create<sp/>blob<sp/>and<sp/>download<sp/>link</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="export_8ts_1a98fce97231aeed091a76ea8b55d164f8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="export_8ts_1a98fce97231aeed091a76ea8b55d164f8" kindref="member">blob</ref><sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Blob</ref>([<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">csvContent</ref>],<sp/>{<sp/><ref refid="CompetitionForm_8svelte_1a2807c8a03bea7dd9d4118326348f457e" kindref="member">type</ref>:<sp/></highlight><highlight class="stringliteral">&apos;text/csv;charset=utf-8;&apos;</highlight><highlight class="normal"><sp/>});</highlight></codeline>
+<codeline lineno="57" refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">document</ref>.createElement(</highlight><highlight class="charliteral">&apos;a&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="58" refid="export_8ts_1a9a18980c95ddde59b7c6b0ff0e3905cb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>.download<sp/>!==<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">undefined</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">url</ref><sp/>=<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">URL</ref>.createObjectURL(<ref refid="export_8ts_1a98fce97231aeed091a76ea8b55d164f8" kindref="member">blob</ref>);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>.setAttribute(</highlight><highlight class="stringliteral">&apos;href&apos;</highlight><highlight class="normal">,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">url</ref>);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>.setAttribute(</highlight><highlight class="stringliteral">&apos;download&apos;</highlight><highlight class="normal">,<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filename</ref>.endsWith(</highlight><highlight class="stringliteral">&apos;.csv&apos;</highlight><highlight class="normal">)<sp/>?<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filename</ref><sp/>:<sp/>`<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$</ref>{<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">filename</ref>}.csv`);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>.style.visibility<sp/>=<sp/></highlight><highlight class="stringliteral">&apos;hidden&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">document</ref>.body.appendChild(<ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>.click();</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">document</ref>.body.removeChild(<ref refid="export_8ts_1ade58c3c25d35a292a73d7ca6fdfe5387" kindref="member">link</ref>);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/lib/utils/export.ts"/>
+  </compounddef>
+</doxygen>

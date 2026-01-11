@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_d651933de2b6a4a55f1ba9edd1e2a68d" kind="dir">
+    <compoundname>src/lib/components</compoundname>
+    <innerdir refid="dir_3a876e367d541b9476390f4e04059c19">src/lib/components/common</innerdir>
+    <innerdir refid="dir_9882d8ae75389091d766c1fcc6cf6012">src/lib/components/forms</innerdir>
+    <innerdir refid="dir_a6b0b5b439df86326c255bf8a928b4de">src/lib/components/views</innerdir>
+    <innerfile refid="BarChart_8svelte">BarChart.svelte</innerfile>
+    <innerfile refid="LineChart_8svelte">LineChart.svelte</innerfile>
+    <innerfile refid="Login_8svelte">Login.svelte</innerfile>
+    <innerfile refid="PieChart_8svelte">PieChart.svelte</innerfile>
+    <innerfile refid="StackedBarChart_8svelte">StackedBarChart.svelte</innerfile>
+    <innerfile refid="TabBar_8svelte">TabBar.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/"/>
+  </compounddef>
+</doxygen>

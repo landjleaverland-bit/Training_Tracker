@@ -63,6 +63,20 @@
                 "reveal": "always",
                 "panel": "dedicated"
             }
+        },
+        {
+            "label": "Generate Documentation",
+            "type": "shell",
+            "command": "doxygen Doxyfile && node scripts/generate_llm_docs.js",
+            "options": {
+                "cwd": "${workspaceFolder}/webapp-main"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Generates Doxygen XML and converts it to LLM-friendly Markdown digest."
         }
     ]
 }

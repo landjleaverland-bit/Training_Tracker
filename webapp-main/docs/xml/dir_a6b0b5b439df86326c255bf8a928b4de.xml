@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_a6b0b5b439df86326c255bf8a928b4de" kind="dir">
+    <compoundname>src/lib/components/views</compoundname>
+    <innerdir refid="dir_467498b7eea2f369586830cadc619a19">src/lib/components/views/competition</innerdir>
+    <innerdir refid="dir_399e750a4a7c29cb7322feaefa7d0194">src/lib/components/views/fingerboarding</innerdir>
+    <innerdir refid="dir_daf352cc4c9ad0d8f6a099a3c56def86">src/lib/components/views/gym</innerdir>
+    <innerdir refid="dir_47219f75777f5814837e1d1f378ab9cd">src/lib/components/views/indoor</innerdir>
+    <innerdir refid="dir_5ec12f1f42d7bd98b0c355c4346e4e64">src/lib/components/views/outdoor</innerdir>
+    <innerfile refid="CompetitionView_8svelte">CompetitionView.svelte</innerfile>
+    <innerfile refid="FingerboardingView_8svelte">FingerboardingView.svelte</innerfile>
+    <innerfile refid="GymSessionView_8svelte">GymSessionView.svelte</innerfile>
+    <innerfile refid="IndoorClimbView_8svelte">IndoorClimbView.svelte</innerfile>
+    <innerfile refid="OutdoorClimbView_8svelte">OutdoorClimbView.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/views/"/>
+  </compounddef>
+</doxygen>

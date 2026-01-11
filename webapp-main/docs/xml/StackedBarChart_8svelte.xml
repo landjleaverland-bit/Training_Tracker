@@ -1,0 +1,578 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="StackedBarChart_8svelte" kind="file" language="JavaScript">
+    <compoundname>StackedBarChart.svelte</compoundname>
+    <includes local="no">as</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>src/lib/components/StackedBarChart.svelte</label>
+        <link refid="StackedBarChart_8svelte"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>as</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1ac19907e2a211da490bf5999037262d92" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref></type>
+        <definition>xAccessor __pad0__</definition>
+        <argsstring></argsstring>
+        <name>__pad0__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Accessor for the category (X-axis) value. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="14" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1ad40ed8bc96e03cf4df05912cf9ec19d2" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref></type>
+        <definition>keys __pad1__</definition>
+        <argsstring></argsstring>
+        <name>__pad1__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Array of keys to stack (e.g., [&apos;flash&apos;, &apos;redpoint&apos;]). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="16" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1ae14b48b7b427937cbbe11162ed9e72be" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">colors</ref></type>
+        <definition>colors __pad2__</definition>
+        <argsstring></argsstring>
+        <name>__pad2__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Array of colors corresponding to the keys. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="18" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a2e21da69a7b1b0a3d8c1e5274fe43dea" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">labels</ref></type>
+        <definition>labels __pad3__</definition>
+        <argsstring></argsstring>
+        <name>__pad3__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Optional labels for the legend if different from keys. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="20" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a8ea1683bb73566c69247773867cd973d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref></type>
+        <definition>width __pad4__</definition>
+        <argsstring></argsstring>
+        <name>__pad4__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="21" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1af704f374e051d84037482cc1da2df714" prot="public" static="no" mutable="no">
+        <type><ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref></type>
+        <definition>height __pad5__</definition>
+        <argsstring></argsstring>
+        <name>__pad5__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="22" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a53712ee78c20063dec77ef3536a1a0f2" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginTop</ref></type>
+        <definition>marginTop __pad6__</definition>
+        <argsstring></argsstring>
+        <name>__pad6__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="23" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a6bebf4b5129ece327033fe9a4d4f514d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginRight</ref></type>
+        <definition>marginRight __pad7__</definition>
+        <argsstring></argsstring>
+        <name>__pad7__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="24" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a0bfeefb855576b641cf37bac8abea508" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginBottom</ref></type>
+        <definition>marginBottom __pad8__</definition>
+        <argsstring></argsstring>
+        <name>__pad8__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="25" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a0fe5deb02295a27edd3110c727b0f965" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginLeft</ref></type>
+        <definition>marginLeft __pad9__</definition>
+        <argsstring></argsstring>
+        <name>__pad9__</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="26" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>let</definition>
+        <argsstring></argsstring>
+        <name>let</name>
+        <initializer>{
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref>,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>,
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">colors</ref>,
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">labels</ref>,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref> = 640,
+		<ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref> = 400,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginTop</ref> = 20,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginRight</ref> = 20,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginBottom</ref> = 60,
+		<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginLeft</ref> = 40,
+	}: <ref refid="CompetitionCard_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" kindref="member">Props</ref> = $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">props</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="29" column="1" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="29" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a2ec88fd0b39fceab73ff2d1aa1cfc8f7" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let legendLabels</definition>
+        <argsstring></argsstring>
+        <name>legendLabels</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">labels</ref> || <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys.map</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref> =&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k.charAt</ref>(0).<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">toUpperCase</ref>() + <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k.slice</ref>(1)))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="44" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1aab731bd53f9075d0f35fac618e530ec3" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let containerWidth</definition>
+        <argsstring></argsstring>
+        <name>containerWidth</name>
+        <initializer>= $<ref refid="CompetitionView_8svelte_1ad571e50aabaf6930e5c8061ffb6f9145" kindref="member">state</ref>(0)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="46" column="5" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let resolvedWidth</definition>
+        <argsstring></argsstring>
+        <name>resolvedWidth</name>
+        <initializer>= $derived(<ref refid="BarChart_8svelte_1aab731bd53f9075d0f35fac618e530ec3" kindref="member">containerWidth</ref> || width)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="47" column="5" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let innerWidth</definition>
+        <argsstring></argsstring>
+        <name>innerWidth</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref> - <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginLeft</ref> - <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginRight</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="49" column="5" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1af1685c8fe1efb99942249b7f6670878d" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let innerHeight</definition>
+        <argsstring></argsstring>
+        <name>innerHeight</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref> - <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginTop</ref> - <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginBottom</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="50" column="5" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a6467e9bda0101885064f3ff303a3ad52" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let fontSize</definition>
+        <argsstring></argsstring>
+        <name>fontSize</name>
+        <initializer>= 12</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="51" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a8ff794e2a44d2cd364448e180646af99" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let xScale</definition>
+        <argsstring></argsstring>
+        <name>xScale</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3.scaleBand</ref>()
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data.map</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref>))
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">range</ref>([0, <ref refid="BarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" kindref="member">innerWidth</ref>])
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">padding</ref>(0.2)
+    )</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="54" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a6cc32df09c0c8c6f5a20c02af0c9788f" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let yMax</definition>
+        <argsstring></argsstring>
+        <name>yMax</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived.by</ref>(() =&gt; {
+        <ref refid="auth_8ts_1ac7933242658dd4629eb3c1c4581a514d" kindref="member">if</ref> (<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data.length</ref> === 0) <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">return</ref> 0;
+        
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">maxVal</ref> = <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3.max</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>, <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref> =&gt; {
+            <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">return</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys.reduce</ref>((<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">acc</ref>, <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref>) =&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">acc</ref> + (<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>[<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref>] || 0), 0);
+        });
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">return</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">maxVal</ref> || 10;
+    })</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="61" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a6b2b33a13af36f46a46961257ec85216" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let yScale</definition>
+        <argsstring></argsstring>
+        <name>yScale</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3.scaleLinear</ref>()
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>([0, <ref refid="StackedBarChart_8svelte_1a6cc32df09c0c8c6f5a20c02af0c9788f" kindref="member">yMax</ref>])
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">range</ref>([<ref refid="BarChart_8svelte_1af1685c8fe1efb99942249b7f6670878d" kindref="member">innerHeight</ref>, 0])
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">nice</ref>()
+    )</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="70" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1afa2f3b2f22c3b670989fc8f96e1a2671" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let colorScale</definition>
+        <argsstring></argsstring>
+        <name>colorScale</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3.scaleOrdinal</ref>&lt;<ref refid="IndoorClimbEntry_8svelte_1ac2d6def5709c4c7f89d18e27a9512de8" kindref="member">string</ref>&gt;()
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>)
+        .<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">range</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">colors</ref>)
+    )</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="76" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a14425c2969756bbb6d5f95150f8a1dc7" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let stackedData</definition>
+        <argsstring></argsstring>
+        <name>stackedData</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3.stack</ref>().<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>)(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">any</ref>))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="82" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a43289268e6b09fe8a9e885b3d1d6291f" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let xTicks</definition>
+        <argsstring></argsstring>
+        <name>xTicks</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived.by</ref>(() =&gt; {
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref> = <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xScale.domain</ref>();
+        <ref refid="auth_8ts_1ac7933242658dd4629eb3c1c4581a514d" kindref="member">if</ref> (<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref> &lt; 500 &amp;&amp; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain.length</ref> &gt; 0) {
+            <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">step</ref> = <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Math.ceil</ref>(30 / (<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref> / <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain.length</ref>)); 
+            <ref refid="auth_8ts_1ac7933242658dd4629eb3c1c4581a514d" kindref="member">if</ref> (<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">step</ref> &gt; 1) {
+                <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">return</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain.filter</ref>((<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">_</ref>, <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">i</ref>) =&gt; <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">i</ref> % <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">step</ref> === 0);
+            }
+        }
+        <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">return</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>;
+    })</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="84" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="StackedBarChart_8svelte_1a11e0cef3b56d6c874af918bf26e76361" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref></type>
+        <definition>let yTicks</definition>
+        <argsstring></argsstring>
+        <name>yTicks</name>
+        <initializer>= $<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">derived</ref>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">yScale.ticks</ref>(5))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/components/StackedBarChart.svelte" line="95" column="9" bodyfile="src/lib/components/StackedBarChart.svelte" bodystart="95" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>@component @description A responsive Stacked Bar Chart component using D3.js. visualizing distributions across categories (e.g., attempt types per grade). </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal">&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">lang</ref>=</highlight><highlight class="stringliteral">&quot;ts&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">from</ref><sp/></highlight><highlight class="stringliteral">&apos;d3&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="CompetitionCard_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" kindref="member">Props</ref><sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">any</ref>[];</highlight></codeline>
+<codeline lineno="14" refid="StackedBarChart_8svelte_1ac19907e2a211da490bf5999037262d92" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref>:<sp/>(<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">any</ref>)<sp/>=&gt;<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="16" refid="StackedBarChart_8svelte_1ad40ed8bc96e03cf4df05912cf9ec19d2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="18" refid="StackedBarChart_8svelte_1ae14b48b7b427937cbbe11162ed9e72be" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">colors</ref>:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="20" refid="StackedBarChart_8svelte_1a2e21da69a7b1b0a3d8c1e5274fe43dea" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">labels</ref>?:<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal">[];</highlight></codeline>
+<codeline lineno="21" refid="StackedBarChart_8svelte_1a8ea1683bb73566c69247773867cd973d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="22" refid="StackedBarChart_8svelte_1af704f374e051d84037482cc1da2df714" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="23" refid="StackedBarChart_8svelte_1a53712ee78c20063dec77ef3536a1a0f2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginTop</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="24" refid="StackedBarChart_8svelte_1a6bebf4b5129ece327033fe9a4d4f514d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginRight</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="25" refid="StackedBarChart_8svelte_1a0bfeefb855576b641cf37bac8abea508" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginBottom</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="26" refid="StackedBarChart_8svelte_1a0fe5deb02295a27edd3110c727b0f965" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginLeft</ref>?:<sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref>,</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">colors</ref>,</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">labels</ref>,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref><sp/>=<sp/>640,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref><sp/>=<sp/>400,</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginTop</ref><sp/>=<sp/>20,</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginRight</ref><sp/>=<sp/>20,</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginBottom</ref><sp/>=<sp/>60,</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginLeft</ref><sp/>=<sp/>40,</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>}:<sp/><ref refid="CompetitionCard_8svelte_1a8c971d067f1ad0ddcd8fe9f93f06ed27" kindref="member">Props</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$props</ref>();</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Use<sp/>keys<sp/>as<sp/>labels<sp/>if<sp/>no<sp/>explicit<sp/>labels<sp/>provided</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="StackedBarChart_8svelte_1a2ec88fd0b39fceab73ff2d1aa1cfc8f7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a2ec88fd0b39fceab73ff2d1aa1cfc8f7" kindref="member">legendLabels</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">labels</ref><sp/>||<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>.map(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref><sp/>=&gt;<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref>.charAt(0).toUpperCase()<sp/>+<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref>.slice(1)));</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="StackedBarChart_8svelte_1aab731bd53f9075d0f35fac618e530ec3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1aab731bd53f9075d0f35fac618e530ec3" kindref="member">containerWidth</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$state</ref>(0);</highlight></codeline>
+<codeline lineno="47" refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1aab731bd53f9075d0f35fac618e530ec3" kindref="member">containerWidth</ref><sp/>||<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="StackedBarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" kindref="member">innerWidth</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref><sp/>-<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginLeft</ref><sp/>-<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginRight</ref>);</highlight></codeline>
+<codeline lineno="50" refid="StackedBarChart_8svelte_1af1685c8fe1efb99942249b7f6670878d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1af1685c8fe1efb99942249b7f6670878d" kindref="member">innerHeight</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref><sp/>-<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginTop</ref><sp/>-<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">marginBottom</ref>);</highlight></codeline>
+<codeline lineno="51" refid="StackedBarChart_8svelte_1a6467e9bda0101885064f3ff303a3ad52" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a6467e9bda0101885064f3ff303a3ad52" kindref="member">fontSize</ref><sp/>=<sp/>12;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Scales</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="StackedBarChart_8svelte_1a8ff794e2a44d2cd364448e180646af99" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a8ff794e2a44d2cd364448e180646af99" kindref="member">xScale</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3</ref>.scaleBand()</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.domain(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>.map(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref>))</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.range([0,<sp/><ref refid="StackedBarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" kindref="member">innerWidth</ref>])</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.padding(0.2)</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Calculate<sp/>max<sp/>Y<sp/>for<sp/>stack</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="StackedBarChart_8svelte_1a6cc32df09c0c8c6f5a20c02af0c9788f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a6cc32df09c0c8c6f5a20c02af0c9788f" kindref="member">yMax</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>.by(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>.length<sp/>===<sp/>0)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Sum<sp/>of<sp/>all<sp/>keys<sp/>for<sp/>each<sp/>item</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">maxVal</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3</ref>.max(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref>,<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref><sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>.reduce((<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">acc</ref>,<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref>)<sp/>=&gt;<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">acc</ref><sp/>+<sp/>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>[<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">k</ref>]<sp/>||<sp/>0),<sp/>0);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">maxVal</ref><sp/>||<sp/>10;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="StackedBarChart_8svelte_1a6b2b33a13af36f46a46961257ec85216" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a6b2b33a13af36f46a46961257ec85216" kindref="member">yScale</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3</ref>.scaleLinear()</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.domain([0,<sp/><ref refid="StackedBarChart_8svelte_1a6cc32df09c0c8c6f5a20c02af0c9788f" kindref="member">yMax</ref>])</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.range([<ref refid="StackedBarChart_8svelte_1af1685c8fe1efb99942249b7f6670878d" kindref="member">innerHeight</ref>,<sp/>0])</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.nice()</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76" refid="StackedBarChart_8svelte_1afa2f3b2f22c3b670989fc8f96e1a2671" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1afa2f3b2f22c3b670989fc8f96e1a2671" kindref="member">colorScale</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3</ref>.scaleOrdinal&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;()</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.domain(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>)</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>.range(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">colors</ref>)</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Compute<sp/>stack</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82" refid="StackedBarChart_8svelte_1a14425c2969756bbb6d5f95150f8a1dc7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a14425c2969756bbb6d5f95150f8a1dc7" kindref="member">stackedData</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d3</ref>.stack().keys(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref>)(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">data</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">any</ref>));</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84" refid="StackedBarChart_8svelte_1a43289268e6b09fe8a9e885b3d1d6291f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a43289268e6b09fe8a9e885b3d1d6291f" kindref="member">xTicks</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>.by(()<sp/>=&gt;<sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1a8ff794e2a44d2cd364448e180646af99" kindref="member">xScale</ref>.domain();</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth &lt; 500 &amp;&amp; domain.length &gt;</ref><sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">step</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Math</ref>.ceil(30<sp/>/<sp/>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref><sp/>/<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>.length));<sp/></highlight><highlight class="comment">//<sp/>Ensure<sp/>30px<sp/>per<sp/>tick</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">step</ref><sp/>&gt;<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>.filter((<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">_</ref>,<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">i</ref>)<sp/>=&gt;<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">i</ref><sp/>%<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">step</ref><sp/>===<sp/>0);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">domain</ref>;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>});</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95" refid="StackedBarChart_8svelte_1a11e0cef3b56d6c874af918bf26e76361" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1a4caa6b0893b478bf6c54b5ef3e8fe20f" kindref="member">let</ref><sp/><ref refid="StackedBarChart_8svelte_1a11e0cef3b56d6c874af918bf26e76361" kindref="member">yTicks</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">$derived</ref>(<ref refid="StackedBarChart_8svelte_1a6b2b33a13af36f46a46961257ec85216" kindref="member">yScale</ref>.ticks(5));</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal">&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">script</ref>&gt;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal">&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;chart-container&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">role</ref>=</highlight><highlight class="stringliteral">&quot;img&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">aria</ref>-<ref refid="Keypad_8svelte_1a2bb60cdd93fc4266c879467e7bbd0624" kindref="member">label</ref>=</highlight><highlight class="stringliteral">&quot;Stacked<sp/>Bar<sp/>chart&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bind</ref>:<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">clientWidth</ref>={<ref refid="StackedBarChart_8svelte_1aab731bd53f9075d0f35fac618e530ec3" kindref="member">containerWidth</ref>}&gt;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;!--<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Legend</ref><sp/>--&gt;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;legend&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">keys</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">key</ref>,<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">i</ref>}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;legend-item&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;legend-color&quot;</highlight><highlight class="normal"><sp/><ref refid="CompetitionView_8svelte_1a8ba9b58991c02462588258e164fe3f84" kindref="member">style</ref>=</highlight><highlight class="stringliteral">&quot;background-color:<sp/>{colors[i]};&quot;</highlight><highlight class="normal">&gt;&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">=</highlight><highlight class="stringliteral">&quot;legend-label&quot;</highlight><highlight class="normal">&gt;{<ref refid="StackedBarChart_8svelte_1a2ec88fd0b39fceab73ff2d1aa1cfc8f7" kindref="member">legendLabels</ref>[<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">i</ref>]}&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">span</ref>&gt;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">svg</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>={<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">resolvedWidth</ref>}<sp/>{<ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref>}<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">viewBox</ref>=</highlight><highlight class="stringliteral">&quot;0<sp/>0<sp/>{resolvedWidth}<sp/>{height}&quot;</highlight><highlight class="normal"><sp/><ref refid="CompetitionView_8svelte_1a8ba9b58991c02462588258e164fe3f84" kindref="member">style</ref>=</highlight><highlight class="stringliteral">&quot;max-width:<sp/>100%;<sp/>height:<sp/>auto;&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">transform</ref>=</highlight><highlight class="stringliteral">&quot;translate({marginLeft},<sp/>{marginTop})&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;!--<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">X</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Axis</ref><sp/>--&gt;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">transform</ref>=</highlight><highlight class="stringliteral">&quot;translate(0,<sp/>{innerHeight})&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">line</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">x1</ref>=</highlight><highlight class="stringliteral">&quot;0&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">x2</ref>={<ref refid="StackedBarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" kindref="member">innerWidth</ref>}<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">stroke</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/>/&gt;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="StackedBarChart_8svelte_1a43289268e6b09fe8a9e885b3d1d6291f" kindref="member">xTicks</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="RestTimer_8svelte_1aad91e8f9d99fbeee732ceee64ceffe97" kindref="member">tick</ref>}</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">transform</ref>=</highlight><highlight class="stringliteral">&quot;translate({(xScale(tick)<sp/>||<sp/>0)<sp/>+<sp/>xScale.bandwidth()<sp/>/<sp/>2},<sp/>0)&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">line</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">y2</ref>=</highlight><highlight class="stringliteral">&quot;6&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">stroke</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/>/&gt;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">dy</ref>=</highlight><highlight class="stringliteral">&quot;0.71em&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">y</ref>=</highlight><highlight class="stringliteral">&quot;9&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">anchor</ref>=</highlight><highlight class="stringliteral">&quot;middle&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fill</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="GymSessionFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>={<ref refid="StackedBarChart_8svelte_1a6467e9bda0101885064f3ff303a3ad52" kindref="member">fontSize</ref>}&gt;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="RestTimer_8svelte_1aad91e8f9d99fbeee732ceee64ceffe97" kindref="member">tick</ref>}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>&gt;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref>&gt;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref>&gt;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;!--<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Y</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Axis</ref><sp/>--&gt;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref>&gt;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">line</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">y2</ref>={<ref refid="StackedBarChart_8svelte_1af1685c8fe1efb99942249b7f6670878d" kindref="member">innerHeight</ref>}<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">stroke</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/>/&gt;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="StackedBarChart_8svelte_1a11e0cef3b56d6c874af918bf26e76361" kindref="member">yTicks</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="RestTimer_8svelte_1aad91e8f9d99fbeee732ceee64ceffe97" kindref="member">tick</ref>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">transform</ref>=</highlight><highlight class="stringliteral">&quot;translate(0,<sp/>{yScale(tick)})&quot;</highlight><highlight class="normal">&gt;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">line</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">x2</ref>=</highlight><highlight class="stringliteral">&quot;-6&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">stroke</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/>/&gt;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">x</ref>=</highlight><highlight class="stringliteral">&quot;-9&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">dy</ref>=</highlight><highlight class="stringliteral">&quot;0.32em&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">anchor</ref>=</highlight><highlight class="stringliteral">&quot;end&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fill</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="GymSessionFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>={<ref refid="StackedBarChart_8svelte_1a6467e9bda0101885064f3ff303a3ad52" kindref="member">fontSize</ref>}&gt;</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="RestTimer_8svelte_1aad91e8f9d99fbeee732ceee64ceffe97" kindref="member">tick</ref>}</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">text</ref>&gt;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">line</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">x2</ref>={<ref refid="StackedBarChart_8svelte_1a82db314369031ea00e16c5e39ddc277d" kindref="member">innerWidth</ref>}<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">stroke</ref>=</highlight><highlight class="stringliteral">&quot;currentColor&quot;</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">stroke</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">opacity</ref>=</highlight><highlight class="stringliteral">&quot;0.1&quot;</highlight><highlight class="normal"><sp/>/&gt;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref>&gt;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref>&gt;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;!--<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">Bars</ref><sp/>--&gt;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="StackedBarChart_8svelte_1a14425c2969756bbb6d5f95150f8a1dc7" kindref="member">stackedData</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">layer</ref>}</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{#<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">layer</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">as</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;!--<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>[0]<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">is</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">baseline</ref>,<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>[1]<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">is</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">topline</ref>,<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>.data<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">is</ref><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">original</ref><sp/></highlight><highlight class="keywordtype">object</highlight><highlight class="normal"><sp/>--&gt;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{@</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xVal</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xAccessor</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>.data)}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{@</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xPos</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1a8ff794e2a44d2cd364448e180646af99" kindref="member">xScale</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xVal</ref>)<sp/>||<sp/>0}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{@</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">yTop</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1a6b2b33a13af36f46a46961257ec85216" kindref="member">yScale</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>[1])}</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{@</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">yBottom</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1a6b2b33a13af36f46a46961257ec85216" kindref="member">yScale</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">d</ref>[0])}</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{@</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">barHeight</ref><sp/>=<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">yBottom</ref><sp/>-<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">yTop</ref>}</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rect</ref></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">x</ref>={<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">xPos</ref>}</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">y</ref>={<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">yTop</ref>}</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>={<ref refid="StackedBarChart_8svelte_1a8ff794e2a44d2cd364448e180646af99" kindref="member">xScale</ref>.bandwidth()}</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref>={<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">barHeight</ref>}</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">fill</ref>={<ref refid="StackedBarChart_8svelte_1afa2f3b2f22c3b670989fc8f96e1a2671" kindref="member">colorScale</ref>(<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">layer</ref>.key)}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rx</ref>=</highlight><highlight class="stringliteral">&quot;1&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/&gt;</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">each</ref>}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">g</ref>&gt;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">svg</ref>&gt;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal">&lt;/<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">div</ref>&gt;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal">&lt;<ref refid="CompetitionView_8svelte_1a8ba9b58991c02462588258e164fe3f84" kindref="member">style</ref>&gt;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>.chart-<ref refid="CompetitionView_8svelte_1a4f1eaad52169807126a9fdb200b2e486" kindref="member">container</ref><sp/>{</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">family</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">sans</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">serif</ref>;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">direction</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">column</ref>;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref>-<ref refid="IndoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" kindref="member">items</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">center</ref>;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/>.legend<sp/>{</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">wrap</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">wrap</ref>;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gap</ref>:<sp/>1<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">rem</ref>;</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">margin</ref>-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">bottom</ref>:<sp/>0.5rem;</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">justify</ref>-<ref refid="CompetitionView_8svelte_1aa847f2bbc747f47e666a46cb74f30e00" kindref="member">content</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">center</ref>;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>.legend-<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">item</ref><sp/>{</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">display</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">flex</ref>;</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">align</ref>-<ref refid="IndoorClimbFilters_8svelte_1ad9a75ea1e4ddd55bedaed405270a215b" kindref="member">items</ref>:<sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">center</ref>;</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">gap</ref>:<sp/>0.25rem;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">font</ref>-<ref refid="GymSessionFilters_8svelte_1ae20d3ca2acbfbfe24798ca800435f9f1" kindref="member">size</ref>:<sp/>0.85rem;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="GymSessionFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref>:<sp/>#555;</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/>.legend-<ref refid="GymSessionFilters_8svelte_1aee0174667653000761904b9bea00878d" kindref="member">color</ref><sp/>{</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">width</ref>:<sp/>12<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="_09page_8svelte_1a02f9c12d8a38862426b6ee7cb12d7a63" kindref="member">height</ref>:<sp/>12<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">border</ref>-<ref refid="PieChart_8svelte_1a2989c832320185e8d7750c179c0f1a17" kindref="member">radius</ref>:<sp/>2<ref refid="StackedBarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">px</ref>;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="192"><highlight class="normal">&lt;/<ref refid="CompetitionView_8svelte_1a8ba9b58991c02462588258e164fe3f84" kindref="member">style</ref>&gt;</highlight></codeline>
+    </programlisting>
+    <location file="src/lib/components/StackedBarChart.svelte"/>
+  </compounddef>
+</doxygen>

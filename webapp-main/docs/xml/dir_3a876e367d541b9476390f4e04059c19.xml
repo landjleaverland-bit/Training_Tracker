@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_3a876e367d541b9476390f4e04059c19" kind="dir">
+    <compoundname>src/lib/components/common</compoundname>
+    <innerfile refid="DeleteConfirmModal_8svelte">DeleteConfirmModal.svelte</innerfile>
+    <innerfile refid="DeleteDataModal_8svelte">DeleteDataModal.svelte</innerfile>
+    <innerfile refid="EditSessionModal_8svelte">EditSessionModal.svelte</innerfile>
+    <innerfile refid="IconLegend_8svelte">IconLegend.svelte</innerfile>
+    <innerfile refid="MultiSelect_8svelte">MultiSelect.svelte</innerfile>
+    <innerfile refid="ReloadPrompt_8svelte">ReloadPrompt.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/lib/components/common/"/>
+  </compounddef>
+</doxygen>

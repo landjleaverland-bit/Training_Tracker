@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="_09layout_8ts" kind="file" language="JavaScript">
+    <compoundname>+layout.ts</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="_09layout_8ts_1aebbfa9cf2a713e244087bd2872cb6beb" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>export const prerender</definition>
+        <argsstring></argsstring>
+        <name>prerender</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">true</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/routes/+layout.ts" line="1" column="14" bodyfile="src/routes/+layout.ts" bodystart="1" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="_09layout_8ts_1a11e880fa57a1e59dcbb1999ecdfa605c" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>export const ssr</definition>
+        <argsstring></argsstring>
+        <name>ssr</name>
+        <initializer>= <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">false</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/routes/+layout.ts" line="2" column="14" bodyfile="src/routes/+layout.ts" bodystart="2" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="_09layout_8ts_1aebbfa9cf2a713e244087bd2872cb6beb" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="_09layout_8ts_1aebbfa9cf2a713e244087bd2872cb6beb" kindref="member">prerender</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="2" refid="_09layout_8ts_1a11e880fa57a1e59dcbb1999ecdfa605c" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="_09layout_8ts_1a11e880fa57a1e59dcbb1999ecdfa605c" kindref="member">ssr</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+    </programlisting>
+    <location file="src/routes/+layout.ts"/>
+  </compounddef>
+</doxygen>

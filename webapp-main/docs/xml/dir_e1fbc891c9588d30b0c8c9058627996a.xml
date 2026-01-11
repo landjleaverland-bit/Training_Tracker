@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_e1fbc891c9588d30b0c8c9058627996a" kind="dir">
+    <compoundname>src/routes/log</compoundname>
+    <innerfile refid="log_2_09page_8svelte">+page.svelte</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/routes/log/"/>
+  </compounddef>
+</doxygen>

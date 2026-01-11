@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="firebaseConfig_8ts" kind="file" language="JavaScript">
+    <compoundname>firebaseConfig.ts</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" prot="public" static="no" mutable="no">
+        <type><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref> <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">const</ref></type>
+        <definition>export const firebaseConfig</definition>
+        <argsstring></argsstring>
+        <name>firebaseConfig</name>
+        <initializer>= {
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">apiKey:</ref> &quot;AIzaSyCafK98LY5K0UlDsTGUhEIQTR2cDLImolo&quot;,
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">authDomain:</ref> &quot;training-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">plan</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">database.firebaseapp.com&quot;</ref>,
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">projectId:</ref> &quot;training-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">plan</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">database&quot;</ref>,
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">storageBucket:</ref> &quot;training-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">plan</ref>-<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">database.firebasestorage.app&quot;</ref>,
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">messagingSenderId:</ref> &quot;825153765638&quot;,
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">appId:</ref> &quot;1:825153765638:web:1550a992d019ae09a21e87&quot;,
+  <ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">measurementId:</ref> &quot;G-5<ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">EWMTE7BDF&quot;</ref>
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/lib/services/firebaseConfig.ts" line="1" column="14" bodyfile="src/lib/services/firebaseConfig.ts" bodystart="1" bodyend="9"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1" refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" refkind="member"><highlight class="normal"><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">export</ref><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="firebaseConfig_8ts_1a1d5563f0dccf4e070961cbfd315d87d6" kindref="member">firebaseConfig</ref><sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">apiKey</ref>:<sp/></highlight><highlight class="stringliteral">&quot;AIzaSyCafK98LY5K0UlDsTGUhEIQTR2cDLImolo&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">authDomain</ref>:<sp/></highlight><highlight class="stringliteral">&quot;training-plan-database.firebaseapp.com&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">projectId</ref>:<sp/></highlight><highlight class="stringliteral">&quot;training-plan-database&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">storageBucket</ref>:<sp/></highlight><highlight class="stringliteral">&quot;training-plan-database.firebasestorage.app&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">messagingSenderId</ref>:<sp/></highlight><highlight class="stringliteral">&quot;825153765638&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">appId</ref>:<sp/></highlight><highlight class="stringliteral">&quot;1:825153765638:web:1550a992d019ae09a21e87&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><ref refid="BarChart_8svelte_1adebbefa0aa87c8b6fbde9115d3c2a220" kindref="member">measurementId</ref>:<sp/></highlight><highlight class="stringliteral">&quot;G-5EWMTE7BDF&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal">};</highlight></codeline>
+    </programlisting>
+    <location file="src/lib/services/firebaseConfig.ts"/>
+  </compounddef>
+</doxygen>
