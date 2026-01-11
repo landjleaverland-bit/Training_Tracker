@@ -17,7 +17,7 @@ EXTRACT_PACKAGE        = YES
 EXTRACT_STATIC         = YES
 EXTRACT_LOCAL_CLASSES  = YES
 EXTRACT_LOCAL_METHODS  = YES
-EXTRACT_ANON_NSPACES   = YES
+EXTRACT_ANON_NSPACES   = NO
 resolve_titles         = YES
 HIDE_UNDOC_MEMBERS     = NO
 HIDE_UNDOC_CLASSES     = NO
@@ -45,8 +45,7 @@ GENERATE_DEPRECATEDLIST= YES
 INPUT                  = src
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.ts \
-                         *.svelte \
-                         *.js
+                         *.svelte
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
