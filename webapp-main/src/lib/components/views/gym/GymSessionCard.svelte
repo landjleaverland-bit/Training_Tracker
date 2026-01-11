@@ -196,6 +196,13 @@
 				</div>
 			{/if}
 
+            {#if session.notes}
+                <div class="notes-info">
+                    <span class="label">Notes:</span>
+                    <p class="notes-text">{session.notes}</p>
+                </div>
+            {/if}
+
 			<div class="exercises-list">
 				{#each Object.entries(groupedExercises) as [category, subcategories]}
 					<div class="category-group">
@@ -456,7 +463,7 @@
 		padding: 1.25rem;
 	}
 
-	.bw-info {
+	.bw-info, .notes-info {
 		font-size: 0.9rem;
 		color: var(--text-secondary);
 		margin-bottom: 1.25rem;
@@ -467,7 +474,20 @@
 		border-radius: 20px;
 	}
 
-	.bw-info .label {
+    .notes-info {
+        display: block; /* Notes take full width */
+        font-style: normal;
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+    
+    .notes-text {
+        margin: 0.25rem 0 0 0;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+    }
+
+	.bw-info .label, .notes-info .label {
 		font-weight: 600;
 		font-style: normal;
 	}

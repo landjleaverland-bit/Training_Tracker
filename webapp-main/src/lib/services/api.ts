@@ -526,6 +526,7 @@ export interface GymSessionPayload {
     name: string;
     bodyweight?: number;
     trainingBlock?: 'Strength' | 'Power' | 'Power Endurance' | 'Muscular Endurance';
+    notes?: string;
     exercises: Array<{
         id: string;
         name: string;

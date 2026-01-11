@@ -663,6 +663,20 @@
 		</div>
 	</div>
 
+    <!-- Session Notes Section -->
+    <div class="notes-section">
+        <div class="form-group">
+            <label for="session-notes">Session Notes</label>
+            <textarea 
+                id="session-notes" 
+                bind:value={notes} 
+                class="session-notes-area"
+                placeholder="How did the session feel? Key takeaways..."
+                rows="3"
+            ></textarea>
+        </div>
+    </div>
+
 
 
 	<!-- Submit Button -->
