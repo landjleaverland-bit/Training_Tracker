@@ -1,1 +1,0 @@
-(function(){"use strict";let e=null;self.addEventListener("message",l=>{const{action:t,interval:a}=l.data;t==="START"?(e&&clearInterval(e),e=setInterval(()=>{self.postMessage({type:"TICK"})},a||100)):t==="STOP"&&e&&(clearInterval(e),e=null)})})();
