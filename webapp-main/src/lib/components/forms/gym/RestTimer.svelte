@@ -123,20 +123,20 @@
         }
     }
 
-    function updateNotification() {
+    function updateNotification(shouldVibrate = false) {
         const status = phase === 'WORK' ? 'Work' : 'Rest';
         const setInfo = `[Set ${currentSet}/${configSets}]`;
         const label = remaining < 0 ? 'Overtime' : 'Remaining';
         const text = `${label}: ${formatTime(Math.abs(remaining))}`;
         
+        // Limit to 2 actions to avoid displacement by browser "Unsubscribe" button
         const actions: NotificationAction[] = [
             { action: 'pause', title: '⏸ Pause' },
-            { action: 'extend-10', title: '⏱ +10s' },
             { action: 'finish-session', title: '🏁 Finish' }
         ];
 
         if (remaining >= 0) {
-            sendNotification(`${status} Timer ${setInfo}`, text, actions, false);
+            sendNotification(`${status} Timer ${setInfo}`, text, actions, shouldVibrate);
         } else {
              if (allowOvertime && overtimeTriggered) {
                  // Overtime specific
@@ -285,13 +285,19 @@
         startPhase(configWork);
     }
 
-    function startPhase(duration: number) {
+    function startPhase(duration: number, vibrate = false) {
         runningState = 'RUNNING';
         remaining = duration;
         endTimestamp = Date.now() + (duration * 1000);
         overtimeTriggered = false;
         saveState();
         audioManager.playChime(); // Beep on start
+
+        // Consolidate notification update: Vibrate if requested, otherwise silent update if hidden
+        if (document.hidden) {
+            updateNotification(vibrate);
+            lastNotifiedRemaining = remaining;
+        }
     }
 
     function pause() {
@@ -351,14 +357,14 @@
                 clearState();
             } else {
                 phase = 'REST';
-                startPhase(configRest);
-                sendNotification("Work Complete", `Resting for ${configRest}s`);
+                // Trigger consolidated notification with vibration
+                startPhase(configRest, true);
             }
         } else if (phase === 'REST') {
             currentSet++;
             phase = 'WORK';
-            startPhase(configWork);
-            sendNotification("Rest Complete", `Starting Set ${currentSet}/${configSets}`);
+            // Trigger consolidated notification with vibration
+            startPhase(configWork, true);
         }
     }
 
