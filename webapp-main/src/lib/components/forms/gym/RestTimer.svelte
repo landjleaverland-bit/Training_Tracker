@@ -61,6 +61,8 @@
     let pausedTimeRemaining = $state<number | null>(null);
     let overtimeTriggered = $state(false);
     let lastNotifiedRemaining = $state<number | null>(null);
+    let swRegistration: ServiceWorkerRegistration | null = null;
+    let swMessageHandler: ((event: MessageEvent) => void) | null = null;
     
     // Derived for UI
     let progress = $state(0);
@@ -92,11 +94,16 @@
         
         // Listen for SW messages
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('message', (event) => {
+            navigator.serviceWorker.ready.then(reg => {
+                swRegistration = reg;
+            });
+
+            swMessageHandler = (event: MessageEvent) => {
                 if (event.data && event.data.type === 'TIMER_ACTION') {
                     handleTimerAction(event.data.action);
                 }
-            });
+            };
+            navigator.serviceWorker.addEventListener('message', swMessageHandler);
         }
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -104,6 +111,9 @@
         return () => {
             clearInterval(timerInterval);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
+            if ('serviceWorker' in navigator && swMessageHandler) {
+                navigator.serviceWorker.removeEventListener('message', swMessageHandler);
+            }
         };
     });
 
@@ -115,23 +125,24 @@
 
     function updateNotification() {
         const status = phase === 'WORK' ? 'Work' : 'Rest';
+        const setInfo = `[Set ${currentSet}/${configSets}]`;
         const label = remaining < 0 ? 'Overtime' : 'Remaining';
         const text = `${label}: ${formatTime(Math.abs(remaining))}`;
         
-        // Don't show "Next Set" actions while running, only when finished/overtime
-        // Unless we are in overtime? logic below handles overtime separately
+        const actions: NotificationAction[] = [
+            { action: 'pause', title: '⏸ Pause' },
+            { action: 'extend-10', title: '⏱ +10s' },
+            { action: 'finish-session', title: '🏁 Finish' }
+        ];
+
         if (remaining >= 0) {
-            sendNotification(`${status} Timer`, text, [], false);
+            sendNotification(`${status} Timer ${setInfo}`, text, actions, false);
         } else {
-             // In overtime, we want to keep the actions if possible, or re-send them?
-             // Overtime logic in tick handles the detailed notification.
-             // Here we simple update time if needed.
-             // But re-sending without actions clears them. 
-             // Let's defer overtime updates to the specific overtime block in tick.
              if (allowOvertime && overtimeTriggered) {
+                 // Overtime specific
                  sendNotification("Interval Finished", `Overtime: ${formatTime(Math.abs(remaining))}`, [
-                     { action: 'next-set', title: 'Next Set' },
-                     { action: 'extend-10', title: '+10s' }
+                     { action: 'finish-session', title: '🏁 Finish' },
+                     { action: 'extend-10', title: '⏱ +10s' }
                  ], false);
              }
         }
@@ -146,8 +157,8 @@
 
     function sendNotification(title: string, body: string, actions: NotificationAction[] = [], renotify = true) {
         if ('serviceWorker' in navigator && Notification.permission === 'granted') {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.showNotification(title, {
+            const func = (reg: ServiceWorkerRegistration) => {
+                reg.showNotification(title, {
                     body,
                     icon: '/favicon.png', // Fallback or app icon
                     vibrate: renotify ? [200, 100, 200] : [],
@@ -155,7 +166,13 @@
                     tag: 'rest-timer',
                     renotify
                 } as any);
-            });
+            };
+
+            if (swRegistration) {
+                func(swRegistration);
+            } else {
+                navigator.serviceWorker.ready.then(func);
+            }
         }
     }
 
@@ -173,8 +190,16 @@
             if (remaining > 0) overtimeTriggered = false;
             
             saveState();
+            // Force update notification to reflect new time immediately
+            if (document.hidden) updateNotification();
         } else if (action === 'next-set') {
             skip();
+        } else if (action === 'finish-session') {
+            finishSession();
+        } else if (action === 'pause') {
+            pause();
+        } else if (action === 'resume') {
+            resume();
         }
     }
 
@@ -274,6 +299,12 @@
         pausedTimeRemaining = remaining;
         endTimestamp = null;
         saveState();
+        if (document.hidden) {
+            sendNotification("Timer Paused", "Tap to resume", [
+                { action: 'resume', title: '▶ Resume' },
+                { action: 'finish-session', title: '🏁 Finish' }
+            ], false);
+        }
     }
 
     function resume() {
@@ -281,6 +312,7 @@
             runningState = 'RUNNING';
             endTimestamp = Date.now() + (pausedTimeRemaining * 1000);
             saveState();
+            if (document.hidden) updateNotification();
         }
     }
 
@@ -292,6 +324,15 @@
         phase = 'SETUP';
         runningState = 'PAUSED';
         clearState();
+    }
+
+    function finishSession() {
+        phase = 'FINISHED';
+        runningState = 'PAUSED';
+        endTimestamp = null;
+        onComplete();
+        clearState();
+        if (document.hidden) sendNotification("Session Complete", "Nicely Done!", [], false);
     }
 
     function handlePhaseComplete() {
@@ -348,8 +389,8 @@
                      } else {
                          // Overtime Alert (First time) - Needs sound/vibrate
                          sendNotification("Interval Finished", "Overtime started", [
-                             { action: 'next-set', title: 'Next Set' },
-                             { action: 'extend-10', title: '+10s' }
+                             { action: 'finish-session', title: '🏁 Finish' },
+                             { action: 'extend-10', title: '⏱ +10s' }
                          ], true); // renotify: true for alert
                      }
                 }
@@ -477,16 +518,30 @@
                          </div>
                     </div>
 
-                    <div class="controls">
-                         {#if runningState === 'RUNNING'}
-                            <button class="ctl-btn pause" onclick={pause}>⏸</button>
-                         {:else}
-                            <button class="ctl-btn play" onclick={resume}>▶</button>
-                         {/if}
-                         <button class="ctl-btn skip" onclick={skip}>
-                            {remaining < 0 ? 'Next' : '⏭'}
+                    <div class="controls-row">
+                         <!-- +10s -->
+                         <button class="ctl-btn secondary" onclick={() => handleTimerAction('extend-10')}>
+                            +10
                          </button>
-                         <button class="ctl-btn stop" onclick={stop} style="font-size: 1rem; padding: 1rem;">Stop</button>
+
+                         <!-- Play/Pause -->
+                         {#if runningState === 'RUNNING'}
+                            <button class="ctl-btn primary" onclick={pause}>⏸</button>
+                         {:else}
+                            <button class="ctl-btn primary" onclick={resume}>▶</button>
+                         {/if}
+
+                         <!-- Finish (Session) -->
+                         <button class="ctl-btn secondary finish" onclick={finishSession}>
+                            🏁
+                         </button>
+                    </div>
+
+                    <div class="controls-sub">
+                        <button class="text-btn" onclick={skip}>
+                            {remaining < 0 ? 'Next Set' : '⏭ Skip'}
+                        </button>
+                        <button class="text-btn stop" onclick={stop}>✕ Abort</button>
                     </div>
                 {/if}
             </div>
@@ -678,12 +733,13 @@
         font-variant-numeric: tabular-nums;
     }
 
-    .controls {
+    .controls-row {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 1.5rem;
         width: 100%;
         justify-content: center;
+        margin-bottom: 1.5rem;
     }
 
     .ctl-btn {
@@ -699,17 +755,55 @@
         justify-content: center;
         color: #333;
         transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     
-    .ctl-btn.play {
+    .ctl-btn.primary {
          background: #333;
          color: white;
+         width: 72px;
+         height: 72px;
+         font-size: 2rem;
          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .ctl-btn.secondary {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .ctl-btn.finish {
+        color: #4ade80;
+        font-size: 1.2rem;
     }
 
     .ctl-btn:active {
         transform: scale(0.95);
     }
+
+    .controls-sub {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .text-btn {
+        background: none;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: background 0.2s;
+        color: #666;
+    }
+
+    .text-btn:hover { background: #f4f5f7; }
+    
+    .text-btn.stop { color: #ef4444; }
+    .text-btn.stop:hover { background: #fff5f5; }
 
     .finished-state {
         text-align: center;
