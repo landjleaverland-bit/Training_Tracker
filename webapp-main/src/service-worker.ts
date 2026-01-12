@@ -101,7 +101,7 @@ sw.addEventListener('fetch', (event: FetchEvent) => {
 
 sw.addEventListener('notificationclick', (event) => {
     // event.notification.close(); // Don't close immediately, let the client update it via tag replacement
-    (async () => {
+    event.waitUntil((async () => {
         const allClients = await sw.clients.matchAll({
             type: 'window',
             includeUncontrolled: true
@@ -128,6 +128,5 @@ sw.addEventListener('notificationclick', (event) => {
                 action: event.action
             });
         }
-    })()
-    );
+    })());
 });
