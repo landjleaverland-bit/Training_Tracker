@@ -100,36 +100,34 @@ sw.addEventListener('fetch', (event: FetchEvent) => {
 });
 
 sw.addEventListener('notificationclick', (event) => {
-    event.notification.close();
+    // event.notification.close(); // Don't close immediately, let the client update it via tag replacement
+    (async () => {
+        const allClients = await sw.clients.matchAll({
+            type: 'window',
+            includeUncontrolled: true
+        });
 
-    event.waitUntil(
-        (async () => {
-            const allClients = await sw.clients.matchAll({
-                type: 'window',
-                includeUncontrolled: true
+        // Try to find a visible client, or at least any client
+        let client = allClients.find(c => c.visibilityState === 'visible');
+
+        if (!client && allClients.length > 0) {
+            client = allClients[0];
+            // Focus if possible
+            if ('focus' in client) await client.focus();
+        } else if (!client) {
+            // Optional: Open a new window if none are open
+            if (sw.clients.openWindow) {
+                const newClient = await sw.clients.openWindow('/');
+                if (newClient) client = newClient;
+            }
+        }
+
+        if (client) {
+            client.postMessage({
+                type: 'TIMER_ACTION',
+                action: event.action
             });
-
-            // Try to find a visible client, or at least any client
-            let client = allClients.find(c => c.visibilityState === 'visible');
-
-            if (!client && allClients.length > 0) {
-                client = allClients[0];
-                // Focus if possible
-                if ('focus' in client) await client.focus();
-            } else if (!client) {
-                // Optional: Open a new window if none are open
-                if (sw.clients.openWindow) {
-                    const newClient = await sw.clients.openWindow('/');
-                    if (newClient) client = newClient;
-                }
-            }
-
-            if (client) {
-                client.postMessage({
-                    type: 'TIMER_ACTION',
-                    action: event.action
-                });
-            }
-        })()
+        }
+    })()
     );
 });

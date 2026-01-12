@@ -10,11 +10,15 @@
      * - LocalStorage state persistence for resilience
      * - Floating overlay UI
      */
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount } from 'svelte';
     import { fade, fly, scale } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
     import { audioManager } from '$lib/utils/audio';
     import { getTimerPreferences, saveTimerPreferences } from '$lib/services/api';
+
+    const STATE_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
+    const RING_CIRCUMFERENCE = 283;
+    const TICK_INTERVAL_MS = 100;
 
     interface NotificationAction {
         action: string;
@@ -45,7 +49,8 @@
     let runningState = $state<RunningState>('PAUSED');
     
     // Config
-    let workDuration = $state(0); // 0 means manual/open-ended, but user requested "set time"
+    // Config
+    // let workDuration = $state(0); // Removed unused
     // Actually user said "allow user to set the time for each set... and rest time".
     // So distinct Work and Rest durations.
     // Defaulting Work to 30s and Rest to 60s for now, adjustable.
@@ -65,13 +70,15 @@
     let swMessageHandler: ((event: MessageEvent) => void) | null = null;
     
     // Derived for UI
-    let progress = $state(0);
+    // Derived for UI
+    // let progress = $state(0); // Removed unused
     
     // Preferences Storage
     // const STORAGE_KEY = 'interval_timer_prefs'; // Deprecated in favor of API
 
     // -- Lifecycle --
-    let timerInterval: any = null;
+    // let timerInterval: any = null; // Replaced by Worker
+    let timerWorker: Worker | null = null;
 
     $effect(() => {
         if (visible) {
@@ -90,7 +97,22 @@
 
     onMount(() => {
         restoreState();
-        timerInterval = setInterval(tick, 100);
+
+        // Initialize Web Worker (handled asynchronously)
+        (async () => {
+            const TimerWorker = (await import('./timer.worker?worker')).default;
+            timerWorker = new TimerWorker();
+            timerWorker.onmessage = (e) => {
+                if (e.data.type === 'TICK') {
+                    tick();
+                }
+            };
+            
+            // Only start if we are actively running
+            if (runningState === 'RUNNING' && visible && phase !== 'SETUP' && phase !== 'FINISHED') {
+                 timerWorker.postMessage({ action: 'START', interval: TICK_INTERVAL_MS });
+            }
+        })();
         
         // Listen for SW messages
         if ('serviceWorker' in navigator) {
@@ -109,7 +131,7 @@
         document.addEventListener('visibilitychange', handleVisibilityChange);
         
         return () => {
-            clearInterval(timerInterval);
+            if (timerWorker) timerWorker.terminate();
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             if ('serviceWorker' in navigator && swMessageHandler) {
                 navigator.serviceWorker.removeEventListener('message', swMessageHandler);
@@ -248,7 +270,7 @@
             const saved = localStorage.getItem('active_interval_timer');
             if (saved) {
                 const s = JSON.parse(saved);
-                if (Date.now() - s.timestamp < 3600000) { // 1 hr expiry
+                if (Date.now() - s.timestamp < STATE_EXPIRY_MS) { // 1 hr expiry
                     phase = s.phase;
                     runningState = s.runningState;
                     remaining = s.remaining;
@@ -283,6 +305,7 @@
         phase = 'WORK';
         currentSet = 1;
         startPhase(configWork);
+        timerWorker?.postMessage({ action: 'START', interval: TICK_INTERVAL_MS });
     }
 
     function startPhase(duration: number, vibrate = false) {
@@ -304,6 +327,7 @@
         runningState = 'PAUSED';
         pausedTimeRemaining = remaining;
         endTimestamp = null;
+        timerWorker?.postMessage({ action: 'STOP' });
         saveState();
         if (document.hidden) {
             sendNotification("Timer Paused", "Tap to resume", [
@@ -314,9 +338,10 @@
     }
 
     function resume() {
-        if (pausedTimeRemaining) {
+        if (pausedTimeRemaining !== null) {
             runningState = 'RUNNING';
             endTimestamp = Date.now() + (pausedTimeRemaining * 1000);
+            timerWorker?.postMessage({ action: 'START', interval: TICK_INTERVAL_MS });
             saveState();
             if (document.hidden) updateNotification();
         }
@@ -329,6 +354,7 @@
     function stop() {
         phase = 'SETUP';
         runningState = 'PAUSED';
+        timerWorker?.postMessage({ action: 'STOP' });
         clearState();
     }
 
@@ -336,6 +362,7 @@
         phase = 'FINISHED';
         runningState = 'PAUSED';
         endTimestamp = null;
+        timerWorker?.postMessage({ action: 'STOP' });
         onComplete();
         clearState();
         if (document.hidden) sendNotification("Session Complete", "Nicely Done!", [], false);
@@ -419,6 +446,11 @@
             // Minimize behavior? For now just hide but keep state (resilience handles reload)
             // But if we want to stop:
             visible = false;
+            // Should we stop worker? Usually minimize keeps running.
+            // But if we are "closing" fully, maybe stop? 
+            // The prompt implies onClose closes the overlay. Background tick is desired if navigating away?
+            // "Background notifications" implies it runs while minimized.
+            // So DO NOT stop worker here if running.
         }
         if (onClose) onClose();
     }
@@ -510,8 +542,8 @@
                             <circle 
                                 class="progress" 
                                 cx="50" cy="50" r="45"
-                                stroke-dasharray="283"
-                                stroke-dashoffset={283 * (1 - (remaining / (phase === 'WORK' ? configWork : configRest)))}
+                                stroke-dasharray={RING_CIRCUMFERENCE}
+                                stroke-dashoffset={RING_CIRCUMFERENCE * (1 - Math.max(0, Math.min(1, remaining / (phase === 'WORK' ? configWork : configRest))))}
                             />
                          </svg>
                          <div class="timer-val">
