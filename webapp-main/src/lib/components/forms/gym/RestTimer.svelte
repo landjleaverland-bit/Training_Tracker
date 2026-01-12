@@ -60,6 +60,7 @@
     let endTimestamp = $state<number | null>(null);
     let pausedTimeRemaining = $state<number | null>(null);
     let overtimeTriggered = $state(false);
+    let lastNotifiedRemaining = $state<number | null>(null);
     
     // Derived for UI
     let progress = $state(0);
@@ -97,9 +98,44 @@
                 }
             });
         }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
         
-        return () => clearInterval(timerInterval);
+        return () => {
+            clearInterval(timerInterval);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
     });
+
+    function handleVisibilityChange() {
+        if (document.hidden && runningState === 'RUNNING') {
+            updateNotification();
+        }
+    }
+
+    function updateNotification() {
+        const status = phase === 'WORK' ? 'Work' : 'Rest';
+        const label = remaining < 0 ? 'Overtime' : 'Remaining';
+        const text = `${label}: ${formatTime(Math.abs(remaining))}`;
+        
+        // Don't show "Next Set" actions while running, only when finished/overtime
+        // Unless we are in overtime? logic below handles overtime separately
+        if (remaining >= 0) {
+            sendNotification(`${status} Timer`, text, [], false);
+        } else {
+             // In overtime, we want to keep the actions if possible, or re-send them?
+             // Overtime logic in tick handles the detailed notification.
+             // Here we simple update time if needed.
+             // But re-sending without actions clears them. 
+             // Let's defer overtime updates to the specific overtime block in tick.
+             if (allowOvertime && overtimeTriggered) {
+                 sendNotification("Interval Finished", `Overtime: ${formatTime(Math.abs(remaining))}`, [
+                     { action: 'next-set', title: 'Next Set' },
+                     { action: 'extend-10', title: '+10s' }
+                 ], false);
+             }
+        }
+    }
 
     // -- Notifications --
     async function requestNotificationPermission() {
@@ -108,16 +144,16 @@
         }
     }
 
-    function sendNotification(title: string, body: string, actions: NotificationAction[] = []) {
+    function sendNotification(title: string, body: string, actions: NotificationAction[] = [], renotify = true) {
         if ('serviceWorker' in navigator && Notification.permission === 'granted') {
             navigator.serviceWorker.ready.then(registration => {
                 registration.showNotification(title, {
                     body,
                     icon: '/favicon.png', // Fallback or app icon
-                    vibrate: [200, 100, 200],
+                    vibrate: renotify ? [200, 100, 200] : [],
                     actions,
                     tag: 'rest-timer',
-                    renotify: true
+                    renotify
                 } as any);
             });
         }
@@ -293,6 +329,14 @@
             const diff = endTimestamp - now;
             remaining = Math.ceil(diff / 1000);
 
+            // Background Notification Update
+            if (document.hidden) {
+                if (lastNotifiedRemaining !== remaining) {
+                    updateNotification();
+                    lastNotifiedRemaining = remaining;
+                }
+            }
+
             if (remaining <= 0) {
                 if (!overtimeTriggered) {
                      overtimeTriggered = true;
@@ -302,14 +346,12 @@
                          remaining = 0;
                          handlePhaseComplete();
                      } else {
-                         // Overtime Alert
-                         sendNotification("Timer Finished", "Overtime started", [
+                         // Overtime Alert (First time) - Needs sound/vibrate
+                         sendNotification("Interval Finished", "Overtime started", [
                              { action: 'next-set', title: 'Next Set' },
                              { action: 'extend-10', title: '+10s' }
-                         ]);
+                         ], true); // renotify: true for alert
                      }
-                     // If overtime allowed, we just continue (remaining becomes negative)
-                     // UI should handle negative display
                 }
             }
         }
