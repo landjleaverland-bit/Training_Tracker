@@ -402,7 +402,7 @@
 
 	
 	<!-- Basic Info Section -->
-	<div class="form-row">
+	<!-- Basic Info Section -->
 		<div class="form-group">
 			<label for="date">Date</label>
 			<div class="date-time-row">
@@ -438,7 +438,6 @@
                 </select>
             {/if}
 		</div>
-	</div>
 
 	<!-- Custom Location input block removed -->
 
@@ -741,11 +740,7 @@
 		gap: 0.5rem;
 	}
 
-	@media (max-width: 640px) {
-		.form-row {
-			grid-template-columns: 1fr;
-		}
-	}
+
 
 	.form-group {
 		display: flex;
@@ -785,12 +780,7 @@
 
 
 	/* Form Layout */
-	.form-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-		margin-bottom: 1rem;
-	}
+
 
 	/* Load Metrics Section */
 	.load-section {
