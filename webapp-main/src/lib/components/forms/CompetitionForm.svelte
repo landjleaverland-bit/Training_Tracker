@@ -286,26 +286,24 @@
 	</div>
 
 	<!-- General Info -->
-	<div class="form-grid">
-		<div class="form-group">
-			<label for="date">Date</label>
-			<div class="date-time-row">
-				<input type="date" id="date" bind:value={date} />
-				<input type="time" id="time" bind:value={time} />
-			</div>
+	<div class="form-group mb-4">
+		<label for="date">Date</label>
+		<div class="date-time-row">
+			<input type="date" id="date" bind:value={date} />
+			<input type="time" id="time" bind:value={time} />
 		</div>
-		<div class="form-group">
-			<label for="venue">Venue</label>
-			<select id="venue" bind:value={venue}>
-				<option value="" disabled>Select venue...</option>
-				{#each venues as v}
-					<option value={v}>{v}</option>
-				{/each}
-			</select>
-			{#if showCustomVenue}
-				<input type="text" bind:value={customVenue} placeholder="Enter venue name" class="mt-2" />
-			{/if}
-		</div>
+	</div>
+	<div class="form-group mb-4">
+		<label for="venue">Venue</label>
+		<select id="venue" bind:value={venue}>
+			<option value="" disabled>Select venue...</option>
+			{#each venues as v}
+				<option value={v}>{v}</option>
+			{/each}
+		</select>
+		{#if showCustomVenue}
+			<input type="text" bind:value={customVenue} placeholder="Enter venue name" class="mt-2" />
+		{/if}
 	</div>
 
 	<div class="form-group mb-4">
@@ -485,12 +483,6 @@
 		color: var(--text-primary);
 	}
 
-	.form-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-		margin-bottom: 1rem;
-	}
 	.form-group {
 		display: flex;
 		flex-direction: column;
