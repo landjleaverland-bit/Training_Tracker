@@ -75,7 +75,6 @@
 							title={`Previous: ${target.weight}kg x ${target.reps} on ${formatDate(target.date)}`}
 						>
 							<span class="dot"></span>
-							<span class="date">{formatDate(target.date)}</span>
 							<span class="text">{target.weight}kg x {target.reps}</span>
 						</div>
 					{/each}
@@ -168,12 +167,6 @@
 		padding: 3px 8px;
 		border-radius: 6px;
 		border: 1px solid rgba(255, 255, 255, 0.05);
-	}
-
-	.benchmark-pill .date {
-		opacity: 0.7;
-		font-size: 0.7rem;
-		margin-right: 0.1rem;
 	}
 
 	.benchmark-pill .dot {
