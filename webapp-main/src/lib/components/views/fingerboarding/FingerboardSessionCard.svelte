@@ -214,6 +214,9 @@
 							<div class="ex-title-group">
 								<span class="ex-name">{exercise.name}</span>
 								<span class="ex-grip">{exercise.gripType}</span>
+								{#if exercise.holdSize}
+									<span class="ex-grip size-modifier">{exercise.holdSize}</span>
+								{/if}
 							</div>
 						</div>
 						<div class="ex-sets">
@@ -393,6 +396,12 @@
 		background: #f0f0f0;
 		padding: 0.1rem 0.5rem;
 		border-radius: 4px;
+	}
+
+	.ex-grip.size-modifier {
+		background: rgba(74, 155, 155, 0.1);
+		color: var(--teal-secondary);
+		border: 1px solid rgba(74, 155, 155, 0.2);
 	}
 
 	.ex-sets {

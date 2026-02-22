@@ -153,6 +153,7 @@ export interface FingerboardExercise {
     id: string;
     name: string;
     gripType: string;
+    holdSize?: string;
     /** Number of sets performed. */
     sets: number;
     /** Breakdown of each set. */

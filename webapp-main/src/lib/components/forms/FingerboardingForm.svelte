@@ -25,15 +25,34 @@
 	let { initialData = null, onCancel, onSaved }: Props = $props();
 	let isEditing = $derived(!!initialData);
 
-	const exerciseOptions = ['Max hangs', 'Recruitment pulls', 'Max pick-ups'];
+	const exerciseOptions = [
+		'Max hangs',
+		'Recruitment pulls',
+		'Max pick-ups',
+		'Aerobic capacity',
+		'Anaerobic capacity',
+		'Aerobic power'
+	];
 	const gripOptions = [
 		'Full-crimp',
 		'Half-crimp',
 		'Three finger drag',
 		'Pinch',
 		'Open hand',
-		'Sloper'
+		'Sloper',
+		'Jug' // Adding Jug as it seems standard based on grip types referenced elsewhere
 	];
+
+	// Size options based on grip type
+	const edgeSizes = ['4 mm', '6 mm', '8 mm', '10 mm', '12 mm', '14 mm', '20 mm', '40 mm'];
+	const pinchSizes = ['Narrow', 'Wide'];
+	const sloperSizes = ['Shallow', 'Steep'];
+
+	function getSizeOptions(grip: string) {
+		if (grip === 'Pinch') return pinchSizes;
+		if (grip === 'Sloper') return sloperSizes;
+		return edgeSizes; // Default for crimps/open/jug
+	}
 
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
@@ -69,6 +88,7 @@
 				id: crypto.randomUUID(),
 				name: exerciseOptions[0],
 				gripType: gripOptions[1], // Default to Half-crimp
+				holdSize: '20 mm', // Default edge
 				sets: 1,
 				details: [{ weight: 0, reps: 5 }],
 				notes: ''
@@ -280,16 +300,40 @@
 			<div class="exercise-card">
 				<div class="card-header">
 					<div class="header-inputs">
-						<select bind:value={exercise.name}>
-							{#each exerciseOptions as opt}
-								<option value={opt}>{opt}</option>
-							{/each}
-						</select>
-						<select bind:value={exercise.gripType}>
-							{#each gripOptions as opt}
-								<option value={opt}>{opt}</option>
-							{/each}
-						</select>
+						<div class="input-stack">
+							<label for="ex-name-{i}">Exercise</label>
+							<select id="ex-name-{i}" bind:value={exercise.name}>
+								{#each exerciseOptions as opt}
+									<option value={opt}>{opt}</option>
+								{/each}
+							</select>
+						</div>
+						<div class="input-stack">
+							<label for="ex-grip-{i}">Grip</label>
+							<select
+								id="ex-grip-{i}"
+								bind:value={exercise.gripType}
+								onchange={() => {
+									// Reset holdSize when grip type fundamentally changes
+									const opts = getSizeOptions(exercise.gripType);
+									if (!opts.includes(exercise.holdSize || '')) {
+										exercise.holdSize = opts[Math.floor(opts.length / 2)]; // pick middle option
+									}
+								}}
+							>
+								{#each gripOptions as opt}
+									<option value={opt}>{opt}</option>
+								{/each}
+							</select>
+						</div>
+						<div class="input-stack">
+							<label for="ex-size-{i}">Modifier</label>
+							<select id="ex-size-{i}" bind:value={exercise.holdSize}>
+								{#each getSizeOptions(exercise.gripType) as opt}
+									<option value={opt}>{opt}</option>
+								{/each}
+							</select>
+						</div>
 					</div>
 					<button class="remove-card-btn" onclick={() => removeExercise(i)} title="Remove Exercise"
 						>✕</button
@@ -488,9 +532,20 @@
 
 	.header-inputs {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 		gap: 0.5rem;
 		flex: 1;
+	}
+
+	.input-stack {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.input-stack label {
+		font-size: 0.75rem;
+		color: var(--text-secondary);
 	}
 
 	.remove-card-btn {
