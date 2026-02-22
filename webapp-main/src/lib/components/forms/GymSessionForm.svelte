@@ -105,25 +105,32 @@
 		previousSession = blockSessions.length > 0 ? blockSessions[0] : null;
 	});
 
-	function getBenchmarks(exerciseName: string) {
-		const result: Record<string, { weight: number; reps: number } | null> = {
-			Green: null,
-			Yellow: null,
-			Orange: null,
-			Red: null
-		};
+	function getRecentBenchmarks(exerciseName: string) {
+		const currentSessionId = isEditing && initialData ? initialData.id : null;
 
-		// Sort sessions descending by date (newest first)
-		const sortedSessions = [...allSessions].sort(
-			(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-		);
+		const pastSessions = allSessions.filter((s) => {
+			if (currentSessionId && s.id === currentSessionId) return false;
+			if ((s.trainingBlock || 'Strength') !== trainingBlock) return false;
+			if (s.date > startTime) return false;
+			if (s.date === startTime) {
+				const sTime = s.time || '00:00';
+				const cTime = time || '00:00';
+				if (sTime >= cTime) return false;
+			}
+			return true;
+		});
+
+		const sortedSessions = pastSessions.sort((a, b) => {
+			const dateA = new Date(`${a.date}T${a.time || '00:00'}`);
+			const dateB = new Date(`${b.date}T${b.time || '00:00'}`);
+			return dateB.getTime() - dateA.getTime();
+		});
+
+		const benchmarks = [];
 
 		for (const session of sortedSessions) {
-			// Optimization: if all filled, break
-			if (result.Green && result.Yellow && result.Orange && result.Red) break;
-
 			const ex = session.exercises.find((e) => e.name === exerciseName);
-			if (ex && ex.difficulty && !result[ex.difficulty]) {
+			if (ex && ex.difficulty) {
 				// Find best set (Max weight)
 				let bestSet: GymSet | null = null;
 				for (const set of ex.sets) {
@@ -135,11 +142,17 @@
 				}
 
 				if (bestSet) {
-					result[ex.difficulty] = { weight: bestSet.weight, reps: bestSet.reps };
+					benchmarks.push({
+						date: session.date,
+						difficulty: ex.difficulty,
+						weight: bestSet.weight,
+						reps: bestSet.reps
+					});
+					if (benchmarks.length >= 3) break;
 				}
 			}
 		}
-		return result;
+		return benchmarks;
 	}
 
 	// UI State
@@ -340,7 +353,7 @@
 		{#each exercises as exercise, i}
 			<ExerciseCard
 				{exercise}
-				benchmarks={getBenchmarks(exercise.name)}
+				benchmarks={getRecentBenchmarks(exercise.name)}
 				on:complete={handleSetComplete}
 				on:timer={handleExerciseTimer}
 				on:delete={() => {
