@@ -168,7 +168,7 @@
 
 	let notes = $state('');
 	let isOtherLocation = $state(false);
-	let isTBC = $state(true); // Default to true so users have to uncheck it or at least they are aware
+	let isTBC = $state(false); // Default to false
 
 	const STORAGE_KEY = 'indoor_climb_draft';
 
@@ -488,7 +488,7 @@
 			}
 		];
 		notes = '';
-		isTBC = true;
+		isTBC = false;
 		saveStatus = 'idle';
 		saveMessage = '';
 	}

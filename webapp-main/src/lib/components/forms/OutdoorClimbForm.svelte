@@ -134,7 +134,7 @@
 	]);
 
 	let notes = $state('');
-	let isTBC = $state(true); // Default to true
+	let isTBC = $state(false); // Default to false
 
 	// Reactive crag list based on selected area
 	let availableCrags = $derived(area ? getCrags(area) : []);
@@ -432,7 +432,7 @@
 			{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
 		];
 		notes = '';
-		isTBC = true;
+		isTBC = false;
 		saveStatus = 'idle';
 		saveMessage = '';
 	}

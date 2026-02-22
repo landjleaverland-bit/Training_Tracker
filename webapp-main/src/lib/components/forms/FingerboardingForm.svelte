@@ -49,7 +49,7 @@
 	let jugGrip = $state(3);
 
 	let notes = $state('');
-	let isTBC = $state(true); // Default to true
+	let isTBC = $state(false); // Default to false
 
 	// Add initial exercise card
 	let showRestTimer = $state(false);
@@ -216,7 +216,7 @@
 				saveMessage = 'Session saved!';
 				if (!isEditing) {
 					localStorage.removeItem(STORAGE_KEY);
-					isTBC = true;
+					isTBC = false;
 				}
 
 				if (onSaved) {

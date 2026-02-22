@@ -66,7 +66,7 @@
 	]);
 
 	let notes = $state('');
-	let isTBC = $state(true); // Default to true
+	let isTBC = $state(false); // Default to false
 
 	const STORAGE_KEY = 'competition_session_draft';
 
@@ -241,7 +241,7 @@
 				saveMessage = 'Competition saved!';
 				if (!isEditing) {
 					localStorage.removeItem(STORAGE_KEY);
-					isTBC = true;
+					isTBC = false;
 				}
 
 				if (onSaved) {

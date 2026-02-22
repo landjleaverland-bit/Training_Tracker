@@ -51,7 +51,7 @@
 	let allSessions = $state<GymSession[]>([]);
 
 	let notes = $state('');
-	let isTBC = $state(true); // Default to true
+	let isTBC = $state(false); // Default to false
 
 	// Load history for benchmarks
 	onMount(async () => {
@@ -274,7 +274,7 @@
 			showSuccess = true;
 			if (!isEditing) {
 				localStorage.removeItem(STORAGE_KEY);
-				isTBC = true; // reset
+				isTBC = false; // reset
 			}
 
 			if (onSaved) {
