@@ -327,7 +327,7 @@
 							</select>
 						</div>
 						<div class="input-stack">
-							<label for="ex-size-{i}">Modifier</label>
+							<label for="ex-size-{i}">Edge Size</label>
 							<select id="ex-size-{i}" bind:value={exercise.holdSize}>
 								{#each getSizeOptions(exercise.gripType) as opt}
 									<option value={opt}>{opt}</option>
