@@ -1,32 +1,59 @@
 <script lang="ts">
-    /**
-     * @file OutdoorClimbForm.svelte
-     * @component
-     * @description Form for logging outdoor climbing sessions.
-     * Includes tracking for:
-     * - Location (Area, Crag, Sector)
-     * - Climbing type (Boulder, Sport, Trad)
-     * - Weather/conditions notes (implicitly via session notes)
-     * - Detailed climb logging
-     */
+	/**
+	 * @file OutdoorClimbForm.svelte
+	 * @component
+	 * @description Form for logging outdoor climbing sessions.
+	 * Includes tracking for:
+	 * - Location (Area, Crag, Sector)
+	 * - Climbing type (Boulder, Sport, Trad)
+	 * - Weather/conditions notes (implicitly via session notes)
+	 * - Detailed climb logging
+	 */
 	// Outdoor Climb form for logging outdoor climbing sessions
 	import { onMount } from 'svelte';
 	import { createOutdoorSession, updateOutdoorSession, isOnline } from '$lib/services/api';
 	import { getAreas, getCrags } from '$lib/data/outdoor_locations';
 	import MultiSelect from '$lib/components/common/MultiSelect.svelte';
-    import type { OutdoorClimbSession } from '$lib/types/session'; // Added type
-	
+	import type { OutdoorClimbSession } from '$lib/types/session'; // Added type
+
 	const areas = getAreas();
 	const climbingTypes = ['Boulder', 'Sport', 'Trad'];
 	const attemptTypes = ['Onsight', 'Flash', 'Redpoint', 'Repeat', 'Dogged', 'DNF'];
 
 	// Training classification options
-    // Copied from IndoorClimbForm for consistency, though 'Roof' might be rare outdoors it's still possible.
+	// Copied from IndoorClimbForm for consistency, though 'Roof' might be rare outdoors it's still possible.
 	const climbWallOptions = ['None', 'Overhang', 'Vertical', 'Slab', 'Roof'];
-	const trainingTypeOptions = ['None', 'Projecting', 'Onsighting', 'Campusing', 'Repeaters', 'Comp Sim'];
+	const trainingTypeOptions = [
+		'None',
+		'Projecting',
+		'Onsighting',
+		'Campusing',
+		'Repeaters',
+		'Comp Sim'
+	];
 	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
-	const categoryOptions = ['None', 'Strength', 'Power', 'Strength Capacity', 'Power Capacity', 'Strength Endurance', 'Power Endurance', 'Endurance', 'Coordination', 'Slab Technique', 'Overhang Technique'];
-	const energySystemOptions = ['None', 'Aerobic Lactic Capacity', 'Aerobic Lactic Power', 'Anaerobic Alactic Capacity', 'Anaerobic Alactic Power', 'Anaerobic Power', 'Anaerobic Lactic Capacity'];
+	const categoryOptions = [
+		'None',
+		'Strength',
+		'Power',
+		'Strength Capacity',
+		'Power Capacity',
+		'Strength Endurance',
+		'Power Endurance',
+		'Endurance',
+		'Coordination',
+		'Slab Technique',
+		'Overhang Technique'
+	];
+	const energySystemOptions = [
+		'None',
+		'Aerobic Lactic Capacity',
+		'Aerobic Lactic Power',
+		'Anaerobic Alactic Capacity',
+		'Anaerobic Alactic Power',
+		'Anaerobic Power',
+		'Anaerobic Lactic Capacity'
+	];
 	const techniqueFocusOptions = [
 		'None',
 		'Trusting feet',
@@ -55,19 +82,19 @@
 
 	// Valid grades (case-insensitive matching) is now handled by imported constant
 	import { VALID_GRADES_LOWER } from '$lib/constants';
-    import GradeInput from '$lib/components/ui/GradeInput.svelte';
-    import LoadInput from '$lib/components/ui/LoadInput.svelte';
-    import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
+	import GradeInput from '$lib/components/ui/GradeInput.svelte';
+	import LoadInput from '$lib/components/ui/LoadInput.svelte';
+	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
 
-    // Props
-    interface Props {
-        initialData?: OutdoorClimbSession | null;
-        onCancel?: () => void;
-        onSaved?: () => void;
-    }
-    
-    let { initialData = null, onCancel, onSaved }: Props = $props();
-    let isEditing = $derived(!!initialData);
+	// Props
+	interface Props {
+		initialData?: OutdoorClimbSession | null;
+		onCancel?: () => void;
+		onSaved?: () => void;
+	}
+
+	let { initialData = null, onCancel, onSaved }: Props = $props();
+	let isEditing = $derived(!!initialData);
 
 	let expandedNoteIndex = $state<number | null>(null);
 
@@ -78,8 +105,8 @@
 		attemptType: string;
 		attemptsNum: number;
 		notes: string;
-        wall?: string;
-        techniqueFocus?: string;
+		wall?: string;
+		techniqueFocus?: string;
 	}
 
 	// Form state
@@ -101,127 +128,150 @@
 	let pinchGrip = $state(3);
 	let sloperGrip = $state(3);
 	let jugGrip = $state(3);
-	
+
 	let climbs = $state<ClimbEntry[]>([
 		{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
 	]);
-    
-    let notes = $state('');
+
+	let notes = $state('');
+	let isTBC = $state(true); // Default to true
 
 	// Reactive crag list based on selected area
 	let availableCrags = $derived(area ? getCrags(area) : []);
-    
-    let isOtherCrag = $state(false);
 
-    const STORAGE_KEY = 'outdoor_climb_draft';
+	let isOtherCrag = $state(false);
 
-    let loaded = $state(false);
+	const STORAGE_KEY = 'outdoor_climb_draft';
 
-    onMount(() => {
-        if (initialData) {
-            // Populate form from initialData
-            date = initialData.date;
-            time = initialData.time || '12:00';
-            area = initialData.area;
-            crag = initialData.crag;
-            const standardCrags = getCrags(area);
-            if (crag && !standardCrags.includes(crag)) {
-                isOtherCrag = true;
-            }
+	let loaded = $state(false);
 
-            sector = initialData.sector || '';
-            climbingType = initialData.climbingType;
-            trainingTypes = initialData.trainingTypes || ['None'];
-            difficulty = initialData.difficulty || 'Moderate';
-            categories = initialData.categories || ['None'];
-            energySystems = initialData.energySystems || ['None'];
-            
-            fingerLoad = initialData.fingerLoad;
-            shoulderLoad = initialData.shoulderLoad;
-            forearmLoad = initialData.forearmLoad;
-            
-            openGrip = initialData.openGrip || 3;
-            crimpGrip = initialData.crimpGrip || 3;
-            pinchGrip = initialData.pinchGrip || 3;
-            sloperGrip = initialData.sloperGrip || 3;
-            jugGrip = initialData.jugGrip || 3;
-            
-            climbs = initialData.climbs || [];
-            notes = initialData.notes || '';
-            loaded = true;
-        } else {
-            // Load draft
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    // ... (rest of draft loading logic) ...
-                    if (data.date) date = data.date;
-                    if (data.time) time = data.time;
-                    if (data.area) area = data.area;
-                    if (data.crag) crag = data.crag;
-                    if (data.sector) sector = data.sector;
-                    if (data.isOtherCrag) isOtherCrag = data.isOtherCrag;
-                    if (data.climbingType) climbingType = data.climbingType;
-                    if (data.trainingTypes) trainingTypes = data.trainingTypes;
-                    if (data.difficulty) difficulty = data.difficulty;
-                    if (data.categories) categories = data.categories;
-                    if (data.energySystems) energySystems = data.energySystems;
-                    
-                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
-                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
-                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
-                    
-                    if (data.openGrip) openGrip = data.openGrip;
-                    if (data.crimpGrip) crimpGrip = data.crimpGrip;
-                    if (data.pinchGrip) pinchGrip = data.pinchGrip;
-                    if (data.sloperGrip) sloperGrip = data.sloperGrip;
-                    if (data.jugGrip) jugGrip = data.jugGrip;
-                    
-                    if (data.climbs) climbs = data.climbs;
-                    if (data.notes) notes = data.notes;
-                } catch (e) {
-                    console.error('Failed to restore draft', e);
-                }
-            }
-            loaded = true;
-        }
-    });
+	onMount(() => {
+		if (initialData) {
+			// Populate form from initialData
+			date = initialData.date;
+			time = initialData.time || '12:00';
+			area = initialData.area;
+			crag = initialData.crag;
+			const standardCrags = getCrags(area);
+			if (crag && !standardCrags.includes(crag)) {
+				isOtherCrag = true;
+			}
 
-    $effect(() => {
-        if (!loaded || isEditing) return; // Don't save drafts when editing
-        const draft = {
-            date, time, area, crag, sector, isOtherCrag, climbingType, trainingTypes, difficulty,
-            categories, energySystems,
-            fingerLoad, shoulderLoad, forearmLoad,
-            openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
-            climbs, notes
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-    });
+			sector = initialData.sector || '';
+			climbingType = initialData.climbingType;
+			trainingTypes = initialData.trainingTypes || ['None'];
+			difficulty = initialData.difficulty || 'Moderate';
+			categories = initialData.categories || ['None'];
+			energySystems = initialData.energySystems || ['None'];
+
+			fingerLoad = initialData.fingerLoad;
+			shoulderLoad = initialData.shoulderLoad;
+			forearmLoad = initialData.forearmLoad;
+
+			openGrip = initialData.openGrip || 3;
+			crimpGrip = initialData.crimpGrip || 3;
+			pinchGrip = initialData.pinchGrip || 3;
+			sloperGrip = initialData.sloperGrip || 3;
+			jugGrip = initialData.jugGrip || 3;
+
+			climbs = initialData.climbs || [];
+			notes = initialData.notes || '';
+			isTBC = initialData.isTBC !== undefined ? initialData.isTBC : false;
+			loaded = true;
+		} else {
+			// Load draft
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				try {
+					const data = JSON.parse(saved);
+					// ... (rest of draft loading logic) ...
+					if (data.date) date = data.date;
+					if (data.time) time = data.time;
+					if (data.area) area = data.area;
+					if (data.crag) crag = data.crag;
+					if (data.sector) sector = data.sector;
+					if (data.isOtherCrag) isOtherCrag = data.isOtherCrag;
+					if (data.climbingType) climbingType = data.climbingType;
+					if (data.trainingTypes) trainingTypes = data.trainingTypes;
+					if (data.difficulty) difficulty = data.difficulty;
+					if (data.categories) categories = data.categories;
+					if (data.energySystems) energySystems = data.energySystems;
+
+					if (data.fingerLoad) fingerLoad = data.fingerLoad;
+					if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+					if (data.forearmLoad) forearmLoad = data.forearmLoad;
+
+					if (data.openGrip) openGrip = data.openGrip;
+					if (data.crimpGrip) crimpGrip = data.crimpGrip;
+					if (data.pinchGrip) pinchGrip = data.pinchGrip;
+					if (data.sloperGrip) sloperGrip = data.sloperGrip;
+					if (data.jugGrip) jugGrip = data.jugGrip;
+
+					if (data.climbs) climbs = data.climbs;
+					if (data.notes) notes = data.notes;
+					if (data.isTBC !== undefined) isTBC = data.isTBC;
+				} catch (e) {
+					console.error('Failed to restore draft', e);
+				}
+			}
+			loaded = true;
+		}
+	});
+
+	$effect(() => {
+		if (!loaded || isEditing) return; // Don't save drafts when editing
+		const draft = {
+			date,
+			time,
+			area,
+			crag,
+			sector,
+			isOtherCrag,
+			climbingType,
+			trainingTypes,
+			difficulty,
+			categories,
+			energySystems,
+			fingerLoad,
+			shoulderLoad,
+			forearmLoad,
+			openGrip,
+			crimpGrip,
+			pinchGrip,
+			sloperGrip,
+			jugGrip,
+			climbs,
+			notes,
+			isTBC
+		};
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+	});
 
 	// Reset crag when area changes
 	$effect(() => {
 		if (area) {
 			crag = '';
-            isOtherCrag = false;
+			isOtherCrag = false;
 		}
 	});
 
-    function onCragChange() {
-        if (crag === 'Other') {
-            isOtherCrag = true;
-            crag = '';
-        }
-    }
+	function onCragChange() {
+		if (crag === 'Other') {
+			isOtherCrag = true;
+			crag = '';
+		}
+	}
 
-    function cancelOtherCrag() {
-        isOtherCrag = false;
-        crag = '';
-    }
+	function cancelOtherCrag() {
+		isOtherCrag = false;
+		crag = '';
+	}
 
 	function addClimb() {
-		climbs = [...climbs, { isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
+		climbs = [
+			...climbs,
+			{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
+		];
 	}
 
 	function removeClimb(index: number) {
@@ -268,18 +318,18 @@
 		if (!area) return 'Please select an area';
 		if (!crag) return 'Please select a crag';
 		if (!climbingType) return 'Please select a climbing type';
-		
-		const invalidGrades = climbs.filter(c => c.grade.trim() && !isValidGrade(c.grade));
+
+		const invalidGrades = climbs.filter((c) => c.grade.trim() && !isValidGrade(c.grade));
 		if (invalidGrades.length > 0) return 'Please fix invalid grades';
-		
+
 		return null;
 	}
 
 	// Save session to local cache and sync to server
-    /**
-     * Validates and saves the outdoor climbing session to Firestore.
-     */
-    async function saveSession() {
+	/**
+	 * Validates and saves the outdoor climbing session to Firestore.
+	 */
+	async function saveSession() {
 		const error = validateForm();
 		if (error) {
 			saveStatus = 'error';
@@ -288,9 +338,9 @@
 		}
 
 		saveStatus = 'saving';
-		
+
 		try {
-			const preparedClimbs = climbs.map(climb => ({
+			const preparedClimbs = climbs.map((climb) => ({
 				...climb,
 				isSport: getIsSport(climb)
 			}));
@@ -315,37 +365,38 @@
 				sloperGrip,
 				jugGrip,
 				climbs: preparedClimbs,
-                notes
+				notes,
+				isTBC
 			};
 
 			// Save to server
-            let result;
-            if (isEditing && initialData) {
-                result = await updateOutdoorSession(initialData.id, sessionData);
-            } else {
-                result = await createOutdoorSession(sessionData);
-            }
+			let result;
+			if (isEditing && initialData) {
+				result = await updateOutdoorSession(initialData.id, sessionData);
+			} else {
+				result = await createOutdoorSession(sessionData);
+			}
 
 			if (result.ok) {
 				saveStatus = 'success';
 				saveMessage = 'Session saved!';
-                if (!isEditing) {
-				    localStorage.removeItem(STORAGE_KEY);
-                }
-                
-                if (onSaved) {
-                    onSaved();
-                } else {
-                    // Dispatch custom event to notify parent of session save (legacy)
-                    window.dispatchEvent(new CustomEvent('session-saved'));
-                    
-                    // Reset form after short delay if not editing
-                    if (!isEditing) {
-                        setTimeout(() => {
-                            resetForm();
-                        }, 2000);
-                    }
-                }
+				if (!isEditing) {
+					localStorage.removeItem(STORAGE_KEY);
+				}
+
+				if (onSaved) {
+					onSaved();
+				} else {
+					// Dispatch custom event to notify parent of session save (legacy)
+					window.dispatchEvent(new CustomEvent('session-saved'));
+
+					// Reset form after short delay if not editing
+					if (!isEditing) {
+						setTimeout(() => {
+							resetForm();
+						}, 2000);
+					}
+				}
 			} else {
 				saveStatus = 'error';
 				saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
@@ -377,8 +428,11 @@
 		pinchGrip = 3;
 		sloperGrip = 3;
 		jugGrip = 3;
-		climbs = [{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }];
-        notes = '';
+		climbs = [
+			{ isSport: false, name: '', grade: '', attemptType: 'Flash', attemptsNum: 1, notes: '' }
+		];
+		notes = '';
+		isTBC = true;
 		saveStatus = 'idle';
 		saveMessage = '';
 	}
@@ -386,12 +440,15 @@
 
 <div class="form-content">
 	<!-- Header Row -->
-    {#if !isEditing}
-        <div class="form-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h3 style="margin: 0;">⛰️ Outdoor Climb</h3>
-        </div>
-    {/if}
-	
+	{#if !isEditing}
+		<div
+			class="form-header-row"
+			style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
+		>
+			<h3 style="margin: 0;">⛰️ Outdoor Climb</h3>
+		</div>
+	{/if}
+
 	<!-- Basic Info Section -->
 	<div class="form-row">
 		<div class="form-group">
@@ -401,7 +458,7 @@
 				<input type="time" id="time" bind:value={time} />
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="area">Area</label>
 			<select id="area" bind:value={area}>
@@ -416,38 +473,43 @@
 	<div class="form-row">
 		<div class="form-group">
 			<label for="crag">Crag</label>
-            {#if isOtherCrag}
-                <div class="input-with-action">
-                    <input 
-                        type="text" 
-                        id="crag-manual" 
-                        bind:value={crag} 
-                        placeholder="Enter custom crag name..." 
-                        class="flat-left"
-                    />
-                    <button 
-                        type="button"
-                        class="action-btn flat-right" 
-                        onclick={cancelOtherCrag}
-                        title="Back to list"
-                    >✕</button>
-                </div>
-            {:else}
-                <select id="crag" bind:value={crag} disabled={!area} onchange={onCragChange}>
-                    <option value="" disabled>{area ? 'Select crag...' : 'Select area first...'}</option>
-                    {#each availableCrags as c}
-                        <option value={c}>{c}</option>
-                    {/each}
-                    {#if area}
-                        <option value="Other">Other (Manual Entry)</option>
-                    {/if}
-                </select>
-            {/if}
+			{#if isOtherCrag}
+				<div class="input-with-action">
+					<input
+						type="text"
+						id="crag-manual"
+						bind:value={crag}
+						placeholder="Enter custom crag name..."
+						class="flat-left"
+					/>
+					<button
+						type="button"
+						class="action-btn flat-right"
+						onclick={cancelOtherCrag}
+						title="Back to list">✕</button
+					>
+				</div>
+			{:else}
+				<select id="crag" bind:value={crag} disabled={!area} onchange={onCragChange}>
+					<option value="" disabled>{area ? 'Select crag...' : 'Select area first...'}</option>
+					{#each availableCrags as c}
+						<option value={c}>{c}</option>
+					{/each}
+					{#if area}
+						<option value="Other">Other (Manual Entry)</option>
+					{/if}
+				</select>
+			{/if}
 		</div>
-		
+
 		<div class="form-group">
 			<label for="sector">Wall / Sector</label>
-			<input type="text" id="sector" bind:value={sector} placeholder="Enter sector or wall name..." />
+			<input
+				type="text"
+				id="sector"
+				bind:value={sector}
+				placeholder="Enter sector or wall name..."
+			/>
 		</div>
 	</div>
 
@@ -461,20 +523,18 @@
 		</select>
 	</div>
 
-
-
 	<!-- Training Details Section -->
 	<div class="training-section">
 		<h4>Training Details</h4>
 		<div class="training-grid">
 			<div class="training-item">
 				<label for="training-type">Training Type</label>
-				<MultiSelect 
-                    options={trainingTypeOptions} 
-                    selected={trainingTypes} 
-                    placeholder="Select types..." 
-                    onChange={(val) => trainingTypes = val} 
-                />
+				<MultiSelect
+					options={trainingTypeOptions}
+					selected={trainingTypes}
+					placeholder="Select types..."
+					onChange={(val) => (trainingTypes = val)}
+				/>
 			</div>
 			<div class="training-item">
 				<label for="difficulty">Difficulty</label>
@@ -486,27 +546,25 @@
 			</div>
 			<div class="training-item">
 				<label for="category">Category</label>
-				<MultiSelect 
-                    options={categoryOptions} 
-                    selected={categories} 
-                    placeholder="Select categories..." 
-                    onChange={(val) => categories = val} 
-                />
+				<MultiSelect
+					options={categoryOptions}
+					selected={categories}
+					placeholder="Select categories..."
+					onChange={(val) => (categories = val)}
+				/>
 			</div>
 			<div class="training-item">
 				<label for="energy-system">Energy System</label>
-				<MultiSelect 
-                    options={energySystemOptions} 
-                    selected={energySystems} 
-                    placeholder="Select systems..." 
-                    onChange={(val) => energySystems = val} 
-                />
+				<MultiSelect
+					options={energySystemOptions}
+					selected={energySystems}
+					placeholder="Select systems..."
+					onChange={(val) => (energySystems = val)}
+				/>
 			</div>
-            <!-- Technique Focus Removed -->
+			<!-- Technique Focus Removed -->
 		</div>
 	</div>
-
-
 
 	<!-- Climbs Table Section -->
 	<div class="climbs-section">
@@ -543,9 +601,10 @@
 								<GradeInput bind:value={climb.grade} />
 							</td>
 							<td>
-								<select 
+								<select
 									value={climb.attemptType}
-									onchange={(e) => handleAttemptTypeChange(index, (e.target as HTMLSelectElement).value)}
+									onchange={(e) =>
+										handleAttemptTypeChange(index, (e.target as HTMLSelectElement).value)}
 								>
 									{#each attemptTypes as type}
 										<option value={type}>{type}</option>
@@ -553,16 +612,16 @@
 								</select>
 							</td>
 							<td>
-								<input 
-									type="number" 
-									bind:value={climb.attemptsNum} 
-									min="1" 
+								<input
+									type="number"
+									bind:value={climb.attemptsNum}
+									min="1"
 									disabled={climb.attemptType === 'Flash' || climb.attemptType === 'Onsight'}
 								/>
 							</td>
-                            <td>
+							<td>
 								<select bind:value={climb.wall}>
-									{#each climbWallOptions.filter(w => w !== 'None') as option}
+									{#each climbWallOptions.filter((w) => w !== 'None') as option}
 										<option value={option}>{option}</option>
 									{/each}
 								</select>
@@ -575,8 +634,8 @@
 								</select>
 							</td>
 							<td class="notes-cell" class:expanded={expandedNoteIndex === index}>
-								<textarea 
-									bind:value={climb.notes} 
+								<textarea
+									bind:value={climb.notes}
 									placeholder="Notes..."
 									onfocus={() => handleNoteFocus(index)}
 									onblur={handleNoteBlur}
@@ -584,7 +643,9 @@
 							</td>
 							<td class="center">
 								{#if climbs.length > 1}
-									<button type="button" class="remove-btn" onclick={() => removeClimb(index)}>✕</button>
+									<button type="button" class="remove-btn" onclick={() => removeClimb(index)}
+										>✕</button
+									>
 								{/if}
 							</td>
 						</tr>
@@ -630,22 +691,42 @@
 		</div>
 	</div>
 
-    <!-- Session Notes Section -->
-    <!-- Session Notes Section -->
-    <div class="notes-section">
-        <SessionNotes bind:value={notes} placeholder="How did the session feel? Weather, conditions, mood..." />
-    </div>
+	<!-- Session Notes Section -->
+	<!-- Session Notes Section -->
+	<div class="notes-section">
+		<SessionNotes
+			bind:value={notes}
+			placeholder="How did the session feel? Weather, conditions, mood..."
+		/>
+	</div>
 
 	<!-- Submit Button -->
 	<div class="submit-section">
 		{#if saveMessage}
-			<div class="save-message" class:success={saveStatus === 'success'} class:error={saveStatus === 'error'}>
+			<div
+				class="save-message"
+				class:success={saveStatus === 'success'}
+				class:error={saveStatus === 'error'}
+			>
 				{saveMessage}
 			</div>
 		{/if}
-		<button 
-			type="button" 
-			class="submit-btn" 
+
+		<div class="tbc-checkbox-wrapper">
+			<input type="checkbox" id="tbc-checkbox" bind:checked={isTBC} />
+			<label
+				for="tbc-checkbox"
+				class="tbc-label"
+				title="Mark this session as To Be Completed (e.g., if you plan to add more climbs or notes later)"
+			>
+				<span class="custom-checkbox"></span>
+				TBC (To Be Completed)
+			</label>
+		</div>
+
+		<button
+			type="button"
+			class="submit-btn"
 			onclick={saveSession}
 			disabled={saveStatus === 'saving'}
 		>
@@ -666,11 +747,15 @@
 	}
 
 	@keyframes slideIn {
-		from { opacity: 0; transform: translateY(4px); }
-		to { opacity: 1; transform: translateY(0); }
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
-
-
 
 	.form-content h3 {
 		margin: 0 0 1.5rem 0;
@@ -734,7 +819,9 @@
 		background: white;
 		font-size: 0.95rem;
 		color: var(--text-primary);
-		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			border-color 0.2s ease,
+			box-shadow 0.2s ease;
 		box-sizing: border-box;
 	}
 
@@ -785,10 +872,13 @@
 		background-color: rgba(255, 255, 255, 0.6); /* Slightly transparent white */
 	}
 
-
 	/* Training Details Section */
 	.training-section {
-		background: linear-gradient(135deg, rgba(74, 155, 155, 0.08) 0%, rgba(100, 180, 180, 0.06) 100%);
+		background: linear-gradient(
+			135deg,
+			rgba(74, 155, 155, 0.08) 0%,
+			rgba(100, 180, 180, 0.06) 100%
+		);
 		border-radius: 12px;
 		padding: 1.25rem;
 		margin: 1.5rem 0;
@@ -840,7 +930,9 @@
 		background: white;
 		font-size: 0.9rem;
 		color: var(--text-primary);
-		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			border-color 0.2s ease,
+			box-shadow 0.2s ease;
 		cursor: pointer;
 	}
 
@@ -885,7 +977,7 @@
 		text-align: center;
 	}
 
-	.climbs-table input[type="text"] {
+	.climbs-table input[type='text'] {
 		width: 100%;
 		min-width: 100px;
 		padding: 0.4rem 0.6rem;
@@ -894,7 +986,7 @@
 		font-size: 0.9rem;
 	}
 
-	.climbs-table input[type="number"] {
+	.climbs-table input[type='number'] {
 		width: 60px;
 		padding: 0.4rem;
 		text-align: center;
@@ -903,7 +995,93 @@
 		font-size: 0.9rem;
 	}
 
-	.climbs-table input[type="number"]:disabled {
+	/* Sleek TBC Checkbox Styles */
+	.tbc-checkbox-wrapper {
+		display: flex;
+		justify-content: center;
+		margin: 0.5rem 0 1.5rem 0;
+		width: 100%;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox'] {
+		display: none;
+	}
+
+	.tbc-label {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		cursor: pointer;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+		padding: 0.6rem 1.2rem;
+		border-radius: 30px;
+		background: rgba(0, 0, 0, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		transition: all 0.2s ease;
+		user-select: none;
+	}
+
+	.tbc-label:hover {
+		background: rgba(239, 108, 0, 0.05);
+		border-color: rgba(239, 108, 0, 0.2);
+		color: #ef6c00;
+	}
+
+	.custom-checkbox {
+		width: 20px;
+		height: 20px;
+		border-radius: 6px;
+		border: 2px solid rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		background: white;
+	}
+
+	/* Checkmark trick */
+	.custom-checkbox::after {
+		content: '';
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		margin-top: -2px; /* optical alignment */
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label {
+		background: rgba(239, 108, 0, 0.1);
+		border-color: rgba(239, 108, 0, 0.4);
+		color: #ef6c00;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox {
+		background: #ef6c00;
+		border-color: #ef6c00;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox::after {
+		opacity: 1;
+	}
+
+	.flat-right {
+		border-top-left-radius: 0 !important;
+		border-bottom-left-radius: 0 !important;
+		border-left: none !important;
+	}
+
+	.flat-left {
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+		border-right: none !important;
+	}
+
+	.climbs-table input[type='number']:disabled {
 		background: rgba(0, 0, 0, 0.05);
 		color: var(--text-secondary);
 	}
@@ -916,7 +1094,7 @@
 		min-width: 80px;
 	}
 
-	.climbs-table input[type="checkbox"] {
+	.climbs-table input[type='checkbox'] {
 		width: 18px;
 		height: 18px;
 		cursor: pointer;
@@ -929,7 +1107,6 @@
 		outline: none;
 		border-color: var(--teal-primary);
 	}
-
 
 	/* Notes cell with expandable textarea */
 	.notes-cell {
@@ -1000,7 +1177,9 @@
 		border-radius: 8px;
 		font-weight: 500;
 		cursor: pointer;
-		transition: background 0.2s ease, border-color 0.2s ease;
+		transition:
+			background 0.2s ease,
+			border-color 0.2s ease;
 	}
 
 	.add-btn:hover {
@@ -1034,49 +1213,48 @@
 		color: #d9534f;
 	}
 
-    /* Input with Action (Manual Entry) */
-    .input-with-action {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        position: relative;
-    }
+	/* Input with Action (Manual Entry) */
+	.input-with-action {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		position: relative;
+	}
 
-    .input-with-action input {
-        flex: 1;
-    }
+	.input-with-action input {
+		flex: 1;
+	}
 
-    .input-with-action input.flat-left {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-right: none;
-    }
+	.input-with-action input.flat-left {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		border-right: none;
+	}
 
-    .action-btn {
-        padding: 0.6rem 1rem;
-        background: #f8f9fa;
-        border: 1.5px solid rgba(74, 155, 155, 0.3);
-        color: #666;
-        cursor: pointer;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-    }
-    
-    .action-btn:hover {
-        background: #eee;
-        color: #333;
-        border-color: rgba(74, 155, 155, 0.5);
-    }
+	.action-btn {
+		padding: 0.6rem 1rem;
+		background: #f8f9fa;
+		border: 1.5px solid rgba(74, 155, 155, 0.3);
+		color: #666;
+		cursor: pointer;
+		font-size: 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+	}
 
-    .action-btn.flat-right {
-        border-top-right-radius: 8px;
-        border-bottom-right-radius: 8px;
-        border-left: 1.5px solid rgba(74, 155, 155, 0.3);
-    }
+	.action-btn:hover {
+		background: #eee;
+		color: #333;
+		border-color: rgba(74, 155, 155, 0.5);
+	}
 
+	.action-btn.flat-right {
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-left: 1.5px solid rgba(74, 155, 155, 0.3);
+	}
 
 	.submit-btn {
 		padding: 0.75rem 2rem;
@@ -1087,7 +1265,9 @@
 		font-size: 1rem;
 		font-weight: 600;
 		cursor: pointer;
-		transition: background 0.2s ease, transform 0.1s ease;
+		transition:
+			background 0.2s ease,
+			transform 0.1s ease;
 	}
 
 	.submit-btn:hover:not(:disabled) {

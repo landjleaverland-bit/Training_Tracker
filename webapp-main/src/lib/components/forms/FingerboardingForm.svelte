@@ -1,62 +1,70 @@
 <script lang="ts">
-    /**
-     * @file FingerboardingForm.svelte
-     * @component
-     * @description Form for logging fingerboarding sessions.
-     * Supports protocol customization (Max hangs, Recruitment, etc.) and grip types.
-     * Includes an integrated rest timer for interval training.
-     */
-    import { onMount, createEventDispatcher } from 'svelte';
+	/**
+	 * @file FingerboardingForm.svelte
+	 * @component
+	 * @description Form for logging fingerboarding sessions.
+	 * Supports protocol customization (Max hangs, Recruitment, etc.) and grip types.
+	 * Includes an integrated rest timer for interval training.
+	 */
+	import { onMount, createEventDispatcher } from 'svelte';
 	import { createFingerboardSession, updateFingerboardSession, isOnline } from '$lib/services/api';
-    import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
-    import RestTimer from './gym/RestTimer.svelte';
+	import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
+	import RestTimer from './gym/RestTimer.svelte';
 	import LoadInput from '$lib/components/ui/LoadInput.svelte';
 	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
-    
-    const dispatch = createEventDispatcher();
 
-    // Props
-    interface Props {
-        initialData?: FingerboardSession | null;
-        onCancel?: () => void;
-        onSaved?: () => void;
-    }
-    
-    let { initialData = null, onCancel, onSaved }: Props = $props();
-    let isEditing = $derived(!!initialData);
+	const dispatch = createEventDispatcher();
 
-    const exerciseOptions = ['Max hangs', 'Recruitment pulls', 'Max pick-ups'];
-    const gripOptions = ['Full-crimp', 'Half-crimp', 'Three finger drag', 'Pinch', 'Open hand', 'Sloper'];
+	// Props
+	interface Props {
+		initialData?: FingerboardSession | null;
+		onCancel?: () => void;
+		onSaved?: () => void;
+	}
 
-    let date = $state(new Date().toISOString().split('T')[0]);
-    let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
-    let exercises = $state<FingerboardExercise[]>([]);
-	
-    let fingerLoad = $state(3);
-    let shoulderLoad = $state(3);
-    let forearmLoad = $state(3);
-    let openGrip = $state(3);
-    let crimpGrip = $state(3);
-    let pinchGrip = $state(3);
-    let sloperGrip = $state(3);
-    let jugGrip = $state(3);
-    
-    let notes = $state('');
-	
+	let { initialData = null, onCancel, onSaved }: Props = $props();
+	let isEditing = $derived(!!initialData);
+
+	const exerciseOptions = ['Max hangs', 'Recruitment pulls', 'Max pick-ups'];
+	const gripOptions = [
+		'Full-crimp',
+		'Half-crimp',
+		'Three finger drag',
+		'Pinch',
+		'Open hand',
+		'Sloper'
+	];
+
+	let date = $state(new Date().toISOString().split('T')[0]);
+	let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
+	let exercises = $state<FingerboardExercise[]>([]);
+
+	let fingerLoad = $state(3);
+	let shoulderLoad = $state(3);
+	let forearmLoad = $state(3);
+	let openGrip = $state(3);
+	let crimpGrip = $state(3);
+	let pinchGrip = $state(3);
+	let sloperGrip = $state(3);
+	let jugGrip = $state(3);
+
+	let notes = $state('');
+	let isTBC = $state(true); // Default to true
+
 	// Add initial exercise card
-    let showRestTimer = $state(false);
-    let activeTimerExerciseId = $state<string | null>(null);
-    let timerDefaultSets = $state(3);
+	let showRestTimer = $state(false);
+	let activeTimerExerciseId = $state<string | null>(null);
+	let timerDefaultSets = $state(3);
 
-    function startRest(exercise: FingerboardExercise) {
-        activeTimerExerciseId = exercise.id;
-        timerDefaultSets = exercise.sets;
-        showRestTimer = true;
-    }
+	function startRest(exercise: FingerboardExercise) {
+		activeTimerExerciseId = exercise.id;
+		timerDefaultSets = exercise.sets;
+		showRestTimer = true;
+	}
 
 	function addExercise() {
 		exercises = [
-			...exercises, 
+			...exercises,
 			{
 				id: crypto.randomUUID(),
 				name: exerciseOptions[0],
@@ -68,77 +76,86 @@
 		];
 	}
 
-    const STORAGE_KEY = 'fingerboard_session_draft';
+	const STORAGE_KEY = 'fingerboard_session_draft';
 
-    let loaded = $state(false);
+	let loaded = $state(false);
 
-    // Initialize with one exercise if empty, or load from storage
-    onMount(() => {
-        if (initialData) {
-            date = initialData.date;
-            time = initialData.time || '12:00';
-            exercises = initialData.exercises;
-            
-            fingerLoad = initialData.fingerLoad || 3;
-            shoulderLoad = initialData.shoulderLoad || 3;
-            forearmLoad = initialData.forearmLoad || 3;
-            
-            openGrip = initialData.openGrip || 3;
-            crimpGrip = initialData.crimpGrip || 3;
-            pinchGrip = initialData.pinchGrip || 3;
-            sloperGrip = initialData.sloperGrip || 3;
-            jugGrip = initialData.jugGrip || 3;
-            
-            notes = initialData.notes || '';
-            
-            loaded = true;
-        } else {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data.time) time = data.time;
-                    if (data.exercises && Array.isArray(data.exercises)) {
-                         exercises = data.exercises;
-                    }
-                    
-                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
-                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
-                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
-                    
-                    if (data.openGrip) openGrip = data.openGrip;
-                    if (data.crimpGrip) crimpGrip = data.crimpGrip;
-                    if (data.pinchGrip) pinchGrip = data.pinchGrip;
-                    if (data.sloperGrip) sloperGrip = data.sloperGrip;
-                    if (data.jugGrip) jugGrip = data.jugGrip;
-                    
-                    if (data.notes) notes = data.notes;
-                } catch (e) {
-                    console.error('Failed to restore draft', e);
-                }
-            }
-            
-            // Ensure at least one exercise exists if storage was empty or invalid
-            if (exercises.length === 0) {
-                addExercise();
-            }
-            loaded = true;
-        }
-    });
+	// Initialize with one exercise if empty, or load from storage
+	onMount(() => {
+		if (initialData) {
+			date = initialData.date;
+			time = initialData.time || '12:00';
+			exercises = initialData.exercises;
 
-    // Save to storage whenever state changes
-    $effect(() => {
-        if (!loaded || isEditing) return;
-        const draft = {
-            date,
-            time,
-            exercises,
-            fingerLoad, shoulderLoad, forearmLoad,
-            openGrip, crimpGrip, pinchGrip, sloperGrip, jugGrip,
-            notes
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-    });
+			fingerLoad = initialData.fingerLoad || 3;
+			shoulderLoad = initialData.shoulderLoad || 3;
+			forearmLoad = initialData.forearmLoad || 3;
+
+			openGrip = initialData.openGrip || 3;
+			crimpGrip = initialData.crimpGrip || 3;
+			pinchGrip = initialData.pinchGrip || 3;
+			sloperGrip = initialData.sloperGrip || 3;
+			jugGrip = initialData.jugGrip || 3;
+
+			notes = initialData.notes || '';
+			isTBC = initialData.isTBC !== undefined ? initialData.isTBC : false;
+
+			loaded = true;
+		} else {
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				try {
+					const data = JSON.parse(saved);
+					if (data.time) time = data.time;
+					if (data.exercises && Array.isArray(data.exercises)) {
+						exercises = data.exercises;
+					}
+
+					if (data.fingerLoad) fingerLoad = data.fingerLoad;
+					if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+					if (data.forearmLoad) forearmLoad = data.forearmLoad;
+
+					if (data.openGrip) openGrip = data.openGrip;
+					if (data.crimpGrip) crimpGrip = data.crimpGrip;
+					if (data.pinchGrip) pinchGrip = data.pinchGrip;
+					if (data.sloperGrip) sloperGrip = data.sloperGrip;
+					if (data.jugGrip) jugGrip = data.jugGrip;
+
+					if (data.notes) notes = data.notes;
+					if (data.isTBC !== undefined) isTBC = data.isTBC;
+				} catch (e) {
+					console.error('Failed to restore draft', e);
+				}
+			}
+
+			// Ensure at least one exercise exists if storage was empty or invalid
+			if (exercises.length === 0) {
+				addExercise();
+			}
+			loaded = true;
+		}
+	});
+
+	// Save to storage whenever state changes
+	$effect(() => {
+		if (!loaded || isEditing) return;
+		const draft = {
+			date,
+			time,
+			exercises,
+			fingerLoad,
+			shoulderLoad,
+			forearmLoad,
+			openGrip,
+			crimpGrip,
+			pinchGrip,
+			sloperGrip,
+			jugGrip,
+			notes,
+			isTBC
+		};
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+	});
 
 	function removeExercise(index: number) {
 		exercises = exercises.filter((_, i) => i !== index);
@@ -160,89 +177,93 @@
 		}
 	}
 
-    let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
-    let saveMessage = $state('');
+	let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
+	let saveMessage = $state('');
 
-    /**
-     * Validates and saves the fingerboard session to Firestore.
-     */
-    async function saveSession() {
-        saveStatus = 'saving';
-		
-        try {
-            const sessionData = {
-                date,
-                time,
-                location: 'N/A', // Fingerboarding usually doesn't need location or defaults to generic
-                exercises: JSON.parse(JSON.stringify(exercises)), // Deep copy
-                fingerLoad,
-                shoulderLoad,
-                forearmLoad,
-                openGrip,
-                crimpGrip,
-                pinchGrip,
-                sloperGrip,
-                jugGrip,
-                notes
-            };
-            
-            let result;
-            if (isEditing && initialData) {
-                result = await updateFingerboardSession(initialData.id, sessionData);
-            } else {
-                result = await createFingerboardSession(sessionData);
-            }
+	/**
+	 * Validates and saves the fingerboard session to Firestore.
+	 */
+	async function saveSession() {
+		saveStatus = 'saving';
 
-            if (result.ok) {
-                saveStatus = 'success';
-                saveMessage = 'Session saved!';
-                if (!isEditing) localStorage.removeItem(STORAGE_KEY);
-                
-                if (onSaved) {
-                    onSaved();
-                } else {
-                    window.dispatchEvent(new CustomEvent('session-saved'));
-                    setTimeout(() => {
-                        resetForm();
-                    }, 2000);
-                }
-            } else {
-                saveStatus = 'error';
-                saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
-            }
-        } catch (e) {
-            saveStatus = 'error';
-            saveMessage = 'Failed to save session';
-            console.error('Save error:', e);
-        }
-    }
+		try {
+			const sessionData = {
+				date,
+				time,
+				location: 'N/A', // Fingerboarding usually doesn't need location or defaults to generic
+				exercises: JSON.parse(JSON.stringify(exercises)), // Deep copy
+				fingerLoad,
+				shoulderLoad,
+				forearmLoad,
+				openGrip,
+				crimpGrip,
+				pinchGrip,
+				sloperGrip,
+				jugGrip,
+				notes,
+				isTBC
+			};
 
-    function resetForm() {
-        date = new Date().toISOString().split('T')[0];
-        time = new Date().toTimeString().split(' ')[0].slice(0, 5);
-        exercises = [];
-        addExercise();
-        fingerLoad = 3;
-        shoulderLoad = 3;
-        forearmLoad = 3;
-        openGrip = 3;
-        crimpGrip = 3;
-        pinchGrip = 3;
-        sloperGrip = 3;
-        jugGrip = 3;
-        notes = '';
-        saveStatus = 'idle';
-        saveMessage = '';
-    }
+			let result;
+			if (isEditing && initialData) {
+				result = await updateFingerboardSession(initialData.id, sessionData);
+			} else {
+				result = await createFingerboardSession(sessionData);
+			}
+
+			if (result.ok) {
+				saveStatus = 'success';
+				saveMessage = 'Session saved!';
+				if (!isEditing) {
+					localStorage.removeItem(STORAGE_KEY);
+					isTBC = true;
+				}
+
+				if (onSaved) {
+					onSaved();
+				} else {
+					window.dispatchEvent(new CustomEvent('session-saved'));
+					setTimeout(() => {
+						resetForm();
+					}, 2000);
+				}
+			} else {
+				saveStatus = 'error';
+				saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
+			}
+		} catch (e) {
+			saveStatus = 'error';
+			saveMessage = 'Failed to save session';
+			console.error('Save error:', e);
+		}
+	}
+
+	function resetForm() {
+		date = new Date().toISOString().split('T')[0];
+		time = new Date().toTimeString().split(' ')[0].slice(0, 5);
+		exercises = [];
+		addExercise();
+		fingerLoad = 3;
+		shoulderLoad = 3;
+		forearmLoad = 3;
+		openGrip = 3;
+		crimpGrip = 3;
+		pinchGrip = 3;
+		sloperGrip = 3;
+		jugGrip = 3;
+		notes = '';
+		saveStatus = 'idle';
+		saveMessage = '';
+	}
 </script>
 
 <div class="form-content">
 	<div class="header-row">
-        <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
-            {#if !isEditing}
-                 <h3>🤏 Fingerboarding</h3>
-            {/if}
-        </div>
+		<div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
+			{#if !isEditing}
+				<h3>🤏 Fingerboarding</h3>
+			{/if}
+		</div>
 		<button class="add-row-btn" onclick={addExercise}>+ Add Exercise</button>
 	</div>
 
@@ -270,7 +291,9 @@
 							{/each}
 						</select>
 					</div>
-					<button class="remove-card-btn" onclick={() => removeExercise(i)} title="Remove Exercise">✕</button>
+					<button class="remove-card-btn" onclick={() => removeExercise(i)} title="Remove Exercise"
+						>✕</button
+					>
 				</div>
 
 				<div class="sets-list">
@@ -290,7 +313,9 @@
 						</div>
 					{/each}
 					<button class="add-set-btn" onclick={() => addSet(i)}>+ Add Set</button>
-                    <button class="rest-btn" onclick={() => startRest(exercise)} title="Interval Timer">⏱ Timer</button>
+					<button class="rest-btn" onclick={() => startRest(exercise)} title="Interval Timer"
+						>⏱ Timer</button
+					>
 				</div>
 
 				<div class="card-footer">
@@ -321,7 +346,7 @@
 				<LoadInput id="forearm-load" label="Forearm" bind:value={forearmLoad} />
 			</div>
 		</div>
-		
+
 		<h4 class="mt-4">Grip Metrics</h4>
 		<div class="load-metrics">
 			<div class="metric-row">
@@ -342,19 +367,38 @@
 		</div>
 	</div>
 
-    <div class="notes-section">
-        <SessionNotes bind:value={notes} placeholder="How did the session feel? Energy levels, mood, etc." />
-    </div>
+	<div class="notes-section">
+		<SessionNotes
+			bind:value={notes}
+			placeholder="How did the session feel? Energy levels, mood, etc."
+		/>
+	</div>
+
+	<div class="tbc-checkbox-wrapper">
+		<input type="checkbox" id="tbc-checkbox" bind:checked={isTBC} />
+		<label
+			for="tbc-checkbox"
+			class="tbc-label"
+			title="Mark this session as To Be Completed (e.g., if you plan to add more exercises or notes later)"
+		>
+			<span class="custom-checkbox"></span>
+			TBC (To Be Completed)
+		</label>
+	</div>
 
 	<div class="submit-section">
 		{#if saveMessage}
-			<div class="save-message" class:success={saveStatus === 'success'} class:error={saveStatus === 'error'}>
+			<div
+				class="save-message"
+				class:success={saveStatus === 'success'}
+				class:error={saveStatus === 'error'}
+			>
 				{saveMessage}
 			</div>
 		{/if}
-		<button 
-			type="button" 
-			class="submit-btn" 
+		<button
+			type="button"
+			class="submit-btn"
 			onclick={saveSession}
 			disabled={saveStatus === 'saving'}
 		>
@@ -368,11 +412,11 @@
 		</button>
 	</div>
 
-    <RestTimer 
-        bind:visible={showRestTimer} 
-        defaultSets={timerDefaultSets} 
-        associatedExerciseId={activeTimerExerciseId}
-    />
+	<RestTimer
+		bind:visible={showRestTimer}
+		defaultSets={timerDefaultSets}
+		associatedExerciseId={activeTimerExerciseId}
+	/>
 </div>
 
 <style>
@@ -381,8 +425,14 @@
 	}
 
 	@keyframes slideIn {
-		from { opacity: 0; transform: translateY(4px); }
-		to { opacity: 1; transform: translateY(0); }
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	.header-row {
@@ -425,7 +475,7 @@
 		border: 1px solid rgba(74, 155, 155, 0.2);
 		border-radius: 12px;
 		padding: 1rem;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 	}
 
 	.card-header {
@@ -509,24 +559,24 @@
 		margin-top: 0.2rem;
 	}
 
-    .rest-btn {
-        align-self: flex-start;
-        background: rgba(45, 212, 191, 0.1);
-        color: var(--teal-primary);
-        border: 1px solid var(--teal-primary);
-        padding: 0.3rem 0.8rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        cursor: pointer;
-        margin-top: 0.2rem;
-        font-weight: 600;
-        margin-left: 0.5rem;
-    }
+	.rest-btn {
+		align-self: flex-start;
+		background: rgba(45, 212, 191, 0.1);
+		color: var(--teal-primary);
+		border: 1px solid var(--teal-primary);
+		padding: 0.3rem 0.8rem;
+		border-radius: 4px;
+		font-size: 0.8rem;
+		cursor: pointer;
+		margin-top: 0.2rem;
+		font-weight: 600;
+		margin-left: 0.5rem;
+	}
 
-    .rest-btn:hover {
-        background: var(--teal-primary);
-        color: white;
-    }
+	.rest-btn:hover {
+		background: var(--teal-primary);
+		color: white;
+	}
 
 	.card-footer {
 		display: grid;
@@ -536,18 +586,21 @@
 		padding-top: 1rem;
 	}
 
-	.meta-input, .notes-input {
+	.meta-input,
+	.notes-input {
 		display: flex;
 		flex-direction: column;
 		gap: 0.2rem;
 	}
 
-	.meta-input label, .notes-input label {
+	.meta-input label,
+	.notes-input label {
 		font-size: 0.75rem;
 		color: var(--text-secondary);
 	}
 
-	.meta-input input, .notes-input input {
+	.meta-input input,
+	.notes-input input {
 		width: 100%;
 		padding: 0.4rem;
 		border: 1px solid #ddd;
@@ -566,7 +619,9 @@
 		font-size: 1.1rem;
 		cursor: pointer;
 		box-shadow: 0 4px 12px rgba(74, 155, 155, 0.3);
-		transition: transform 0.2s, box-shadow 0.2s;
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
 	}
 
 	.submit-btn:disabled {
@@ -591,28 +646,28 @@
 		background: #f8d7da;
 		color: #721c24;
 	}
-	
+
 	select {
 		padding: 0.5rem;
 		border-radius: 6px;
 		border: 1px solid #ccc;
 		background: white;
 	}
-	
+
 	.date-time-row {
 		display: grid;
 		grid-template-columns: 2fr 1fr;
 		gap: 0.5rem;
 	}
-	
-	input[type="date"], input[type="time"] {
+
+	input[type='date'],
+	input[type='time'] {
 		padding: 0.5rem;
 		border-radius: 6px;
 		border: 1px solid #ccc;
 		width: 100%;
 		background: white;
 	}
-
 
 	/* Load Metrics Section */
 	.load-section {
@@ -629,7 +684,7 @@
 			margin: 1rem 0;
 		}
 	}
-	
+
 	.load-section h4 {
 		margin: 0 0 1rem 0;
 		color: var(--teal-secondary);
@@ -663,5 +718,77 @@
 		background-color: rgba(255, 255, 255, 0.6); /* Slightly transparent white */
 	}
 
-    
+	/* Sleek TBC Checkbox Styles */
+	.tbc-checkbox-wrapper {
+		display: flex;
+		justify-content: center;
+		margin: 0.5rem 0 1.5rem 0;
+		width: 100%;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox'] {
+		display: none;
+	}
+
+	.tbc-label {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		cursor: pointer;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+		padding: 0.6rem 1.2rem;
+		border-radius: 30px;
+		background: rgba(0, 0, 0, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		transition: all 0.2s ease;
+		user-select: none;
+	}
+
+	.tbc-label:hover {
+		background: rgba(239, 108, 0, 0.05);
+		border-color: rgba(239, 108, 0, 0.2);
+		color: #ef6c00;
+	}
+
+	.custom-checkbox {
+		width: 20px;
+		height: 20px;
+		border-radius: 6px;
+		border: 2px solid rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		background: white;
+	}
+
+	/* Checkmark trick */
+	.custom-checkbox::after {
+		content: '';
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		margin-top: -2px; /* optical alignment */
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label {
+		background: rgba(239, 108, 0, 0.1);
+		border-color: rgba(239, 108, 0, 0.4);
+		color: #ef6c00;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox {
+		background: #ef6c00;
+		border-color: #ef6c00;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox::after {
+		opacity: 1;
+	}
 </style>

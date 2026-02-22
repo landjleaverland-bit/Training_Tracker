@@ -1,12 +1,12 @@
 <script lang="ts">
 	// Indoor Climb Session Card
 	import { slide } from 'svelte/transition';
-    import { invalidateAll } from '$app/navigation'; // Reload data on update
+	import { invalidateAll } from '$app/navigation'; // Reload data on update
 
 	import type { IndoorClimbSession } from '$lib/types/session';
 	import IndoorClimbEntry from './IndoorClimbEntry.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-    import EditSessionModal from '$lib/components/common/EditSessionModal.svelte';
+	import EditSessionModal from '$lib/components/common/EditSessionModal.svelte';
 	import { deleteIndoorSession } from '$lib/services/api';
 
 	interface Props {
@@ -18,7 +18,7 @@
 
 	let isExpanded = $state(false);
 	let showDeleteModal = $state(false);
-    let showEditModal = $state(false);
+	let showEditModal = $state(false);
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
@@ -27,43 +27,43 @@
 	function handleDeleteSession() {
 		showDeleteModal = true;
 	}
-    
-    function handleEditSession() {
-        showEditModal = true;
-    }
-    
-    function closeEditModal() {
-        showEditModal = false;
-    }
-    
-    async function handleSessionSaved() {
-        showEditModal = false;
-        await invalidateAll();
-    }
+
+	function handleEditSession() {
+		showEditModal = true;
+	}
+
+	function closeEditModal() {
+		showEditModal = false;
+	}
+
+	async function handleSessionSaved() {
+		showEditModal = false;
+		await invalidateAll();
+	}
 
 	async function confirmDeleteSession() {
 		try {
-            const result = await deleteIndoorSession(session.id);
-            if (result.ok) {
-                showDeleteModal = false;
-                onDelete();
-            } else {
-                console.error('Failed to delete session:', result.error);
-                alert('Failed to delete session: ' + result.error);
-            }
-        } catch (e) {
-            console.error('Exception deleting session:', e);
-            alert('Error deleting session');
-        }
+			const result = await deleteIndoorSession(session.id);
+			if (result.ok) {
+				showDeleteModal = false;
+				onDelete();
+			} else {
+				console.error('Failed to delete session:', result.error);
+				alert('Failed to delete session: ' + result.error);
+			}
+		} catch (e) {
+			console.error('Exception deleting session:', e);
+			alert('Error deleting session');
+		}
 	}
 
 	function handleClimbDelete(climbIndex: number) {
-        // Read only
+		// Read only
 	}
-    
-    function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
-        // Read only
-    }
+
+	function handleClimbUpdate(climbIndex: number, updatedClimb: any) {
+		// Read only
+	}
 
 	// Calculate stats
 	let climbCount = $derived(session.climbs?.length ?? 0);
@@ -97,16 +97,19 @@
 			<div class="session-info">
 				<div class="session-text">
 					<h3 class="location">{session.location}</h3>
-						<div class="meta-row">
-							<span class="time-tag">🕒 {session.time || '12:00'}</span>
-							<span class="type-tag">{session.climbingType}</span>
-						</div>
-						<div class="meta-row lowercase">
-							<span class="stat">{climbCount} climbs</span>
-							{#if climbCount > 0}
-								<span class="stat">Max: {maxGrade}</span>
-							{/if}
-						</div>
+					<div class="meta-row">
+						<span class="time-tag">🕒 {session.time || '12:00'}</span>
+						<span class="type-tag">{session.climbingType}</span>
+						{#if session.isTBC}
+							<span class="tbc-tag" title="Session To Be Completed">TBC</span>
+						{/if}
+					</div>
+					<div class="meta-row lowercase">
+						<span class="stat">{climbCount} climbs</span>
+						{#if climbCount > 0}
+							<span class="stat">Max: {maxGrade}</span>
+						{/if}
+					</div>
 				</div>
 
 				<!-- Load Summary (Right aligned, wraps on mobile if needed) -->
@@ -136,16 +139,16 @@
 			<!-- Delete Button (Only visible when expanded or via hover, but better always accessible or in expanded view) -->
 			<!-- Let's put it in the header but propagation stop -->
 			<!-- Actions -->
-            <button 
-                class="btn-icon edit-session" 
-                title="Edit Session"
-                onclick={(e) => {
-                    e.stopPropagation();
-                    handleEditSession();
-                }}
-            >
-                ✏️
-            </button>
+			<button
+				class="btn-icon edit-session"
+				title="Edit Session"
+				onclick={(e) => {
+					e.stopPropagation();
+					handleEditSession();
+				}}
+			>
+				✏️
+			</button>
 			<button
 				class="btn-icon delete-session"
 				title="Delete Session"
@@ -338,13 +341,13 @@
 		onCancel={() => (showDeleteModal = false)}
 	/>
 
-    <EditSessionModal 
-        isOpen={showEditModal} 
-        activityType="indoor_climb" 
-        initialData={session} 
-        onClose={closeEditModal} 
-        onSaved={handleSessionSaved} 
-    />
+	<EditSessionModal
+		isOpen={showEditModal}
+		activityType="indoor_climb"
+		initialData={session}
+		onClose={closeEditModal}
+		onSaved={handleSessionSaved}
+	/>
 </div>
 
 <style>
@@ -462,8 +465,6 @@
 		font-weight: 600;
 		color: var(--text-primary);
 	}
-
-
 
 	.meta-row {
 		display: flex;
@@ -644,8 +645,6 @@
 		margin-bottom: 0.3rem;
 	}
 
-
-
 	@media (max-width: 480px) {
 		.metrics-container {
 			padding: 0.8rem;
@@ -720,5 +719,16 @@
 		font-style: italic;
 		margin: 0;
 		font-size: 0.9rem;
+	}
+
+	.tbc-tag {
+		background: rgba(239, 108, 0, 0.15); /* Sleek amber/orange tint */
+		color: #ef6c00;
+		padding: 0.1rem 0.4rem;
+		border-radius: 4px;
+		font-weight: 700;
+		font-size: 0.75rem;
+		border: 1px solid rgba(239, 108, 0, 0.3);
+		box-shadow: 0 1px 2px rgba(239, 108, 0, 0.1);
 	}
 </style>

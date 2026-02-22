@@ -27,6 +27,8 @@ export interface BaseSession {
     syncStatus: 'pending' | 'synced' | 'error';
     /** Timestamp of last successful sync. */
     syncedAt?: string;
+    /** Flag indicating if the session is To Be Completed. */
+    isTBC?: boolean;
 }
 
 /**

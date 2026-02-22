@@ -2,10 +2,10 @@
 	import { EXERCISE_LIBRARY } from '$lib/data/exercises';
 	import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
 	import { deleteGymSession } from '$lib/services/api';
-    import { invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
-    import EditSessionModal from '$lib/components/common/EditSessionModal.svelte';
+	import EditSessionModal from '$lib/components/common/EditSessionModal.svelte';
 
 	interface Props {
 		session: GymSession;
@@ -16,7 +16,7 @@
 
 	let isExpanded = $state(false);
 	let showDeleteModal = $state(false);
-    let showEditModal = $state(false);
+	let showEditModal = $state(false);
 
 	function toggleExpand() {
 		isExpanded = !isExpanded;
@@ -25,52 +25,72 @@
 	function handleDeleteSession() {
 		showDeleteModal = true;
 	}
-    
-    function handleEditSession() {
-        showEditModal = true;
-    }
-    
-    function closeEditModal() {
-        showEditModal = false;
-    }
-    
-    async function handleSessionSaved() {
-        showEditModal = false;
-        await invalidateAll();
-    }
+
+	function handleEditSession() {
+		showEditModal = true;
+	}
+
+	function closeEditModal() {
+		showEditModal = false;
+	}
+
+	async function handleSessionSaved() {
+		showEditModal = false;
+		await invalidateAll();
+	}
 
 	async function confirmDeleteSession() {
-        try {
-            const result = await deleteGymSession(session.id);
-            if (result.ok) {
-                showDeleteModal = false;
-                onDelete();
-            } else {
-                console.error('Failed to delete session:', result.error);
-                alert('Failed to delete session');
-            }
-        } catch (e) {
-            console.error('Exception deleting session:', e);
+		try {
+			const result = await deleteGymSession(session.id);
+			if (result.ok) {
+				showDeleteModal = false;
+				onDelete();
+			} else {
+				console.error('Failed to delete session:', result.error);
+				alert('Failed to delete session');
+			}
+		} catch (e) {
+			console.error('Exception deleting session:', e);
 			alert('Error deleting session');
-        }
+		}
 	}
 
 	function getExerciseDef(name: string) {
 		return EXERCISE_LIBRARY.find((e) => e.name === name);
 	}
 
-	function getTrainingBlockStyle(block: string | undefined): { bg: string; color: string; border: string } {
+	function getTrainingBlockStyle(block: string | undefined): {
+		bg: string;
+		color: string;
+		border: string;
+	} {
 		switch (block) {
 			case 'Strength':
-				return { bg: 'rgba(99, 102, 241, 0.1)', color: '#4338ca', border: 'rgba(99, 102, 241, 0.2)' }; // Indigo
+				return {
+					bg: 'rgba(99, 102, 241, 0.1)',
+					color: '#4338ca',
+					border: 'rgba(99, 102, 241, 0.2)'
+				}; // Indigo
 			case 'Power':
 				return { bg: 'rgba(239, 68, 68, 0.1)', color: '#b91c1c', border: 'rgba(239, 68, 68, 0.2)' }; // Red
 			case 'Power Endurance':
-				return { bg: 'rgba(245, 158, 11, 0.1)', color: '#b45309', border: 'rgba(245, 158, 11, 0.2)' }; // Amber
+				return {
+					bg: 'rgba(245, 158, 11, 0.1)',
+					color: '#b45309',
+					border: 'rgba(245, 158, 11, 0.2)'
+				}; // Amber
 			case 'Muscular Endurance':
-				return { bg: 'rgba(16, 185, 129, 0.1)', color: '#047857', border: 'rgba(16, 185, 129, 0.2)' }; // Emerald
+				return {
+					bg: 'rgba(16, 185, 129, 0.1)',
+					color: '#047857',
+					border: 'rgba(16, 185, 129, 0.2)'
+				}; // Emerald
 			default:
-				return { bg: 'rgba(107, 114, 128, 0.1)', color: '#374151', border: 'rgba(107, 114, 128, 0.2)' }; // Gray
+				return {
+					bg: 'rgba(107, 114, 128, 0.1)',
+					color: '#374151',
+					border: 'rgba(107, 114, 128, 0.2)'
+				}; // Gray
 		}
 	}
 
@@ -126,7 +146,7 @@
 				<span class="month"
 					>{new Date(session.date).toLocaleDateString('en-GB', { month: 'short' })}</span
 				>
-                                <span class="year">{new Date(session.date).getFullYear()}</span>
+				<span class="year">{new Date(session.date).getFullYear()}</span>
 			</div>
 
 			<div class="session-info">
@@ -138,12 +158,15 @@
 						<span class="time-tag">🕒 {session.time || '12:00'}</span>
 						{#if session.trainingBlock}
 							{@const style = getTrainingBlockStyle(session.trainingBlock)}
-							<span 
+							<span
 								class="block-tag"
 								style="--bg-color: {style.bg}; --text-color: {style.color}; --border-color: {style.border};"
 							>
 								{session.trainingBlock}
 							</span>
+						{/if}
+						{#if session.isTBC}
+							<span class="tbc-tag" title="Session To Be Completed">TBC</span>
 						{/if}
 						<span class="stat">{exerciseCount} Exercises</span>
 						<span class="stat">{totalSets} Sets</span>
@@ -162,16 +185,16 @@
 				{/if}
 			</div>
 
-            <button 
-                class="btn-icon edit-session" 
-                title="Edit Session"
-                onclick={(e) => {
-                    e.stopPropagation();
-                    handleEditSession();
-                }}
-            >
-                ✏️
-            </button>
+			<button
+				class="btn-icon edit-session"
+				title="Edit Session"
+				onclick={(e) => {
+					e.stopPropagation();
+					handleEditSession();
+				}}
+			>
+				✏️
+			</button>
 			<button
 				class="btn-icon delete-session"
 				title="Delete Session"
@@ -196,12 +219,12 @@
 				</div>
 			{/if}
 
-            {#if session.notes}
-                <div class="notes-info">
-                    <span class="label">Notes:</span>
-                    <p class="notes-text">{session.notes}</p>
-                </div>
-            {/if}
+			{#if session.notes}
+				<div class="notes-info">
+					<span class="label">Notes:</span>
+					<p class="notes-text">{session.notes}</p>
+				</div>
+			{/if}
 
 			<div class="exercises-list">
 				{#each Object.entries(groupedExercises) as [category, subcategories]}
@@ -265,12 +288,12 @@
 	onCancel={() => (showDeleteModal = false)}
 />
 
-<EditSessionModal 
-    isOpen={showEditModal} 
-    activityType="gym_session" 
-    initialData={session} 
-    onClose={closeEditModal} 
-    onSaved={handleSessionSaved} 
+<EditSessionModal
+	isOpen={showEditModal}
+	activityType="gym_session"
+	initialData={session}
+	onClose={closeEditModal}
+	onSaved={handleSessionSaved}
 />
 
 <style>
@@ -463,7 +486,8 @@
 		padding: 1.25rem;
 	}
 
-	.bw-info, .notes-info {
+	.bw-info,
+	.notes-info {
 		font-size: 0.9rem;
 		color: var(--text-secondary);
 		margin-bottom: 1.25rem;
@@ -474,20 +498,21 @@
 		border-radius: 20px;
 	}
 
-    .notes-info {
-        display: block; /* Notes take full width */
-        font-style: normal;
-        border-radius: 8px;
-        padding: 0.75rem;
-    }
-    
-    .notes-text {
-        margin: 0.25rem 0 0 0;
-        color: var(--text-primary);
-        white-space: pre-wrap;
-    }
+	.notes-info {
+		display: block; /* Notes take full width */
+		font-style: normal;
+		border-radius: 8px;
+		padding: 0.75rem;
+	}
 
-	.bw-info .label, .notes-info .label {
+	.notes-text {
+		margin: 0.25rem 0 0 0;
+		color: var(--text-primary);
+		white-space: pre-wrap;
+	}
+
+	.bw-info .label,
+	.notes-info .label {
 		font-weight: 600;
 		font-style: normal;
 	}
@@ -630,5 +655,17 @@
 		font-size: 0.9rem;
 		font-weight: 600;
 		text-transform: uppercase;
+	}
+
+	.tbc-tag {
+		background: rgba(239, 108, 0, 0.15); /* Sleek amber/orange tint */
+		color: #ef6c00;
+		padding: 0.1rem 0.4rem;
+		border-radius: 4px;
+		font-weight: 700;
+		font-size: 0.75rem;
+		border: 1px solid rgba(239, 108, 0, 0.3);
+		box-shadow: 0 1px 2px rgba(239, 108, 0, 0.1);
+		margin-right: 0.5rem;
 	}
 </style>

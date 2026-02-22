@@ -1,404 +1,450 @@
 <script lang="ts">
-    /**
-     * @file CompetitionForm.svelte
-     * @component
-     * @description Form for logging competition climbing sessions.
-     * Supports Bouldering, Lead, and Speed types, with specific round configurations.
-     * Allows for comprehensive tracking of competition results and physical load.
-     */
-    import { onMount, createEventDispatcher } from 'svelte';
+	/**
+	 * @file CompetitionForm.svelte
+	 * @component
+	 * @description Form for logging competition climbing sessions.
+	 * Supports Bouldering, Lead, and Speed types, with specific round configurations.
+	 * Allows for comprehensive tracking of competition results and physical load.
+	 */
+	import { onMount, createEventDispatcher } from 'svelte';
 	import { createCompetitionSession, updateCompetitionSession, isOnline } from '$lib/services/api';
-    import type { CompetitionSession, CompetitionRound, CompetitionClimbResult } from '$lib/types/session';
+	import type {
+		CompetitionSession,
+		CompetitionRound,
+		CompetitionClimbResult
+	} from '$lib/types/session';
 	import LoadInput from '$lib/components/ui/LoadInput.svelte';
 	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
 
-    const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 
-    // Props
-    interface Props {
-        /** Initial data for editing an existing session. */
-        initialData?: CompetitionSession | null;
-        /** Callback when the user cancels the form. */
-        onCancel?: () => void;
-        /** Callback when the session is successfully saved. */
-        onSaved?: () => void;
-    }
+	// Props
+	interface Props {
+		/** Initial data for editing an existing session. */
+		initialData?: CompetitionSession | null;
+		/** Callback when the user cancels the form. */
+		onCancel?: () => void;
+		/** Callback when the session is successfully saved. */
+		onSaved?: () => void;
+	}
 
-    let { initialData = null, onCancel, onSaved }: Props = $props();
-    let isEditing = $derived(!!initialData);
+	let { initialData = null, onCancel, onSaved }: Props = $props();
+	let isEditing = $derived(!!initialData);
 
-    const venues = [
-        'Flashpoint Bristol', 'Rockstar Techno', 'Rockstar Unit 3', 'Rockstar Unit 5',
-        'Bloc', 'TCA', 'Other'
-    ];
-    const competitionTypes = ['Bouldering', 'Lead', 'Speed'];
-    const roundOptions = ['Qualifiers', 'Semi-Finals', 'Finals', 'Result', 'Other'];
-    const resultStatuses = ['Flash', 'Top', 'Zone', 'Attempt'];
+	const venues = [
+		'Flashpoint Bristol',
+		'Rockstar Techno',
+		'Rockstar Unit 3',
+		'Rockstar Unit 5',
+		'Bloc',
+		'TCA',
+		'Other'
+	];
+	const competitionTypes = ['Bouldering', 'Lead', 'Speed'];
+	const roundOptions = ['Qualifiers', 'Semi-Finals', 'Finals', 'Result', 'Other'];
+	const resultStatuses = ['Flash', 'Top', 'Zone', 'Attempt'];
 
-    let date = $state(new Date().toISOString().split('T')[0]);
-    let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
-    let venue = $state('');
-    let customVenue = $state('');
-    let type = $state('Bouldering');
-    
-    // Load Metrics
-    let fingerLoad = $state(4);
-    let shoulderLoad = $state(4);
-    let forearmLoad = $state(4);
+	let date = $state(new Date().toISOString().split('T')[0]);
+	let time = $state(new Date().toTimeString().split(' ')[0].slice(0, 5));
+	let venue = $state('');
+	let customVenue = $state('');
+	let type = $state('Bouldering');
 
-    // Round Configuration
-    let roundName = $state('Qualifiers');
-    let customRoundName = $state('');
-    let finalPosition = $state<number | null>(null);
+	// Load Metrics
+	let fingerLoad = $state(4);
+	let shoulderLoad = $state(4);
+	let forearmLoad = $state(4);
 
-    // Dynamic Problem Table
-    let climbs = $state<CompetitionClimbResult[]>([
-        { name: '#1', status: 'Flash', attemptCount: 1, notes: '' }
-    ]);
-    
-    let notes = $state('');
+	// Round Configuration
+	let roundName = $state('Qualifiers');
+	let customRoundName = $state('');
+	let finalPosition = $state<number | null>(null);
 
-    const STORAGE_KEY = 'competition_session_draft';
+	// Dynamic Problem Table
+	let climbs = $state<CompetitionClimbResult[]>([
+		{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }
+	]);
 
-    let loaded = $state(false);
+	let notes = $state('');
+	let isTBC = $state(true); // Default to true
 
-    /**
-     * Initializes the form with existing data or loads a draft from local storage.
-     */
-    onMount(() => {
-        if (initialData) {
-            date = initialData.date;
-            time = initialData.time || '12:00';
-            type = initialData.type || 'Bouldering';
-            notes = initialData.notes || '';
-            
-            // Populate venue
-            if (venues.includes(initialData.venue)) {
-                venue = initialData.venue;
-            } else {
-                venue = 'Other';
-                customVenue = initialData.venue;
-            }
+	const STORAGE_KEY = 'competition_session_draft';
 
-            // Populate Loads
-            fingerLoad = initialData.fingerLoad ?? 4;
-            shoulderLoad = initialData.shoulderLoad ?? 4;
-            forearmLoad = initialData.forearmLoad ?? 4;
+	let loaded = $state(false);
 
-            // Populate Rounds (Take first round for editing simplicity, multi-round editing might need comprehensive UI)
-            if (initialData.rounds && initialData.rounds.length > 0) {
-                const r = initialData.rounds[0];
-                if (roundOptions.includes(r.name)) {
-                    roundName = r.name;
-                } else {
-                    roundName = 'Other';
-                    customRoundName = r.name;
-                }
-                
-                finalPosition = r.position ?? null;
-                
-                if (r.climbs && r.climbs.length > 0) {
-                    climbs = r.climbs;
-                }
-            }
-            loaded = true;
-        } else {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                 try {
-                    const data = JSON.parse(saved);
-                    if (data.venue) venue = data.venue;
-                    if (data.time) time = data.time;
-                    if (data.customVenue) customVenue = data.customVenue;
-                    if (data.type) type = data.type;
-                    if (data.fingerLoad) fingerLoad = data.fingerLoad;
-                    if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
-                    if (data.forearmLoad) forearmLoad = data.forearmLoad;
-                    if (data.roundName) roundName = data.roundName;
-                    if (data.customRoundName) customRoundName = data.customRoundName;
-                    if (data.finalPosition) finalPosition = data.finalPosition;
-                    if (data.climbs) climbs = data.climbs;
-                    if (data.notes) notes = data.notes;
-                 } catch (e) {
-                     console.error('Failed to restore draft', e);
-                 }
-            }
-            loaded = true;
-        }
-    });
+	/**
+	 * Initializes the form with existing data or loads a draft from local storage.
+	 */
+	onMount(() => {
+		if (initialData) {
+			date = initialData.date;
+			time = initialData.time || '12:00';
+			type = initialData.type || 'Bouldering';
+			notes = initialData.notes || '';
 
-    /**
-     * Autosaves current form state to local storage as a draft.
-     */
-    $effect(() => {
-        if (!loaded || isEditing) return;
-        const draft = {
-            date, time, venue, customVenue, type,
-            fingerLoad, shoulderLoad, forearmLoad,
-            roundName, customRoundName, finalPosition,
-            climbs, notes
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-    });
+			// Populate venue
+			if (venues.includes(initialData.venue)) {
+				venue = initialData.venue;
+			} else {
+				venue = 'Other';
+				customVenue = initialData.venue;
+			}
 
-    // Computed states
-    let isResultMode = $derived(roundName === 'Result');
-    let showCustomVenue = $derived(venue === 'Other');
-    let showCustomRound = $derived(roundName === 'Other');
-    let actualRoundName = $derived(roundName === 'Other' ? customRoundName : roundName);
+			// Populate Loads
+			fingerLoad = initialData.fingerLoad ?? 4;
+			shoulderLoad = initialData.shoulderLoad ?? 4;
+			forearmLoad = initialData.forearmLoad ?? 4;
 
-    function addClimbRow() {
-        const nextNum = climbs.length + 1;
-        climbs = [...climbs, { name: `#${nextNum}`, status: 'Flash', attemptCount: 1, notes: '' }];
-    }
+			// Populate Rounds (Take first round for editing simplicity, multi-round editing might need comprehensive UI)
+			if (initialData.rounds && initialData.rounds.length > 0) {
+				const r = initialData.rounds[0];
+				if (roundOptions.includes(r.name)) {
+					roundName = r.name;
+				} else {
+					roundName = 'Other';
+					customRoundName = r.name;
+				}
 
-    function removeClimbRow(index: number) {
-        if (climbs.length > 1) {
-            climbs = climbs.filter((_, i) => i !== index);
-        } else {
-            // If last row, just clear it
-            climbs[0] = { name: '#1', status: 'Flash', attemptCount: 1, notes: '' };
-        }
-    }
+				finalPosition = r.position ?? null;
 
-    /**
-     * Updates climb status and auto-sets attempt count for Flash.
-     */
-    function handleStatusChange(index: number, status: string) {
-        climbs[index].status = status as any;
-        if (status === 'Flash') {
-            climbs[index].attemptCount = 1;
-        }
-    }
+				if (r.climbs && r.climbs.length > 0) {
+					climbs = r.climbs;
+				}
+			}
+			isTBC = initialData.isTBC !== undefined ? initialData.isTBC : false;
+			loaded = true;
+		} else {
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				try {
+					const data = JSON.parse(saved);
+					if (data.venue) venue = data.venue;
+					if (data.time) time = data.time;
+					if (data.customVenue) customVenue = data.customVenue;
+					if (data.type) type = data.type;
+					if (data.fingerLoad) fingerLoad = data.fingerLoad;
+					if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
+					if (data.forearmLoad) forearmLoad = data.forearmLoad;
+					if (data.roundName) roundName = data.roundName;
+					if (data.customRoundName) customRoundName = data.customRoundName;
+					if (data.finalPosition) finalPosition = data.finalPosition;
+					if (data.climbs) climbs = data.climbs;
+					if (data.notes) notes = data.notes;
+					if (data.isTBC !== undefined) isTBC = data.isTBC;
+				} catch (e) {
+					console.error('Failed to restore draft', e);
+				}
+			}
+			loaded = true;
+		}
+	});
 
-    let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
-    let saveMessage = $state('');
+	/**
+	 * Autosaves current form state to local storage as a draft.
+	 */
+	$effect(() => {
+		if (!loaded || isEditing) return;
+		const draft = {
+			date,
+			time,
+			venue,
+			customVenue,
+			type,
+			fingerLoad,
+			shoulderLoad,
+			forearmLoad,
+			roundName,
+			customRoundName,
+			finalPosition,
+			climbs,
+			notes,
+			isTBC
+		};
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+	});
 
-    /**
-     * Validates and saves the competition session to Firestore.
-     */
-    async function saveSession() {
-        if (!venue || (venue === 'Other' && !customVenue)) {
-            saveStatus = 'error';
-            saveMessage = 'Please specify a venue';
-            return;
-        }
+	// Computed states
+	let isResultMode = $derived(roundName === 'Result');
+	let showCustomVenue = $derived(venue === 'Other');
+	let showCustomRound = $derived(roundName === 'Other');
+	let actualRoundName = $derived(roundName === 'Other' ? customRoundName : roundName);
 
-        saveStatus = 'saving';
-        
-        try {
-            const roundData: CompetitionRound = {
-                name: actualRoundName,
-                position: isResultMode ? finalPosition : undefined,
-                climbs: isResultMode ? undefined : JSON.parse(JSON.stringify(climbs))
-            };
+	function addClimbRow() {
+		const nextNum = climbs.length + 1;
+		climbs = [...climbs, { name: `#${nextNum}`, status: 'Flash', attemptCount: 1, notes: '' }];
+	}
 
-            const sessionData = {
-                date,
-                time,
-                venue: venue === 'Other' ? customVenue : venue,
-                customVenue: venue === 'Other' ? customVenue : undefined,
-                type: type as any,
-                fingerLoad: isResultMode ? undefined : fingerLoad,
-                shoulderLoad: isResultMode ? undefined : shoulderLoad,
-                forearmLoad: isResultMode ? undefined : forearmLoad,
-                rounds: [roundData], // Currently creating a new session per log, could append in future logic
-                notes
-            };
-            
-            let result;
-            if (isEditing && initialData) {
-                result = await updateCompetitionSession(initialData.id, sessionData);
-            } else {
-                result = await createCompetitionSession(sessionData);
-            }
+	function removeClimbRow(index: number) {
+		if (climbs.length > 1) {
+			climbs = climbs.filter((_, i) => i !== index);
+		} else {
+			// If last row, just clear it
+			climbs[0] = { name: '#1', status: 'Flash', attemptCount: 1, notes: '' };
+		}
+	}
 
-            if (result.ok) {
-                saveStatus = 'success';
-                saveMessage = 'Competition saved!';
-                if (!isEditing) localStorage.removeItem(STORAGE_KEY);
-                
-                if (onSaved) {
-                    onSaved();
-                } else {
-                    window.dispatchEvent(new CustomEvent('session-saved'));
-                    setTimeout(() => {
-                        resetForm();
-                    }, 2000);
-                }
-            } else {
-                saveStatus = 'error';
-                saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
-            }
-        } catch (e) {
-            saveStatus = 'error';
-            saveMessage = 'Failed to save session';
-            console.error('Save error:', e);
-        }
-    }
+	/**
+	 * Updates climb status and auto-sets attempt count for Flash.
+	 */
+	function handleStatusChange(index: number, status: string) {
+		climbs[index].status = status as any;
+		if (status === 'Flash') {
+			climbs[index].attemptCount = 1;
+		}
+	}
 
-    function resetForm() {
-        date = new Date().toISOString().split('T')[0];
-        time = new Date().toTimeString().split(' ')[0].slice(0, 5);
-        venue = '';
-        customVenue = '';
-        finalPosition = null;
-        climbs = [{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }];
-        notes = '';
-        saveStatus = 'idle';
-        saveMessage = '';
-    }
+	let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
+	let saveMessage = $state('');
+
+	/**
+	 * Validates and saves the competition session to Firestore.
+	 */
+	async function saveSession() {
+		if (!venue || (venue === 'Other' && !customVenue)) {
+			saveStatus = 'error';
+			saveMessage = 'Please specify a venue';
+			return;
+		}
+
+		saveStatus = 'saving';
+
+		try {
+			const roundData: CompetitionRound = {
+				name: actualRoundName,
+				position: isResultMode ? finalPosition : undefined,
+				climbs: isResultMode ? undefined : JSON.parse(JSON.stringify(climbs))
+			};
+
+			const sessionData = {
+				date,
+				time,
+				venue: venue === 'Other' ? customVenue : venue,
+				customVenue: venue === 'Other' ? customVenue : undefined,
+				type: type as any,
+				fingerLoad: isResultMode ? undefined : fingerLoad,
+				shoulderLoad: isResultMode ? undefined : shoulderLoad,
+				forearmLoad: isResultMode ? undefined : forearmLoad,
+				rounds: [roundData], // Currently creating a new session per log, could append in future logic
+				notes,
+				isTBC
+			};
+
+			let result;
+			if (isEditing && initialData) {
+				result = await updateCompetitionSession(initialData.id, sessionData);
+			} else {
+				result = await createCompetitionSession(sessionData);
+			}
+
+			if (result.ok) {
+				saveStatus = 'success';
+				saveMessage = 'Competition saved!';
+				if (!isEditing) {
+					localStorage.removeItem(STORAGE_KEY);
+					isTBC = true;
+				}
+
+				if (onSaved) {
+					onSaved();
+				} else {
+					window.dispatchEvent(new CustomEvent('session-saved'));
+					setTimeout(() => {
+						resetForm();
+					}, 2000);
+				}
+			} else {
+				saveStatus = 'error';
+				saveMessage = 'Failed to save: ' + (result.error || 'Unknown error');
+			}
+		} catch (e) {
+			saveStatus = 'error';
+			saveMessage = 'Failed to save session';
+			console.error('Save error:', e);
+		}
+	}
+
+	function resetForm() {
+		date = new Date().toISOString().split('T')[0];
+		time = new Date().toTimeString().split(' ')[0].slice(0, 5);
+		venue = '';
+		customVenue = '';
+		finalPosition = null;
+		climbs = [{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }];
+		notes = '';
+		saveStatus = 'idle';
+		saveMessage = '';
+	}
 </script>
 
 <div class="form-content">
-    <div style="flex: 1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        {#if !isEditing}
-             <h3 style="margin: 0; color: var(--teal-secondary);">
-                🏆 Competition
-             </h3>
-        {/if}
-    </div>
+	<div
+		style="flex: 1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"
+	>
+		{#if !isEditing}
+			<h3 style="margin: 0; color: var(--teal-secondary);">🏆 Competition</h3>
+		{/if}
+	</div>
 
-    <!-- General Info -->
-    <div class="form-grid">
-        <div class="form-group">
-            <label for="date">Date</label>
-            <div class="date-time-row">
-                <input type="date" id="date" bind:value={date} />
-                <input type="time" id="time" bind:value={time} />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="venue">Venue</label>
-            <select id="venue" bind:value={venue}>
-                <option value="" disabled>Select venue...</option>
-                {#each venues as v}
-                    <option value={v}>{v}</option>
-                {/each}
-            </select>
-            {#if showCustomVenue}
-                <input type="text" bind:value={customVenue} placeholder="Enter venue name" class="mt-2" />
-            {/if}
-        </div>
-    </div>
+	<!-- General Info -->
+	<div class="form-grid">
+		<div class="form-group">
+			<label for="date">Date</label>
+			<div class="date-time-row">
+				<input type="date" id="date" bind:value={date} />
+				<input type="time" id="time" bind:value={time} />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="venue">Venue</label>
+			<select id="venue" bind:value={venue}>
+				<option value="" disabled>Select venue...</option>
+				{#each venues as v}
+					<option value={v}>{v}</option>
+				{/each}
+			</select>
+			{#if showCustomVenue}
+				<input type="text" bind:value={customVenue} placeholder="Enter venue name" class="mt-2" />
+			{/if}
+		</div>
+	</div>
 
-    <div class="form-group mb-4">
-        <label for="type">Type</label>
-        <select id="type" bind:value={type}>
-            {#each competitionTypes as t}
-                <option value={t}>{t}</option>
-            {/each}
-        </select>
-    </div>
+	<div class="form-group mb-4">
+		<label for="type">Type</label>
+		<select id="type" bind:value={type}>
+			{#each competitionTypes as t}
+				<option value={t}>{t}</option>
+			{/each}
+		</select>
+	</div>
 
+	<!-- Session Notes Section -->
+	<div class="form-group mb-4">
+		<SessionNotes bind:value={notes} placeholder="How did the comp go? Strategy, mindset, etc." />
+	</div>
 
+	<!-- Round Configuration -->
+	<div class="round-section">
+		<div class="form-group">
+			<label for="round">Round</label>
+			<select id="round" bind:value={roundName}>
+				{#each roundOptions as r}
+					<option value={r}>{r}</option>
+				{/each}
+			</select>
+			{#if showCustomRound}
+				<input type="text" bind:value={customRoundName} placeholder="Round name" class="mt-2" />
+			{/if}
+		</div>
 
-    <!-- Session Notes Section -->
-    <div class="form-group mb-4">
-        <SessionNotes bind:value={notes} placeholder="How did the comp go? Strategy, mindset, etc." />
-    </div>
+		{#if isResultMode}
+			<!-- RESULT MODE -->
+			<div class="result-mode-content">
+				<div class="form-group">
+					<label for="position">Final Position</label>
+					<input
+						type="number"
+						id="position"
+						bind:value={finalPosition}
+						placeholder="#"
+						class="large-input"
+					/>
+				</div>
+			</div>
+		{:else}
+			<!-- STANDARD MODE -->
+			<div class="section-header centered">
+				<h4>Load Metrics</h4>
+			</div>
+			<div class="load-metrics-column">
+				<div class="metric-row">
+					<LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} max={5} />
+				</div>
+				<div class="metric-row">
+					<LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} max={5} />
+				</div>
+				<div class="metric-row">
+					<LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} max={5} />
+				</div>
+			</div>
 
-    <!-- Round Configuration -->
-    <div class="round-section">
-        <div class="form-group">
-            <label for="round">Round</label>
-            <select id="round" bind:value={roundName}>
-                {#each roundOptions as r}
-                    <option value={r}>{r}</option>
-                {/each}
-            </select>
-            {#if showCustomRound}
-                <input type="text" bind:value={customRoundName} placeholder="Round name" class="mt-2" />
-            {/if}
-        </div>
+			<div class="climbs-table-container">
+				<div class="section-header">
+					<h4>Boulders / Routes</h4>
+				</div>
 
-        {#if isResultMode}
-            <!-- RESULT MODE -->
-            <div class="result-mode-content">
-                <div class="form-group">
-                    <label for="position">Final Position</label>
-                    <input type="number" id="position" bind:value={finalPosition} placeholder="#" class="large-input" />
-                </div>
-            </div>
-        {:else}
-            <!-- STANDARD MODE -->
-            <div class="section-header centered">
-                <h4>Load Metrics</h4>
-            </div>
-            <div class="load-metrics-column">
-                <div class="metric-row">
-                    <LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} max={5} />
-                </div>
-                <div class="metric-row">
-                    <LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} max={5} />
-                </div>
-                <div class="metric-row">
-                    <LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} max={5} />
-                </div>
-            </div>
+				<table class="climbs-table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Result</th>
+							<th>Att.</th>
+							<th>Notes</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each climbs as climb, i}
+							<tr>
+								<td class="col-name">
+									<input type="text" bind:value={climb.name} />
+								</td>
+								<td class="col-status">
+									<select
+										value={climb.status}
+										onchange={(e) => handleStatusChange(i, (e.target as HTMLSelectElement).value)}
+									>
+										{#each resultStatuses as s}
+											<option value={s}>{s}</option>
+										{/each}
+									</select>
+								</td>
+								<td class="col-attempt">
+									{#if climb.status !== 'Flash'}
+										<input type="number" bind:value={climb.attemptCount} min="1" />
+									{:else}
+										<span class="flash-dash">-</span>
+									{/if}
+								</td>
+								<td class="col-notes">
+									<input type="text" bind:value={climb.notes} placeholder="..." />
+								</td>
+								<td class="col-action">
+									<button onclick={() => removeClimbRow(i)}>✕</button>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+				<button class="add-row-btn" onclick={addClimbRow}>+ Add Row</button>
+			</div>
+		{/if}
+	</div>
 
-            <div class="climbs-table-container">
-                <div class="section-header">
-                    <h4>Boulders / Routes</h4>
-                </div>
-                
-                <table class="climbs-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Result</th>
-                            <th>Att.</th>
-                            <th>Notes</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#each climbs as climb, i}
-                            <tr>
-                                <td class="col-name">
-                                    <input type="text" bind:value={climb.name} />
-                                </td>
-                                <td class="col-status">
-                                    <select 
-                                        value={climb.status} 
-                                        onchange={(e) => handleStatusChange(i, (e.target as HTMLSelectElement).value)}
-                                    >
-                                        {#each resultStatuses as s}
-                                            <option value={s}>{s}</option>
-                                        {/each}
-                                    </select>
-                                </td>
-                                <td class="col-attempt">
-                                    {#if climb.status !== 'Flash'}
-                                        <input type="number" bind:value={climb.attemptCount} min="1" />
-                                    {:else}
-                                        <span class="flash-dash">-</span>
-                                    {/if}
-                                </td>
-                                <td class="col-notes">
-                                    <input type="text" bind:value={climb.notes} placeholder="..." />
-                                </td>
-                                <td class="col-action">
-                                    <button onclick={() => removeClimbRow(i)}>✕</button>
-                                </td>
-                            </tr>
-                        {/each}
-                    </tbody>
-                </table>
-                <button class="add-row-btn" onclick={addClimbRow}>+ Add Row</button>
-            </div>
-        {/if}
-    </div>
+	<div class="tbc-checkbox-wrapper">
+		<input type="checkbox" id="tbc-checkbox" bind:checked={isTBC} />
+		<label
+			for="tbc-checkbox"
+			class="tbc-label"
+			title="Mark this session as To Be Completed (e.g., if you plan to add more rounds or notes later)"
+		>
+			<span class="custom-checkbox"></span>
+			TBC (To Be Completed)
+		</label>
+	</div>
 
-    <div class="submit-section">
+	<div class="submit-section">
 		{#if saveMessage}
-			<div class="save-message" class:success={saveStatus === 'success'} class:error={saveStatus === 'error'}>
+			<div
+				class="save-message"
+				class:success={saveStatus === 'success'}
+				class:error={saveStatus === 'error'}
+			>
 				{saveMessage}
 			</div>
 		{/if}
-		<button 
-			type="button" 
-			class="submit-btn" 
+		<button
+			type="button"
+			class="submit-btn"
 			onclick={saveSession}
 			disabled={saveStatus === 'saving'}
 		>
@@ -414,128 +460,201 @@
 </div>
 
 <style>
-    .form-content { animation: slideIn 0.2s ease; }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-    
-    h3 { margin: 0 0 1.5rem 0; color: var(--teal-secondary); font-size: 1.25rem; }
-    h4 { margin: 0; font-size: 1rem; color: var(--text-primary); }
+	.form-content {
+		animation: slideIn 0.2s ease;
+	}
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .form-group label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
-    
-    input, select {
-        padding: 0.6rem;
-        border: 1px solid rgba(74, 155, 155, 0.3);
-        border-radius: 8px;
-        font-size: 0.95rem;
-        width: 100%;
-        box-sizing: border-box;
-    }
+	h3 {
+		margin: 0 0 1.5rem 0;
+		color: var(--teal-secondary);
+		font-size: 1.25rem;
+	}
+	h4 {
+		margin: 0;
+		font-size: 1rem;
+		color: var(--text-primary);
+	}
 
-    .date-time-row {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 0.5rem;
-    }
+	.form-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+	.form-group label {
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+	}
 
-    .mt-2 { margin-top: 0.5rem; }
-    .mb-4 { margin-bottom: 1rem; }
+	input,
+	select {
+		padding: 0.6rem;
+		border: 1px solid rgba(74, 155, 155, 0.3);
+		border-radius: 8px;
+		font-size: 0.95rem;
+		width: 100%;
+		box-sizing: border-box;
+	}
 
-    .round-section {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid #e9ecef;
-    }
+	.date-time-row {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 0.5rem;
+	}
 
-    .load-metrics-column {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        margin-bottom: 1.5rem;
-    }
+	.mt-2 {
+		margin-top: 0.5rem;
+	}
+	.mb-4 {
+		margin-bottom: 1rem;
+	}
 
-    .metric-row {
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-    }
+	.round-section {
+		background: #f8f9fa;
+		border-radius: 12px;
+		padding: 1rem;
+		margin-bottom: 1.5rem;
+		border: 1px solid #e9ecef;
+	}
 
-    .metric-row:nth-child(odd) {
-        background-color: rgba(74, 155, 155, 0.08);
-    }
+	.load-metrics-column {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		margin-bottom: 1.5rem;
+	}
 
-    .metric-row:nth-child(even) {
-        background-color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .section-header.centered {
-        justify-content: center;
-        margin-bottom: 0.5rem;
-    }
-    
-    .section-header.centered h4 {
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 700;
-        color: var(--teal-secondary);
-        font-size: 1.1rem;
-    }
+	.metric-row {
+		padding: 0.4rem 0.8rem;
+		border-radius: 6px;
+	}
 
-    .climbs-table-container { margin-top: 1rem; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    
-    .climbs-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    .climbs-table th { text-align: left; color: var(--text-secondary); font-weight: 500; padding: 0.5rem; border-bottom: 1px solid #ddd; }
-    .climbs-table td { padding: 0.25rem; }
-    
-    .col-name input { width: 50px; text-align: center; }
-    .col-attempt input { width: 50px; text-align: center; }
-    .col-status select { min-width: 90px; }
-    .col-action button { background: none; border: none; color: #d9534f; cursor: pointer; padding: 0.5rem; }
-    
-    .col-notes { position: relative; min-width: 40px; }
-    .col-notes input:focus {
-        position: absolute;
-        right: 0;
-        width: 220px;
-        max-width: 70vw;
-        z-index: 10;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        top: 50%;
-        transform: translateY(-50%);
-    }
+	.metric-row:nth-child(odd) {
+		background-color: rgba(74, 155, 155, 0.08);
+	}
 
-    .add-row-btn {
-        width: 100%;
-        margin-top: 0.5rem;
-        padding: 0.5rem;
-        background: white;
-        border: 1px dashed #aaa;
-        color: var(--text-secondary);
-        border-radius: 6px;
-        cursor: pointer;
-    }
+	.metric-row:nth-child(even) {
+		background-color: rgba(255, 255, 255, 0.6);
+	}
 
-    .result-mode-content {
-        margin-top: 1.5rem;
-        text-align: center;
-    }
+	.section-header.centered {
+		justify-content: center;
+		margin-bottom: 0.5rem;
+	}
 
-    .large-input {
-        font-size: 2rem !important;
-        width: 100px !important;
-        text-align: center;
-        padding: 1rem !important;
-        margin: 0 auto;
-        display: block;
-        border-color: var(--gold-primary) !important;
-        color: var(--teal-secondary);
-        font-weight: 700;
-    }
+	.section-header.centered h4 {
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-weight: 700;
+		color: var(--teal-secondary);
+		font-size: 1.1rem;
+	}
 
-    .submit-btn {
+	.climbs-table-container {
+		margin-top: 1rem;
+	}
+	.section-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.5rem;
+	}
+
+	.climbs-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.9rem;
+	}
+	.climbs-table th {
+		text-align: left;
+		color: var(--text-secondary);
+		font-weight: 500;
+		padding: 0.5rem;
+		border-bottom: 1px solid #ddd;
+	}
+	.climbs-table td {
+		padding: 0.25rem;
+	}
+
+	.col-name input {
+		width: 50px;
+		text-align: center;
+	}
+	.col-attempt input {
+		width: 50px;
+		text-align: center;
+	}
+	.col-status select {
+		min-width: 90px;
+	}
+	.col-action button {
+		background: none;
+		border: none;
+		color: #d9534f;
+		cursor: pointer;
+		padding: 0.5rem;
+	}
+
+	.col-notes {
+		position: relative;
+		min-width: 40px;
+	}
+	.col-notes input:focus {
+		position: absolute;
+		right: 0;
+		width: 220px;
+		max-width: 70vw;
+		z-index: 10;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.add-row-btn {
+		width: 100%;
+		margin-top: 0.5rem;
+		padding: 0.5rem;
+		background: white;
+		border: 1px dashed #aaa;
+		color: var(--text-secondary);
+		border-radius: 6px;
+		cursor: pointer;
+	}
+
+	.result-mode-content {
+		margin-top: 1.5rem;
+		text-align: center;
+	}
+
+	.large-input {
+		font-size: 2rem !important;
+		width: 100px !important;
+		text-align: center;
+		padding: 1rem !important;
+		margin: 0 auto;
+		display: block;
+		border-color: var(--gold-primary) !important;
+		color: var(--teal-secondary);
+		font-weight: 700;
+	}
+
+	.submit-btn {
 		width: 100%;
 		padding: 1rem;
 		background: linear-gradient(135deg, var(--teal-primary) 0%, var(--teal-secondary) 100%);
@@ -548,10 +667,12 @@
 		margin-top: 1rem;
 		box-shadow: 0 4px 12px rgba(74, 155, 155, 0.3);
 	}
-    
-    .submit-btn:disabled { opacity: 0.7; }
-    
-    .save-message {
+
+	.submit-btn:disabled {
+		opacity: 0.7;
+	}
+
+	.save-message {
 		text-align: center;
 		padding: 0.5rem;
 		margin-bottom: 0.5rem;
@@ -559,8 +680,86 @@
 		font-size: 0.9rem;
 	}
 
-	.save-message.success { background: #d4edda; color: #155724; }
-	.save-message.error { background: #f8d7da; color: #721c24; }
+	.save-message.success {
+		background: #d4edda;
+		color: #155724;
+	}
+	.save-message.error {
+		background: #f8d7da;
+		color: #721c24;
+	}
 
+	/* Sleek TBC Checkbox Styles */
+	.tbc-checkbox-wrapper {
+		display: flex;
+		justify-content: center;
+		margin: 0.5rem 0 1.5rem 0;
+		width: 100%;
+	}
 
+	.tbc-checkbox-wrapper input[type='checkbox'] {
+		display: none;
+	}
+
+	.tbc-label {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		cursor: pointer;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+		padding: 0.6rem 1.2rem;
+		border-radius: 30px;
+		background: rgba(0, 0, 0, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		transition: all 0.2s ease;
+		user-select: none;
+	}
+
+	.tbc-label:hover {
+		background: rgba(239, 108, 0, 0.05);
+		border-color: rgba(239, 108, 0, 0.2);
+		color: #ef6c00;
+	}
+
+	.custom-checkbox {
+		width: 20px;
+		height: 20px;
+		border-radius: 6px;
+		border: 2px solid rgba(0, 0, 0, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		background: white;
+	}
+
+	/* Checkmark trick */
+	.custom-checkbox::after {
+		content: '';
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		margin-top: -2px; /* optical alignment */
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label {
+		background: rgba(239, 108, 0, 0.1);
+		border-color: rgba(239, 108, 0, 0.4);
+		color: #ef6c00;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox {
+		background: #ef6c00;
+		border-color: #ef6c00;
+	}
+
+	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox::after {
+		opacity: 1;
+	}
 </style>
