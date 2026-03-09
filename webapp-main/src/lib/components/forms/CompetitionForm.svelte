@@ -3,8 +3,8 @@
 	 * @file CompetitionForm.svelte
 	 * @component
 	 * @description Form for logging competition climbing sessions.
-	 * Supports Bouldering, Lead, and Speed types, with specific round configurations.
-	 * Allows for comprehensive tracking of competition results and physical load.
+	 * Supports multiple rounds (Qualifiers, Semi-Finals, Finals, etc.),
+	 * each with a climb table and position tracking.
 	 */
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { createCompetitionSession, updateCompetitionSession, isOnline } from '$lib/services/api';
@@ -15,16 +15,14 @@
 	} from '$lib/types/session';
 	import LoadInput from '$lib/components/ui/LoadInput.svelte';
 	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
+	import { slide } from 'svelte/transition';
 
 	const dispatch = createEventDispatcher();
 
 	// Props
 	interface Props {
-		/** Initial data for editing an existing session. */
 		initialData?: CompetitionSession | null;
-		/** Callback when the user cancels the form. */
 		onCancel?: () => void;
-		/** Callback when the session is successfully saved. */
 		onSaved?: () => void;
 	}
 
@@ -41,7 +39,7 @@
 		'Other'
 	];
 	const competitionTypes = ['Bouldering', 'Lead', 'Speed'];
-	const roundOptions = ['Qualifiers', 'Semi-Finals', 'Finals', 'Result', 'Other'];
+	const roundOptions = ['Qualifiers', 'Semi-Finals', 'Finals', 'Other'];
 	const resultStatuses = ['Flash', 'Top', 'Zone', 'Attempt'];
 
 	let date = $state(new Date().toISOString().split('T')[0]);
@@ -55,26 +53,35 @@
 	let shoulderLoad = $state(4);
 	let forearmLoad = $state(4);
 
-	// Round Configuration
-	let roundName = $state('Qualifiers');
-	let customRoundName = $state('');
-	let finalPosition = $state<number | null>(null);
+	// --- Multi-Round State ---
+	interface RoundState {
+		id: string;
+		name: string;
+		customName: string;
+		position: number | null;
+		climbs: CompetitionClimbResult[];
+		expanded: boolean;
+	}
 
-	// Dynamic Problem Table
-	let climbs = $state<CompetitionClimbResult[]>([
-		{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }
-	]);
+	function createDefaultRound(name: string = 'Qualifiers'): RoundState {
+		return {
+			id: crypto.randomUUID(),
+			name,
+			customName: '',
+			position: null,
+			climbs: [{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }],
+			expanded: true
+		};
+	}
+
+	let rounds = $state<RoundState[]>([createDefaultRound()]);
 
 	let notes = $state('');
-	let isTBC = $state(false); // Default to false
+	let isTBC = $state(false);
 
 	const STORAGE_KEY = 'competition_session_draft';
-
 	let loaded = $state(false);
 
-	/**
-	 * Initializes the form with existing data or loads a draft from local storage.
-	 */
 	onMount(() => {
 		if (initialData) {
 			date = initialData.date;
@@ -82,7 +89,6 @@
 			type = initialData.type || 'Bouldering';
 			notes = initialData.notes || '';
 
-			// Populate venue
 			if (venues.includes(initialData.venue)) {
 				venue = initialData.venue;
 			} else {
@@ -90,27 +96,28 @@
 				customVenue = initialData.venue;
 			}
 
-			// Populate Loads
 			fingerLoad = initialData.fingerLoad ?? 4;
 			shoulderLoad = initialData.shoulderLoad ?? 4;
 			forearmLoad = initialData.forearmLoad ?? 4;
 
-			// Populate Rounds (Take first round for editing simplicity, multi-round editing might need comprehensive UI)
+			// Convert existing rounds to RoundState
 			if (initialData.rounds && initialData.rounds.length > 0) {
-				const r = initialData.rounds[0];
-				if (roundOptions.includes(r.name)) {
-					roundName = r.name;
-				} else {
-					roundName = 'Other';
-					customRoundName = r.name;
-				}
-
-				finalPosition = r.position ?? null;
-
-				if (r.climbs && r.climbs.length > 0) {
-					climbs = r.climbs;
-				}
+				rounds = initialData.rounds.map((r) => {
+					const isStandardName = roundOptions.includes(r.name);
+					return {
+						id: crypto.randomUUID(),
+						name: isStandardName ? r.name : 'Other',
+						customName: isStandardName ? '' : r.name,
+						position: r.position ?? null,
+						climbs:
+							r.climbs && r.climbs.length > 0
+								? r.climbs
+								: [{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }],
+						expanded: true
+					};
+				});
 			}
+
 			isTBC = initialData.isTBC !== undefined ? initialData.isTBC : false;
 			loaded = true;
 		} else {
@@ -125,10 +132,7 @@
 					if (data.fingerLoad) fingerLoad = data.fingerLoad;
 					if (data.shoulderLoad) shoulderLoad = data.shoulderLoad;
 					if (data.forearmLoad) forearmLoad = data.forearmLoad;
-					if (data.roundName) roundName = data.roundName;
-					if (data.customRoundName) customRoundName = data.customRoundName;
-					if (data.finalPosition) finalPosition = data.finalPosition;
-					if (data.climbs) climbs = data.climbs;
+					if (data.rounds) rounds = data.rounds;
 					if (data.notes) notes = data.notes;
 					if (data.isTBC !== undefined) isTBC = data.isTBC;
 				} catch (e) {
@@ -139,9 +143,6 @@
 		}
 	});
 
-	/**
-	 * Autosaves current form state to local storage as a draft.
-	 */
 	$effect(() => {
 		if (!loaded || isEditing) return;
 		const draft = {
@@ -153,52 +154,64 @@
 			fingerLoad,
 			shoulderLoad,
 			forearmLoad,
-			roundName,
-			customRoundName,
-			finalPosition,
-			climbs,
+			rounds,
 			notes,
 			isTBC
 		};
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
 	});
 
-	// Computed states
-	let isResultMode = $derived(roundName === 'Result');
 	let showCustomVenue = $derived(venue === 'Other');
-	let showCustomRound = $derived(roundName === 'Other');
-	let actualRoundName = $derived(roundName === 'Other' ? customRoundName : roundName);
 
-	function addClimbRow() {
-		const nextNum = climbs.length + 1;
-		climbs = [...climbs, { name: `#${nextNum}`, status: 'Flash', attemptCount: 1, notes: '' }];
+	// --- Round Management ---
+	function addRound() {
+		// Collapse existing rounds, add expanded new one
+		rounds = rounds.map((r) => ({ ...r, expanded: false }));
+		rounds = [...rounds, createDefaultRound('Qualifiers')];
 	}
 
-	function removeClimbRow(index: number) {
-		if (climbs.length > 1) {
-			climbs = climbs.filter((_, i) => i !== index);
-		} else {
-			// If last row, just clear it
-			climbs[0] = { name: '#1', status: 'Flash', attemptCount: 1, notes: '' };
+	function removeRound(index: number) {
+		if (rounds.length > 1) {
+			rounds = rounds.filter((_, i) => i !== index);
 		}
 	}
 
-	/**
-	 * Updates climb status and auto-sets attempt count for Flash.
-	 */
-	function handleStatusChange(index: number, status: string) {
-		climbs[index].status = status as any;
+	function toggleRound(index: number) {
+		rounds[index].expanded = !rounds[index].expanded;
+	}
+
+	function getActualRoundName(round: RoundState): string {
+		return round.name === 'Other' ? round.customName : round.name;
+	}
+
+	// --- Climb Management (per round) ---
+	function addClimbToRound(roundIndex: number) {
+		const nextNum = rounds[roundIndex].climbs.length + 1;
+		rounds[roundIndex].climbs = [
+			...rounds[roundIndex].climbs,
+			{ name: `#${nextNum}`, status: 'Flash', attemptCount: 1, notes: '' }
+		];
+	}
+
+	function removeClimbFromRound(roundIndex: number, climbIndex: number) {
+		const round = rounds[roundIndex];
+		if (round.climbs.length > 1) {
+			rounds[roundIndex].climbs = round.climbs.filter((_, i) => i !== climbIndex);
+		} else {
+			rounds[roundIndex].climbs[0] = { name: '#1', status: 'Flash', attemptCount: 1, notes: '' };
+		}
+	}
+
+	function handleStatusChange(roundIndex: number, climbIndex: number, status: string) {
+		rounds[roundIndex].climbs[climbIndex].status = status as any;
 		if (status === 'Flash') {
-			climbs[index].attemptCount = 1;
+			rounds[roundIndex].climbs[climbIndex].attemptCount = 1;
 		}
 	}
 
 	let saveStatus = $state<'idle' | 'saving' | 'success' | 'error'>('idle');
 	let saveMessage = $state('');
 
-	/**
-	 * Validates and saves the competition session to Firestore.
-	 */
 	async function saveSession() {
 		if (!venue || (venue === 'Other' && !customVenue)) {
 			saveStatus = 'error';
@@ -209,11 +222,11 @@
 		saveStatus = 'saving';
 
 		try {
-			const roundData: CompetitionRound = {
-				name: actualRoundName,
-				position: isResultMode ? finalPosition : undefined,
-				climbs: isResultMode ? undefined : JSON.parse(JSON.stringify(climbs))
-			};
+			const roundsData: CompetitionRound[] = rounds.map((r) => ({
+				name: getActualRoundName(r),
+				position: r.position,
+				climbs: JSON.parse(JSON.stringify(r.climbs))
+			}));
 
 			const sessionData = {
 				date,
@@ -221,10 +234,10 @@
 				venue: venue === 'Other' ? customVenue : venue,
 				customVenue: venue === 'Other' ? customVenue : undefined,
 				type: type as any,
-				fingerLoad: isResultMode ? undefined : fingerLoad,
-				shoulderLoad: isResultMode ? undefined : shoulderLoad,
-				forearmLoad: isResultMode ? undefined : forearmLoad,
-				rounds: [roundData], // Currently creating a new session per log, could append in future logic
+				fingerLoad,
+				shoulderLoad,
+				forearmLoad,
+				rounds: roundsData,
 				notes,
 				isTBC
 			};
@@ -268,8 +281,7 @@
 		time = new Date().toTimeString().split(' ')[0].slice(0, 5);
 		venue = '';
 		customVenue = '';
-		finalPosition = null;
-		climbs = [{ name: '#1', status: 'Flash', attemptCount: 1, notes: '' }];
+		rounds = [createDefaultRound()];
 		notes = '';
 		saveStatus = 'idle';
 		saveMessage = '';
@@ -320,102 +332,148 @@
 		<SessionNotes bind:value={notes} placeholder="How did the comp go? Strategy, mindset, etc." />
 	</div>
 
-	<!-- Round Configuration -->
-	<div class="round-section">
-		<div class="form-group">
-			<label for="round">Round</label>
-			<select id="round" bind:value={roundName}>
-				{#each roundOptions as r}
-					<option value={r}>{r}</option>
-				{/each}
-			</select>
-			{#if showCustomRound}
-				<input type="text" bind:value={customRoundName} placeholder="Round name" class="mt-2" />
-			{/if}
+	<!-- Load Metrics -->
+	<div class="section-header centered">
+		<h4>Load Metrics</h4>
+	</div>
+	<div class="load-metrics-column">
+		<div class="metric-row">
+			<LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} max={5} />
+		</div>
+		<div class="metric-row">
+			<LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} max={5} />
+		</div>
+		<div class="metric-row">
+			<LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} max={5} />
+		</div>
+	</div>
+
+	<!-- Rounds Section -->
+	<div class="rounds-section">
+		<div class="section-header">
+			<h4>Rounds</h4>
 		</div>
 
-		{#if isResultMode}
-			<!-- RESULT MODE -->
-			<div class="result-mode-content">
-				<div class="form-group">
-					<label for="position">Final Position</label>
-					<input
-						type="number"
-						id="position"
-						bind:value={finalPosition}
-						placeholder="#"
-						class="large-input"
-					/>
+		{#each rounds as round, ri}
+			<div class="round-card" transition:slide={{ duration: 150 }}>
+				<div
+					class="round-card-header"
+					role="button"
+					tabindex="0"
+					onclick={() => toggleRound(ri)}
+					onkeydown={(e) => e.key === 'Enter' && toggleRound(ri)}
+				>
+					<div class="round-summary">
+						<span class="round-name">{getActualRoundName(round) || 'New Round'}</span>
+						{#if round.position}
+							<span class="position-pill">#{round.position}</span>
+						{/if}
+						{#if !round.expanded}
+							<span class="climb-count"
+								>{round.climbs.length} climb{round.climbs.length !== 1 ? 's' : ''}</span
+							>
+						{/if}
+					</div>
+					<div class="round-actions">
+						{#if rounds.length > 1}
+							<button
+								class="remove-round-btn"
+								onclick={(e) => {
+									e.stopPropagation();
+									removeRound(ri);
+								}}
+								title="Remove round">✕</button
+							>
+						{/if}
+						<span class="chevron">{round.expanded ? '▲' : '▼'}</span>
+					</div>
 				</div>
-			</div>
-		{:else}
-			<!-- STANDARD MODE -->
-			<div class="section-header centered">
-				<h4>Load Metrics</h4>
-			</div>
-			<div class="load-metrics-column">
-				<div class="metric-row">
-					<LoadInput id="finger" label="Finger Load" bind:value={fingerLoad} max={5} />
-				</div>
-				<div class="metric-row">
-					<LoadInput id="shoulder" label="Shoulder Load" bind:value={shoulderLoad} max={5} />
-				</div>
-				<div class="metric-row">
-					<LoadInput id="forearm" label="Forearm Load" bind:value={forearmLoad} max={5} />
-				</div>
-			</div>
 
-			<div class="climbs-table-container">
-				<div class="section-header">
-					<h4>Boulders / Routes</h4>
-				</div>
+				{#if round.expanded}
+					<div class="round-body" transition:slide={{ duration: 150 }}>
+						<div class="round-meta">
+							<div class="form-group">
+								<label for="round-name-{ri}">Round</label>
+								<select id="round-name-{ri}" bind:value={round.name}>
+									{#each roundOptions as r}
+										<option value={r}>{r}</option>
+									{/each}
+								</select>
+								{#if round.name === 'Other'}
+									<input
+										type="text"
+										bind:value={round.customName}
+										placeholder="Round name"
+										class="mt-2"
+									/>
+								{/if}
+							</div>
+							<div class="form-group">
+								<label for="position-{ri}">Position</label>
+								<input
+									type="number"
+									id="position-{ri}"
+									bind:value={round.position}
+									placeholder="#"
+									class="position-input"
+								/>
+							</div>
+						</div>
 
-				<table class="climbs-table">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Result</th>
-							<th>Att.</th>
-							<th>Notes</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each climbs as climb, i}
-							<tr>
-								<td class="col-name">
-									<input type="text" bind:value={climb.name} />
-								</td>
-								<td class="col-status">
-									<select
-										value={climb.status}
-										onchange={(e) => handleStatusChange(i, (e.target as HTMLSelectElement).value)}
-									>
-										{#each resultStatuses as s}
-											<option value={s}>{s}</option>
-										{/each}
-									</select>
-								</td>
-								<td class="col-attempt">
-									{#if climb.status !== 'Flash'}
-										<input type="number" bind:value={climb.attemptCount} min="1" />
-									{:else}
-										<span class="flash-dash">-</span>
-									{/if}
-								</td>
-								<td class="col-notes">
-									<input type="text" bind:value={climb.notes} placeholder="..." />
-								</td>
-								<td class="col-action">
-									<button onclick={() => removeClimbRow(i)}>✕</button>
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-				<button class="add-row-btn" onclick={addClimbRow}>+ Add Row</button>
+						<!-- Climb Table -->
+						<div class="climbs-table-container">
+							<table class="climbs-table">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Result</th>
+										<th>Att.</th>
+										<th>Notes</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{#each round.climbs as climb, ci}
+										<tr>
+											<td class="col-name">
+												<input type="text" bind:value={climb.name} />
+											</td>
+											<td class="col-status">
+												<select
+													value={climb.status}
+													onchange={(e) =>
+														handleStatusChange(ri, ci, (e.target as HTMLSelectElement).value)}
+												>
+													{#each resultStatuses as s}
+														<option value={s}>{s}</option>
+													{/each}
+												</select>
+											</td>
+											<td class="col-attempt">
+												{#if climb.status !== 'Flash'}
+													<input type="number" bind:value={climb.attemptCount} min="1" />
+												{:else}
+													<span class="flash-dash">-</span>
+												{/if}
+											</td>
+											<td class="col-notes">
+												<input type="text" bind:value={climb.notes} placeholder="..." />
+											</td>
+											<td class="col-action">
+												<button onclick={() => removeClimbFromRound(ri, ci)}>✕</button>
+											</td>
+										</tr>
+									{/each}
+								</tbody>
+							</table>
+							<button class="add-row-btn" onclick={() => addClimbToRound(ri)}>+ Add Climb</button>
+						</div>
+					</div>
+				{/if}
 			</div>
-		{/if}
+		{/each}
+
+		<button class="add-round-btn" onclick={addRound}>+ Add Round</button>
 	</div>
 
 	<div class="tbc-checkbox-wrapper">
@@ -517,14 +575,7 @@
 		margin-bottom: 1rem;
 	}
 
-	.round-section {
-		background: #f8f9fa;
-		border-radius: 12px;
-		padding: 1rem;
-		margin-bottom: 1.5rem;
-		border: 1px solid #e9ecef;
-	}
-
+	/* Load Metrics */
 	.load-metrics-column {
 		display: flex;
 		flex-direction: column;
@@ -558,14 +609,129 @@
 		font-size: 1.1rem;
 	}
 
-	.climbs-table-container {
-		margin-top: 1rem;
-	}
 	.section-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 0.5rem;
+	}
+
+	/* Rounds */
+	.rounds-section {
+		margin-bottom: 1.5rem;
+	}
+
+	.round-card {
+		background: #f8f9fa;
+		border-radius: 12px;
+		border: 1px solid #e9ecef;
+		margin-bottom: 0.75rem;
+		overflow: hidden;
+	}
+
+	.round-card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.8rem 1rem;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.round-card-header:hover {
+		background: rgba(74, 155, 155, 0.05);
+	}
+
+	.round-summary {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.round-name {
+		font-weight: 600;
+		color: var(--teal-secondary);
+		font-size: 1rem;
+	}
+
+	.position-pill {
+		background-color: #ffd700;
+		color: #856404;
+		font-weight: 700;
+		padding: 0.1rem 0.5rem;
+		border-radius: 12px;
+		font-size: 0.8rem;
+	}
+
+	.climb-count {
+		font-size: 0.8rem;
+		color: var(--text-secondary);
+	}
+
+	.round-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.remove-round-btn {
+		background: none;
+		border: none;
+		color: #d9534f;
+		cursor: pointer;
+		padding: 0.3rem 0.5rem;
+		font-size: 0.9rem;
+		border-radius: 4px;
+	}
+
+	.remove-round-btn:hover {
+		background: rgba(217, 83, 79, 0.1);
+	}
+
+	.chevron {
+		color: #aaa;
+		font-size: 0.8rem;
+	}
+
+	.round-body {
+		padding: 0 1rem 1rem 1rem;
+		border-top: 1px solid #e9ecef;
+	}
+
+	.round-meta {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 1rem;
+		padding: 0.75rem 0;
+	}
+
+	.position-input {
+		width: 70px !important;
+		text-align: center;
+		font-weight: 600;
+		font-size: 1.1rem !important;
+	}
+
+	.add-round-btn {
+		width: 100%;
+		padding: 0.75rem;
+		background: white;
+		border: 2px dashed rgba(74, 155, 155, 0.3);
+		color: var(--teal-primary);
+		font-weight: 600;
+		border-radius: 12px;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	.add-round-btn:hover {
+		background: rgba(45, 212, 191, 0.05);
+		border-color: var(--teal-primary);
+	}
+
+	/* Climbs Table */
+	.climbs-table-container {
+		margin-top: 0.5rem;
 	}
 
 	.climbs-table {
@@ -629,21 +795,10 @@
 		cursor: pointer;
 	}
 
-	.result-mode-content {
-		margin-top: 1.5rem;
+	.flash-dash {
 		text-align: center;
-	}
-
-	.large-input {
-		font-size: 2rem !important;
-		width: 100px !important;
-		text-align: center;
-		padding: 1rem !important;
-		margin: 0 auto;
 		display: block;
-		border-color: var(--gold-primary) !important;
-		color: var(--teal-secondary);
-		font-weight: 700;
+		color: var(--text-secondary);
 	}
 
 	.submit-btn {
@@ -727,7 +882,6 @@
 		background: white;
 	}
 
-	/* Checkmark trick */
 	.custom-checkbox::after {
 		content: '';
 		width: 5px;
@@ -737,7 +891,7 @@
 		transform: rotate(45deg);
 		opacity: 0;
 		transition: opacity 0.2s ease;
-		margin-top: -2px; /* optical alignment */
+		margin-top: -2px;
 	}
 
 	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label {

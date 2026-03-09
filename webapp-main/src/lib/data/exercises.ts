@@ -399,7 +399,7 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
     },
     {
         id: 'barbell_good_mornings',
-        name: 'BarbellGood Mornings',
+        name: 'Barbell Good Mornings',
         category: 'Legs',
         subcategory: 'Hinge Pattern',
         targetMuscles: ['Back', 'Hamstrings'],

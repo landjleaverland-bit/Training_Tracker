@@ -47,13 +47,6 @@
 <div class="exercise-card">
 	<div class="header">
 		<div class="title-group">
-			<button
-				class="icon-btn info-btn"
-				on:click={() => dispatch('info', exercise)}
-				aria-label="Exercise Info"
-			>
-				<div class="info-icon">?</div>
-			</button>
 			<div>
 				<h4>{exercise.name}</h4>
 				<!-- Timer Button -->
@@ -211,26 +204,6 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 0.75rem;
-	}
-
-	.info-btn {
-		padding-top: 2px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.info-icon {
-		width: 24px;
-		height: 24px;
-		border-radius: 50%;
-		border: 1.5px solid var(--teal-primary);
-		color: var(--teal-primary);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.9rem;
-		font-weight: bold;
 	}
 
 	.icon-btn {

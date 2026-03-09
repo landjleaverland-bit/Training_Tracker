@@ -96,6 +96,8 @@ export interface IndoorClimbSession extends BaseSession {
     sloperGrip: number;
     /** Volume of Jug grip usage (1-5). */
     jugGrip: number;
+    /** Wall height categorization (Short, Medium, Tall). */
+    wallHeight?: string;
     /** List of individual climbs logged. */
     climbs: ClimbEntry[];
     /** General session notes. */
@@ -130,6 +132,8 @@ export interface OutdoorClimbSession extends BaseSession {
     pinchGrip: number;
     sloperGrip: number;
     jugGrip: number;
+    /** Wall height categorization (Short, Medium, Tall). */
+    wallHeight?: string;
     climbs: ClimbEntry[];
     notes?: string;
 }

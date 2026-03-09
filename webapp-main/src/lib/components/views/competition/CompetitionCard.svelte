@@ -54,20 +54,28 @@
 	}
 
 	function getResultSummary(session: CompetitionSession) {
-		// Quick summary for header
 		if (!session.rounds || session.rounds.length === 0) return 'No rounds';
-		const lastRound = session.rounds[session.rounds.length - 1]; // usually Final
 
-		if (lastRound.position) return `#${lastRound.position} ${lastRound.name}`;
+		// Find best position across all rounds
+		const positions = session.rounds.filter((r) => r.position).map((r) => r.position as number);
+		const bestPosition = positions.length > 0 ? Math.min(...positions) : null;
 
-		if (lastRound.climbs) {
+		const roundCount = session.rounds.length;
+		const lastRound = session.rounds[roundCount - 1];
+
+		let summary = `${roundCount} Rnd${roundCount !== 1 ? 's' : ''}`;
+
+		if (bestPosition) {
+			summary += ` · Best: #${bestPosition}`;
+		} else if (lastRound.climbs) {
 			const tops = lastRound.climbs.filter(
 				(c) => c.status === 'Top' || c.status === 'Flash'
 			).length;
 			const zones = lastRound.climbs.filter((c) => c.status === 'Zone').length;
-			return `${session.rounds.length} Rnds · Final: ${tops}T ${zones + tops}Z`;
+			summary += ` · ${tops}T ${zones + tops}Z`;
 		}
-		return lastRound.name;
+
+		return summary;
 	}
 
 	function getStatusClass(status: string) {

@@ -20,7 +20,6 @@
 
 	import RestTimer from './gym/RestTimer.svelte';
 	import PlateCalculator from './gym/PlateCalculator.svelte';
-	import ExerciseDetailModal from './gym/ExerciseDetailModal.svelte';
 	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
 	import { fly, fade } from 'svelte/transition';
@@ -39,7 +38,6 @@
 	let isEditing = $derived(!!initialData);
 
 	// State
-	let sessionName = $state('');
 	let bodyweight = $state<number | undefined>(undefined);
 	let exercises = $state<GymExercise[]>([]);
 	let startTime = $state(new Date().toISOString().split('T')[0]);
@@ -57,7 +55,6 @@
 	onMount(async () => {
 		if (initialData) {
 			// Populate form from initialData
-			sessionName = initialData.name;
 			bodyweight = initialData.bodyweight;
 			exercises = initialData.exercises;
 			startTime = initialData.date;
@@ -71,7 +68,6 @@
 			if (saved) {
 				try {
 					const data = JSON.parse(saved);
-					if (data.sessionName) sessionName = data.sessionName;
 					if (data.bodyweight) bodyweight = data.bodyweight;
 					if (data.startTime) startTime = data.startTime;
 					if (data.time) time = data.time;
@@ -176,7 +172,6 @@
 	$effect(() => {
 		if (loaded && !isEditing && typeof localStorage !== 'undefined') {
 			const draft = {
-				sessionName,
 				bodyweight,
 				startTime,
 				time,
@@ -270,7 +265,7 @@
 		const sessionPayload = {
 			date: startTime,
 			time,
-			name: sessionName || 'Gym Workout',
+			name: 'Gym Workout',
 			bodyweight,
 			trainingBlock,
 			exercises,
@@ -318,12 +313,6 @@
 			</div>
 		{/if}
 
-		<input
-			type="text"
-			class="session-name"
-			placeholder="Workout Name (e.g. Pull Day)"
-			bind:value={sessionName}
-		/>
 		<div class="meta-row">
 			<label>
 				Date
@@ -358,13 +347,6 @@
 				on:timer={handleExerciseTimer}
 				on:delete={() => {
 					exerciseToDeleteIndex = i;
-				}}
-				on:info={() => {
-					// Find definition from library
-					const def = EXERCISE_LIBRARY.find((e) => e.name === exercise.name);
-					if (def) {
-						activeExerciseDetail = def;
-					}
 				}}
 			/>
 		{/each}
@@ -490,15 +472,6 @@
 		</div>
 	{/if}
 
-	<!-- Exercise Detail Modal -->
-	{#if activeExerciseDetail}
-		<ExerciseDetailModal
-			exercise={activeExerciseDetail}
-			visible={true}
-			on:close={() => (activeExerciseDetail = null)}
-		/>
-	{/if}
-
 	<!-- Rest Timer -->
 	<RestTimer
 		bind:visible={showRestTimer}
@@ -534,23 +507,6 @@
 		padding: 1rem;
 		border-radius: 12px;
 		margin-bottom: 1rem;
-	}
-
-	.session-name {
-		width: 100%;
-		background: transparent;
-		border: none;
-		border-bottom: 1px solid var(--border-primary);
-		font-size: 1.5rem;
-		color: var(--teal-primary);
-		font-weight: bold;
-		margin-bottom: 1rem;
-		padding-bottom: 0.5rem;
-	}
-
-	.session-name:focus {
-		outline: none;
-		border-color: var(--teal-primary);
 	}
 
 	.meta-row {

@@ -38,9 +38,11 @@
 		'Onsighting',
 		'Campusing',
 		'Repeaters',
-		'Comp Sim'
+		'Comp Sim',
+		'Comp'
 	];
-	const difficulties = ['None', 'Easy', 'Medium', 'Hard', 'Max', 'Limit+'];
+	const difficulties = ['Easy', 'Medium', 'Hard'];
+	const wallHeightOptions = ['Short', 'Medium', 'Tall'];
 	const categoryOptions = [
 		'None',
 		'Strength',
@@ -140,7 +142,8 @@
 	// customLocation removed in favor of inline entry
 	let climbingType = $state('');
 	let trainingTypes = $state<string[]>(['None']);
-	let difficulty = $state('None');
+	let difficulty = $state('Easy');
+	let wallHeight = $state('Medium');
 	let categories = $state<string[]>(['None']);
 	let energySystems = $state<string[]>(['None']);
 	let wallAngles = $state<string[]>(['None']);
@@ -194,7 +197,8 @@
 
 			climbingType = initialData.climbingType;
 			trainingTypes = initialData.trainingTypes || ['None'];
-			difficulty = initialData.difficulty || 'None';
+			difficulty = initialData.difficulty || 'Easy';
+			wallHeight = initialData.wallHeight || 'Medium';
 			categories = initialData.categories || ['None'];
 			energySystems = initialData.energySystems || ['None'];
 			wallAngles = initialData.wallAngles || ['None'];
@@ -239,6 +243,7 @@
 					if (data.climbingType) climbingType = data.climbingType;
 					if (data.trainingTypes) trainingTypes = data.trainingTypes;
 					if (data.difficulty) difficulty = data.difficulty;
+					if (data.wallHeight) wallHeight = data.wallHeight;
 					if (data.categories) categories = data.categories;
 					if (data.energySystems) energySystems = data.energySystems;
 					if (data.wallAngles) wallAngles = data.wallAngles;
@@ -274,6 +279,7 @@
 			climbingType,
 			trainingTypes,
 			difficulty,
+			wallHeight,
 			categories,
 			energySystems,
 			fingerLoad,
@@ -399,6 +405,7 @@
 				climbingType,
 				trainingTypes, // Array
 				difficulty,
+				wallHeight,
 				categories, // Array
 				energySystems, // Array
 				wallAngles, // Array
@@ -464,7 +471,8 @@
 		isOtherLocation = false;
 		climbingType = '';
 		trainingTypes = ['None'];
-		difficulty = 'None';
+		difficulty = 'Easy';
+		wallHeight = 'Medium';
 		categories = ['None'];
 		energySystems = ['None'];
 		wallAngles = ['None'];
@@ -559,10 +567,18 @@
 				/>
 			</div>
 			<div class="training-item">
-				<label for="difficulty">Difficulty</label>
+				<label for="difficulty">Difficulty Feel</label>
 				<select id="difficulty" bind:value={difficulty}>
 					{#each difficulties as diff}
 						<option value={diff}>{diff}</option>
+					{/each}
+				</select>
+			</div>
+			<div class="training-item">
+				<label for="wall-height">Wall Height</label>
+				<select id="wall-height" bind:value={wallHeight}>
+					{#each wallHeightOptions as h}
+						<option value={h}>{h}</option>
 					{/each}
 				</select>
 			</div>
