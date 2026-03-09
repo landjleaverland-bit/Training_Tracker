@@ -38,8 +38,7 @@
 		'Onsighting',
 		'Campusing',
 		'Repeaters',
-		'Comp Sim',
-		'Comp'
+		'Comp Sim'
 	];
 	const difficulties = ['Easy', 'Medium', 'Hard'];
 	const wallHeightOptions = ['Short', 'Medium', 'Tall'];

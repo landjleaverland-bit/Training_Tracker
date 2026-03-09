@@ -15,6 +15,7 @@
 	} from '$lib/types/session';
 	import LoadInput from '$lib/components/ui/LoadInput.svelte';
 	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
+	import DeleteConfirmModal from '$lib/components/common/DeleteConfirmModal.svelte';
 	import { slide } from 'svelte/transition';
 
 	const dispatch = createEventDispatcher();
@@ -164,16 +165,27 @@
 	let showCustomVenue = $derived(venue === 'Other');
 
 	// --- Round Management ---
+	let showDeleteRoundModal = $state(false);
+	let roundToDeleteIndex = $state<number | null>(null);
+
 	function addRound() {
 		// Collapse existing rounds, add expanded new one
 		rounds = rounds.map((r) => ({ ...r, expanded: false }));
-		rounds = [...rounds, createDefaultRound('Qualifiers')];
+		const defaultName = rounds.length === 1 ? 'Finals' : 'Other';
+		rounds = [...rounds, createDefaultRound(defaultName)];
 	}
 
-	function removeRound(index: number) {
-		if (rounds.length > 1) {
-			rounds = rounds.filter((_, i) => i !== index);
+	function confirmRemoveRound(index: number) {
+		roundToDeleteIndex = index;
+		showDeleteRoundModal = true;
+	}
+
+	function executeRemoveRound() {
+		if (roundToDeleteIndex !== null && rounds.length > 1) {
+			rounds = rounds.filter((_, i) => i !== roundToDeleteIndex);
 		}
+		showDeleteRoundModal = false;
+		roundToDeleteIndex = null;
 	}
 
 	function toggleRound(index: number) {
@@ -377,10 +389,11 @@
 					<div class="round-actions">
 						{#if rounds.length > 1}
 							<button
+								type="button"
 								class="remove-round-btn"
 								onclick={(e) => {
 									e.stopPropagation();
-									removeRound(ri);
+									confirmRemoveRound(ri);
 								}}
 								title="Remove round">✕</button
 							>
@@ -460,20 +473,23 @@
 												<input type="text" bind:value={climb.notes} placeholder="..." />
 											</td>
 											<td class="col-action">
-												<button onclick={() => removeClimbFromRound(ri, ci)}>✕</button>
+												<button type="button" onclick={() => removeClimbFromRound(ri, ci)}>✕</button
+												>
 											</td>
 										</tr>
 									{/each}
 								</tbody>
 							</table>
-							<button class="add-row-btn" onclick={() => addClimbToRound(ri)}>+ Add Climb</button>
+							<button type="button" class="add-row-btn" onclick={() => addClimbToRound(ri)}
+								>+ Add Climb</button
+							>
 						</div>
 					</div>
 				{/if}
 			</div>
 		{/each}
 
-		<button class="add-round-btn" onclick={addRound}>+ Add Round</button>
+		<button type="button" class="add-round-btn" onclick={addRound}>+ Add Round</button>
 	</div>
 
 	<div class="tbc-checkbox-wrapper">
@@ -514,6 +530,18 @@
 		</button>
 	</div>
 </div>
+
+<DeleteConfirmModal
+	isOpen={showDeleteRoundModal}
+	title="Delete Round"
+	message="Are you sure you want to delete this round? All climbs logged in this round will be lost."
+	confirmKeyword="round"
+	onConfirm={executeRemoveRound}
+	onCancel={() => {
+		showDeleteRoundModal = false;
+		roundToDeleteIndex = null;
+	}}
+/>
 
 <style>
 	.form-content {
