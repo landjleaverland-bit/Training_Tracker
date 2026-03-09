@@ -568,6 +568,9 @@
 			<div class="training-item">
 				<label for="difficulty">Difficulty Feel</label>
 				<select id="difficulty" bind:value={difficulty}>
+					{#if !difficulties.includes(difficulty)}
+						<option value={difficulty}>{difficulty}</option>
+					{/if}
 					{#each difficulties as diff}
 						<option value={diff}>{diff}</option>
 					{/each}
