@@ -193,6 +193,12 @@
 						<span class="value">{session.difficulty}</span>
 					</div>
 				{/if}
+				{#if session.wallHeight}
+					<div class="detail-item">
+						<span class="label">Wall Height</span>
+						<span class="value">{session.wallHeight}</span>
+					</div>
+				{/if}
 				{#if session.categories?.length}
 					<div class="detail-item">
 						<span class="label">Category</span>
