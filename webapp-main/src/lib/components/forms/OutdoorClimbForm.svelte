@@ -141,6 +141,7 @@
 	// Reactive crag list based on selected area
 	let availableCrags = $derived(area ? getCrags(area) : []);
 
+	let isOtherArea = $state(false);
 	let isOtherCrag = $state(false);
 
 	const STORAGE_KEY = 'outdoor_climb_draft';
@@ -153,6 +154,10 @@
 			date = initialData.date;
 			time = initialData.time || '12:00';
 			area = initialData.area;
+			const standardAreas = getAreas();
+			if (area && !standardAreas.includes(area)) {
+				isOtherArea = true;
+			}
 			crag = initialData.crag;
 			const standardCrags = getCrags(area);
 			if (crag && !standardCrags.includes(crag)) {
@@ -193,6 +198,7 @@
 					if (data.area) area = data.area;
 					if (data.crag) crag = data.crag;
 					if (data.sector) sector = data.sector;
+					if (data.isOtherArea) isOtherArea = data.isOtherArea;
 					if (data.isOtherCrag) isOtherCrag = data.isOtherCrag;
 					if (data.climbingType) climbingType = data.climbingType;
 					if (data.trainingTypes) trainingTypes = data.trainingTypes;
@@ -230,6 +236,7 @@
 			area,
 			crag,
 			sector,
+			isOtherArea,
 			isOtherCrag,
 			climbingType,
 			trainingTypes,
@@ -252,13 +259,21 @@
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
 	});
 
-	// Reset crag when area changes
-	$effect(() => {
-		if (area) {
-			crag = '';
-			isOtherCrag = false;
+	function onAreaChange() {
+		if (area === 'Other') {
+			isOtherArea = true;
+			area = '';
 		}
-	});
+		crag = '';
+		isOtherCrag = false;
+	}
+
+	function cancelOtherArea() {
+		isOtherArea = false;
+		area = '';
+		crag = '';
+		isOtherCrag = false;
+	}
 
 	function onCragChange() {
 		if (crag === 'Other') {
@@ -419,7 +434,9 @@
 		date = new Date().toISOString().split('T')[0];
 		time = new Date().toTimeString().split(' ')[0].slice(0, 5);
 		area = '';
+		isOtherArea = false;
 		crag = '';
+		isOtherCrag = false;
 		sector = '';
 		climbingType = '';
 		trainingTypes = ['None'];
@@ -468,33 +485,54 @@
 
 		<div class="form-group">
 			<label for="area">Area</label>
-			<select id="area" bind:value={area}>
-				<option value="" disabled>Select area...</option>
-				{#each areas as a}
-					<option value={a}>{a}</option>
-				{/each}
-			</select>
+			{#if isOtherArea}
+				<div class="input-with-action">
+					<input
+						type="text"
+						id="area-manual"
+						bind:value={area}
+						placeholder="Enter custom area name..."
+						class="flat-left"
+					/>
+					<button
+						type="button"
+						class="action-btn flat-right"
+						onclick={cancelOtherArea}
+						title="Back to list">✕</button
+					>
+				</div>
+			{:else}
+				<select id="area" bind:value={area} onchange={onAreaChange}>
+					<option value="" disabled>Select area...</option>
+					{#each areas as a}
+						<option value={a}>{a}</option>
+					{/each}
+					<option value="Other">Other (Manual Entry)</option>
+				</select>
+			{/if}
 		</div>
 	</div>
 
 	<div class="form-row">
 		<div class="form-group">
 			<label for="crag">Crag</label>
-			{#if isOtherCrag}
+			{#if isOtherCrag || isOtherArea}
 				<div class="input-with-action">
 					<input
 						type="text"
 						id="crag-manual"
 						bind:value={crag}
 						placeholder="Enter custom crag name..."
-						class="flat-left"
+						class={!isOtherArea ? 'flat-left' : ''}
 					/>
+					{#if !isOtherArea}
 					<button
 						type="button"
 						class="action-btn flat-right"
 						onclick={cancelOtherCrag}
 						title="Back to list">✕</button
 					>
+					{/if}
 				</div>
 			{:else}
 				<select id="crag" bind:value={crag} disabled={!area} onchange={onCragChange}>
