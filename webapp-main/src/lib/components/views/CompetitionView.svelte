@@ -7,7 +7,12 @@
 	import type { CompetitionSession } from '$lib/types/session';
     import CompetitionCard from './competition/CompetitionCard.svelte';
 
-	let sessions = $state<CompetitionSession[]>([]);
+	interface Props {
+		sessions?: CompetitionSession[];
+		selectedDate?: string;
+	}
+
+	let { sessions = $bindable([]), selectedDate = $bindable('') }: Props = $props();
 	let loading = $state(true);
 
 	// Pagination
@@ -50,6 +55,13 @@
 	function loadMore() {
 		visibleCount += ITEMS_PER_PAGE;
 	}
+
+	let filteredSessions = $derived(
+		sessions.filter((s) => {
+			if (selectedDate && s.date !== selectedDate) return false;
+			return true;
+		})
+	);
 </script>
 
 <div class="view-content">
@@ -71,18 +83,24 @@
 
 	{#if loading && sessions.length === 0}
 		<div class="loading">Loading sessions...</div>
-	{:else if sessions.length === 0}
-		<div class="empty-state">No competitions logged yet.</div>
+	{:else if filteredSessions.length === 0}
+		<div class="empty-state">
+			{#if sessions.length > 0}
+				No competitions on this date.
+			{:else}
+				No competitions logged yet.
+			{/if}
+		</div>
 	{:else}
 		<div class="timeline">
-			{#each sessions.slice(0, visibleCount) as session}
+			{#each filteredSessions.slice(0, visibleCount) as session}
                 <CompetitionCard {session} />
 			{/each}
 
-			{#if visibleCount < sessions.length}
+			{#if visibleCount < filteredSessions.length}
 				<div class="load-more-container">
 					<button class="load-more-btn" onclick={loadMore}>
-						Load More ({sessions.length - visibleCount} remaining)
+						Load More ({filteredSessions.length - visibleCount} remaining)
 					</button>
 				</div>
 			{/if}

@@ -9,8 +9,13 @@
 	import type { IndoorClimbSession } from '$lib/types/session';
     import { downloadCSV } from '$lib/utils/export';
 
+	interface Props {
+		sessions?: IndoorClimbSession[];
+		selectedDate?: string;
+	}
+
 	// State
-	let sessions = $state<IndoorClimbSession[]>([]);
+	let { sessions = $bindable([]), selectedDate = $bindable('') }: Props = $props();
 	let filteredSessions = $state<IndoorClimbSession[]>([]);
 	
 	let isLoading = $state(false);
@@ -24,6 +29,14 @@
         climbingType: '',
 		sessionType: '',
 		grade: ''
+	});
+
+	$effect(() => {
+		if (selectedDate !== undefined && filters) {
+			filters.startDate = selectedDate;
+			filters.endDate = selectedDate;
+			applyFilters();
+		}
 	});
 
 	// Pagination state

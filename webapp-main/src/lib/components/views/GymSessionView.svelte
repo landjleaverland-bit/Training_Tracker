@@ -8,8 +8,13 @@
 	import type { GymSession } from '$lib/types/session';
     import { downloadCSV } from '$lib/utils/export';
 
+	interface Props {
+		sessions?: GymSession[];
+		selectedDate?: string;
+	}
+
 	// State
-	let sessions = $state<GymSession[]>([]);
+	let { sessions = $bindable([]), selectedDate = $bindable('') }: Props = $props();
 	let filteredSessions = $state<GymSession[]>([]);
 	
 	let isLoading = $state(false);
@@ -21,6 +26,14 @@
 		endDate: '',
 		name: '',
 		trainingBlock: ''
+	});
+
+	$effect(() => {
+		if (selectedDate !== undefined && filters) {
+			filters.startDate = selectedDate;
+			filters.endDate = selectedDate;
+			applyFilters();
+		}
 	});
 
 	// Pagination state

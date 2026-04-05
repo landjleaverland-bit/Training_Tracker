@@ -1,11 +1,12 @@
 <script lang="ts">
 	// View Data page - for viewing training history
-	import { fade, scale } from 'svelte/transition';
+	import { fade, scale, slide } from 'svelte/transition';
 	import IndoorClimbView from '$lib/components/views/IndoorClimbView.svelte';
 	import OutdoorClimbView from '$lib/components/views/OutdoorClimbView.svelte';
 	import GymSessionView from '$lib/components/views/GymSessionView.svelte';
 	import FingerboardingView from '$lib/components/views/FingerboardingView.svelte';
 	import CompetitionView from '$lib/components/views/CompetitionView.svelte';
+	import CalendarView from '$lib/components/common/CalendarView.svelte';
 	import type { Session } from '$lib/types/session';
 
 	const activityTypes = [
@@ -17,7 +18,18 @@
 	];
 
 	let selectedActivity = $state('');
-	
+	let showCalendar = $state(false);
+	let activeSessions = $state<any[]>([]);
+	let activeDate = $state('');
+
+	// Reset state when activity changes
+	$effect(() => {
+		if (selectedActivity) {
+			activeSessions = [];
+			activeDate = '';
+		}
+	});
+
     // Settings/Delete Modal removed as local cache is deprecated.
     // Bulk delete functionality can be added later if needed via API.
 </script>
@@ -32,28 +44,50 @@
 
 	
 	<div class="content-card">
-		<div class="form-group">
-			<label for="activity-type">Activity Type</label>
-			<select id="activity-type" bind:value={selectedActivity}>
-				<option value="" disabled>Select an activity...</option>
-				{#each activityTypes as activity (activity.value)}
-					<option value={activity.value}>{activity.icon} {activity.label}</option>
-				{/each}
-			</select>
+		<div class="form-group-row">
+			<div class="form-group flex-1">
+				<label for="activity-type">Activity Type</label>
+				<select id="activity-type" bind:value={selectedActivity}>
+					<option value="" disabled>Select an activity...</option>
+					{#each activityTypes as activity (activity.value)}
+						<option value={activity.value}>{activity.icon} {activity.label}</option>
+					{/each}
+				</select>
+			</div>
+			
+			{#if selectedActivity}
+				<button 
+					class="calendar-toggle {showCalendar ? 'active' : ''}" 
+					onclick={() => showCalendar = !showCalendar}
+					title="Toggle Calendar View"
+				>
+					📅
+				</button>
+			{/if}
 		</div>
+
+		{#if showCalendar && selectedActivity}
+			<div transition:slide={{ duration: 200 }}>
+				<CalendarView 
+					bind:selectedDate={activeDate} 
+					sessions={activeSessions} 
+					activityType={selectedActivity} 
+				/>
+			</div>
+		{/if}
 
 		{#if selectedActivity}
 			<div class="view-container">
 				{#if selectedActivity === 'indoor_climb'}
-					<IndoorClimbView />
+					<IndoorClimbView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'outdoor_climb'}
-					<OutdoorClimbView />
+					<OutdoorClimbView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'gym_session'}
-					<GymSessionView />
+					<GymSessionView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'fingerboarding'}
-					<FingerboardingView />
+					<FingerboardingView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'competition'}
-					<CompetitionView />
+					<CompetitionView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{/if}
 			</div>
 		{/if}
@@ -108,6 +142,41 @@
 		border: 1px solid rgba(74, 155, 155, 0.15);
 	}
 
+	.form-group-row {
+		display: flex;
+		align-items: flex-end;
+		gap: 1rem;
+	}
+
+	.flex-1 {
+		flex: 1;
+	}
+
+	.calendar-toggle {
+		background: white;
+		border: 2px solid rgba(74, 155, 155, 0.3);
+		border-radius: 10px;
+		height: 48px;
+		width: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.5rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.calendar-toggle:hover {
+		border-color: var(--teal-primary);
+		background: rgba(74, 155, 155, 0.05);
+	}
+
+	.calendar-toggle.active {
+		background: var(--teal-secondary);
+		border-color: var(--teal-secondary);
+		box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+	}
+
 	.form-group {
 		display: flex;
 		flex-direction: column;
@@ -129,6 +198,7 @@
 		color: var(--text-primary);
 		cursor: pointer;
 		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		height: 48px;
 	}
 
 	.form-group select:focus {

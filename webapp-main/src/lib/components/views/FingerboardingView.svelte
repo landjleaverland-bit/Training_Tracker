@@ -3,7 +3,12 @@
 	import type { FingerboardSession } from '$lib/types/session';
 	import FingerboardSessionCard from './fingerboarding/FingerboardSessionCard.svelte';
 
-	let sessions = $state<FingerboardSession[]>([]);
+	interface Props {
+		sessions?: FingerboardSession[];
+		selectedDate?: string;
+	}
+
+	let { sessions = $bindable([]), selectedDate = $bindable('') }: Props = $props();
 	let loading = $state(true);
 	let startDate = $state('');
 	let endDate = $state('');
@@ -17,6 +22,13 @@
 		startDate;
 		endDate;
 		visibleCount = ITEMS_PER_PAGE;
+	});
+
+	$effect(() => {
+		if (selectedDate !== undefined) {
+			startDate = selectedDate;
+			endDate = selectedDate;
+		}
 	});
 
 	async function loadSessions() {
