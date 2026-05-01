@@ -52,6 +52,21 @@
 
 	// Determine activity types per day
 	let dayTypes = $derived.by(() => {
+		if (activityType === 'combined') {
+			const data: Record<string, string[]> = {};
+			for (const s of sessions) {
+				const d = s.date;
+				if (!data[d]) data[d] = [];
+				if (!data[d].includes(s.activityType)) data[d].push(s.activityType);
+			}
+			const result: Record<string, string> = {};
+			for (const [date, types] of Object.entries(data)) {
+				if (types.length > 1) result[date] = 'multiple';
+				else result[date] = types[0];
+			}
+			return result;
+		}
+
 		const data: Record<string, { boulder: boolean; sport: boolean; other: boolean }> = {};
 
 		for (const s of sessions) {
@@ -89,7 +104,7 @@
 			}
 		}
 
-		const result: Record<string, 'boulder' | 'sport' | 'mixed' | 'other'> = {};
+		const result: Record<string, string> = {};
 		for (const [date, info] of Object.entries(data)) {
 			if (info.boulder && info.sport) result[date] = 'mixed';
 			else if (info.boulder) result[date] = 'boulder';
@@ -160,7 +175,16 @@
 		{/each}
 	</div>
 
-	{#if activityType === 'indoor_climb' || activityType === 'outdoor_climb' || activityType === 'competition'}
+	{#if activityType === 'combined'}
+		<div class="calendar-legend">
+			<div class="legend-item"><span class="box type-indoor_climb"></span> Indoor</div>
+			<div class="legend-item"><span class="box type-outdoor_climb"></span> Outdoor</div>
+			<div class="legend-item"><span class="box type-gym_session"></span> Gym</div>
+			<div class="legend-item"><span class="box type-fingerboarding"></span> Fingerboard</div>
+			<div class="legend-item"><span class="box type-competition"></span> Comp</div>
+			<div class="legend-item"><span class="box type-multiple"></span> Multiple</div>
+		</div>
+	{:else if activityType === 'indoor_climb' || activityType === 'outdoor_climb' || activityType === 'competition'}
 		<div class="calendar-legend">
 			<div class="legend-item"><span class="box type-boulder"></span> Bouldering</div>
 			<div class="legend-item"><span class="box type-sport"></span> Sport / Lead</div>
@@ -279,6 +303,36 @@
         color: #004d40;
         font-weight: 600;
 	}
+	.day.type-indoor_climb {
+		background: rgba(66, 165, 245, 0.3); /* Blue */
+		color: #0d47a1;
+		font-weight: 600;
+	}
+	.day.type-outdoor_climb {
+		background: rgba(129, 199, 132, 0.3); /* Green */
+		color: #1b5e20;
+		font-weight: 600;
+	}
+	.day.type-gym_session {
+		background: rgba(255, 183, 77, 0.3); /* Orange */
+		color: #e65100;
+		font-weight: 600;
+	}
+	.day.type-fingerboarding {
+		background: rgba(149, 117, 205, 0.3); /* Purple */
+		color: #4a148c;
+		font-weight: 600;
+	}
+	.day.type-competition {
+		background: rgba(239, 83, 80, 0.3); /* Red */
+		color: #b71c1c;
+		font-weight: 600;
+	}
+	.day.type-multiple {
+		background: linear-gradient(135deg, rgba(66, 165, 245, 0.4) 0%, rgba(129, 199, 132, 0.4) 100%);
+		color: #333;
+		font-weight: 600;
+	}
 
 	.day.selected {
 		border-color: var(--teal-primary);
@@ -312,4 +366,10 @@
 	.box.type-boulder { background: rgba(66, 165, 245, 0.5); }
 	.box.type-sport { background: rgba(239, 83, 80, 0.5); }
 	.box.type-mixed { background: linear-gradient(135deg, rgba(66, 165, 245, 0.5) 50%, rgba(239, 83, 80, 0.5) 50%); }
+	.box.type-indoor_climb { background: rgba(66, 165, 245, 0.5); }
+	.box.type-outdoor_climb { background: rgba(129, 199, 132, 0.5); }
+	.box.type-gym_session { background: rgba(255, 183, 77, 0.5); }
+	.box.type-fingerboarding { background: rgba(149, 117, 205, 0.5); }
+	.box.type-competition { background: rgba(239, 83, 80, 0.5); }
+	.box.type-multiple { background: linear-gradient(135deg, rgba(66, 165, 245, 0.5) 50%, rgba(129, 199, 132, 0.5) 50%); }
 </style>

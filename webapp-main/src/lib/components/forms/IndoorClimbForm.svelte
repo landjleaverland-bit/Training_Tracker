@@ -550,7 +550,11 @@
 
 	<div class="form-group">
 		<label for="climbing-type">Climbing Type</label>
-		<select id="climbing-type" bind:value={climbingType}>
+		<select id="climbing-type" bind:value={climbingType} onchange={(e) => {
+			if (climbingType === 'Bouldering') {
+				wallHeight = 'Short';
+			}
+		}}>
 			<option value="" disabled>Select type...</option>
 			{#each climbingTypes as type}
 				<option value={type}>{type}</option>

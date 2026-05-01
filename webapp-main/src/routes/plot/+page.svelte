@@ -319,6 +319,7 @@
         { id: 'strength', label: 'Finger Strength Metrics' },
         { id: 'gym_exercises', label: 'Gym Exercises' },
         { id: 'load', label: 'Load Tracking' },
+        { id: 'combined', label: 'Combined' },
     ];
 
     let currentViewLabel = $derived(views.find(v => v.id === selectedView)?.label);
@@ -646,6 +647,10 @@
                     {:else}
                         <p class="no-data">No gym exercises recorded yet.</p>
                     {/if}
+                 </div>
+            {:else if selectedView === 'combined'}
+                 <div class="empty-state" style="padding: 3rem; text-align: center; color: var(--text-secondary); background: rgba(255, 255, 255, 0.5); border-radius: 12px; border: 2px dashed rgba(74, 155, 155, 0.15);">
+                     <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Combined view is currently a placeholder for future updates.</p>
                  </div>
             {/if}
         {/if}

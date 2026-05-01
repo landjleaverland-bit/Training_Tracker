@@ -7,6 +7,7 @@
 	import FingerboardingView from '$lib/components/views/FingerboardingView.svelte';
 	import CompetitionView from '$lib/components/views/CompetitionView.svelte';
 	import CalendarView from '$lib/components/common/CalendarView.svelte';
+	import { getIndoorSessions, getOutdoorSessions, getGymSessions, getFingerboardSessions, getCompetitionSessions } from '$lib/services/api';
 	import type { Session } from '$lib/types/session';
 
 	const activityTypes = [
@@ -14,7 +15,8 @@
 		{ value: 'outdoor_climb', label: 'Outdoor Climb', icon: '⛰️' },
 		{ value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
 		{ value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
-		{ value: 'competition', label: 'Competition', icon: '🏆' }
+		{ value: 'competition', label: 'Competition', icon: '🏆' },
+		{ value: 'combined', label: 'Combined', icon: '📅' }
 	];
 
 	let selectedActivity = $state('');
@@ -27,8 +29,36 @@
 		if (selectedActivity) {
 			activeSessions = [];
 			activeDate = '';
+			
+			if (selectedActivity === 'combined') {
+				fetchAllSessions();
+			}
 		}
 	});
+
+	async function fetchAllSessions() {
+		try {
+			const [indoor, outdoor, gym, finger, comp] = await Promise.all([
+				getIndoorSessions(),
+				getOutdoorSessions(),
+				getGymSessions(),
+				getFingerboardSessions(),
+				getCompetitionSessions()
+			]);
+
+			let allSessions: any[] = [];
+			if (indoor.ok && indoor.data) allSessions = [...allSessions, ...indoor.data.map(s => ({ ...s, activityType: 'indoor_climb' }))];
+			if (outdoor.ok && outdoor.data) allSessions = [...allSessions, ...outdoor.data.map(s => ({ ...s, activityType: 'outdoor_climb' }))];
+			if (gym.ok && gym.data) allSessions = [...allSessions, ...gym.data.map(s => ({ ...s, activityType: 'gym_session' }))];
+			if (finger.ok && finger.data) allSessions = [...allSessions, ...finger.data.map(s => ({ ...s, activityType: 'fingerboarding' }))];
+			if (comp.ok && comp.data) allSessions = [...allSessions, ...comp.data.map(s => ({ ...s, activityType: 'competition' }))];
+
+			allSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+			activeSessions = allSessions;
+		} catch (e) {
+			console.error("Failed to fetch combined sessions", e);
+		}
+	}
 
     // Settings/Delete Modal removed as local cache is deprecated.
     // Bulk delete functionality can be added later if needed via API.
@@ -88,6 +118,11 @@
 					<FingerboardingView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'competition'}
 					<CompetitionView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
+				{:else if selectedActivity === 'combined'}
+					<div style="padding: 3rem; text-align: center; color: var(--text-secondary); background: rgba(255, 255, 255, 0.5); border-radius: 12px; border: 2px dashed rgba(74, 155, 155, 0.15);">
+						<p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Combined view is currently a placeholder for future updates.</p>
+						<small style="opacity: 0.7;">You can still use the calendar above to view all your sessions!</small>
+					</div>
 				{/if}
 			</div>
 		{/if}
