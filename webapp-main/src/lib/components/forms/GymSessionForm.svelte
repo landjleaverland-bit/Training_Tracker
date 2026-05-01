@@ -68,9 +68,13 @@
 			if (saved) {
 				try {
 					const data = JSON.parse(saved);
+
+					// Check if draft is older than 24 hours
+					const isStale = data.draftSavedAt ? (Date.now() - data.draftSavedAt > 24 * 60 * 60 * 1000) : false;
+
 					if (data.bodyweight) bodyweight = data.bodyweight;
-					if (data.startTime) startTime = data.startTime;
-					if (data.time) time = data.time;
+					if (data.startTime && !isStale) startTime = data.startTime;
+					if (data.time && !isStale) time = data.time;
 					if (data.trainingBlock) trainingBlock = data.trainingBlock;
 					if (data.exercises) exercises = data.exercises;
 					if (data.notes) notes = data.notes;
@@ -178,7 +182,8 @@
 				trainingBlock,
 				exercises,
 				notes,
-				isTBC
+				isTBC,
+				draftSavedAt: Date.now()
 			};
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
 		}

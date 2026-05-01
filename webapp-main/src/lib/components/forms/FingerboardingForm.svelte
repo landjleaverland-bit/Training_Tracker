@@ -126,7 +126,12 @@
 			if (saved) {
 				try {
 					const data = JSON.parse(saved);
-					if (data.time) time = data.time;
+
+					// Check if draft is older than 24 hours
+					const isStale = data.draftSavedAt ? (Date.now() - data.draftSavedAt > 24 * 60 * 60 * 1000) : false;
+
+					if (data.date && !isStale) date = data.date;
+					if (data.time && !isStale) time = data.time;
 					if (data.exercises && Array.isArray(data.exercises)) {
 						exercises = data.exercises;
 					}
@@ -172,7 +177,8 @@
 			sloperGrip,
 			jugGrip,
 			notes,
-			isTBC
+			isTBC,
+			draftSavedAt: Date.now()
 		};
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
 	});
