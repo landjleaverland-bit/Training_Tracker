@@ -1,13 +1,15 @@
 <script lang="ts">
     import { VALID_GRADES_LOWER } from '$lib/constants';
+    import { formatGrade } from '$lib/utils/formatters';
 
     interface Props {
         value: string;
         placeholder?: string;
         required?: boolean;
+        isSport?: boolean;
     }
 
-    let { value = $bindable(), placeholder = 'V3' }: Props = $props();
+    let { value = $bindable(), placeholder = 'V3', isSport = false }: Props = $props();
 
     function isValidGrade(g: string): boolean {
         if (!g.trim()) return true; // Allow empty
@@ -15,12 +17,19 @@
     }
 
     let valid = $derived(isValidGrade(value));
+
+    function handleBlur() {
+        if (value) {
+            value = formatGrade(value, isSport);
+        }
+    }
 </script>
 
 <div class="grade-input-container">
     <input 
         type="text" 
         bind:value={value} 
+        onblur={handleBlur}
         {placeholder}
         class="grade-input" 
         class:invalid={!valid}
@@ -43,7 +52,6 @@
         border: 2px solid rgba(74, 155, 155, 0.2);
         font-family: monospace;
         font-size: 0.95rem;
-        text-transform: uppercase;
         transition: border-color 0.2s;
     }
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Single climb entry row component
 	import { slide } from 'svelte/transition';
+	import { formatGrade } from '$lib/utils/formatters';
 
 	interface Props {
 		climb: {
@@ -52,7 +53,7 @@
             aria-expanded={isExpanded}
         >
             <div class="climb-main-info">
-                <span class="grade-badge" class:sport={climb.isSport}>{climb.grade}</span>
+                <span class="grade-badge" class:sport={climb.isSport}>{formatGrade(climb.grade, climb.isSport)}</span>
                 <span class="climb-name">{climb.name || 'Unnamed Route'}</span>
                 {#if showClimbType}
                     <span class="climb-type-tag">{climb.isSport ? 'Sport' : 'Boulder'}</span>

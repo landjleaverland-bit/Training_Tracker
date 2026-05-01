@@ -654,7 +654,7 @@
 								<input type="text" bind:value={climb.name} placeholder="Route name..." />
 							</td>
 							<td>
-								<GradeInput bind:value={climb.grade} />
+								<GradeInput bind:value={climb.grade} isSport={getIsSport(climb)} />
 							</td>
 							<td>
 								<select
