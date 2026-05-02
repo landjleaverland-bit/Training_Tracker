@@ -442,42 +442,20 @@
 		margin-right: 0;
 	}
 
-	.header-actions {
+	.header-status {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		gap: 0.75rem;
 	}
 
 	.status-icon {
 		font-size: 1rem;
 	}
 
-	.btn-icon {
-		background: none;
-		border: none;
-		cursor: pointer;
-		font-size: 1.1rem;
-		padding: 0.5rem;
-		border-radius: 8px;
-		transition: background 0.2s;
-		opacity: 0.6;
-	}
-
-	.btn-icon:hover {
-		background: rgba(0, 0, 0, 0.05);
-		opacity: 1;
-	}
-
-	.btn-icon.delete-session:hover {
-		background: rgba(239, 68, 68, 0.1);
-		color: #ef4444;
-	}
-
 	.chevron {
 		color: var(--text-secondary);
 		opacity: 0.5;
 		font-size: 0.8rem;
-		transition: transform 0.2s;
 	}
 
 	.card-body {
