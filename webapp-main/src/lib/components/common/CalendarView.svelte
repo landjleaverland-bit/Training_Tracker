@@ -59,9 +59,9 @@
 				if (!data[d]) data[d] = [];
 				if (!data[d].includes(s.activityType)) data[d].push(s.activityType);
 			}
-			const result: Record<string, string> = {};
+			const result: Record<string, string | string[]> = {};
 			for (const [date, types] of Object.entries(data)) {
-				if (types.length > 1) result[date] = 'multiple';
+				if (types.length > 1) result[date] = types;
 				else result[date] = types[0];
 			}
 			return result;
@@ -104,15 +104,37 @@
 			}
 		}
 
-		const result: Record<string, string> = {};
+		const result: Record<string, string | string[]> = {};
 		for (const [date, info] of Object.entries(data)) {
-			if (info.boulder && info.sport) result[date] = 'mixed';
+			if (info.boulder && info.sport) result[date] = ['boulder', 'sport'];
 			else if (info.boulder) result[date] = 'boulder';
 			else if (info.sport) result[date] = 'sport';
 			else result[date] = 'other';
 		}
 		return result;
 	});
+
+	const typeColorMap: Record<string, string> = {
+		indoor_climb: 'rgba(66, 165, 245, 0.4)',
+		outdoor_climb: 'rgba(129, 199, 132, 0.4)',
+		gym_session: 'rgba(255, 183, 77, 0.4)',
+		fingerboarding: 'rgba(149, 117, 205, 0.4)',
+		competition: 'rgba(239, 83, 80, 0.4)',
+		boulder: 'rgba(66, 165, 245, 0.4)',
+		sport: 'rgba(239, 83, 80, 0.4)',
+		other: 'rgba(74, 155, 155, 0.4)'
+	};
+
+	function getDayStyle(dType: string | string[] | undefined): string {
+		if (!dType || typeof dType === 'string') return '';
+		const colors = dType.map((t) => typeColorMap[t]).filter(Boolean);
+		if (colors.length < 2) return '';
+		const step = 100 / colors.length;
+		const stops = colors
+			.map((c, i) => `${c} ${Math.round(i * step)}%, ${c} ${Math.round((i + 1) * step)}%`)
+			.join(', ');
+		return `background: linear-gradient(135deg, ${stops});`;
+	}
 
 	function prevMonth() {
 		currentViewDate = new Date(currentViewDate.getFullYear(), currentViewDate.getMonth() - 1, 1);
@@ -163,9 +185,11 @@
 				<div class="day empty"></div>
 			{:else}
 				{@const dType = dayTypes[dayCell.dateStr]}
+				{@const multiStyle = getDayStyle(dType)}
 				{@const isSelected = selectedDate === dayCell.dateStr}
 				<button 
-					class="day {dType ? 'has-data' : ''} {dType ? `type-${dType}` : ''} {isSelected ? 'selected' : ''}"
+					class="day {dType ? 'has-data' : ''} {typeof dType === 'string' ? `type-${dType}` : (dType ? 'type-multi' : '')} {isSelected ? 'selected' : ''}"
+					style={multiStyle}
 					onclick={() => selectDay(dayCell.dateStr)}
 					title={dType ? `Sessions present on ${dayCell.dateStr}` : `No sessions on ${dayCell.dateStr}`}
 				>
@@ -182,7 +206,6 @@
 			<div class="legend-item"><span class="box type-gym_session"></span> Gym</div>
 			<div class="legend-item"><span class="box type-fingerboarding"></span> Fingerboard</div>
 			<div class="legend-item"><span class="box type-competition"></span> Comp</div>
-			<div class="legend-item"><span class="box type-multiple"></span> Multiple</div>
 		</div>
 	{:else if activityType === 'indoor_climb' || activityType === 'outdoor_climb' || activityType === 'competition'}
 		<div class="calendar-legend">
@@ -328,8 +351,8 @@
 		color: #b71c1c;
 		font-weight: 600;
 	}
-	.day.type-multiple {
-		background: linear-gradient(135deg, rgba(66, 165, 245, 0.4) 0%, rgba(129, 199, 132, 0.4) 100%);
+	.day.type-multiple,
+	.day.type-multi {
 		color: #333;
 		font-weight: 600;
 	}
