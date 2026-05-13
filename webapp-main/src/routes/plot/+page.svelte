@@ -37,11 +37,20 @@
     const gradeStackColors = ['#22C55E', '#3B82F6', '#F97316', '#EF4444'];
     const gradeStackLabels = ['Flash/Onsight', 'Redpoint', 'Dogged', 'DNF'];
 
+    const activityTypes = [
+        { value: 'indoor_climb', label: 'Indoor Climb', icon: '🧗' },
+        { value: 'outdoor_climb', label: 'Outdoor Climb', icon: '⛰️' },
+        { value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
+        { value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
+        { value: 'competition', label: 'Competition', icon: '🏆' },
+        { value: 'combined', label: 'Combined', icon: '📅' }
+    ];
 
     let sessions = $state<Session[]>([]);
     let selectedView = $state('general');
     let timeRange = $state<'week' | 'month' | 'year' | 'specific_week' | 'specific_month' | 'specific_year' | 'all'>('all');
     let selectedDateValue = $state('');
+    let selectedActivity = $state('');
 
     onMount(async () => {
         try {
@@ -89,20 +98,25 @@
 
     // Filtered Sessions
     let filteredSessions = $derived.by(() => {
-        if (timeRange === 'all') return sessions;
+        let baseSessions = sessions;
+        if (selectedActivity && selectedActivity !== 'combined') {
+            baseSessions = sessions.filter(s => s.activityType === selectedActivity);
+        }
+
+        if (timeRange === 'all') return baseSessions;
 
         const now = new Date();
         const cutoff = new Date();
 
         if (timeRange === 'week') {
             cutoff.setDate(now.getDate() - 7);
-            return sessions.filter(s => new Date(s.date) >= cutoff);
+            return baseSessions.filter(s => new Date(s.date) >= cutoff);
         } else if (timeRange === 'month') {
             cutoff.setMonth(now.getMonth() - 1);
-            return sessions.filter(s => new Date(s.date) >= cutoff);
+            return baseSessions.filter(s => new Date(s.date) >= cutoff);
         } else if (timeRange === 'year') {
             cutoff.setFullYear(now.getFullYear() - 1);
-            return sessions.filter(s => new Date(s.date) >= cutoff);
+            return baseSessions.filter(s => new Date(s.date) >= cutoff);
         } else if (timeRange === 'specific_week' && selectedDateValue) {
              const [yearStr, weekStr] = selectedDateValue.split('-W');
              const year = parseInt(yearStr);
@@ -116,19 +130,19 @@
                 return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
              };
              
-             return sessions.filter(s => {
+             return baseSessions.filter(s => {
                  const d = new Date(s.date);
                  return d.getFullYear() === year && getISOWeek(d) === week;
              });
 
         } else if (timeRange === 'specific_month' && selectedDateValue) {
             // value is "YYYY-MM"
-             return sessions.filter(s => s.date.startsWith(selectedDateValue));
+             return baseSessions.filter(s => s.date.startsWith(selectedDateValue));
         } else if (timeRange === 'specific_year' && selectedDateValue) {
-             return sessions.filter(s => s.date.startsWith(selectedDateValue));
+             return baseSessions.filter(s => s.date.startsWith(selectedDateValue));
         }
 
-        return sessions;
+        return baseSessions;
     });
 
     // Determine date range for zero-filling
@@ -334,6 +348,17 @@
 
     <!-- Controls -->
     <div class="controls-card">
+        <label for="activity-type">Activity Type:</label>
+        <div class="select-wrapper">
+            <select id="activity-type" bind:value={selectedActivity}>
+                <option value="" disabled>Select an activity...</option>
+                {#each activityTypes as activity (activity.value)}
+                    <option value={activity.value}>{activity.icon} {activity.label}</option>
+                {/each}
+            </select>
+            <div class="select-arrow">▼</div>
+        </div>
+
         <label for="view-select">Select Analysis:</label>
         <div class="select-wrapper">
             <select id="view-select" bind:value={selectedView}>
@@ -344,7 +369,7 @@
             <div class="select-arrow">▼</div>
         </div>
 
-        <label for="time-select" style="margin-top: 1rem;">Time Range:</label>
+        <label for="time-select">Time Range:</label>
         <div class="select-wrapper">
             <select id="time-select" bind:value={timeRange}>
                 <option value="week">Past Week</option>
@@ -381,15 +406,16 @@
     
     <!-- Content Area -->
     <div class="content-card">
-        <h2 class="view-title">{currentViewLabel}</h2>
+        {#if selectedActivity}
+            <h2 class="view-title">{currentViewLabel}</h2>
 
-        {#if sessions.length === 0}
-            <div class="empty-state">
-                <p>No sessions found. Log some data to see charts!</p>
-            </div>
-        {:else}
-            
-            {#if selectedView === 'general'}
+            {#if sessions.length === 0}
+                <div class="empty-state">
+                    <p>No sessions found. Log some data to see charts!</p>
+                </div>
+            {:else}
+                
+                {#if selectedView === 'general'}
                 <div class="chart-grid">
                     <div class="chart-card">
                         <h3>Climbing vs Rest</h3>
@@ -653,6 +679,11 @@
                      <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Combined view is currently a placeholder for future updates.</p>
                  </div>
             {/if}
+        {/if}
+        {:else}
+            <div class="empty-state" style="padding: 3rem; text-align: center; color: var(--text-secondary); background: rgba(255, 255, 255, 0.5); border-radius: 12px; border: 2px dashed rgba(74, 155, 155, 0.15);">
+                <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Please select an activity type to view data plots.</p>
+            </div>
         {/if}
 
 
