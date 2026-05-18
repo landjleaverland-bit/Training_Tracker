@@ -346,19 +346,22 @@
         <p class="subtitle">Visualize your progress</p>
     </div>
 
-    <!-- Controls -->
-    <div class="controls-card">
-        <label for="activity-type">Activity Type:</label>
-        <div class="select-wrapper">
+    <!-- Activity Type Selection -->
+    <div class="content-card" style="margin-bottom: 1.5rem;">
+        <div class="form-group">
+            <label for="activity-type">Activity Type</label>
             <select id="activity-type" bind:value={selectedActivity}>
                 <option value="" disabled>Select an activity...</option>
                 {#each activityTypes as activity (activity.value)}
                     <option value={activity.value}>{activity.icon} {activity.label}</option>
                 {/each}
             </select>
-            <div class="select-arrow">▼</div>
         </div>
+    </div>
 
+    {#if selectedActivity}
+    <!-- Analysis Controls -->
+    <div class="controls-card">
         <label for="view-select">Select Analysis:</label>
         <div class="select-wrapper">
             <select id="view-select" bind:value={selectedView}>
@@ -406,7 +409,6 @@
     
     <!-- Content Area -->
     <div class="content-card">
-        {#if selectedActivity}
             <h2 class="view-title">{currentViewLabel}</h2>
 
             {#if sessions.length === 0}
@@ -679,15 +681,11 @@
                      <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Combined view is currently a placeholder for future updates.</p>
                  </div>
             {/if}
-        {/if}
-        {:else}
-            <div class="empty-state" style="padding: 3rem; text-align: center; color: var(--text-secondary); background: rgba(255, 255, 255, 0.5); border-radius: 12px; border: 2px dashed rgba(74, 155, 155, 0.15);">
-                <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Please select an activity type to view data plots.</p>
-            </div>
-        {/if}
+            {/if}
 
 
     </div>
+    {/if}
 </div>
 
 <style>
@@ -769,6 +767,39 @@
         padding: 1.5rem;
         box-shadow: 0 4px 20px rgba(74, 155, 155, 0.1);
         border: 1px solid rgba(74, 155, 155, 0.15);
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .form-group select {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 2px solid rgba(74, 155, 155, 0.3);
+        background: white;
+        font-size: 1rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--teal-primary);
+        box-shadow: 0 0 0 3px rgba(74, 155, 155, 0.15);
+    }
+
+    .form-group select:hover {
+        border-color: var(--teal-primary);
     }
 
     .view-title {
