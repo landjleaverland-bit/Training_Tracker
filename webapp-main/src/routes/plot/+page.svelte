@@ -324,7 +324,7 @@
 
 
     // View Options
-    const views = [
+    const allViews = [
         { id: 'general', label: 'General Activity & Volume' },
         { id: 'systems', label: 'Training System Breakdown' },
         { id: 'grades', label: 'Performance Grade Pyramids' },
@@ -336,7 +336,34 @@
         { id: 'combined', label: 'Combined' },
     ];
 
-    let currentViewLabel = $derived(views.find(v => v.id === selectedView)?.label);
+    // Map each activity type to the view IDs relevant for its data
+    const viewsByActivity: Record<string, string[]> = {
+        indoor_climb:   ['general', 'systems', 'grades', 'venues', 'periodization', 'load'],
+        outdoor_climb:  ['general', 'systems', 'grades', 'venues', 'periodization', 'load'],
+        gym_session:    ['general', 'gym_exercises', 'periodization', 'load'],
+        fingerboarding: ['general', 'strength', 'periodization', 'load'],
+        competition:    ['general', 'grades', 'periodization', 'load'],
+        combined:       allViews.map(v => v.id),
+    };
+
+    // Filtered views based on selected activity
+    let filteredViews = $derived.by(() => {
+        const allowed = viewsByActivity[selectedActivity];
+        if (!allowed) return allViews;
+        return allViews.filter(v => allowed.includes(v.id));
+    });
+
+    // Reset selectedView when activity changes if current view isn't available
+    $effect(() => {
+        if (selectedActivity) {
+            const allowed = viewsByActivity[selectedActivity];
+            if (allowed && !allowed.includes(selectedView)) {
+                selectedView = 'general';
+            }
+        }
+    });
+
+    let currentViewLabel = $derived(allViews.find(v => v.id === selectedView)?.label);
 
 </script>
 
@@ -365,7 +392,7 @@
         <label for="view-select">Select Analysis:</label>
         <div class="select-wrapper">
             <select id="view-select" bind:value={selectedView}>
-                {#each views as view}
+                {#each filteredViews as view}
                     <option value={view.id}>{view.label}</option>
                 {/each}
             </select>
