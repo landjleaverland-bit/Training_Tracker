@@ -48,9 +48,129 @@
 
     let sessions = $state<Session[]>([]);
     let selectedView = $state('general');
-    let timeRange = $state<'week' | 'month' | 'year' | 'specific_week' | 'specific_month' | 'specific_year' | 'all'>('all');
+    let timeRange = $state<'day' | 'week' | 'month' | 'year' | 'all'>('all');
     let selectedDateValue = $state('');
     let selectedActivity = $state('');
+    let lastTimeRange = 'all';
+
+    $effect(() => {
+        if (timeRange !== lastTimeRange) {
+            lastTimeRange = timeRange;
+            const now = new Date();
+            if (timeRange === 'day') {
+                selectedDateValue = now.toLocaleDateString('en-CA'); // 'YYYY-MM-DD' in local timezone
+            } else if (timeRange === 'week') {
+                const d = new Date(now.getTime());
+                d.setHours(0,0,0,0);
+                d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+                const week1 = new Date(d.getFullYear(), 0, 4);
+                const weekNum = 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+                selectedDateValue = `${d.getFullYear()}-W${weekNum.toString().padStart(2, '0')}`;
+            } else if (timeRange === 'month') {
+                selectedDateValue = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+            } else if (timeRange === 'year') {
+                selectedDateValue = `${now.getFullYear()}`;
+            } else {
+                selectedDateValue = '';
+            }
+        }
+    });
+
+    function getISOWeekString(date: Date) {
+        const d = new Date(date.getTime());
+        d.setHours(0,0,0,0);
+        d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+        const week1 = new Date(d.getFullYear(), 0, 4);
+        const weekNum = 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+        return `${d.getFullYear()}-W${weekNum.toString().padStart(2, '0')}`;
+    }
+
+    function parseISOWeek(weekStr: string): Date {
+        const parts = weekStr.split('-W');
+        if (parts.length !== 2) return new Date();
+        const year = parseInt(parts[0]);
+        const week = parseInt(parts[1]);
+        
+        const simple = new Date(year, 0, 1 + (week - 1) * 7);
+        const dow = simple.getDay();
+        const ISOweekStart = simple;
+        if (dow <= 4)
+            ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+        else
+            ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+        return ISOweekStart;
+    }
+
+    function navigateDay(dateStr: string, direction: 'prev' | 'next') {
+        const parts = dateStr.split('-');
+        if (parts.length !== 3) return dateStr;
+        const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        date.setDate(date.getDate() + (direction === 'next' ? 1 : -1));
+        return date.toLocaleDateString('en-CA');
+    }
+
+    function navigateWeek(weekStr: string, direction: 'prev' | 'next') {
+        const date = parseISOWeek(weekStr);
+        date.setDate(date.getDate() + (direction === 'next' ? 7 : -7));
+        return getISOWeekString(date);
+    }
+
+    function navigateMonth(monthStr: string, direction: 'prev' | 'next') {
+        const parts = monthStr.split('-');
+        if (parts.length !== 2) return monthStr;
+        let year = parseInt(parts[0]);
+        let month = parseInt(parts[1]) - 1; // 0-11
+        
+        if (direction === 'next') {
+            month += 1;
+            if (month > 11) {
+                month = 0;
+                year += 1;
+            }
+        } else {
+            month -= 1;
+            if (month < 0) {
+                month = 11;
+                year -= 1;
+            }
+        }
+        return `${year}-${(month + 1).toString().padStart(2, '0')}`;
+    }
+
+    function navigateYear(yearStr: string, direction: 'prev' | 'next') {
+        const currentYear = parseInt(yearStr);
+        if (isNaN(currentYear)) return yearStr;
+        
+        const index = availableYears.indexOf(currentYear);
+        if (index === -1) {
+            return String(currentYear + (direction === 'next' ? 1 : -1));
+        }
+        
+        if (direction === 'next') {
+            if (index > 0) {
+                return String(availableYears[index - 1]);
+            }
+            return String(currentYear + 1);
+        } else {
+            if (index < availableYears.length - 1) {
+                return String(availableYears[index + 1]);
+            }
+            return String(currentYear - 1);
+        }
+    }
+
+    function navigate(direction: 'prev' | 'next') {
+        if (!selectedDateValue) return;
+        if (timeRange === 'day') {
+            selectedDateValue = navigateDay(selectedDateValue, direction);
+        } else if (timeRange === 'week') {
+            selectedDateValue = navigateWeek(selectedDateValue, direction);
+        } else if (timeRange === 'month') {
+            selectedDateValue = navigateMonth(selectedDateValue, direction);
+        } else if (timeRange === 'year') {
+            selectedDateValue = navigateYear(selectedDateValue, direction);
+        }
+    }
 
     onMount(async () => {
         try {
@@ -105,19 +225,9 @@
 
         if (timeRange === 'all') return baseSessions;
 
-        const now = new Date();
-        const cutoff = new Date();
-
-        if (timeRange === 'week') {
-            cutoff.setDate(now.getDate() - 7);
-            return baseSessions.filter(s => new Date(s.date) >= cutoff);
-        } else if (timeRange === 'month') {
-            cutoff.setMonth(now.getMonth() - 1);
-            return baseSessions.filter(s => new Date(s.date) >= cutoff);
-        } else if (timeRange === 'year') {
-            cutoff.setFullYear(now.getFullYear() - 1);
-            return baseSessions.filter(s => new Date(s.date) >= cutoff);
-        } else if (timeRange === 'specific_week' && selectedDateValue) {
+        if (timeRange === 'day' && selectedDateValue) {
+             return baseSessions.filter(s => s.date.startsWith(selectedDateValue));
+        } else if (timeRange === 'week' && selectedDateValue) {
              const [yearStr, weekStr] = selectedDateValue.split('-W');
              const year = parseInt(yearStr);
              const week = parseInt(weekStr);
@@ -135,10 +245,10 @@
                  return d.getFullYear() === year && getISOWeek(d) === week;
              });
 
-        } else if (timeRange === 'specific_month' && selectedDateValue) {
-            // value is "YYYY-MM"
+        } else if (timeRange === 'month' && selectedDateValue) {
+             // value is "YYYY-MM"
              return baseSessions.filter(s => s.date.startsWith(selectedDateValue));
-        } else if (timeRange === 'specific_year' && selectedDateValue) {
+        } else if (timeRange === 'year' && selectedDateValue) {
              return baseSessions.filter(s => s.date.startsWith(selectedDateValue));
         }
 
@@ -151,16 +261,11 @@
         const end = new Date();
         const start = new Date();
 
-        if (timeRange === 'week') {
-            start.setDate(now.getDate() - 6); // Last 7 days inclusive
-            return { start, end };
-        } else if (timeRange === 'month') {
-            start.setMonth(now.getMonth() - 1);
-            return { start, end };
-        } else if (timeRange === 'year') {
-            start.setFullYear(now.getFullYear() - 1);
-            return { start, end };
-        } else if (timeRange === 'specific_week' && selectedDateValue) {
+        if (timeRange === 'day' && selectedDateValue) {
+             const [year, month, day] = selectedDateValue.split('-');
+             const d = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+             return { start: d, end: d };
+        } else if (timeRange === 'week' && selectedDateValue) {
              const [yearStr, weekStr] = selectedDateValue.split('-W');
              const year = parseInt(yearStr);
              const week = parseInt(weekStr);
@@ -179,12 +284,12 @@
              wEnd.setDate(wEnd.getDate() + 6);
              return { start: wStart, end: wEnd };
 
-        } else if (timeRange === 'specific_month' && selectedDateValue) {
+        } else if (timeRange === 'month' && selectedDateValue) {
              const [year, month] = selectedDateValue.split('-');
              const mStart = new Date(parseInt(year), parseInt(month) - 1, 1);
              const mEnd = new Date(parseInt(year), parseInt(month), 0);
              return { start: mStart, end: mEnd };
-        } else if (timeRange === 'specific_year' && selectedDateValue) {
+        } else if (timeRange === 'year' && selectedDateValue) {
             const year = parseInt(selectedDateValue);
             const mStart = new Date(year, 0, 1);
             const mEnd = new Date(year, 11, 31);
@@ -234,7 +339,7 @@
 
     // Determine granularity for load tracking
     let loadGranularity = $derived.by(() => {
-        if (['week', 'month', 'specific_week', 'specific_month'].includes(timeRange)) {
+        if (['day', 'week', 'month'].includes(timeRange)) {
             return 'day';
         }
         return 'week' as 'week' | 'day';
@@ -388,48 +493,56 @@
 
     {#if selectedActivity}
     <!-- Analysis Controls -->
-    <div class="controls-card">
-        <label for="view-select">Select Analysis:</label>
-        <div class="select-wrapper">
-            <select id="view-select" bind:value={selectedView}>
-                {#each filteredViews as view}
-                    <option value={view.id}>{view.label}</option>
-                {/each}
-            </select>
-            <div class="select-arrow">▼</div>
-        </div>
-
-        <label for="time-select">Time Range:</label>
-        <div class="select-wrapper">
-            <select id="time-select" bind:value={timeRange}>
-                <option value="week">Past Week</option>
-                <option value="month">Past Month</option>
-                <option value="year">Past Year</option>
-                <option value="specific_week">Specific Week</option>
-                <option value="specific_month">Specific Month</option>
-                <option value="specific_year">Specific Year</option>
-                <option value="all">All Time</option>
-            </select>
-            <div class="select-arrow">▼</div>
-        </div>
-
-        {#if timeRange === 'specific_week'}
-            <div class="specific-date-input" style="margin-top: 0.5rem;">
-                <input type="week" bind:value={selectedDateValue} class="date-picker" />
-            </div>
-        {:else if timeRange === 'specific_month'}
-             <div class="specific-date-input" style="margin-top: 0.5rem;">
-                <input type="month" bind:value={selectedDateValue} class="date-picker" />
-            </div>
-        {:else if timeRange === 'specific_year'}
-            <div class="select-wrapper" style="margin-top: 0.5rem;">
-                <select bind:value={selectedDateValue} class="date-picker">
-                    <option value="" disabled selected>Select Year</option>
-                    {#each availableYears as year}
-                        <option value={String(year)}>{year}</option>
+    <div class="controls-card flex-column">
+        <div class="controls-row">
+            <label for="view-select">Select Analysis:</label>
+            <div class="select-wrapper">
+                <select id="view-select" bind:value={selectedView}>
+                    {#each filteredViews as view}
+                        <option value={view.id}>{view.label}</option>
                     {/each}
                 </select>
                 <div class="select-arrow">▼</div>
+            </div>
+
+            <label for="time-select">Time Range:</label>
+            <div class="select-wrapper">
+                <select id="time-select" bind:value={timeRange}>
+                    <option value="day">Day</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                    <option value="all">All Time</option>
+                </select>
+                <div class="select-arrow">▼</div>
+            </div>
+        </div>
+
+        {#if timeRange !== 'all'}
+            <div class="navigation-row">
+                <button class="nav-btn" onclick={() => navigate('prev')} aria-label="Previous">◀</button>
+                
+                <div class="picker-container">
+                    {#if timeRange === 'day'}
+                        <input type="date" bind:value={selectedDateValue} class="date-picker" />
+                    {:else if timeRange === 'week'}
+                        <input type="week" bind:value={selectedDateValue} class="date-picker" />
+                    {:else if timeRange === 'month'}
+                        <input type="month" bind:value={selectedDateValue} class="date-picker" />
+                    {:else if timeRange === 'year'}
+                        <div class="select-wrapper">
+                            <select bind:value={selectedDateValue} class="date-picker">
+                                <option value="" disabled selected>Select Year</option>
+                                {#each availableYears as year}
+                                    <option value={String(year)}>{year}</option>
+                                {/each}
+                            </select>
+                            <div class="select-arrow">▼</div>
+                        </div>
+                    {/if}
+                </div>
+
+                <button class="nav-btn" onclick={() => navigate('next')} aria-label="Next">▶</button>
             </div>
         {/if}
     </div>
@@ -753,6 +866,60 @@
         align-items: center;
         gap: 1rem;
         flex-wrap: wrap;
+    }
+
+    .controls-card.flex-column {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .controls-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .navigation-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+        border-top: 1px dashed rgba(0, 0, 0, 0.08);
+        padding-top: 1rem;
+    }
+
+    .picker-container {
+        flex: 0 1 250px;
+        min-width: 150px;
+        position: relative;
+    }
+
+    .nav-btn {
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        color: var(--text-primary);
+        font-size: 1rem;
+        padding: 0.5rem 0.85rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-btn:hover {
+        background: var(--teal-primary);
+        color: white;
+        border-color: var(--teal-primary);
+        box-shadow: 0 2px 8px rgba(74, 155, 155, 0.2);
+    }
+
+    .nav-btn:active {
+        transform: scale(0.95);
     }
     
     .controls-card label {
