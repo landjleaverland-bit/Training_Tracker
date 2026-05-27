@@ -7,12 +7,14 @@
 	import GymSessionCard from './gym/GymSessionCard.svelte';
 	import FingerboardSessionCard from './fingerboarding/FingerboardSessionCard.svelte';
 	import CompetitionCard from './competition/CompetitionCard.svelte';
+	import CampusSessionCard from './campus/CampusSessionCard.svelte';
 	import {
 		getIndoorSessions,
 		getOutdoorSessions,
 		getGymSessions,
 		getFingerboardSessions,
-		getCompetitionSessions
+		getCompetitionSessions,
+		getCampusSessions
 	} from '$lib/services/api';
 
 	interface Props {
@@ -51,12 +53,13 @@
 		fetchError = '';
 
 		try {
-			const [indoor, outdoor, gym, finger, comp] = await Promise.all([
+			const [indoor, outdoor, gym, finger, comp, campus] = await Promise.all([
 				getIndoorSessions(),
 				getOutdoorSessions(),
 				getGymSessions(),
 				getFingerboardSessions(),
-				getCompetitionSessions()
+				getCompetitionSessions(),
+				getCampusSessions()
 			]);
 
 			let allSessions: any[] = [];
@@ -84,6 +87,11 @@
 				allSessions = [
 					...allSessions,
 					...comp.data.map((s) => ({ ...s, activityType: 'competition' }))
+				];
+			if (campus.ok && campus.data)
+				allSessions = [
+					...allSessions,
+					...campus.data.map((s) => ({ ...s, activityType: 'campus_boarding' }))
 				];
 
 			allSessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -122,6 +130,8 @@
 				return '🤏 Fingerboard';
 			case 'competition':
 				return '🏆 Competition';
+			case 'campus_boarding':
+				return '🪜 Campus';
 			default:
 				return '📋 Session';
 		}
@@ -139,6 +149,8 @@
 				return 'type-fingerboard';
 			case 'competition':
 				return 'type-competition';
+			case 'campus_boarding':
+				return 'type-campus_boarding';
 			default:
 				return '';
 		}
@@ -177,6 +189,7 @@
 		<div class="legend-item"><span class="legend-dot type-gym"></span> Gym</div>
 		<div class="legend-item"><span class="legend-dot type-fingerboard"></span> Fingerboard</div>
 		<div class="legend-item"><span class="legend-dot type-competition"></span> Competition</div>
+		<div class="legend-item"><span class="legend-dot type-campus_boarding"></span> Campus Boarding</div>
 	</div>
 
 	<div class="sessions-list">
@@ -195,6 +208,8 @@
 					<FingerboardSessionCard {session} onDelete={handleFetchData} />
 				{:else if session.activityType === 'competition'}
 					<CompetitionCard {session} />
+				{:else if session.activityType === 'campus_boarding'}
+					<CampusSessionCard {session} onDelete={handleFetchData} />
 				{/if}
 			</div>
 		{/each}
@@ -345,6 +360,9 @@
 	.legend-dot.type-competition {
 		background: rgba(239, 83, 80, 0.7);
 	}
+	.legend-dot.type-campus_boarding {
+		background: rgba(236, 64, 122, 0.7);
+	}
 
 	.combined-card-wrapper {
 		position: relative;
@@ -367,6 +385,9 @@
 	}
 	.combined-card-wrapper.type-competition {
 		border-left-color: rgba(239, 83, 80, 0.7);
+	}
+	.combined-card-wrapper.type-campus_boarding {
+		border-left-color: rgba(236, 64, 122, 0.7);
 	}
 
 	.type-indicator {

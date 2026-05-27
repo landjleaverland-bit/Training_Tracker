@@ -7,6 +7,7 @@
 	import FingerboardingView from '$lib/components/views/FingerboardingView.svelte';
 	import CompetitionView from '$lib/components/views/CompetitionView.svelte';
 	import CombinedView from '$lib/components/views/CombinedView.svelte';
+	import CampusBoardingView from '$lib/components/views/CampusBoardingView.svelte';
 	import CalendarView from '$lib/components/common/CalendarView.svelte';
 	import type { Session } from '$lib/types/session';
 
@@ -16,6 +17,7 @@
 		{ value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
 		{ value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
 		{ value: 'competition', label: 'Competition', icon: '🏆' },
+		{ value: 'campus_boarding', label: 'Campus Boarding', icon: '🪜' },
 		{ value: 'combined', label: 'Combined', icon: '📅' }
 	];
 
@@ -90,6 +92,8 @@
 					<FingerboardingView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'competition'}
 					<CompetitionView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
+				{:else if selectedActivity === 'campus_boarding'}
+					<CampusBoardingView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{:else if selectedActivity === 'combined'}
 					<CombinedView bind:sessions={activeSessions} bind:selectedDate={activeDate} />
 				{/if}

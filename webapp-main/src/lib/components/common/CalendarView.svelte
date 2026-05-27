@@ -120,6 +120,7 @@
 		gym_session: 'rgba(255, 183, 77, 0.4)',
 		fingerboarding: 'rgba(149, 117, 205, 0.4)',
 		competition: 'rgba(239, 83, 80, 0.4)',
+		campus_boarding: 'rgba(236, 64, 122, 0.4)',
 		boulder: 'rgba(66, 165, 245, 0.4)',
 		sport: 'rgba(239, 83, 80, 0.4)',
 		other: 'rgba(74, 155, 155, 0.4)'
@@ -206,6 +207,7 @@
 			<div class="legend-item"><span class="box type-gym_session"></span> Gym</div>
 			<div class="legend-item"><span class="box type-fingerboarding"></span> Fingerboard</div>
 			<div class="legend-item"><span class="box type-competition"></span> Comp</div>
+			<div class="legend-item"><span class="box type-campus_boarding"></span> Campus</div>
 		</div>
 	{:else if activityType === 'indoor_climb' || activityType === 'outdoor_climb' || activityType === 'competition'}
 		<div class="calendar-legend">
@@ -351,6 +353,11 @@
 		color: #b71c1c;
 		font-weight: 600;
 	}
+	.day.type-campus_boarding {
+		background: rgba(236, 64, 122, 0.3); /* Rose/Pink */
+		color: #880e4f;
+		font-weight: 600;
+	}
 	.day.type-multiple,
 	.day.type-multi {
 		color: #333;
@@ -394,5 +401,6 @@
 	.box.type-gym_session { background: rgba(255, 183, 77, 0.5); }
 	.box.type-fingerboarding { background: rgba(149, 117, 205, 0.5); }
 	.box.type-competition { background: rgba(239, 83, 80, 0.5); }
+	.box.type-campus_boarding { background: rgba(236, 64, 122, 0.5); }
 	.box.type-multiple { background: linear-gradient(135deg, rgba(66, 165, 245, 0.5) 50%, rgba(129, 199, 132, 0.5) 50%); }
 </style>

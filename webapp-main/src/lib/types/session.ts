@@ -277,6 +277,55 @@ export interface GymSession extends BaseSession {
 export type GymSessionPayload = SessionPayload<GymSession>;
 
 /**
+ * @brief Detail set for a campus boarding exercise.
+ */
+export interface CampusSet {
+    /** Weight added or removed (kg). */
+    weight: number;
+    /** Number of repetitions or moves. */
+    reps: number;
+}
+
+/**
+ * @brief Campus boarding exercise entry.
+ */
+export interface CampusExercise {
+    id: string;
+    /** Wall type: 'Campus board rings' | 'Campus board balls' | 'Boulder walls' | 'Beast' */
+    wallType: string;
+    /** Exercise type: 'Matched laddering' | 'Alternate hand laddering' | etc. */
+    exerciseType: string;
+    /** Grade input if wallType is 'Boulder walls' or 'Beast' */
+    grade?: string;
+    /** Number of sets performed. */
+    sets: number;
+    /** Breakdown of each set. */
+    details: CampusSet[];
+    notes: string;
+}
+
+/**
+ * @brief Campus boarding session payload.
+ */
+export interface CampusSession extends BaseSession {
+    activityType: 'campus_boarding';
+    location: string;
+    exercises: CampusExercise[];
+    fingerLoad?: number;
+    shoulderLoad?: number;
+    forearmLoad?: number;
+    openGrip?: number;
+    crimpGrip?: number;
+    pinchGrip?: number;
+    sloperGrip?: number;
+    jugGrip?: number;
+    notes?: string;
+}
+
+export type CampusSessionPayload = SessionPayload<CampusSession>;
+
+/**
  * @brief Union of all possible session types.
  */
-export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession | GymSession;
+export type Session = IndoorClimbSession | OutdoorClimbSession | FingerboardSession | CompetitionSession | GymSession | CampusSession;
+

@@ -11,6 +11,7 @@
 	import GymSessionForm from '$lib/components/forms/GymSessionForm.svelte';
 	import FingerboardingForm from '$lib/components/forms/FingerboardingForm.svelte';
 	import CompetitionForm from '$lib/components/forms/CompetitionForm.svelte';
+	import CampusBoardingForm from '$lib/components/forms/CampusBoardingForm.svelte';
 
 	interface Props {
 		/** Visibility state. */
@@ -79,6 +80,8 @@
 					<FingerboardingForm {initialData} onCancel={onClose} onSaved={onSaved} />
 				{:else if activityType === 'competition'}
 					<CompetitionForm {initialData} onCancel={onClose} onSaved={onSaved} />
+				{:else if activityType === 'campus_boarding'}
+					<CampusBoardingForm {initialData} onCancel={onClose} onSaved={onSaved} />
 				{/if}
 			</div>
 		</div>

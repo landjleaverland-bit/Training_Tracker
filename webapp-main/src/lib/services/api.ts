@@ -23,7 +23,9 @@ import type {
     CompetitionSession,
     CompetitionSessionPayload,
     GymSession,
-    GymSessionPayload
+    GymSessionPayload,
+    CampusSession,
+    CampusSessionPayload
 } from '$lib/types/session';
 
 // ------------------------------------------------------------------
@@ -104,6 +106,22 @@ export const createGymSession = gymService.create;
 export const updateGymSession = gymService.update;
 export const getGymSessions = gymService.get;
 export const deleteGymSession = gymService.delete;
+
+
+// ------------------------------------------------------------------
+// Campus Boarding Sessions
+// ------------------------------------------------------------------
+
+const campusService = createCrudService<CampusSessionPayload, CampusSession>({
+    collectionName: 'Campus_Sessions',
+    activityType: 'campus_boarding',
+    getIdentifier: () => 'Campus_Boarding'
+});
+
+export const createCampusSession = campusService.create;
+export const updateCampusSession = campusService.update;
+export const getCampusSessions = campusService.get;
+export const deleteCampusSession = campusService.delete;
 
 
 // ------------------------------------------------------------------

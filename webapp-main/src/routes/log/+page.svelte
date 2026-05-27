@@ -5,6 +5,7 @@
 	import GymSessionForm from '$lib/components/forms/GymSessionForm.svelte';
 	import FingerboardingForm from '$lib/components/forms/FingerboardingForm.svelte';
 	import CompetitionForm from '$lib/components/forms/CompetitionForm.svelte';
+	import CampusBoardingForm from '$lib/components/forms/CampusBoardingForm.svelte';
     import { isOnline } from '$lib/services/api';
     import { onMount } from 'svelte';
 	
@@ -13,7 +14,8 @@
 		{ value: 'outdoor_climb', label: 'Outdoor Climb', icon: '⛰️' },
 		{ value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
 		{ value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
-		{ value: 'competition', label: 'Competition', icon: '🏆' }
+		{ value: 'competition', label: 'Competition', icon: '🏆' },
+		{ value: 'campus_boarding', label: 'Campus Boarding', icon: '🪜' }
 	];
 
 	let selectedActivity = $state('');
@@ -69,6 +71,8 @@
 					<FingerboardingForm />
 				{:else if selectedActivity === 'competition'}
 					<CompetitionForm />
+				{:else if selectedActivity === 'campus_boarding'}
+					<CampusBoardingForm />
 				{/if}
 			</div>
 		{/if}
