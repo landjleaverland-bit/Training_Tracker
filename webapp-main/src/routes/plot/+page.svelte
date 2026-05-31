@@ -5,7 +5,8 @@
         getOutdoorSessions, 
         getGymSessions, 
         getFingerboardSessions, 
-        getCompetitionSessions 
+        getCompetitionSessions,
+        getCampusSessions
     } from '$lib/services/api';
     import type { Session } from '$lib/types/session';
     import { 
@@ -42,6 +43,7 @@
         { value: 'outdoor_climb', label: 'Outdoor Climb', icon: '⛰️' },
         { value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
         { value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
+        { value: 'campus_boarding', label: 'Campus Boarding', icon: '🪜' },
         { value: 'competition', label: 'Competition', icon: '🏆' },
         { value: 'combined', label: 'Combined', icon: '📅' }
     ];
@@ -175,22 +177,24 @@
     onMount(async () => {
         try {
             console.log('Fetching plot data...');
-            const [indoor, outdoor, gym, finger, comp] = await Promise.all([
+            const [indoor, outdoor, gym, finger, comp, campus] = await Promise.all([
                 getIndoorSessions(),
                 getOutdoorSessions(),
                 getGymSessions(),
                 getFingerboardSessions(),
-                getCompetitionSessions()
+                getCompetitionSessions(),
+                getCampusSessions()
             ]);
 
-            console.log('Results:', { indoor, outdoor, gym, finger, comp });
+            console.log('Results:', { indoor, outdoor, gym, finger, comp, campus });
 
             const all = [
                 ...(indoor.data || []),
                 ...(outdoor.data || []),
                 ...(gym.data || []),
                 ...(finger.data || []),
-                ...(comp.data || [])
+                ...(comp.data || []),
+                ...(campus.data || [])
             ];
             
             // Filter invalid dates at source
@@ -447,6 +451,7 @@
         outdoor_climb:  ['general', 'systems', 'grades', 'venues', 'periodization', 'load'],
         gym_session:    ['general', 'gym_exercises', 'periodization', 'load'],
         fingerboarding: ['general', 'strength', 'periodization', 'load'],
+        campus_boarding: ['general', 'periodization', 'load'],
         competition:    ['general', 'grades', 'periodization', 'load'],
         combined:       allViews.map(v => v.id),
     };

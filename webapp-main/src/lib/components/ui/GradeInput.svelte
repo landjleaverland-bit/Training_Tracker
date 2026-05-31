@@ -3,16 +3,17 @@
     import { formatGrade } from '$lib/utils/formatters';
 
     interface Props {
-        value: string;
+        id?: string;
+        value?: string;
         placeholder?: string;
         required?: boolean;
         isSport?: boolean;
     }
 
-    let { value = $bindable(), placeholder = 'V3', isSport = false }: Props = $props();
+    let { id, value = $bindable(), placeholder = 'V3', isSport = false }: Props = $props();
 
-    function isValidGrade(g: string): boolean {
-        if (!g.trim()) return true; // Allow empty
+    function isValidGrade(g: string | undefined): boolean {
+        if (!g || !g.trim()) return true; // Allow empty
         return VALID_GRADES_LOWER.includes(g.trim().toLowerCase());
     }
 
@@ -27,6 +28,7 @@
 
 <div class="grade-input-container">
     <input 
+        {id}
         type="text" 
         bind:value={value} 
         onblur={handleBlur}

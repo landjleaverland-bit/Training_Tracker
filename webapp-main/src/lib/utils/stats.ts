@@ -413,8 +413,8 @@ export function getWeeklyLoadStats(sessions: Session[]): TimeSeriesPoint[] {
         if (isClimbing(s)) {
             const c = s as IndoorClimbSession; // or Outdoor, fields satisfy structural shape
             load = (c.fingerLoad || 0) + (c.shoulderLoad || 0) + (c.forearmLoad || 0);
-        } else if (s.activityType === 'competition') {
-            const c = s as unknown as any; // CompetitionSession
+        } else if (s.activityType === 'competition' || s.activityType === 'campus_boarding') {
+            const c = s as unknown as any; // CompetitionSession or CampusSession
             load = (c.fingerLoad || 0) + (c.shoulderLoad || 0) + (c.forearmLoad || 0);
         }
 
