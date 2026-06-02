@@ -43,7 +43,7 @@
         { value: 'outdoor_climb', label: 'Outdoor Climb', icon: '⛰️' },
         { value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
         { value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
-        { value: 'campus_boarding', label: 'Campus Boarding', icon: '🪜' },
+        { value: 'campus_boarding', label: 'Campusing', icon: '🪜' },
         { value: 'competition', label: 'Competition', icon: '🏆' },
         { value: 'combined', label: 'Combined', icon: '📅' }
     ];

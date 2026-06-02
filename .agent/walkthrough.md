@@ -1,6 +1,6 @@
-# Walkthrough - Add Campus Boarding Activity
+# Walkthrough - Add Campusing Activity
 
-This walkthrough summarizes the final implementation details and verification results for adding the "Campus Boarding" logging option to the Training Tracker.
+This walkthrough summarizes the final implementation details and verification results for adding the "Campusing" logging option to the Training Tracker.
 
 ## Changes Made
 
@@ -10,7 +10,7 @@ This walkthrough summarizes the final implementation details and verification re
 ### 2. Plotting & Analytics Integration
 - **[+page.svelte (Plot Page)](file:///home/jleaverland/repo/Training_Tracker/webapp-main/src/routes/plot/+page.svelte):**
   - Imported and invoked the `getCampusSessions` API call in `onMount`.
-  - Added the `campus_boarding` option to the activity selector dropdown with the list label "Campus Boarding" and icon `🪜`.
+  - Added the `campus_boarding` option to the activity selector dropdown with the list label "Campusing" and icon `🪜`.
   - Registered `campus_boarding` in `viewsByActivity` to allow "General", "Periodization", and "Load" analysis views.
   - Combined fetched campus sessions into the aggregated session list to populate all generic charts (e.g. climbing vs rest days, session type breakdowns, body part load, and grip load charts).
 
@@ -18,7 +18,7 @@ This walkthrough summarizes the final implementation details and verification re
 - **[GradeInput.svelte](file:///home/jleaverland/repo/Training_Tracker/webapp-main/src/lib/components/ui/GradeInput.svelte):**
   - Updated the component's typescript props to accept an optional `value?: string` and optional `id?: string`.
   - Bound the `id` to the internal HTML input element so that parent labels are correctly linked for accessibility.
-  - Handled the optional `string | undefined` type in validation to resolve Svelte compilation and TypeScript errors on the Campus Boarding Form.
+  - Handled the optional `string | undefined` type in validation to resolve Svelte compilation and TypeScript errors on the Campusing Form.
 
 ---
 

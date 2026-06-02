@@ -2,7 +2,7 @@
 	/**
 	 * @file CampusBoardingForm.svelte
 	 * @component
-	 * @description Form for logging Campus Boarding sessions.
+	 * @description Form for logging Campus sessions.
 	 * Supports custom exercises, wall types, and conditional grades.
 	 * Includes an integrated rest timer.
 	 */
@@ -28,7 +28,7 @@
 	let isEditing = $derived(!!initialData);
 
 	const wallOptions = [
-		'Campus board rings',
+		'Campus board rungs',
 		'Campus board balls',
 		'Boulder walls',
 		'Beast'
@@ -220,7 +220,7 @@
 
 			if (result.ok) {
 				saveStatus = 'success';
-				saveMessage = 'Campus boarding session saved!';
+				saveMessage = 'Campus session saved!';
 				if (!isEditing) {
 					localStorage.removeItem(STORAGE_KEY);
 					isTBC = false;
@@ -272,7 +272,7 @@
 	<div class="header-row">
 		<div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
 			{#if !isEditing}
-				<h3>🪜 Campus Boarding</h3>
+				<h3>🪜 Campusing</h3>
 			{/if}
 		</div>
 		<button class="add-row-btn" onclick={addExercise}>+ Add Exercise</button>

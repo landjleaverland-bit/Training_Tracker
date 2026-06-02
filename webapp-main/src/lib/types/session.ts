@@ -277,7 +277,7 @@ export interface GymSession extends BaseSession {
 export type GymSessionPayload = SessionPayload<GymSession>;
 
 /**
- * @brief Detail set for a campus boarding exercise.
+ * @brief Detail set for a campusing exercise.
  */
 export interface CampusSet {
     /** Weight added or removed (kg). */
@@ -287,11 +287,11 @@ export interface CampusSet {
 }
 
 /**
- * @brief Campus boarding exercise entry.
+ * @brief campusing exercise entry.
  */
 export interface CampusExercise {
     id: string;
-    /** Wall type: 'Campus board rings' | 'Campus board balls' | 'Boulder walls' | 'Beast' */
+    /** Wall type: 'Campus board rungs' | 'Campus board balls' | 'Boulder walls' | 'Beast' */
     wallType: string;
     /** Exercise type: 'Matched laddering' | 'Alternate hand laddering' | etc. */
     exerciseType: string;
@@ -305,7 +305,7 @@ export interface CampusExercise {
 }
 
 /**
- * @brief Campus boarding session payload.
+ * @brief campusing session payload.
  */
 export interface CampusSession extends BaseSession {
     activityType: 'campus_boarding';

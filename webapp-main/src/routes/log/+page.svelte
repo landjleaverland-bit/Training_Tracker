@@ -15,7 +15,7 @@
 		{ value: 'gym_session', label: 'Gym Session', icon: '🏋️' },
 		{ value: 'fingerboarding', label: 'Fingerboarding', icon: '🤏' },
 		{ value: 'competition', label: 'Competition', icon: '🏆' },
-		{ value: 'campus_boarding', label: 'Campus Boarding', icon: '🪜' }
+		{ value: 'campus_boarding', label: 'Campusing', icon: '🪜' }
 	];
 
 	let selectedActivity = $state('');

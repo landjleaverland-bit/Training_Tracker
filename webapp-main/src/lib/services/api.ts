@@ -109,7 +109,7 @@ export const deleteGymSession = gymService.delete;
 
 
 // ------------------------------------------------------------------
-// Campus Boarding Sessions
+// Campusing Sessions
 // ------------------------------------------------------------------
 
 const campusService = createCrudService<CampusSessionPayload, CampusSession>({

@@ -74,7 +74,7 @@
 
 <div class="view-content">
 	<div class="header">
-		<h3>🪜 Campus Boarding Log</h3>
+		<h3>🪜 Campusing Log</h3>
 		<button
 			class="fetch-btn"
 			onclick={loadSessions}
@@ -107,7 +107,7 @@
 			{#if sessions.length > 0}
 				No sessions match filter.
 			{:else}
-				No campus boarding sessions logged yet.
+				No campusing sessions logged yet.
 			{/if}
 		</div>
 	{:else}

@@ -189,7 +189,7 @@
 		<div class="legend-item"><span class="legend-dot type-gym"></span> Gym</div>
 		<div class="legend-item"><span class="legend-dot type-fingerboard"></span> Fingerboard</div>
 		<div class="legend-item"><span class="legend-dot type-competition"></span> Competition</div>
-		<div class="legend-item"><span class="legend-dot type-campus_boarding"></span> Campus Boarding</div>
+		<div class="legend-item"><span class="legend-dot type-campus_boarding"></span> Campusing</div>
 	</div>
 
 	<div class="sessions-list">

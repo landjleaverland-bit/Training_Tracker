@@ -246,7 +246,7 @@
 <DeleteConfirmModal
 	isOpen={showDeleteModal}
 	title="Delete Campus Session"
-	message="Are you sure you want to delete this campus boarding session? This cannot be undone."
+	message="Are you sure you want to delete this campusing session? This cannot be undone."
 	onConfirm={confirmDeleteSession}
 	onCancel={() => (showDeleteModal = false)}
 />
