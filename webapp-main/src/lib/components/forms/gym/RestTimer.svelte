@@ -256,6 +256,7 @@
     }
 
     function handleTimerAction(action: string) {
+        audioManager.init();
         if (action === 'extend-10') {
             remaining += 10;
             if (endTimestamp) endTimestamp += 10000;
@@ -280,6 +281,7 @@
     }
 
     function startSession() {
+        audioManager.init();
         requestNotificationPermission(); 
         savePreference();
         currentSet = 1;
@@ -312,6 +314,7 @@
     }
 
     function pause() {
+        audioManager.init();
         runningState = 'PAUSED';
         pausedTimeRemaining = remaining;
         endTimestamp = null;
@@ -326,6 +329,7 @@
     }
 
     function resume() {
+        audioManager.init();
         if (pausedTimeRemaining !== null) {
             runningState = 'RUNNING';
             endTimestamp = Date.now() + (pausedTimeRemaining * 1000);
@@ -343,6 +347,7 @@
     }
 
     function skip() {
+        audioManager.init();
         if (navigator.serviceWorker.controller) {
              navigator.serviceWorker.controller.postMessage({ type: 'SKIP_PHASE' });
         }

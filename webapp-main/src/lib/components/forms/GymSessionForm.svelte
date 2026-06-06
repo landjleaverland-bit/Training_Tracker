@@ -14,6 +14,7 @@
 	import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
 	import { EXERCISE_LIBRARY, type ExerciseDefinition } from '$lib/data/exercises';
 	import { createGymSession, updateGymSession, getGymSessions, getTimerPreferences } from '$lib/services/api';
+	import { audioManager } from '$lib/utils/audio';
 
 	// Components
 	import ExerciseCard from './gym/ExerciseCard.svelte';
@@ -261,6 +262,9 @@
 	async function handleSetComplete(event: CustomEvent) {
 		const { exercise } = event.detail || {};
 		if (!exercise) return;
+
+		// Initialize audio context synchronously within the click call stack
+		audioManager.init();
 
 		activeTimerExerciseId = exercise.id;
 		timerDefaultSets = exercise.sets.length;

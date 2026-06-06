@@ -11,6 +11,7 @@
 	import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
 	import RestTimer from './gym/RestTimer.svelte';
 	import LoadInput from '$lib/components/ui/LoadInput.svelte';
+	import { audioManager } from '$lib/utils/audio';
 	import SessionNotes from '$lib/components/ui/SessionNotes.svelte';
 
 	const dispatch = createEventDispatcher();
@@ -76,6 +77,7 @@
 	let timerDefaultSets = $state(3);
 
 	function startRest(exercise: FingerboardExercise) {
+		audioManager.init();
 		activeTimerExerciseId = exercise.id;
 		timerDefaultSets = exercise.sets;
 		showRestTimer = true;
