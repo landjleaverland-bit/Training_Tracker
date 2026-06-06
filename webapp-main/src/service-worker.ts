@@ -72,6 +72,16 @@ async function ensureInitialized() {
                 const now = Date.now();
                 const diff = timerState.endTimestamp - now;
                 timerState.remaining = Math.ceil(diff / 1000);
+                
+                // If timer expired in background while SW was inactive
+                if (timerState.remaining <= 0 && !timerState.overtimeTriggered) {
+                    timerState.overtimeTriggered = true;
+                    if (!timerState.allowOvertime) {
+                        handlePhaseComplete();
+                        return;
+                    }
+                }
+                
                 startTimerInterval();
             } else {
                 stopTimerInterval();
@@ -201,8 +211,11 @@ function handlePhaseComplete() {
     }
 
     if (timerState.phase === 'WORK') {
+        timerState.phase = 'REST';
+        startPhase(timerState.configRest);
+    } else if (timerState.phase === 'REST') {
         if (timerState.currentSet >= timerState.configSets) {
-            // All done
+            // All sets done (including final rest)
             timerState.phase = 'FINISHED';
             timerState.runningState = 'PAUSED';
             timerState.endTimestamp = null;
@@ -221,13 +234,10 @@ function handlePhaseComplete() {
             }
             broadcastTimerState();
         } else {
-            timerState.phase = 'REST';
-            startPhase(timerState.configRest);
+            timerState.currentSet++;
+            timerState.phase = 'WORK';
+            startPhase(timerState.configWork);
         }
-    } else if (timerState.phase === 'REST') {
-        timerState.currentSet++;
-        timerState.phase = 'WORK';
-        startPhase(timerState.configWork);
     }
     saveSWTimerState(timerState);
 }

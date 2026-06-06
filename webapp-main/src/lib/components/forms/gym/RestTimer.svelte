@@ -63,6 +63,7 @@
     // Tick & Audio Tracking
     let lastTickedSecond = $state<number | null>(null);
     let playAlertTriggered = $state(false);
+    let transitionTriggered = $state(false);
 
     // SW Integration
     let swRegistration: ServiceWorkerRegistration | null = null;
@@ -226,6 +227,13 @@
             }
             return;
         }
+
+        if (phase !== s.phase) {
+            playAlertTriggered = false;
+            lastTickedSecond = null;
+            transitionTriggered = false;
+        }
+
         phase = s.phase;
         runningState = s.runningState;
         endTimestamp = s.endTimestamp;
@@ -240,6 +248,10 @@
             remaining = Math.ceil(diff / 1000);
         } else {
             remaining = s.remaining;
+        }
+
+        if (!allowOvertime && remaining < 0) {
+            remaining = 0;
         }
     }
 
@@ -362,8 +374,12 @@
         if (endTimestamp) {
             const now = Date.now();
             const diff = endTimestamp - now;
-            const newRemaining = Math.ceil(diff / 1000);
+            let newRemaining = Math.ceil(diff / 1000);
             
+            if (!allowOvertime && newRemaining < 0) {
+                newRemaining = 0;
+            }
+
             if (newRemaining !== remaining) {
                 remaining = newRemaining;
             }
@@ -374,10 +390,16 @@
                 audioManager.playTick();
             }
 
-            // Local completion audio alert
+            // Local completion audio alert & skip trigger
             if (remaining <= 0 && !overtimeTriggered && !playAlertTriggered) {
                 playAlertTriggered = true;
                 audioManager.playCompletionAlert();
+
+                // If overtime is not allowed, tell SW to transition to the next phase
+                if (!allowOvertime && !transitionTriggered) {
+                    transitionTriggered = true;
+                    skip();
+                }
             }
         }
     }
