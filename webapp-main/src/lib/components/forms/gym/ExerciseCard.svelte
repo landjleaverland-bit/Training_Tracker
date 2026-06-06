@@ -90,7 +90,7 @@
 
 	<div class="sets">
 		{#each exercise.sets as set, i}
-			<ExerciseSetRow setNumber={i + 1} bind:set on:complete on:change />
+			<ExerciseSetRow setNumber={i + 1} bind:set on:complete={() => dispatch('complete', { exercise, setIndex: i })} on:change />
 		{/each}
 	</div>
 

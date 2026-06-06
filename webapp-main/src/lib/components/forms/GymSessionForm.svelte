@@ -13,7 +13,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { GymSession, GymExercise, GymSet } from '$lib/types/session';
 	import { EXERCISE_LIBRARY, type ExerciseDefinition } from '$lib/data/exercises';
-	import { createGymSession, updateGymSession, getGymSessions } from '$lib/services/api';
+	import { createGymSession, updateGymSession, getGymSessions, getTimerPreferences } from '$lib/services/api';
 
 	// Components
 	import ExerciseCard from './gym/ExerciseCard.svelte';
@@ -169,6 +169,7 @@
 	let activeTimerExerciseId = $state<string | null>(null);
 	let timerDefaultSets = $state(3);
 	let lastCompletedExerciseId = $state<string | null>(null);
+	let autoStartRestOnly = $state(false);
 
 	// Persistence
 	let loaded = $state(false);
@@ -257,8 +258,21 @@
 		showRestTimer = true;
 	}
 
-	function handleSetComplete() {
-		// No longer auto-starting timer globally
+	async function handleSetComplete(event: CustomEvent) {
+		const { exercise } = event.detail || {};
+		if (!exercise) return;
+
+		activeTimerExerciseId = exercise.id;
+		timerDefaultSets = exercise.sets.length;
+
+		// Load preferences first to initialize configRest etc in RestTimer
+		await getTimerPreferences(exercise.id);
+
+		// Trigger auto start
+		autoStartRestOnly = true;
+		setTimeout(() => {
+			autoStartRestOnly = false;
+		}, 100);
 	}
 
 	/**
@@ -482,6 +496,7 @@
 		bind:visible={showRestTimer}
 		defaultSets={timerDefaultSets}
 		associatedExerciseId={activeTimerExerciseId}
+		autoStartRestOnly={autoStartRestOnly}
 	/>
 
 	<!-- Delete Confirmation -->

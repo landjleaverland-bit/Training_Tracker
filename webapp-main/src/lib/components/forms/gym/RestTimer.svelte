@@ -2,16 +2,17 @@
     /**
      * @file RestTimer.svelte
      * @component
-     * @description A versatile interval timer for rest and work periods.
+     * @description A versatile interval and rest-only timer.
      * Features:
-     * - Configurable Work/Rest durations
+     * - Configurable Work/Rest durations or Rest-only countdowns
      * - Set counting
-     * - Audio feedback (chimes)
-     * - LocalStorage state persistence for resilience
-     * - Floating overlay UI
-     * - Service Worker integration for reliable background timing
+     * - Countdown warning ticks (3s, 2s, 1s)
+     * - Audio feedback (chimes & ticks)
+     * - Cache API and LocalStorage state persistence for background reliability
+     * - Full mobile support (clock delta timing, wake-up event synchronization, audio unlock gestures)
+     * - Floating overlay UI & minimized interactive pill UI for non-obtrusive status tracking
      */
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount } from 'svelte';
     import { fade, fly, scale } from 'svelte/transition';
     import { cubicOut } from 'svelte/easing';
     import { audioManager } from '$lib/utils/audio';
@@ -25,12 +26,14 @@
         visible = $bindable(false), 
         defaultSets = 3,
         associatedExerciseId = null,
+        autoStartRestOnly = false,
         onComplete = () => {},
         onClose = () => {}
     } = $props<{
         visible?: boolean;
         defaultSets?: number;
         associatedExerciseId?: string | null;
+        autoStartRestOnly?: boolean;
         onComplete?: () => void;
         onClose?: () => void;
     }>();
@@ -38,9 +41,11 @@
     // -- State --
     type TimerPhase = 'SETUP' | 'WORK' | 'REST' | 'FINISHED';
     type RunningState = 'RUNNING' | 'PAUSED';
+    type TimerMode = 'INTERVAL' | 'REST_ONLY';
 
     let phase = $state<TimerPhase>('SETUP');
     let runningState = $state<RunningState>('PAUSED');
+    let timerMode = $state<TimerMode>('INTERVAL');
     
     // Config
     let configWork = $state(30); 
@@ -55,9 +60,17 @@
     let pausedTimeRemaining = $state<number | null>(null);
     let overtimeTriggered = $state(false);
     
+    // Tick & Audio Tracking
+    let lastTickedSecond = $state<number | null>(null);
+    let playAlertTriggered = $state(false);
+
     // SW Integration
     let swRegistration: ServiceWorkerRegistration | null = null;
     let swMessageHandler: ((event: MessageEvent) => void) | null = null;
+
+    // Derived States
+    let isTimerActive = $derived(phase !== 'SETUP' && phase !== 'FINISHED');
+    let showMinimizedPill = $derived(!visible && isTimerActive);
 
     $effect(() => {
         if (visible) {
@@ -69,10 +82,22 @@
         }
     });
 
+    // Handle auto-starting rest timer from external components (e.g., set completion)
+    $effect(() => {
+        if (autoStartRestOnly && phase === 'SETUP') {
+            audioManager.init();
+            timerMode = 'REST_ONLY';
+            loadPreference().then(() => {
+                if (defaultSets > 0) configSets = defaultSets;
+                startSession();
+            });
+        }
+    });
+
     onMount(() => {
         restoreState();
 
-        // 1. Request state from SW in case we are reopening a running tab
+        // Request current state from SW
         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
             navigator.serviceWorker.controller.postMessage({ type: 'GET_TIMER_STATE' });
         }
@@ -93,10 +118,22 @@
             navigator.serviceWorker.addEventListener('message', swMessageHandler);
         }
 
+        // Focus & Visibility sync to handle aggressive mobile tab suspension recovery
+        const syncOnResume = () => {
+            if (isTimerActive && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({ type: 'GET_TIMER_STATE' });
+            }
+        };
+
+        window.addEventListener('focus', syncOnResume);
+        document.addEventListener('visibilitychange', syncOnResume);
+
         return () => {
             if ('serviceWorker' in navigator && swMessageHandler) {
                 navigator.serviceWorker.removeEventListener('message', swMessageHandler);
             }
+            window.removeEventListener('focus', syncOnResume);
+            document.removeEventListener('visibilitychange', syncOnResume);
             if (animationFrame) cancelAnimationFrame(animationFrame);
         };
     });
@@ -111,6 +148,9 @@
                 configWork = res.data.workDuration;
                 configRest = res.data.restDuration;
                 allowOvertime = res.data.allowOvertime;
+                if (res.data.mode) {
+                    timerMode = res.data.mode;
+                }
             }
         } catch (e) {
             console.warn(e);
@@ -123,7 +163,8 @@
             await saveTimerPreferences(associatedExerciseId, {
                 workDuration: configWork,
                 restDuration: configRest,
-                allowOvertime
+                allowOvertime,
+                mode: timerMode
             });
         } catch (e) { console.error(e); }
     }
@@ -136,10 +177,11 @@
             allowOvertime,
             currentSet,
             associatedExerciseId, pausedTimeRemaining, timestamp: Date.now(),
-            overtimeTriggered
+            overtimeTriggered,
+            mode: timerMode
         };
         localStorage.setItem('active_interval_timer', JSON.stringify(snapshot));
-        return snapshot; // Return for SW
+        return snapshot;
     }
 
     function restoreState() {
@@ -147,7 +189,7 @@
             const saved = localStorage.getItem('active_interval_timer');
             if (saved) {
                 const s = JSON.parse(saved);
-                if (Date.now() - s.timestamp < STATE_EXPIRY_MS) { // 1 hr expiry
+                if (Date.now() - s.timestamp < STATE_EXPIRY_MS) {
                     phase = s.phase;
                     runningState = s.runningState;
                     remaining = s.remaining;
@@ -162,10 +204,10 @@
                     associatedExerciseId = s.associatedExerciseId;
                     pausedTimeRemaining = s.pausedTimeRemaining;
                     overtimeTriggered = s.overtimeTriggered;
+                    if (s.mode) timerMode = s.mode;
                     
-                    if (phase !== 'SETUP' && phase !== 'FINISHED') {
-                        visible = true;
-                    }
+                    // Show minimized pill on restoration rather than forcing overlay open
+                    visible = false;
                 }
             }
         } catch (e) {}
@@ -176,18 +218,28 @@
     }
 
     function syncState(s: any) {
-        if (!s) return;
+        if (!s) {
+            if (phase !== 'SETUP' && phase !== 'FINISHED') {
+                phase = 'SETUP';
+                runningState = 'PAUSED';
+                clearState();
+            }
+            return;
+        }
         phase = s.phase;
         runningState = s.runningState;
         endTimestamp = s.endTimestamp;
         currentSet = s.currentSet;
         overtimeTriggered = s.overtimeTriggered;
+        if (s.mode) timerMode = s.mode;
         
-        // Allow UI to update remaining immediately if provided (optional, relying on endTimestamp is better)
-        // remaining = s.remaining;
-
-        if (runningState === 'RUNNING' && phase !== 'FINISHED' && phase !== 'SETUP') {
-             // ensure loop is running? tick handles it
+        // Recalculate remaining based on system clock delta to bypass background throttling
+        if (endTimestamp && runningState === 'RUNNING') {
+            const now = Date.now();
+            const diff = endTimestamp - now;
+            remaining = Math.ceil(diff / 1000);
+        } else {
+            remaining = s.remaining;
         }
     }
 
@@ -195,7 +247,10 @@
         if (action === 'extend-10') {
             remaining += 10;
             if (endTimestamp) endTimestamp += 10000;
-            if (remaining > 0) overtimeTriggered = false;
+            if (remaining > 0) {
+                overtimeTriggered = false;
+                playAlertTriggered = false;
+            }
             
             const state = saveState();
             if (navigator.serviceWorker.controller) {
@@ -212,20 +267,27 @@
         }
     }
 
-    // Control
     function startSession() {
         requestNotificationPermission(); 
         savePreference();
-        phase = 'WORK';
         currentSet = 1;
-        startPhase(configWork);
+        if (timerMode === 'REST_ONLY') {
+            phase = 'REST';
+            startPhase(configRest);
+        } else {
+            phase = 'WORK';
+            startPhase(configWork);
+        }
     }
 
-    function startPhase(duration: number, vibrate = false) {
+    function startPhase(duration: number) {
         runningState = 'RUNNING';
         remaining = duration;
         endTimestamp = Date.now() + (duration * 1000);
         overtimeTriggered = false;
+        playAlertTriggered = false;
+        lastTickedSecond = null;
+        
         const state = saveState();
         audioManager.playChime(); 
 
@@ -255,6 +317,8 @@
         if (pausedTimeRemaining !== null) {
             runningState = 'RUNNING';
             endTimestamp = Date.now() + (pausedTimeRemaining * 1000);
+            playAlertTriggered = false;
+            lastTickedSecond = null;
             const state = saveState();
 
             if (navigator.serviceWorker.controller) {
@@ -269,11 +333,6 @@
     function skip() {
         if (navigator.serviceWorker.controller) {
              navigator.serviceWorker.controller.postMessage({ type: 'SKIP_PHASE' });
-        } else {
-             // Fallback if no SW controller (unlikely in prod but possible in dev)
-             // handlePhaseComplete(); // Removed local logic, strictly rely on SW? 
-             // Ideally we should have shared logic or rely on SW.
-             // For safety, let's keep it handled by SW mostly.
         }
     }
 
@@ -297,9 +356,8 @@
         clearState();
     }
 
-    // Animation Loop
     function tick() {
-        if (!visible || phase === 'SETUP' || phase === 'FINISHED' || runningState === 'PAUSED') return;
+        if (phase === 'SETUP' || phase === 'FINISHED' || runningState === 'PAUSED') return;
         
         if (endTimestamp) {
             const now = Date.now();
@@ -309,24 +367,17 @@
             if (newRemaining !== remaining) {
                 remaining = newRemaining;
             }
-            // Logic for overtime/audio handled by SW mostly, but maybe local audio needed?
-            // SW cannot play audio directly (only vibrate).
-            // So we need local logic for audio:
-            if (remaining === 0 && !overtimeTriggered) {
-                 // Trigger audio locally
-                 // We need to know if we just crossed 0.
-                 // This might fire multiple times if not careful.
-                 // But since 'overtimeTriggered' is state, we can use it?
-                 // Wait, we sync overtimeTriggered from SW.
-                 // If SW is faster, it might already be true.
-                 // Let's rely on standard logic:
-                 if (!overtimeTriggered) {
-                     // We play alert locally.
-                     // But wait, SW also sends vibration?
-                     // Ideally SW sends a message "PLAY_AUDIO"?
-                     // Or just check here.
-                      audioManager.playCompletionAlert();
-                 }
+
+            // Local audio warning beeps at 3, 2, 1 seconds remaining
+            if (remaining > 0 && remaining <= 3 && remaining !== lastTickedSecond) {
+                lastTickedSecond = remaining;
+                audioManager.playTick();
+            }
+
+            // Local completion audio alert
+            if (remaining <= 0 && !overtimeTriggered && !playAlertTriggered) {
+                playAlertTriggered = true;
+                audioManager.playCompletionAlert();
             }
         }
     }
@@ -341,7 +392,6 @@
         animationFrame = requestAnimationFrame(uiLoop);
     });
 
-    // Helpers
     async function requestNotificationPermission() {
         if ('Notification' in window && Notification.permission !== 'granted') {
             await Notification.requestPermission();
@@ -349,9 +399,11 @@
     }
 
     function formatTime(s: number) {
-        const m = Math.floor(s / 60);
-        const sec = s % 60;
-        return `${m}:${sec.toString().padStart(2, '0')}`;
+        const sign = s < 0 ? '-' : '';
+        const absSec = Math.abs(s);
+        const m = Math.floor(absSec / 60);
+        const sec = absSec % 60;
+        return `${sign}${m}:${sec.toString().padStart(2, '0')}`;
     }
 
     function closeTimer() {
@@ -362,6 +414,11 @@
             visible = false;
         }
         if (onClose) onClose();
+    }
+
+    function getPhaseColor() {
+        if (timerMode === 'REST_ONLY') return '#2dd4bf'; // Teal for rest
+        return phase === 'WORK' ? '#4ade80' : '#2dd4bf';
     }
 </script>
 
@@ -376,8 +433,8 @@
     >
         <div 
             class="timer-card" 
-            class:work={phase === 'WORK'}
-            class:rest={phase === 'REST'}
+            class:work={timerMode === 'INTERVAL' && phase === 'WORK'}
+            class:rest={timerMode === 'REST_ONLY' || phase === 'REST'}
             transition:scale={{ start: 0.96, duration: 300, easing: cubicOut }}
         >
             <!-- Header -->
@@ -398,14 +455,31 @@
             <div class="content">
                 {#if phase === 'SETUP'}
                     <div class="setup-form">
-                        <div class="input-group">
-                            <label for="work-duration">Work</label>
-                            <div class="time-adjuster">
-                                <button onclick={() => configWork = Math.max(5, configWork - 5)}>−</button>
-                                <span class="val">{formatTime(configWork)}</span>
-                                <button onclick={() => configWork += 5}>+</button>
-                            </div>
+                        <!-- Mode Selector -->
+                        <div class="mode-selector">
+                            <button 
+                                class="mode-btn" 
+                                class:active={timerMode === 'INTERVAL'}
+                                onclick={() => timerMode = 'INTERVAL'}
+                            >⏱ Interval</button>
+                            <button 
+                                class="mode-btn" 
+                                class:active={timerMode === 'REST_ONLY'}
+                                onclick={() => timerMode = 'REST_ONLY'}
+                            >😴 Rest Only</button>
                         </div>
+
+                        {#if timerMode === 'INTERVAL'}
+                            <div class="input-group" transition:fade={{ duration: 150 }}>
+                                <label for="work-duration">Work</label>
+                                <div class="time-adjuster">
+                                    <button onclick={() => configWork = Math.max(5, configWork - 5)}>−</button>
+                                    <span class="val">{formatTime(configWork)}</span>
+                                    <button onclick={() => configWork += 5}>+</button>
+                                </div>
+                            </div>
+                        {/if}
+
                         <div class="input-group">
                             <label for="rest-duration">Rest</label>
                             <div class="time-adjuster">
@@ -414,6 +488,7 @@
                                 <button onclick={() => configRest += 5}>+</button>
                             </div>
                         </div>
+
                         <div class="input-group">
                             <label for="num-sets">Sets</label>
                             <div class="time-adjuster">
@@ -432,7 +507,7 @@
                         </div>
                         
                         <button class="start-btn" onclick={startSession}>
-                            ▶ Start Interval
+                            ▶ Start {timerMode === 'INTERVAL' ? 'Interval' : 'Rest'}
                         </button>
                     </div>
 
@@ -455,12 +530,16 @@
                             />
                          </svg>
                          <div class="timer-val">
-                             <div class="phase-label">
-                                 {remaining < 0 ? 'OVERTIME' : phase}
-                             </div>
-                             <div class="digits" style:color={remaining < 0 ? '#ef4444' : 'inherit'}>
-                                 {formatTime(Math.abs(remaining))}
-                             </div>
+                              <div class="phase-label">
+                                  {#if remaining < 0}
+                                      OVERTIME
+                                  {:else}
+                                      {timerMode === 'REST_ONLY' ? 'REST' : phase}
+                                  {/if}
+                              </div>
+                              <div class="digits" style:color={remaining < 0 ? '#ef4444' : 'inherit'}>
+                                  {formatTime(remaining)}
+                              </div>
                          </div>
                     </div>
 
@@ -490,6 +569,39 @@
                         <button class="text-btn stop" onclick={stop}>✕ Abort</button>
                     </div>
                 {/if}
+            </div>
+        </div>
+    </div>
+{/if}
+
+<!-- Minimized Floating Pill UI -->
+{#if showMinimizedPill}
+    <div 
+        class="minimized-pill"
+        transition:fly={{ y: 50, duration: 300 }}
+        onclick={() => visible = true}
+        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') visible = true; }}
+        role="button"
+        tabindex="0"
+        aria-label="Expand rest timer"
+    >
+        <div class="pill-left">
+            <span class="pulsating-dot" style="--dot-color: {getPhaseColor()}"></span>
+            <span class="pill-label">
+                {timerMode === 'REST_ONLY' ? 'Rest' : (phase === 'WORK' ? 'Work' : 'Rest')} {currentSet}/{configSets}
+            </span>
+        </div>
+        <div class="pill-right">
+            <span class="pill-time" class:overtime={remaining < 0}>
+                {formatTime(remaining)}
+            </span>
+            <div class="pill-controls">
+                {#if runningState === 'RUNNING'}
+                    <button class="pill-btn" onclick={(e) => { e.stopPropagation(); pause(); }} aria-label="Pause">⏸</button>
+                {:else}
+                    <button class="pill-btn" onclick={(e) => { e.stopPropagation(); resume(); }} aria-label="Resume">▶</button>
+                {/if}
+                <button class="pill-btn" onclick={(e) => { e.stopPropagation(); skip(); }} aria-label="Skip">⏭</button>
             </div>
         </div>
     </div>
@@ -560,6 +672,34 @@
         display: flex;
         flex-direction: column;
         gap: 1.25rem;
+    }
+
+    /* Mode Selector */
+    .mode-selector {
+        display: flex;
+        background: #f4f5f7;
+        padding: 4px;
+        border-radius: 12px;
+        gap: 4px;
+    }
+
+    .mode-btn {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+        background: white;
+        color: #333;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
     .input-group {
@@ -819,5 +959,122 @@
 
     input:checked + .slider:before {
         transform: translateX(22px);
+    }
+
+    /* Floating Pill styles */
+    .minimized-pill {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: calc(100% - 32px);
+        max-width: 320px;
+        height: 52px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 26px;
+        padding: 0 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+        bottom: 24px; /* Desktop position */
+    }
+
+    .minimized-pill:hover {
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .minimized-pill:active {
+        transform: translateX(-50%) scale(0.98);
+    }
+
+    .pill-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .pulsating-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--dot-color, #2dd4bf);
+        box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.7);
+        animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 8px rgba(45, 212, 191, 0);
+        }
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(45, 212, 191, 0);
+        }
+    }
+
+    .pill-label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #374151;
+    }
+
+    .pill-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .pill-time {
+        font-family: 'Inter', monospace;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .pill-time.overtime {
+        color: #ef4444;
+    }
+
+    .pill-controls {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .pill-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.05);
+        color: #374151;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .pill-btn:hover {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive position for Mobile bottom navigation bar clearance */
+    @media (max-width: 640px) {
+        .minimized-pill {
+            bottom: 80px; /* Clear mobile sticky bottom TabBar */
+        }
     }
 </style>

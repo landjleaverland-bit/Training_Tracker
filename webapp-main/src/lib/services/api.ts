@@ -141,6 +141,7 @@ export interface TimerPreferencesPayload {
     workDuration: number;
     restDuration: number;
     allowOvertime: boolean;
+    mode?: 'INTERVAL' | 'REST_ONLY';
 }
 
 export interface RemoteTimerPreferences extends TimerPreferencesPayload {
@@ -182,6 +183,7 @@ export async function getTimerPreferences(exerciseId: string): Promise<{ ok: boo
                     workDuration: data.workDuration,
                     restDuration: data.restDuration,
                     allowOvertime: data.allowOvertime,
+                    mode: data.mode || 'INTERVAL',
                     updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString()
                 }
             };

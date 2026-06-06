@@ -27,10 +27,58 @@ interface TimerState {
     configRest: number;
     allowOvertime: boolean;
     overtimeTriggered: boolean;
+    associatedExerciseId?: string | null;
+    mode?: 'INTERVAL' | 'REST_ONLY';
+}
+
+const TIMER_CACHE_NAME = 'rest-timer-state-v1';
+const TIMER_STATE_URL = 'http://localhost/timer-state';
+
+async function saveSWTimerState(state: TimerState | null) {
+    try {
+        const cache = await caches.open(TIMER_CACHE_NAME);
+        if (state) {
+            await cache.put(TIMER_STATE_URL, new Response(JSON.stringify(state)));
+        } else {
+            await cache.delete(TIMER_STATE_URL);
+        }
+    } catch (err) {
+        console.error('Failed to save timer state to cache:', err);
+    }
+}
+
+async function restoreSWTimerState(): Promise<TimerState | null> {
+    try {
+        const cache = await caches.open(TIMER_CACHE_NAME);
+        const response = await cache.match(TIMER_STATE_URL);
+        if (response) {
+            return await response.json();
+        }
+    } catch (err) {
+        console.error('Failed to restore timer state from cache:', err);
+    }
+    return null;
 }
 
 let timerState: TimerState | null = null;
 let timerIntervalId: ReturnType<typeof setInterval> | null = null;
+
+async function ensureInitialized() {
+    if (timerState === null) {
+        const restored = await restoreSWTimerState();
+        if (restored) {
+            timerState = restored;
+            if (timerState.runningState === 'RUNNING' && timerState.endTimestamp) {
+                const now = Date.now();
+                const diff = timerState.endTimestamp - now;
+                timerState.remaining = Math.ceil(diff / 1000);
+                startTimerInterval();
+            } else {
+                stopTimerInterval();
+            }
+        }
+    }
+}
 
 function formatTime(s: number): string {
     const m = Math.floor(Math.abs(s) / 60);
@@ -41,7 +89,9 @@ function formatTime(s: number): string {
 function showTimerNotification(vibrate = false) {
     if (!timerState || timerState.phase === 'SETUP' || timerState.phase === 'FINISHED') return;
 
-    const status = timerState.phase === 'WORK' ? 'Work' : 'Rest';
+    if (!('showNotification' in sw.registration)) return;
+
+    const status = timerState.mode === 'REST_ONLY' ? 'Rest' : (timerState.phase === 'WORK' ? 'Work' : 'Rest');
     const setInfo = `[Set ${timerState.currentSet}/${timerState.configSets}]`;
     const label = timerState.remaining < 0 ? 'Overtime' : 'Remaining';
     const text = `${label}: ${formatTime(timerState.remaining)}`;
@@ -50,15 +100,19 @@ function showTimerNotification(vibrate = false) {
         ? [{ action: 'pause', title: '⏸ Pause' }, { action: 'finish-session', title: '🏁 Finish' }]
         : [{ action: 'resume', title: '▶ Resume' }, { action: 'finish-session', title: '🏁 Finish' }];
 
-    sw.registration.showNotification(`${status} Timer ${setInfo}`, {
-        body: text,
-        icon: '/favicon.png',
-        vibrate: vibrate ? [200, 100, 200] : [],
-        actions,
-        tag: 'rest-timer',
-        renotify: vibrate,
-        silent: !vibrate
-    } as NotificationOptions);
+    try {
+        sw.registration.showNotification(`${status} Timer ${setInfo}`, {
+            body: text,
+            icon: '/favicon.png',
+            vibrate: vibrate ? [200, 100, 200] : [],
+            actions,
+            tag: 'rest-timer',
+            renotify: vibrate,
+            silent: !vibrate
+        } as NotificationOptions);
+    } catch (err) {
+        console.error('showNotification error:', err);
+    }
 }
 
 function broadcastTimerState() {
@@ -84,6 +138,7 @@ function timerTick() {
             if (!timerState.allowOvertime) {
                 // Move to next phase
                 handlePhaseComplete();
+                return;
             } else {
                 // Show overtime alert
                 showTimerNotification(true);
@@ -92,12 +147,58 @@ function timerTick() {
 
         // Update notification every second
         showTimerNotification(false);
+        saveSWTimerState(timerState);
         broadcastTimerState();
     }
 }
 
 function handlePhaseComplete() {
     if (!timerState) return;
+
+    if (timerState.mode === 'REST_ONLY') {
+        if (timerState.currentSet >= timerState.configSets) {
+            timerState.phase = 'FINISHED';
+            timerState.runningState = 'PAUSED';
+            timerState.endTimestamp = null;
+            stopTimerInterval();
+            if ('showNotification' in sw.registration) {
+                try {
+                    sw.registration.showNotification('Session Complete', {
+                        body: 'Nicely Done!',
+                        icon: '/favicon.png',
+                        tag: 'rest-timer',
+                        vibrate: [500, 100, 500]
+                    } as NotificationOptions);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+            broadcastTimerState();
+        } else {
+            const completedSet = timerState.currentSet;
+            timerState.currentSet++;
+            timerState.phase = 'REST';
+            timerState.runningState = 'PAUSED';
+            timerState.endTimestamp = null;
+            timerState.remaining = timerState.configRest;
+            stopTimerInterval();
+            if ('showNotification' in sw.registration) {
+                try {
+                    sw.registration.showNotification('Rest Complete', {
+                        body: `Set ${completedSet} rest complete.`,
+                        icon: '/favicon.png',
+                        tag: 'rest-timer',
+                        vibrate: [300, 100, 300]
+                    } as NotificationOptions);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+            broadcastTimerState();
+        }
+        saveSWTimerState(timerState);
+        return;
+    }
 
     if (timerState.phase === 'WORK') {
         if (timerState.currentSet >= timerState.configSets) {
@@ -106,12 +207,18 @@ function handlePhaseComplete() {
             timerState.runningState = 'PAUSED';
             timerState.endTimestamp = null;
             stopTimerInterval();
-            sw.registration.showNotification('Session Complete', {
-                body: 'Nicely Done!',
-                icon: '/favicon.png',
-                tag: 'rest-timer',
-                vibrate: [500, 100, 500]
-            } as NotificationOptions);
+            if ('showNotification' in sw.registration) {
+                try {
+                    sw.registration.showNotification('Session Complete', {
+                        body: 'Nicely Done!',
+                        icon: '/favicon.png',
+                        tag: 'rest-timer',
+                        vibrate: [500, 100, 500]
+                    } as NotificationOptions);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
             broadcastTimerState();
         } else {
             timerState.phase = 'REST';
@@ -122,6 +229,7 @@ function handlePhaseComplete() {
         timerState.phase = 'WORK';
         startPhase(timerState.configWork);
     }
+    saveSWTimerState(timerState);
 }
 
 function startPhase(duration: number) {
@@ -131,6 +239,7 @@ function startPhase(duration: number) {
     timerState.endTimestamp = Date.now() + (duration * 1000);
     timerState.overtimeTriggered = false;
     showTimerNotification(true);
+    saveSWTimerState(timerState);
     broadcastTimerState();
 }
 
@@ -161,7 +270,7 @@ sw.addEventListener('activate', (event: ExtendableEvent) => {
     // Remove previous caches
     async function deleteOldCaches() {
         for (const key of await caches.keys()) {
-            if (key !== CACHE) await caches.delete(key);
+            if (key !== CACHE && key !== TIMER_CACHE_NAME) await caches.delete(key);
         }
     }
 
@@ -235,51 +344,64 @@ sw.addEventListener('fetch', (event: FetchEvent) => {
 sw.addEventListener('message', (event) => {
     if (!event.data) return;
 
-    if (event.data.type === 'START_TIMER') {
-        timerState = event.data.state;
-        startTimerInterval();
-        showTimerNotification(true);
-    } else if (event.data.type === 'STOP_TIMER') {
-        stopTimerInterval();
-        timerState = null;
-        // Optionally clear notification
-        sw.registration.getNotifications({ tag: 'rest-timer' }).then(notifications => {
-            notifications.forEach(n => n.close());
-        });
-    } else if (event.data.type === 'PAUSE_TIMER') {
-        if (timerState) {
-            timerState.runningState = 'PAUSED';
-            timerState.endTimestamp = null;
-            // Capture remaining from client or calculate? Client should propagate.
-            if (event.data.state) timerState = event.data.state;
-            stopTimerInterval();
-            showTimerNotification(false);
-            broadcastTimerState();
-        }
-    } else if (event.data.type === 'RESUME_TIMER') {
-        if (timerState && event.data.state) {
-            timerState = event.data.state; // Sync full state including new endTimestamp
+    event.waitUntil((async () => {
+        await ensureInitialized();
+
+        if (event.data.type === 'START_TIMER') {
+            timerState = event.data.state;
             startTimerInterval();
             showTimerNotification(true);
+            await saveSWTimerState(timerState);
+        } else if (event.data.type === 'STOP_TIMER') {
+            stopTimerInterval();
+            timerState = null;
+            await saveSWTimerState(null);
+            if ('showNotification' in sw.registration) {
+                try {
+                    const notifications = await sw.registration.getNotifications({ tag: 'rest-timer' });
+                    notifications.forEach(n => n.close());
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        } else if (event.data.type === 'PAUSE_TIMER') {
+            if (timerState) {
+                timerState.runningState = 'PAUSED';
+                timerState.endTimestamp = null;
+                if (event.data.state) timerState = event.data.state;
+                stopTimerInterval();
+                showTimerNotification(false);
+                await saveSWTimerState(timerState);
+                broadcastTimerState();
+            }
+        } else if (event.data.type === 'RESUME_TIMER') {
+            if (timerState && event.data.state) {
+                timerState = event.data.state;
+                startTimerInterval();
+                showTimerNotification(true);
+                await saveSWTimerState(timerState);
+                broadcastTimerState();
+            }
+        } else if (event.data.type === 'SKIP_PHASE') {
+            handlePhaseComplete();
+        } else if (event.data.type === 'EXTEND_TIMER') {
+            if (timerState) {
+                timerState = event.data.state;
+                showTimerNotification(false);
+                await saveSWTimerState(timerState);
+                broadcastTimerState();
+            }
+        } else if (event.data.type === 'GET_TIMER_STATE') {
             broadcastTimerState();
         }
-    } else if (event.data.type === 'SKIP_PHASE') {
-        handlePhaseComplete();
-    } else if (event.data.type === 'EXTEND_TIMER') {
-        if (timerState) {
-            // Client already updated state, just sync
-            timerState = event.data.state;
-            showTimerNotification(false);
-            broadcastTimerState();
-        }
-    } else if (event.data.type === 'GET_TIMER_STATE') {
-        broadcastTimerState();
-    }
+    })());
 });
 
 sw.addEventListener('notificationclick', (event) => {
     event.notification.close();
     event.waitUntil((async () => {
+        await ensureInitialized();
+
         const allClients = await sw.clients.matchAll({
             type: 'window',
             includeUncontrolled: true
@@ -289,9 +411,10 @@ sw.addEventListener('notificationclick', (event) => {
         if (event.action === 'pause') {
             if (timerState) {
                 timerState.runningState = 'PAUSED';
-                timerState.endTimestamp = null; // Pause freezes time
+                timerState.endTimestamp = null;
                 stopTimerInterval();
                 showTimerNotification(false);
+                await saveSWTimerState(timerState);
                 broadcastTimerState();
             }
         } else if (event.action === 'resume') {
@@ -300,12 +423,14 @@ sw.addEventListener('notificationclick', (event) => {
                 timerState.endTimestamp = Date.now() + (timerState.remaining * 1000);
                 startTimerInterval();
                 showTimerNotification(true);
+                await saveSWTimerState(timerState);
                 broadcastTimerState();
             }
         } else if (event.action === 'finish-session') {
             stopTimerInterval();
             timerState = null;
-            broadcastTimerState(); // Client will see null and close
+            await saveSWTimerState(null);
+            broadcastTimerState();
         }
 
         // Also focus client
@@ -318,7 +443,7 @@ sw.addEventListener('notificationclick', (event) => {
             if (newClient) client = newClient;
         }
 
-        // Notify client of action (in case it needs to run logic, though SW handled state)
+        // Notify client of action
         if (client) {
             client.postMessage({
                 type: 'TIMER_ACTION',
