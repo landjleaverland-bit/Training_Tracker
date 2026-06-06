@@ -127,3 +127,40 @@ describe('API ID Generation Consistency', () => {
         expect(mockDoc).toHaveBeenCalledWith(expect.anything(), 'users', 'test-user-id', 'Gym_Sessions', '2024-02-14_20-00_Leg_Day');
     });
 });
+
+describe('Fingerboard Historic Data Normalization', () => {
+    it('should map Max hangs to Hangboard Max Strength', () => {
+        const legacyEx = { name: 'Max hangs', gripType: 'Half-crimp', holdSize: '20 mm' };
+        const normalized = api.normalizeFingerboardExercise(legacyEx);
+        expect(normalized.name).toBe('Hangboard');
+        expect(normalized.energySystem).toBe('Max strength');
+    });
+
+    it('should map Max pick-ups to Lifting edge Max Strength', () => {
+        const legacyEx = { name: 'Max pick-ups', gripType: 'Pinch', holdSize: 'Wide' };
+        const normalized = api.normalizeFingerboardExercise(legacyEx);
+        expect(normalized.name).toBe('Lifting edge');
+        expect(normalized.energySystem).toBe('Max strength');
+    });
+
+    it('should map Max pickups (no hyphen) to Lifting edge Max Strength', () => {
+        const legacyEx = { name: 'max pickups', gripType: 'Pinch', holdSize: 'Wide' };
+        const normalized = api.normalizeFingerboardExercise(legacyEx);
+        expect(normalized.name).toBe('Lifting edge');
+        expect(normalized.energySystem).toBe('Max strength');
+    });
+
+    it('should map Recruitment pulls to Hangboard Recruitment pulls', () => {
+        const legacyEx = { name: 'Recruitment pulls', gripType: 'Half-crimp' };
+        const normalized = api.normalizeFingerboardExercise(legacyEx);
+        expect(normalized.name).toBe('Hangboard');
+        expect(normalized.energySystem).toBe('Recruitment pulls');
+    });
+
+    it('should preserve already normalized exercises', () => {
+        const modernEx = { name: 'Pinch block', energySystem: 'Aerobic power', gripType: 'Pinch' };
+        const normalized = api.normalizeFingerboardExercise(modernEx);
+        expect(normalized.name).toBe('Pinch block');
+        expect(normalized.energySystem).toBe('Aerobic power');
+    });
+});

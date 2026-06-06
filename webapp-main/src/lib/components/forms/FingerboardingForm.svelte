@@ -7,7 +7,7 @@
 	 * Includes an integrated rest timer for interval training.
 	 */
 	import { onMount, createEventDispatcher } from 'svelte';
-	import { createFingerboardSession, updateFingerboardSession, isOnline } from '$lib/services/api';
+	import { createFingerboardSession, updateFingerboardSession, isOnline, normalizeFingerboardExercise } from '$lib/services/api';
 	import type { FingerboardSession, FingerboardExercise, ExerciseSet } from '$lib/types/session';
 	import RestTimer from './gym/RestTimer.svelte';
 	import LoadInput from '$lib/components/ui/LoadInput.svelte';
@@ -27,12 +27,16 @@
 	let isEditing = $derived(!!initialData);
 
 	const exerciseOptions = [
-		'Max hangs',
-		'Recruitment pulls',
-		'Max pick-ups',
-		'Aerobic capacity',
+		'Hangboard',
+		'Lifting edge',
+		'Pinch block'
+	];
+	const energySystemOptions = [
+		'Max strength',
 		'Anaerobic capacity',
-		'Aerobic power'
+		'Aerobic power',
+		'Aerobic capacity',
+		'Recruitment pulls'
 	];
 	const gripOptions = [
 		'Full-crimp',
@@ -89,6 +93,7 @@
 			{
 				id: crypto.randomUUID(),
 				name: exerciseOptions[0],
+				energySystem: energySystemOptions[0],
 				gripType: gripOptions[1], // Default to Half-crimp
 				holdSize: '20 mm', // Default edge
 				sets: 1,
@@ -107,7 +112,7 @@
 		if (initialData) {
 			date = initialData.date;
 			time = initialData.time || '12:00';
-			exercises = initialData.exercises;
+			exercises = initialData.exercises.map(normalizeFingerboardExercise);
 
 			fingerLoad = initialData.fingerLoad || 3;
 			shoulderLoad = initialData.shoulderLoad || 3;
@@ -135,7 +140,7 @@
 					if (data.date && !isStale) date = data.date;
 					if (data.time && !isStale) time = data.time;
 					if (data.exercises && Array.isArray(data.exercises)) {
-						exercises = data.exercises;
+						exercises = data.exercises.map(normalizeFingerboardExercise);
 					}
 
 					if (data.fingerLoad) fingerLoad = data.fingerLoad;
@@ -312,6 +317,14 @@
 							<label for="ex-name-{i}">Exercise</label>
 							<select id="ex-name-{i}" bind:value={exercise.name}>
 								{#each exerciseOptions as opt}
+									<option value={opt}>{opt}</option>
+								{/each}
+							</select>
+						</div>
+						<div class="input-stack">
+							<label for="ex-energy-{i}">Energy System</label>
+							<select id="ex-energy-{i}" bind:value={exercise.energySystem}>
+								{#each energySystemOptions as opt}
 									<option value={opt}>{opt}</option>
 								{/each}
 							</select>

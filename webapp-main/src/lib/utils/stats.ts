@@ -443,13 +443,15 @@ export function getMaxHangStats(sessions: Session[]): TimeSeriesPoint[] {
         const date = getSessionDate(fb);
 
         fb.exercises.forEach(ex => {
-            const maxWeight = Math.max(...ex.details.map(set => set.weight));
-            if (maxWeight > 0) {
-                points.push({
-                    date,
-                    value: maxWeight,
-                    series: ex.gripType
-                });
+            if (ex.name === 'Hangboard' && ex.energySystem === 'Max strength') {
+                const maxWeight = Math.max(...ex.details.map(set => set.weight));
+                if (maxWeight > 0) {
+                    points.push({
+                        date,
+                        value: maxWeight,
+                        series: ex.gripType
+                    });
+                }
             }
         });
     });
@@ -503,7 +505,7 @@ export function getRecruitmentStats(sessions: Session[]): TimeSeriesPoint[] {
         const date = getSessionDate(fb);
 
         fb.exercises.forEach(ex => {
-            if (ex.name === 'Recruitment Pulls') {
+            if (ex.energySystem && ex.energySystem.toLowerCase() === 'recruitment pulls') {
                 const maxWeight = Math.max(...ex.details.map(set => set.weight));
                 if (maxWeight > 0) {
                     points.push({
@@ -530,13 +532,13 @@ export function getMaxPickupStats(sessions: Session[]): TimeSeriesPoint[] {
         const date = getSessionDate(fb);
 
         fb.exercises.forEach(ex => {
-            if (ex.name === 'Max pick-ups') {
+            if (ex.name === 'Lifting edge' && ex.energySystem === 'Max strength') {
                 const maxWeight = Math.max(...ex.details.map(set => set.weight));
                 if (maxWeight > 0) {
                     points.push({
                         date,
                         value: maxWeight,
-                        series: 'Max pick-ups'
+                        series: 'Lifting edge'
                     });
                 }
             }

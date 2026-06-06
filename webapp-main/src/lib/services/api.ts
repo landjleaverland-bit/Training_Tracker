@@ -20,6 +20,7 @@ import type {
     OutdoorSessionPayload,
     FingerboardSession,
     FingerboardSessionPayload,
+    FingerboardExercise,
     CompetitionSession,
     CompetitionSessionPayload,
     GymSession,
@@ -64,6 +65,52 @@ export const deleteOutdoorSession = outdoorService.delete;
 // Fingerboard Sessions
 // ------------------------------------------------------------------
 
+export function normalizeFingerboardExercise(exercise: any): FingerboardExercise {
+    if (exercise && exercise.energySystem) {
+        return exercise as FingerboardExercise;
+    }
+    const oldName = (exercise?.name || '').trim();
+    const normalizedName = oldName.toLowerCase();
+    
+    let newName = 'Hangboard';
+    let energySystem = 'Max strength';
+    
+    if (normalizedName === 'max hangs') {
+        newName = 'Hangboard';
+        energySystem = 'Max strength';
+    } else if (normalizedName === 'max pick-ups' || normalizedName === 'max pickups') {
+        newName = 'Lifting edge';
+        energySystem = 'Max strength';
+    } else {
+        newName = 'Hangboard';
+        if (normalizedName === 'recruitment pulls') {
+            energySystem = 'Recruitment pulls';
+        } else if (normalizedName === 'aerobic capacity') {
+            energySystem = 'Aerobic capacity';
+        } else if (normalizedName === 'anaerobic capacity') {
+            energySystem = 'Anaerobic capacity';
+        } else if (normalizedName === 'aerobic power') {
+            energySystem = 'Aerobic power';
+        } else {
+            energySystem = oldName || 'Max strength';
+        }
+    }
+    
+    return {
+        ...exercise,
+        name: newName,
+        energySystem: energySystem
+    };
+}
+
+export function normalizeFingerboardSession(session: FingerboardSession): FingerboardSession {
+    if (!session || !session.exercises) return session;
+    return {
+        ...session,
+        exercises: session.exercises.map(normalizeFingerboardExercise)
+    };
+}
+
 const fingerboardService = createCrudService<FingerboardSessionPayload, FingerboardSession>({
     collectionName: 'Fingerboarding',
     activityType: 'fingerboarding',
@@ -72,7 +119,13 @@ const fingerboardService = createCrudService<FingerboardSessionPayload, Fingerbo
 
 export const createFingerboardSession = fingerboardService.create;
 export const updateFingerboardSession = fingerboardService.update;
-export const getFingerboardSessions = fingerboardService.get;
+export const getFingerboardSessions = async (since?: string) => {
+    const result = await fingerboardService.get(since);
+    if (result.ok && result.data) {
+        result.data = result.data.map(normalizeFingerboardSession);
+    }
+    return result;
+};
 export const deleteFingerboardSession = fingerboardService.delete;
 
 

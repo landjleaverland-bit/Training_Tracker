@@ -213,6 +213,9 @@
 						<div class="ex-header">
 							<div class="ex-title-group">
 								<span class="ex-name">{exercise.name}</span>
+								{#if exercise.energySystem}
+									<span class="ex-grip energy-tag">{exercise.energySystem}</span>
+								{/if}
 								<span class="ex-grip">{exercise.gripType}</span>
 								{#if exercise.holdSize}
 									<span class="ex-grip size-modifier">{exercise.holdSize}</span>
@@ -402,6 +405,12 @@
 		background: rgba(74, 155, 155, 0.1);
 		color: var(--teal-secondary);
 		border: 1px solid rgba(74, 155, 155, 0.2);
+	}
+
+	.ex-grip.energy-tag {
+		background: rgba(155, 89, 182, 0.1);
+		color: #9b59b6;
+		border: 1px solid rgba(155, 89, 182, 0.2);
 	}
 
 	.ex-sets {

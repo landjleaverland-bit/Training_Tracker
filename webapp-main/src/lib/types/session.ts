@@ -156,6 +156,7 @@ export interface ExerciseSet {
 export interface FingerboardExercise {
     id: string;
     name: string;
+    energySystem: string;
     gripType: string;
     holdSize?: string;
     /** Number of sets performed. */
