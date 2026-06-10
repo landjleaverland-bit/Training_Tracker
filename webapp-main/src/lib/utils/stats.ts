@@ -310,6 +310,80 @@ function formatActivityType(type: string): string {
     return type.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
+const COLOR_MAP: Record<string, string> = {
+    // Indoor Climbing types
+    'indoor boulder': '#3B82F6',        // Vibrant Blue
+    'indoor lead': '#10B981',           // Emerald Green
+    'indoor sport': '#059669',          // Medium Green
+    'indoor lead/sport': '#06B6D4',     // Cyan
+    
+    // Outdoor Climbing types
+    'outdoor boulder': '#1D4ED8',       // Royal Blue
+    'outdoor sport': '#34D399',         // Light Green
+    'outdoor trad': '#047857',          // Dark Green
+    'outdoor lead/sport': '#14B8A6',    // Teal
+    
+    // General Climbing types (when filtered/viewed on individual tabs)
+    'boulder': '#0284C7',               // Sky Blue
+    'bouldering': '#0369A1',            // Darker Sky Blue
+    'lead': '#0F766E',                  // Teal Green
+    'sport': '#15803D',                 // Grass Green
+    'lead/sport': '#16A34A',            // Bright Green
+    'mixed': '#F59E0B',                 // Amber
+    'climb': '#115E59',                 // Dark Teal
+    
+    // Speed
+    'speed': '#EF4444',                 // Red
+    'speed climbing': '#F43F5E',        // Rose
+
+    // Gym / Strength
+    'gym session': '#8B5CF6',           // Violet
+    'strength': '#6366F1',              // Indigo
+    'power': '#D946EF',                 // Fuchsia
+    'power endurance': '#D97706',       // Golden Brown
+    'muscular endurance': '#DC2626',    // Dark Red
+    
+    // Fingerboarding
+    'fingerboarding': '#EAB308',        // Yellow
+    'hang board': '#FACC15',            // Soft Yellow
+    'hangboard': '#FDE047',            // Light Yellow
+    'pickups': '#0EA5E9',               // Light Blue
+    'lifting edge': '#38BDF8',          // Sky Blue 
+    'pinch block': '#A21CAF',           // Purple/Plum
+    
+    // Campus Board
+    'campus boarding': '#F97316',       // Orange
+    'campus board': '#FB923C',          // Light Orange
+    'campus board rungs': '#EA580C',    // Orange-Red
+    'campus board balls': '#C2410C',    // Terracotta
+    'beast': '#2DD4BF',                 // Bright Teal
+    'boulder walls': '#475569',         // Slate Gray
+    
+    // Competition
+    'competition': '#EC4899',           // Pink
+    
+    // Fallbacks
+    'other': '#9CA3AF',                 // Gray
+    'unknown': '#9CA3AF'
+};
+
+export function getCategoryColor(label: string): string {
+    const norm = label.toLowerCase().trim();
+    if (COLOR_MAP[norm]) return COLOR_MAP[norm];
+    
+    // Fallback: stable hash color based on label string
+    const colors = [
+        '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', 
+        '#EC4899', '#3498DB', '#9B59B6', '#1ABC9C', '#E67E22'
+    ];
+    let hash = 0;
+    for (let i = 0; i < norm.length; i++) {
+        hash = norm.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+}
+
 
 // --- 2. Training System Breakdown ---
 

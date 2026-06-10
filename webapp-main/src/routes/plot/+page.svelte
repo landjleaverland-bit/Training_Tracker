@@ -18,6 +18,7 @@
         getFingerboardSessionTypeBreakdown,
         getCampusWallTypeBreakdown,
         getCompetitionTypeBreakdown,
+        getCategoryColor,
         getTrainingSystemStats,
         getGradeStats,
         getIndoorLocationStats,
@@ -625,6 +626,7 @@
                                 data={currentBreakdownData} 
                                 valueAccessor={d => d.value} 
                                 labelAccessor={d => d.label} 
+                                colorAccesor={d => getCategoryColor(d.label)}
                             />
                         {:else}
                             <p class="no-data">No session breakdown data available.</p>

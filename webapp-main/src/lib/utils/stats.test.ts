@@ -5,7 +5,8 @@ import {
     getGymSessionTypeBreakdown,
     getFingerboardSessionTypeBreakdown,
     getCampusWallTypeBreakdown,
-    getCompetitionTypeBreakdown
+    getCompetitionTypeBreakdown,
+    getCategoryColor
 } from './stats';
 
 describe('Stats aggregation breakdowns', () => {
@@ -247,5 +248,29 @@ describe('Stats aggregation breakdowns', () => {
         expect(res).toContainEqual({ label: 'Bouldering', value: 1 });
         expect(res).toContainEqual({ label: 'Lead', value: 2 });
         expect(res.length).toBe(2);
+    });
+
+    it('getCategoryColor returns consistent stable colors', () => {
+        expect(getCategoryColor('Boulder')).toBe('#0284C7');
+        expect(getCategoryColor('Indoor Boulder')).toBe('#3B82F6');
+        expect(getCategoryColor('Lead/Sport')).toBe('#16A34A');
+        expect(getCategoryColor('Campus Board Rungs')).toBe('#EA580C');
+        expect(getCategoryColor('Something custom and unknown')).toMatch(/^#[0-9A-F]{6}$/i);
+    });
+
+    it('no two unique activity/category labels share a color in getCategoryColor', () => {
+        const labels = [
+            'Indoor Boulder', 'Indoor Lead', 'Indoor Sport', 'Indoor Lead/Sport',
+            'Outdoor Boulder', 'Outdoor Sport', 'Outdoor Trad', 'Outdoor Lead/Sport',
+            'Boulder', 'Bouldering', 'Lead', 'Sport', 'Lead/Sport', 'Mixed', 'Climb',
+            'Speed', 'Speed Climbing', 'Gym Session', 'Strength', 'Power',
+            'Power Endurance', 'Muscular Endurance', 'Fingerboarding', 'Hang Board',
+            'Hangboard', 'Pickups', 'Lifting Edge', 'Pinch Block', 'Campus Boarding',
+            'Campus Board', 'Campus Board Rungs', 'Campus Board Balls', 'Beast',
+            'Boulder Walls', 'Competition'
+        ];
+        const colors = labels.map(l => getCategoryColor(l));
+        const uniqueColors = new Set(colors);
+        expect(colors.length).toBe(uniqueColors.size);
     });
 });
