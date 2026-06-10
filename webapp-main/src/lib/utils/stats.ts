@@ -7,7 +7,7 @@
  */
 
 import * as d3 from 'd3';
-import type { Session, IndoorClimbSession, OutdoorClimbSession, FingerboardSession } from '$lib/types/session';
+import type { Session, IndoorClimbSession, OutdoorClimbSession, FingerboardSession, GymSession, CampusSession, CompetitionSession } from '$lib/types/session';
 
 // --- Types ---
 
@@ -175,6 +175,133 @@ export function getSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
         counts[typeLabel] = (counts[typeLabel] || 0) + 1;
     });
 
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
+}
+
+/**
+ * @brief Aggregates climbing types, combining Lead and Sport for indoor climbing.
+ */
+export function getClimbingTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
+    const counts: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'indoor_climb') {
+            const climb = s as IndoorClimbSession;
+            let type = climb.climbingType || 'Unknown';
+            const norm = type.trim().toLowerCase();
+            if (norm === 'lead' || norm === 'sport') {
+                type = 'Lead/Sport';
+            } else {
+                type = type.charAt(0).toUpperCase() + type.slice(1);
+            }
+            counts[type] = (counts[type] || 0) + 1;
+        } else if (s.activityType === 'outdoor_climb') {
+            const climb = s as OutdoorClimbSession;
+            let type = climb.climbingType || 'Unknown';
+            type = type.charAt(0).toUpperCase() + type.slice(1);
+            counts[type] = (counts[type] || 0) + 1;
+        }
+    });
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
+}
+
+/**
+ * @brief Aggregates gym sessions by training block.
+ */
+export function getGymSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
+    const counts: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'gym_session') {
+            const gym = s as GymSession;
+            let type = gym.trainingBlock || 'Other';
+            type = type.split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            counts[type] = (counts[type] || 0) + 1;
+        }
+    });
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
+}
+
+/**
+ * @brief Aggregates fingerboarding sessions by exercise name normalized.
+ */
+export function getFingerboardSessionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
+    const counts: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'fingerboarding') {
+            const fb = s as FingerboardSession;
+            if (fb.exercises) {
+                fb.exercises.forEach(ex => {
+                    let name = ex.name || 'Unknown';
+                    const norm = name.toLowerCase().trim();
+                    if (norm.includes('hangboard')) {
+                        name = 'Hang Board';
+                    } else if (norm.includes('lifting edge') || norm.includes('pickup') || norm.includes('pick-up')) {
+                        name = 'Pickups';
+                    } else if (norm.includes('pinch block')) {
+                        name = 'Pinch Block';
+                    } else {
+                        name = name.split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    }
+                    counts[name] = (counts[name] || 0) + 1;
+                });
+            }
+        }
+    });
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
+}
+
+/**
+ * @brief Aggregates campus sessions by wall type.
+ */
+export function getCampusWallTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
+    const counts: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'campus_boarding') {
+            const campus = s as CampusSession;
+            if (campus.exercises) {
+                campus.exercises.forEach(ex => {
+                    let wall = ex.wallType || 'Unknown';
+                    const norm = wall.toLowerCase().trim();
+                    if (norm === 'campus board rungs') {
+                        wall = 'Campus Board Rungs';
+                    } else if (norm === 'campus board balls') {
+                        wall = 'Campus Board Balls';
+                    } else if (norm === 'beast') {
+                        wall = 'Beast';
+                    } else if (norm.includes('boulder wall')) {
+                        wall = 'Boulder Walls';
+                    } else {
+                        wall = wall.split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    }
+                    counts[wall] = (counts[wall] || 0) + 1;
+                });
+            }
+        }
+    });
+    return Object.entries(counts).map(([label, value]) => ({ label, value }));
+}
+
+/**
+ * @brief Aggregates competition sessions by competition type.
+ */
+export function getCompetitionTypeBreakdown(sessions: Session[]): ChartDataPoint[] {
+    const counts: Record<string, number> = {};
+    sessions.forEach(s => {
+        if (s.activityType === 'competition') {
+            const comp = s as CompetitionSession;
+            let type = comp.type || 'Unknown';
+            const norm = type.toLowerCase().trim();
+            if (norm === 'lead') {
+                type = 'Lead';
+            } else if (norm === 'bouldering') {
+                type = 'Bouldering';
+            } else if (norm === 'speed') {
+                type = 'Speed';
+            } else {
+                type = type.charAt(0).toUpperCase() + type.slice(1);
+            }
+            counts[type] = (counts[type] || 0) + 1;
+        }
+    });
     return Object.entries(counts).map(([label, value]) => ({ label, value }));
 }
 

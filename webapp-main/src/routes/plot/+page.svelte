@@ -13,6 +13,11 @@
         getClimbingVsRestStats, 
         getFingerboardingConsistency, 
         getSessionTypeBreakdown,
+        getClimbingTypeBreakdown,
+        getGymSessionTypeBreakdown,
+        getFingerboardSessionTypeBreakdown,
+        getCampusWallTypeBreakdown,
+        getCompetitionTypeBreakdown,
         getTrainingSystemStats,
         getGradeStats,
         getIndoorLocationStats,
@@ -310,6 +315,43 @@
     let climbVsRest = $derived(getClimbingVsRestStats(filteredSessions, currentDateRange));
     let fbConsistency = $derived(getFingerboardingConsistency(filteredSessions, currentDateRange));
     let sessionTypes = $derived(getSessionTypeBreakdown(filteredSessions));
+    let climbingTypes = $derived(getClimbingTypeBreakdown(filteredSessions));
+    let gymSessionTypes = $derived(getGymSessionTypeBreakdown(filteredSessions));
+    let fingerboardTypes = $derived(getFingerboardSessionTypeBreakdown(filteredSessions));
+    let campusWallTypes = $derived(getCampusWallTypeBreakdown(filteredSessions));
+    let competitionTypes = $derived(getCompetitionTypeBreakdown(filteredSessions));
+
+    let currentBreakdownData = $derived.by(() => {
+        if (selectedActivity === 'indoor_climb' || selectedActivity === 'outdoor_climb') {
+            return climbingTypes;
+        } else if (selectedActivity === 'gym_session') {
+            return gymSessionTypes;
+        } else if (selectedActivity === 'fingerboarding') {
+            return fingerboardTypes;
+        } else if (selectedActivity === 'campus_boarding') {
+            return campusWallTypes;
+        } else if (selectedActivity === 'competition') {
+            return competitionTypes;
+        } else {
+            return sessionTypes;
+        }
+    });
+
+    let breakdownChartTitle = $derived.by(() => {
+        if (selectedActivity === 'indoor_climb' || selectedActivity === 'outdoor_climb') {
+            return 'Climbing Type Breakdown';
+        } else if (selectedActivity === 'gym_session') {
+            return 'Gym Session Type Breakdown';
+        } else if (selectedActivity === 'fingerboarding') {
+            return 'Fingerboard Session Type Breakdown';
+        } else if (selectedActivity === 'campus_boarding') {
+            return 'Wall Type Breakdown';
+        } else if (selectedActivity === 'competition') {
+            return 'Competition Type Breakdown';
+        } else {
+            return 'Session Type Breakdown';
+        }
+    });
 
     // 2. Training Systems
     let trainingSystems = $derived(getTrainingSystemStats(filteredSessions));
@@ -568,19 +610,25 @@
                         <h3>Climbing vs Rest</h3>
                         <PieChart data={climbVsRest} valueAccessor={d => d.value} labelAccessor={d => d.label} colorAccesor={d => d.color} />
                     </div>
+                    
+                    {#if selectedActivity === 'fingerboarding' || selectedActivity === 'combined'}
                     <div class="chart-card">
                         <h3>Fingerboarding Consistency</h3>
                         <PieChart data={fbConsistency} valueAccessor={d => d.value} labelAccessor={d => d.label} colorAccesor={d => d.color} />
                     </div>
-                    <div class="chart-card full-width">
-                        <h3>Session Type Breakdown</h3>
-                        <BarChart 
-                            data={sessionTypes} 
-                            xAccessor={d => d.label} 
-                            yAccessor={d => d.value} 
-                            orientation="vertical"
-                            height={300}
-                        />
+                    {/if}
+                    
+                    <div class="chart-card">
+                        <h3>{breakdownChartTitle}</h3>
+                        {#if currentBreakdownData.length > 0}
+                            <PieChart 
+                                data={currentBreakdownData} 
+                                valueAccessor={d => d.value} 
+                                labelAccessor={d => d.label} 
+                            />
+                        {:else}
+                            <p class="no-data">No session breakdown data available.</p>
+                        {/if}
                     </div>
                 </div>
 
