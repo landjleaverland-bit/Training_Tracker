@@ -238,6 +238,9 @@
 									<div class="exercise-item">
 										<div class="exercise-header">
 											<h4>{exercise.name}</h4>
+											{#if exercise.difficulty}
+												<span class="diff-dot" style="background-color: var(--color-{exercise.difficulty.toLowerCase()})" title="Difficulty: {exercise.difficulty}"></span>
+											{/if}
 											{#if def}
 												<div class="muscle-tags">
 													{#each def.targetMuscles.slice(0, 3) as muscle}
@@ -645,5 +648,23 @@
 		border: 1px solid rgba(239, 108, 0, 0.3);
 		box-shadow: 0 1px 2px rgba(239, 108, 0, 0.1);
 		margin-right: 0.5rem;
+	}
+
+	/* Difficulty Dot Styles */
+	:global(:root) {
+		--color-green: #4ade80;
+		--color-yellow: #facc15;
+		--color-orange: #fb923c;
+		--color-red: #f87171;
+	}
+
+	.diff-dot {
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		margin-left: 0.5rem;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+		vertical-align: middle;
 	}
 </style>

@@ -38,6 +38,7 @@
     import BarChart from '$lib/components/BarChart.svelte';
     import StackedBarChart from '$lib/components/StackedBarChart.svelte';
     import LineChart from '$lib/components/LineChart.svelte';
+    import { EXERCISE_LIBRARY } from '$lib/data/exercises';
 
     // Colors: Flash(Blue), Redpoint(Green), Dogged(Orange), DNF(Red)
     const gradeStackKeys = ['flashCount', 'redpointCount', 'doggedCount', 'dnfCount'];
@@ -425,7 +426,18 @@
         const names = new Set<string>();
         gymSessions.forEach(s => {
             if (s.exercises) {
-                s.exercises.forEach((e: any) => names.add(e.name));
+                s.exercises.forEach((e: any) => {
+                    const official = EXERCISE_LIBRARY.find(lib => {
+                        const n1 = lib.name.toLowerCase().trim().replace(/s$/, '');
+                        const n2 = e.name.toLowerCase().trim().replace(/s$/, '');
+                        return n1 === n2;
+                    });
+                    if (official) {
+                        names.add(official.name);
+                    } else {
+                        names.add(e.name);
+                    }
+                });
             }
         });
         return Array.from(names).sort();
@@ -449,7 +461,12 @@
             const gs = s as any;
             if (!gs.exercises) return;
             
-            const ex = gs.exercises.find((e: any) => e.name === selectedGymExercise);
+            const ex = gs.exercises.find((e: any) => {
+                if (e.name === selectedGymExercise) return true;
+                const n1 = e.name.toLowerCase().trim().replace(/s$/, '');
+                const n2 = selectedGymExercise.toLowerCase().trim().replace(/s$/, '');
+                return n1 === n2;
+            });
             if (ex && ex.sets && ex.sets.length > 0) {
                 // Calculate One Rep Max (estimated) or just Max Weight
                 // Let's use Max Weight for now as it's more direct

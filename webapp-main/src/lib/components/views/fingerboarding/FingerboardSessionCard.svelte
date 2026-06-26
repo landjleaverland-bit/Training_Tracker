@@ -213,6 +213,9 @@
 						<div class="ex-header">
 							<div class="ex-title-group">
 								<span class="ex-name">{exercise.name}</span>
+								{#if exercise.difficulty}
+									<span class="diff-dot" style="background-color: var(--color-{exercise.difficulty.toLowerCase()})" title="Difficulty: {exercise.difficulty}"></span>
+								{/if}
 								{#if exercise.energySystem}
 									<span class="ex-grip energy-tag">{exercise.energySystem}</span>
 								{/if}
@@ -534,5 +537,23 @@
 		box-shadow: 0 1px 2px rgba(239, 108, 0, 0.1);
 		display: inline-block;
 		margin-left: 0.2rem;
+	}
+
+	/* Difficulty Dot Styles */
+	:global(:root) {
+		--color-green: #4ade80;
+		--color-yellow: #facc15;
+		--color-orange: #fb923c;
+		--color-red: #f87171;
+	}
+
+	.diff-dot {
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		margin-left: 0.5rem;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+		vertical-align: middle;
 	}
 </style>

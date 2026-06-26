@@ -164,6 +164,7 @@ export interface FingerboardExercise {
     /** Breakdown of each set. */
     details: ExerciseSet[];
     notes: string;
+    difficulty?: 'Green' | 'Yellow' | 'Orange' | 'Red';
 }
 
 /**

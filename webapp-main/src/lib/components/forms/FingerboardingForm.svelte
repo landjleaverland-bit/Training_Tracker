@@ -48,6 +48,8 @@
 		'Jug' // Adding Jug as it seems standard based on grip types referenced elsewhere
 	];
 
+	const difficulties = ['Green', 'Yellow', 'Orange', 'Red'] as const;
+
 	// Size options based on grip type
 	const edgeSizes = ['4 mm', '6 mm', '8 mm', '10 mm', '12 mm', '14 mm', '20 mm', '40 mm'];
 	const pinchSizes = ['Narrow', 'Wide'];
@@ -383,6 +385,22 @@
 					>
 				</div>
 
+				<div class="difficulty-footer">
+					<span class="diff-label">How did it feel?</span>
+					<div class="diff-circles">
+						{#each difficulties as color}
+							<button
+								type="button"
+								class="diff-circle"
+								class:selected={exercise.difficulty === color}
+								style="--circle-color: var(--color-{color.toLowerCase()})"
+								onclick={() => (exercise.difficulty = color)}
+								aria-label="Mark as {color}"
+							></button>
+						{/each}
+					</div>
+				</div>
+
 				<div class="card-footer">
 					<div class="meta-input">
 						<label for="total-sets-{i}">Total Sets</label>
@@ -481,6 +499,7 @@
 		bind:visible={showRestTimer}
 		defaultSets={timerDefaultSets}
 		associatedExerciseId={activeTimerExerciseId}
+		getReadyDuration={5}
 	/>
 </div>
 
@@ -866,5 +885,50 @@
 
 	.tbc-checkbox-wrapper input[type='checkbox']:checked + .tbc-label .custom-checkbox::after {
 		opacity: 1;
+	}
+
+	/* Difficulty Selector Styles */
+	.difficulty-footer {
+		padding: 0.75rem 1rem;
+		background: rgba(0, 0, 0, 0.02);
+		border-top: 1px solid rgba(0, 0, 0, 0.05);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+
+	.diff-label {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+	}
+
+	.diff-circles {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.diff-circle {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		border: 3px solid var(--circle-color);
+		background: transparent;
+		cursor: pointer;
+		padding: 0;
+		transition: all 0.2s ease;
+	}
+
+	.diff-circle.selected {
+		background: var(--circle-color);
+		box-shadow: 0 0 10px var(--circle-color);
+		transform: scale(1.1);
+	}
+
+	.diff-circle:hover {
+		transform: scale(1.1);
+		background: rgba(0, 0, 0, 0.05);
 	}
 </style>

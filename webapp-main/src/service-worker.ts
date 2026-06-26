@@ -17,7 +17,7 @@ const sw = self as unknown as ServiceWorkerGlobalScope;
 // TIMER STATE (Service Worker managed for reliable background execution)
 // =============================================================================
 interface TimerState {
-    phase: 'SETUP' | 'WORK' | 'REST' | 'FINISHED';
+    phase: 'SETUP' | 'GET_READY' | 'WORK' | 'REST' | 'FINISHED';
     runningState: 'RUNNING' | 'PAUSED';
     endTimestamp: number | null;
     remaining: number;
@@ -29,6 +29,7 @@ interface TimerState {
     overtimeTriggered: boolean;
     associatedExerciseId?: string | null;
     mode?: 'INTERVAL' | 'REST_ONLY';
+    getReadyDuration?: number;
 }
 
 const TIMER_CACHE_NAME = 'rest-timer-state-v1';
@@ -101,8 +102,10 @@ function showTimerNotification(vibrate = false) {
 
     if (!('showNotification' in sw.registration)) return;
 
-    const status = timerState.mode === 'REST_ONLY' ? 'Rest' : (timerState.phase === 'WORK' ? 'Work' : 'Rest');
-    const setInfo = `[Set ${timerState.currentSet}/${timerState.configSets}]`;
+    const status = timerState.phase === 'GET_READY'
+        ? 'Get Ready'
+        : (timerState.mode === 'REST_ONLY' ? 'Rest' : (timerState.phase === 'WORK' ? 'Work' : 'Rest'));
+    const setInfo = timerState.phase === 'GET_READY' ? '' : ` [Set ${timerState.currentSet}/${timerState.configSets}]`;
     const label = timerState.remaining < 0 ? 'Overtime' : 'Remaining';
     const text = `${label}: ${formatTime(timerState.remaining)}`;
 
@@ -111,7 +114,7 @@ function showTimerNotification(vibrate = false) {
         : [{ action: 'resume', title: '▶ Resume' }, { action: 'finish-session', title: '🏁 Finish' }];
 
     try {
-        sw.registration.showNotification(`${status} Timer ${setInfo}`, {
+        sw.registration.showNotification(`${status} Timer${setInfo}`, {
             body: text,
             icon: '/favicon.png',
             vibrate: vibrate ? [200, 100, 200] : [],
@@ -164,6 +167,18 @@ function timerTick() {
 
 function handlePhaseComplete() {
     if (!timerState) return;
+
+    if (timerState.phase === 'GET_READY') {
+        if (timerState.mode === 'REST_ONLY') {
+            timerState.phase = 'REST';
+            startPhase(timerState.configRest);
+        } else {
+            timerState.phase = 'WORK';
+            startPhase(timerState.configWork);
+        }
+        saveSWTimerState(timerState);
+        return;
+    }
 
     if (timerState.mode === 'REST_ONLY') {
         if (timerState.currentSet >= timerState.configSets) {

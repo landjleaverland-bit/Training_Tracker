@@ -425,14 +425,63 @@ export const EXERCISE_LIBRARY: ExerciseDefinition[] = [
         instructions: ['Curl legs against machine resistance.'],
         images: ['/exercises/Leg_Curl.webp']
     },
+    // Jumps
+    {
+        id: 'step_ups',
+        name: 'Step Ups',
+        category: 'Legs',
+        subcategory: 'Jumps',
+        targetMuscles: ['Quads', 'Glutes'],
+        instructions: ['Place one foot on a box or step.', 'Drive through your heel to stand up on the box.', 'Step down with control.']
+    },
+    {
+        id: 'box_jumps',
+        name: 'Box Jumps',
+        category: 'Legs',
+        subcategory: 'Jumps',
+        targetMuscles: ['Quads', 'Hamstrings', 'Glutes', 'Calves'],
+        instructions: ['Stand facing a sturdy box.', 'Bend at the knees and swing your arms back to prepare.', 'Explode upward and land softly on the box with both feet.', 'Step down carefully.']
+    },
     {
         id: 'walking_lunge',
-        name: 'Walking Lunge',
+        name: 'Walking Lunges',
         category: 'Legs',
-        subcategory: 'Isolation',
+        subcategory: 'Jumps',
         targetMuscles: ['Quads', 'Glutes'],
         instructions: ['Step forward and lower hips.'],
         images: ['/exercises/walking_lunge.webp']
+    },
+    {
+        id: 'jump_lunges',
+        name: 'Jump Lunges',
+        category: 'Legs',
+        subcategory: 'Jumps',
+        targetMuscles: ['Quads', 'Glutes', 'Calves'],
+        instructions: ['Start in a lunge position.', 'Jump explosively, switching legs in mid-air.', 'Land softly in a lunge position on the opposite side.']
+    },
+    {
+        id: 'vertical_lunges',
+        name: 'Vertical Lunges',
+        category: 'Legs',
+        subcategory: 'Jumps',
+        targetMuscles: ['Quads', 'Glutes'],
+        instructions: ['Perform a lunge, focusing on driving straight up out of the bottom position.']
+    },
+    {
+        id: 'vertical_jumps',
+        name: 'Vertical Jumps',
+        category: 'Legs',
+        subcategory: 'Jumps',
+        targetMuscles: ['Quads', 'Glutes', 'Calves'],
+        instructions: ['Squat down, swinging your arms back.', 'Explode straight up as high as possible, reaching overhead.', 'Land softly on both feet.']
+    },
+    {
+        id: 'vertical_split_squats',
+        name: 'Vertical Split Squats',
+        category: 'Legs',
+        subcategory: 'Jumps',
+        targetMuscles: ['Quads', 'Glutes', 'Calves'],
+        instructions: ['Position yourself in a split stance.', 'Lower your hips, then drive upward explosively.', 'Land in the same split stance and repeat.']
     },
     // Calves
     {

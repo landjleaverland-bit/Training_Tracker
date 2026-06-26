@@ -27,6 +27,7 @@
         defaultSets = 3,
         associatedExerciseId = null,
         autoStartRestOnly = false,
+        getReadyDuration = 0,
         onComplete = () => {},
         onClose = () => {}
     } = $props<{
@@ -34,12 +35,13 @@
         defaultSets?: number;
         associatedExerciseId?: string | null;
         autoStartRestOnly?: boolean;
+        getReadyDuration?: number;
         onComplete?: () => void;
         onClose?: () => void;
     }>();
 
     // -- State --
-    type TimerPhase = 'SETUP' | 'WORK' | 'REST' | 'FINISHED';
+    type TimerPhase = 'SETUP' | 'GET_READY' | 'WORK' | 'REST' | 'FINISHED';
     type RunningState = 'RUNNING' | 'PAUSED';
     type TimerMode = 'INTERVAL' | 'REST_ONLY';
 
@@ -179,7 +181,8 @@
             currentSet,
             associatedExerciseId, pausedTimeRemaining, timestamp: Date.now(),
             overtimeTriggered,
-            mode: timerMode
+            mode: timerMode,
+            getReadyDuration
         };
         localStorage.setItem('active_interval_timer', JSON.stringify(snapshot));
         return snapshot;
@@ -285,7 +288,10 @@
         requestNotificationPermission(); 
         savePreference();
         currentSet = 1;
-        if (timerMode === 'REST_ONLY') {
+        if (getReadyDuration > 0) {
+            phase = 'GET_READY';
+            startPhase(getReadyDuration);
+        } else if (timerMode === 'REST_ONLY') {
             phase = 'REST';
             startPhase(configRest);
         } else {
@@ -444,6 +450,7 @@
     }
 
     function getPhaseColor() {
+        if (phase === 'GET_READY') return '#fb923c'; // Orange for Get Ready
         if (timerMode === 'REST_ONLY') return '#2dd4bf'; // Teal for rest
         return phase === 'WORK' ? '#4ade80' : '#2dd4bf';
     }
@@ -462,6 +469,7 @@
             class="timer-card" 
             class:work={timerMode === 'INTERVAL' && phase === 'WORK'}
             class:rest={timerMode === 'REST_ONLY' || phase === 'REST'}
+            class:get-ready={phase === 'GET_READY'}
             transition:scale={{ start: 0.96, duration: 300, easing: cubicOut }}
         >
             <!-- Header -->
@@ -471,6 +479,8 @@
                         Timer Setup
                     {:else if phase === 'FINISHED'}
                         Complete
+                    {:else if phase === 'GET_READY'}
+                        Get Ready
                     {:else}
                         Set {currentSet} / {configSets}
                     {/if}
@@ -553,13 +563,15 @@
                                 class="progress" 
                                 cx="50" cy="50" r="45"
                                 stroke-dasharray={RING_CIRCUMFERENCE}
-                                stroke-dashoffset={RING_CIRCUMFERENCE * (1 - Math.max(0, Math.min(1, remaining / (phase === 'WORK' ? configWork : configRest))))}
+                                stroke-dashoffset={RING_CIRCUMFERENCE * (1 - Math.max(0, Math.min(1, remaining / (phase === 'WORK' ? configWork : (phase === 'GET_READY' ? getReadyDuration : configRest)))))}
                             />
                          </svg>
                          <div class="timer-val">
                               <div class="phase-label">
                                   {#if remaining < 0}
                                       OVERTIME
+                                  {:else if phase === 'GET_READY'}
+                                      GET READY
                                   {:else}
                                       {timerMode === 'REST_ONLY' ? 'REST' : phase}
                                   {/if}
@@ -615,7 +627,11 @@
         <div class="pill-left">
             <span class="pulsating-dot" style="--dot-color: {getPhaseColor()}"></span>
             <span class="pill-label">
-                {timerMode === 'REST_ONLY' ? 'Rest' : (phase === 'WORK' ? 'Work' : 'Rest')} {currentSet}/{configSets}
+                {#if phase === 'GET_READY'}
+                    Get Ready
+                {:else}
+                    {timerMode === 'REST_ONLY' ? 'Rest' : (phase === 'WORK' ? 'Work' : 'Rest')} {currentSet}/{configSets}
+                {/if}
             </span>
         </div>
         <div class="pill-right">
@@ -662,6 +678,7 @@
 
     .timer-card.work { border-color: #4ade80; }
     .timer-card.rest { border-color: #2dd4bf; }
+    .timer-card.get-ready { border-color: #fb923c; }
 
     .header {
         padding: 1rem;
